@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":domain"))
-	implementation(project(":infrastructure"))
+	implementation(project(":core:domain"))
+	implementation(project(":core:infrastructure"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
