@@ -1,4 +1,4 @@
-package io.tricefal.core.config
+package io.tricefal.core.security
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean

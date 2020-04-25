@@ -1,14 +1,16 @@
-package io.tricefal.core.config
+package io.tricefal.core.security
 
-import io.tricefal.core.security.JwtAuthorizationFilter
-import io.tricefal.core.security.OktaJwtVerifier
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
+import org.springframework.security.web.csrf.CsrfFilter
+import org.springframework.security.web.csrf.CsrfTokenRepository
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
 import org.springframework.security.web.util.matcher.RequestMatcher
+
 
 @EnableWebSecurity
 //@EnableConfigurationProperties(OAuthProperties::class)
@@ -29,16 +31,20 @@ class SecurityConfiguration() : WebSecurityConfigurerAdapter() {
 
         http.requiresChannel()
             .requestMatchers(RequestMatcher {
-                r -> r.getHeader("X-Forwarded-Proto") != null
-            }).requiresSecure() 
+                r -> r.getHeader("XSRF-TOKEN") != null
+            }).requiresSecure()
 
-        http.csrf()
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-
-        http
-            .addFilterAfter(JwtAuthorizationFilter(oktaJwtVerifier), UsernamePasswordAuthenticationFilter::class.java)
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        http.addFilterAfter(CsrfHeaderFilter(), CsrfFilter::class.java)
+        http.addFilterAfter(JwtAuthorizationFilter(oktaJwtVerifier), UsernamePasswordAuthenticationFilter::class.java)
 
         //@formatter:on
+    }
+
+    private fun csrfTokenRepository(): CsrfTokenRepository? {
+        val repository = HttpSessionCsrfTokenRepository()
+        repository.setHeaderName("X-XSRF-TOKEN")
+        return repository
     }
 
 }
