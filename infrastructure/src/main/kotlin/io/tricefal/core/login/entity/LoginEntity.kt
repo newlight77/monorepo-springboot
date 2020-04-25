@@ -26,7 +26,10 @@ data class LoginEntity(
         var username: String,
 
         @Column(name = "last_login")
-        var lastLogin: Instant
+        var lastLogin: Instant,
+
+        @Column(name = "success")
+        var success: Boolean
 ) {
 
         @JsonIgnore
@@ -42,7 +45,8 @@ fun fromDomain(domain: LoginDomain): LoginEntity {
         var entity = LoginEntity(
                 domain.id,
                 domain.username,
-                domain.lastLogin
+                domain.lastLogin,
+                domain.success
         )
         entity.authorities = domain.authorities.map { AuthorityEntity(it) }.toSet()
         return entity
@@ -54,6 +58,7 @@ fun toDomain(entity: LoginEntity): LoginDomain {
                 entity.id,
                 entity.username,
                 entity.lastLogin,
+                entity.success,
                 entity.authorities.map { it.name }.toSet()
         );
 }

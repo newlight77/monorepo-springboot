@@ -5,6 +5,7 @@ import java.time.Instant
 data class AccountDomain(var id: Long,
                          val username: String,
                          val expirationDate: Instant,
+                         val locked: Boolean,
                          val contact: ContactDomain,
                          val address: AddressDomain,
                          val company: CompanyDomain,

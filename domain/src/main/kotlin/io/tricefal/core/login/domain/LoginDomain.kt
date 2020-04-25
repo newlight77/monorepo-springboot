@@ -10,5 +10,6 @@ data class LoginDomain(
         var id: Long,
         var username: String,
         val lastLogin: Instant = Instant.now(),
+        val success: Boolean = false,
         val authorities: Set<String> = HashSet()
 )

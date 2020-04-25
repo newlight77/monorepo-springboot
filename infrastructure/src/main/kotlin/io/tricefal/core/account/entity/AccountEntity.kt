@@ -15,7 +15,10 @@ data class AccountEntity(
                 var username: @Size(max = 50) String = "",
 
                 @Column(name = "expiration_date")
-                var expirationDate: Instant
+                var expirationDate: Instant,
+
+                @Column(name = "locked")
+                var locked: Boolean
 ) {
 
         @OneToOne
@@ -40,7 +43,7 @@ data class AccountEntity(
 }
 
 fun fromDomain(domain: AccountDomain): AccountEntity {
-        var entity = AccountEntity(domain.id, domain.username, domain.expirationDate)
+        var entity = AccountEntity(domain.id, domain.username, domain.expirationDate, domain.locked)
         entity.contact = fromDomain(domain.contact)
         entity.address = fromDomain(domain.address)
         entity.company = fromDomain(domain.company)
@@ -54,6 +57,7 @@ fun toDomain(entity: AccountEntity): AccountDomain {
                 entity.id,
                 entity.username,
                 entity.expirationDate,
+                entity.locked,
                 toDomain(entity.contact),
                 toDomain(entity.address),
                 toDomain(entity.company),
