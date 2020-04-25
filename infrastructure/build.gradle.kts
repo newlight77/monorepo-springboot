@@ -5,6 +5,7 @@ plugins {
 //	id("io.spring.dependency-management") version "1.0.9.RELEASE"
 	kotlin("plugin.spring") version "1.3.70"
 	kotlin("plugin.jpa") version "1.3.70"
+	idea
 }
 
 group = "io.tricefal"
@@ -30,7 +31,9 @@ dependencies {
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
 
-	runtimeOnly("com.h2database:h2")
+	testImplementation("com.h2database:h2")
+	runtime("com.h2database:h2")
+//	runtime("org.postgresql:postgresql")
 }
 
 tasks.withType<Test> {

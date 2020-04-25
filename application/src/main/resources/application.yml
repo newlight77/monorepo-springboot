@@ -1,0 +1,15 @@
+server:
+    servlet:
+        context-path: /api
+
+security:
+    oauth:
+        issuer: ${OKTA_OAUTH2_ISSUER}
+        audience: ${OKTA_OAUTH2_AUDIENCE}
+        client-id: ${OKTA_OAUTH2_CLIENT_ID}
+        client-secret: ${OKTA_OAUTH2_CLIENT_SECRET}
+    jwt:
+        key-store: classpath:keystore.jks
+        key-store-password: letmein
+        key-pair-alias: mytestkey
+        key-pair-password: changeme
