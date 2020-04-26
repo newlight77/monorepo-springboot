@@ -2,10 +2,7 @@ package io.tricefal.core.security
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
-import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.impl.DefaultClaims
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.context.annotation.Bean
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
@@ -13,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+
 
 private const val HEADER = "Authorization"
 private const val PREFIX = "Bearer "
@@ -22,14 +20,7 @@ class JwtAuthorizationFilter(val oktaJwtVerifier: OktaJwtVerifier) : OncePerRequ
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         try {
-            if (checkJWTToken(request)) {
-                val claims: Claims = validateToken(request)
-                if (claims["authorities"] != null) {
-                    setUpSpringAuthentication(claims)
-                } else {
-                    SecurityContextHolder.clearContext()
-                }
-            }
+            doFilter(jwtTokenInHeader(request))
             filterChain.doFilter(request, response)
         } catch (e: JwtException) {
             response.status = HttpServletResponse.SC_FORBIDDEN
@@ -38,18 +29,30 @@ class JwtAuthorizationFilter(val oktaJwtVerifier: OktaJwtVerifier) : OncePerRequ
         }
     }
 
-    private fun checkJWTToken(request: HttpServletRequest): Boolean {
-        val authenticationHeader = request.getHeader(HEADER)
-        return !(authenticationHeader == null || !authenticationHeader.startsWith(PREFIX))
+    private fun doFilter(jwtToken: String) {
+        if (jwtToken.isBlank()) return
+
+        val claims = extractClaims(jwtToken)
+
+        if (claims?.get("authorities") != null) {
+            setUpSpringAuthentication(claims)
+        } else {
+            SecurityContextHolder.clearContext()
+        }
     }
 
-    private fun validateToken(request: HttpServletRequest): Claims {
-        val jwtToken = request.getHeader(HEADER).replace(PREFIX, "")
-        val jwt = oktaJwtVerifier.decode(jwtToken)
-        logger.info("claims : ${jwt.claims.size}")
+    private fun jwtTokenInHeader(request: HttpServletRequest): String {
+        if (request.getHeader(HEADER).startsWith(PREFIX)) {
+            return request.getHeader(HEADER).replace(PREFIX, "")
+        }
+        return ""
+    }
+
+    private fun extractClaims(jwtToken: String): Claims {
+        val jwt = oktaJwtVerifier.getOrDecode(jwtToken)
+        logger.info("claims : ${jwt!!.claims.size}")
         jwt.claims.map { logger.info("claim : ${it.key}=${it.value}") }
         return DefaultClaims(jwt.claims)
-//        return Jwts.parser().setSigningKey(SECRET.toByteArray()).parseClaimsJws(jwtToken).body
     }
 
     private fun setUpSpringAuthentication(claims: Claims) {
