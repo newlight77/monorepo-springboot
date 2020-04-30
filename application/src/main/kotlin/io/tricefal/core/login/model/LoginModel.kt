@@ -6,6 +6,7 @@ import java.time.Instant
 data class LoginModel(var id: Long,
                         val username: String,
                         val lastLogin: Instant,
+                        val ipAddress: String,
                         val success: Boolean)
 
 fun fromDomain(domain: LoginDomain): LoginModel {
@@ -13,6 +14,7 @@ fun fromDomain(domain: LoginDomain): LoginModel {
             domain.id,
             domain.username,
             domain.lastLogin,
+            domain.ipAddress,
             domain.success
     )
 }
@@ -22,6 +24,7 @@ fun toDomain(model: LoginModel): LoginDomain {
             model.id,
             model.username,
             model.lastLogin,
+            model.ipAddress,
             model.success
     )
 }
