@@ -1,6 +1,5 @@
 package io.tricefal.core.login
 
-import io.tricefal.core.login.entity.LoginEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.rest.core.annotation.RepositoryRestResource

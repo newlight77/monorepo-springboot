@@ -1,6 +1,5 @@
 package io.tricefal.core.login
 
-import io.tricefal.core.login.model.LoginModel
 import org.springframework.web.bind.annotation.*
 
 @RestController

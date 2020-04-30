@@ -1,15 +1,12 @@
 package io.tricefal.core.login
 
-import io.tricefal.core.login.domain.LoginDomain
-import io.tricefal.core.login.entity.fromDomain
-import io.tricefal.core.login.entity.toDomain
 import org.springframework.stereotype.Repository
 
 @Repository
 class LoginRepositoryAdapter(private var repository: LoginJpaRepository) : ILoginRepository<LoginDomain, Long> {
     override fun save(login: LoginDomain) {
         println(login)
-        val entity = fromDomain(login)
+        val entity = toEntity(login)
         repository.save(entity)
     }
 
@@ -17,7 +14,7 @@ class LoginRepositoryAdapter(private var repository: LoginJpaRepository) : ILogi
         println("findByUsername$username")
         return repository.findByUsername(username).map {
             println("map : $username")
-            toDomain(it)
+            fromEntity(it)
         }
     }
 }

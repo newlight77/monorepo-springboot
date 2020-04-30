@@ -1,6 +1,5 @@
-package io.tricefal.core.login.model
+package io.tricefal.core.login
 
-import io.tricefal.core.login.domain.LoginDomain
 import java.time.Instant
 
 data class LoginModel(var id: Long,
@@ -9,7 +8,7 @@ data class LoginModel(var id: Long,
                         val ipAddress: String,
                         val success: Boolean)
 
-fun fromDomain(domain: LoginDomain): LoginModel {
+fun toModel(domain: LoginDomain): LoginModel {
     return LoginModel(
             domain.id,
             domain.username,
@@ -19,7 +18,7 @@ fun fromDomain(domain: LoginDomain): LoginModel {
     )
 }
 
-fun toDomain(model: LoginModel): LoginDomain {
+fun fromModel(model: LoginModel): LoginDomain {
     return LoginDomain(
             model.id,
             model.username,

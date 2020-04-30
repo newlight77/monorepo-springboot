@@ -1,4 +1,4 @@
-package io.tricefal.core.login.domain
+package io.tricefal.core.login
 
 import java.time.Instant
 import java.util.*

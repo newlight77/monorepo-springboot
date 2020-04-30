@@ -1,7 +1,7 @@
 package io.tricefal.core.account.entity
 
 import io.tricefal.core.account.domain.ContactDomain
-import io.tricefal.core.login.domain.EMAIL_REGEX
+import io.tricefal.core.login.EMAIL_REGEX
 import javax.persistence.*
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size

@@ -7,7 +7,7 @@ import java.util.*
 class NotesRepositoryAdapter(private var notesJpaRepository: NotesJpaRepository) : NotesRepository<NoteDomain, Long> {
     override fun save(note: NoteDomain) {
         println(note)
-        notesJpaRepository.save(fromDomain(note))
+        notesJpaRepository.save(toEntity(note))
     }
 
     override fun delete(id: Long) {
@@ -19,20 +19,20 @@ class NotesRepositoryAdapter(private var notesJpaRepository: NotesJpaRepository)
 
     override fun update(note: NoteDomain) {
         println(note)
-        notesJpaRepository.save(fromDomain(note))
+        notesJpaRepository.save(toEntity(note))
     }
 
     override fun findAll(): List<NoteDomain> {
         return notesJpaRepository.findAll().map {
             println("note : $it")
-            toDomain(it)
+            fromEntity(it)
         }
     }
 
     override fun findById(id: Long): Optional<NoteDomain> {
         return notesJpaRepository.findById(id).map {
             println("note : $it")
-            toDomain(it)
+            fromEntity(it)
         }
     }
 
@@ -40,7 +40,7 @@ class NotesRepositoryAdapter(private var notesJpaRepository: NotesJpaRepository)
         println("findByUser$user")
         return notesJpaRepository.findByUser(user).map {
             println("map : $user")
-            toDomain(it)
+            fromEntity(it)
         }
     }
 
@@ -48,27 +48,10 @@ class NotesRepositoryAdapter(private var notesJpaRepository: NotesJpaRepository)
         println("findByTitle$title")
         return notesJpaRepository.findByTitle(title).map {
             println("map : $title")
-            toDomain(it)
+            fromEntity(it)
         }
     }
 
-    fun fromDomain(domain: NoteDomain): NoteEntity {
-        return NoteEntity().copy(
-                domain.id,
-                domain.title,
-                domain.text,
-                domain.author
-        )
-    }
-
-    fun toDomain(entity: NoteEntity): NoteDomain {
-        return NoteDomain().copy(
-                entity.id,
-                entity.title,
-                entity.text,
-                entity.user
-        )
-    }
 }
 
 

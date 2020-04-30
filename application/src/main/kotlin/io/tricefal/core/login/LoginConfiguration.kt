@@ -1,6 +1,5 @@
 package io.tricefal.core.login
 
-import io.tricefal.core.login.domain.LoginDomain
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

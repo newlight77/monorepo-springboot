@@ -1,9 +1,7 @@
-package io.tricefal.core.login.entity
+package io.tricefal.core.login
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.tricefal.core.account.entity.AuthorityEntity
-import io.tricefal.core.login.domain.EMAIL_REGEX
-import io.tricefal.core.login.domain.LoginDomain
 import org.hibernate.annotations.BatchSize
 import java.time.Instant
 import java.util.*
@@ -44,7 +42,7 @@ data class LoginEntity(
         var authorities: Set<AuthorityEntity> = HashSet<AuthorityEntity>()
 }
 
-fun fromDomain(domain: LoginDomain): LoginEntity {
+fun toEntity(domain: LoginDomain): LoginEntity {
         var entity = LoginEntity(
                 domain.id,
                 domain.username,
@@ -56,7 +54,7 @@ fun fromDomain(domain: LoginDomain): LoginEntity {
         return entity
 }
 
-fun toDomain(entity: LoginEntity): LoginDomain {
+fun fromEntity(entity: LoginEntity): LoginDomain {
         entity.authorities
         return LoginDomain(
                 entity.id,
