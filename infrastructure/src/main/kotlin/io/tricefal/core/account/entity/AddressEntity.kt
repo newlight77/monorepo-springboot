@@ -6,7 +6,11 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "address")
-class AddressEntity(@Id @GeneratedValue
+class AddressEntity(
+//                    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+//                    @SequenceGenerator(name = "sequenceGenerator")
+                    @GeneratedValue(strategy = GenerationType.IDENTITY)
+                    @Id
                     val id: Long = 0,
 
                     @Column(name = "postal_address")

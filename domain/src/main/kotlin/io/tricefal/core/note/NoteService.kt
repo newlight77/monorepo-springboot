@@ -33,8 +33,8 @@ class NoteService(private var noteRepository: NotesRepository<NoteDomain, Long>)
         return noteRepository.findById(id)
     }
 
-    override fun findByUser(user: String): List<NoteDomain> {
-        return noteRepository.findByUser(user)
+    override fun findByUser(author: String): List<NoteDomain> {
+        return noteRepository.findByAuthor(author)
     }
 
     override fun findByTitle(title: String): List<NoteDomain> {

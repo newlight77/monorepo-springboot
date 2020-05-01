@@ -1,15 +1,19 @@
 package io.tricefal.core.note
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
-data class NoteEntity(@Id @GeneratedValue var id: Long? = null,
-                var title: String? = null,
-                var text: String? = null,
-                @JsonIgnore var user: String? = null)
+@Table(name = "note")
+data class NoteEntity(
+//                      @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+//                      @SequenceGenerator(name = "sequenceGenerator")
+                      @GeneratedValue(strategy = GenerationType.IDENTITY)
+                      @Id
+                      var id: Long? = null,
+                      var title: String? = null,
+                      var text: String? = null,
+                      @JsonIgnore var author: String? = null)
 
 fun toEntity(domain: NoteDomain): NoteEntity {
     return NoteEntity().copy(
@@ -25,6 +29,6 @@ fun fromEntity(entity: NoteEntity): NoteDomain {
             entity.id,
             entity.title,
             entity.text,
-            entity.user
+            entity.author
     )
 }

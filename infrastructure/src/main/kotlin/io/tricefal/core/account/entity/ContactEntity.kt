@@ -9,8 +9,10 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "contact")
 data class ContactEntity(
-        @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-        @SequenceGenerator(name = "sequenceGenerator")
+//        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+//        @SequenceGenerator(name = "sequenceGenerator")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Id
         var id: Long,
 
         @Column(name = "nom", length = 50)

@@ -8,9 +8,12 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "account")
 data class AccountEntity(
-                @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-                @SequenceGenerator(name = "sequenceGenerator")
-                @Id var id: Long,
+//                @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+//                @SequenceGenerator(name = "sequenceGenerator")
+                @GeneratedValue(strategy = GenerationType.IDENTITY)
+                @Id
+                var id: Long,
+
                 @Column(name = "nom", length = 50)
                 var username: @Size(max = 50) String = "",
 

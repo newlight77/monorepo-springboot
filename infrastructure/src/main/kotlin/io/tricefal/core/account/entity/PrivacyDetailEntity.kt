@@ -8,9 +8,11 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "privacy_detail")
 data class PrivacyDetailEntity(
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-        @SequenceGenerator(name = "sequenceGenerator")
-        @Id var id: Long,
+//        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+//        @SequenceGenerator(name = "sequenceGenerator")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Id
+        var id: Long,
 
         @Column(name = "birth_date")
         val birthDate: LocalDate,

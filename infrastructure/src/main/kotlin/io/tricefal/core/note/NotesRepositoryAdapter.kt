@@ -36,10 +36,10 @@ class NotesRepositoryAdapter(private var notesJpaRepository: NotesJpaRepository)
         }
     }
 
-    override fun findByUser(user: String): List<NoteDomain> {
-        println("findByUser$user")
-        return notesJpaRepository.findByUser(user).map {
-            println("map : $user")
+    override fun findByAuthor(author: String): List<NoteDomain> {
+        println("findByAuthor$author")
+        return notesJpaRepository.findByAuthor(author).map {
+            println("map : $author")
             fromEntity(it)
         }
     }

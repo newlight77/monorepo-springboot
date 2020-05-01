@@ -8,8 +8,10 @@ import javax.validation.constraints.Size
 @Table(name = "bank_info")
 data class BankInfoEntity(
 
-        @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-        @SequenceGenerator(name = "sequenceGenerator")
+//        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+//        @SequenceGenerator(name = "sequenceGenerator")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Id
         val id: Long,
 
         @javax.persistence.Column(name = "owner", length = 50)

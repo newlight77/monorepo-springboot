@@ -22,6 +22,7 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.2.5.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.2.5.RELEASE")
+
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.70")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
@@ -32,8 +33,10 @@ dependencies {
 	testImplementation("org.assertj:assertj-core:3.11.1")
 
 	testImplementation("com.h2database:h2")
-	runtime("com.h2database:h2")
-//	runtime("org.postgresql:postgresql")
+	runtime("org.postgresql:postgresql")
+
+//	compile("org.liquibase:liquibase-core:3.8.9")
+
 }
 
 tasks.withType<Test> {

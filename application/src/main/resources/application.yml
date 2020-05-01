@@ -8,8 +8,22 @@ security:
         audience: ${OKTA_OAUTH2_AUDIENCE}
         client-id: ${OKTA_OAUTH2_CLIENT_ID}
         client-secret: ${OKTA_OAUTH2_CLIENT_SECRET}
-    jwt:
-        key-store: classpath:keystore.jks
-        key-store-password: letmein
-        key-pair-alias: mytestkey
-        key-pair-password: changeme
+
+#    jwt:
+#        key-store: classpath:keystore.jks
+#        key-store-password: letmein
+#        key-pair-alias: mytestkey
+#        key-pair-password: changeme
+
+spring:
+    datasource:
+        url: ${POSTGRES_URL}
+        username: ${POSTGRES_USER}
+        password: ${POSTGRES_PASSWORD}
+        platform: postgresql
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        show-sql: true
+        generate-ddl: true
+        hibernate:
+            ddl-auto: create

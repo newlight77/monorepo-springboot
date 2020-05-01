@@ -7,8 +7,10 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "company")
 data class CompanyEntity(
-        @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-        @SequenceGenerator(name = "sequenceGenerator")
+//        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+//        @SequenceGenerator(name = "sequenceGenerator")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Id
         var id: Long,
 
         @Column(name = "raison_social", length = 50)

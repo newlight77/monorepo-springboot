@@ -2,6 +2,7 @@ package io.tricefal.core.login
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.tricefal.core.account.entity.AuthorityEntity
+import io.tricefal.core.login.LoginDomain
 import org.hibernate.annotations.BatchSize
 import java.time.Instant
 import java.util.*
@@ -11,11 +12,13 @@ import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 @Entity
-@Table(name = "login_detail")
+@Table(name = "login")
 data class LoginEntity(
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-        @SequenceGenerator(name = "sequenceGenerator")
-        @Id val id: Long,
+//        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+//        @SequenceGenerator(name = "sequenceGenerator")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Id
+        val id: Long,
 
         @NotNull
         @Pattern(regexp = EMAIL_REGEX)
