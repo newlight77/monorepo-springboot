@@ -7,11 +7,12 @@ plugins {
 	kotlin("jvm")
 	kotlin("plugin.spring") version "1.3.70"
 	kotlin("plugin.jpa") version "1.3.70"
+	jacoco
 }
 
 group = "io.tricefal"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()
@@ -54,9 +55,11 @@ dependencies {
 		exclude("junit", "junit")
 	}
 
-	testImplementation("io.cucumber:cucumber-java:5.6.0")
-	testImplementation("io.cucumber:cucumber-junit:5.6.0")
+	testImplementation("io.cucumber:cucumber-java8:5.6.0")
+	testImplementation("io.cucumber:cucumber-junit-platform-engine:5.6.0")
 	testImplementation("io.cucumber:cucumber-spring:5.6.0")
+	testImplementation("com.github.cukedoctor:cukedoctor-converter:1.2.1")
+
 	testImplementation("io.rest-assured:rest-assured:4.3.0") {
 		exclude("com.sun.xml.bind", "jaxb-osgi")
 //		exclude("org.codehaus.groovy", "groovy")
@@ -84,10 +87,63 @@ tasks.withType<Test> {
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "11"
+		jvmTarget = "1.8"
 	}
 }
 
 tasks.withType<Jar>() {
     baseName = "core-application"
+}
+
+
+tasks.jacocoTestReport {
+	reports {
+		xml.isEnabled = false
+		csv.isEnabled = false
+		html.isEnabled = true
+		html.destination = file("$buildDir/jacocoHtml")
+	}
+}
+
+tasks.jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = "0.5".toBigDecimal()
+			}
+		}
+
+		rule {
+			enabled = false
+			element = "CLASS"
+			includes = listOf("io.tricefal.*")
+
+			limit {
+				counter = "LINE"
+				value = "TOTALCOUNT"
+				maximum = "0.3".toBigDecimal()
+			}
+		}
+	}
+	classDirectories.setFrom(
+			sourceSets.main.get().output.asFileTree.matching {
+				// exclude main()
+				exclude("io/tricefal/core/TricefalApplicationKt.class")
+			}
+	)
+}
+
+val testCoverage by tasks.registering {
+	group = "verification"
+	description = "Runs the unit tests with coverage."
+
+	dependsOn(":test", ":jacocoTestReport", ":jacocoTestCoverageVerification")
+	val jacocoTestReport = tasks.findByName("jacocoTestReport")
+	jacocoTestReport?.mustRunAfter(tasks.findByName("test"))
+	tasks.findByName("jacocoTestCoverageVerification")?.mustRunAfter(jacocoTestReport)
+}
+
+jacoco {
+	toolVersion = "0.8.5"
+	reportsDir = file("$buildDir/jacoco")
 }
