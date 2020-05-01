@@ -23,48 +23,35 @@ data class LoginEntity(
         @NotNull
         @Pattern(regexp = EMAIL_REGEX)
         @Size(min = 10, max = 50)
-        @Column(name = "expiration_date", length = 50, unique = true, nullable = false)
+        @Column(name = "username", length = 50)
         var username: String,
 
         @Column(name = "last_login")
         var lastLogin: Instant,
 
-        @Column(name = "ip_address")
+        @Column(name = "ip_address", length = 30)
         var ipAddress: String,
 
         @Column(name = "success")
         var success: Boolean
-) {
-
-        @JsonIgnore
-        @ManyToMany
-        @JoinTable(name = "jhi_user_authority",
-                joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-                inverseJoinColumns = [JoinColumn(name = "authority_name", referencedColumnName = "name")])
-        @BatchSize(size = 20)
-        var authorities: Set<AuthorityEntity> = HashSet<AuthorityEntity>()
-}
+)
 
 fun toEntity(domain: LoginDomain): LoginEntity {
-        var entity = LoginEntity(
+        return LoginEntity(
                 domain.id,
                 domain.username,
                 domain.lastLogin,
                 domain.ipAddress,
                 domain.success
         )
-        entity.authorities = domain.authorities.map { AuthorityEntity(it) }.toSet()
-        return entity
 }
 
 fun fromEntity(entity: LoginEntity): LoginDomain {
-        entity.authorities
         return LoginDomain(
                 entity.id,
                 entity.username,
                 entity.lastLogin,
                 entity.ipAddress,
-                entity.success,
-                entity.authorities.map { it.name }.toSet()
-        );
+                entity.success
+        )
 }

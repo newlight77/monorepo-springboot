@@ -1,0 +1,24 @@
+server:
+    port: 9080
+    servlet:
+        context-path: /api
+
+security:
+    basic:
+        enabled: false
+
+#    jwt:
+#        key-store: classpath:keystore.jks
+#        key-store-password: letmein
+#        key-pair-alias: mytestkey
+#        key-pair-password: changeme
+
+spring:
+    datasource:
+        url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+        username: sa
+        password: sa
+        driver-class-name: org.h2.Driver
+    jpa:
+        show-sql: true
+

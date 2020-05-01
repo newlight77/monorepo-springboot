@@ -51,11 +51,29 @@ dependencies {
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+		exclude("junit", "junit")
 	}
 
 	testImplementation("io.cucumber:cucumber-java:5.6.0")
 	testImplementation("io.cucumber:cucumber-junit:5.6.0")
 	testImplementation("io.cucumber:cucumber-spring:5.6.0")
+	testImplementation("io.rest-assured:rest-assured:4.3.0") {
+		exclude("com.sun.xml.bind", "jaxb-osgi")
+//		exclude("org.codehaus.groovy", "groovy")
+	}
+	testImplementation("io.rest-assured:json-path:4.3.0")
+	testImplementation("io.rest-assured:xml-path:4.3.0")
+//	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
+//	testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")
+//	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+
+
+
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.2.5.RELEASE")
+	testImplementation("com.h2database:h2")
+	runtime("org.postgresql:postgresql")
+
+//	compile("org.liquibase:liquibase-core:3.8.9")
 
 }
 

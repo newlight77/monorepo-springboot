@@ -25,8 +25,8 @@ class NoteServiceAdapter(private var service: INotesService<NoteDomain, Long>) :
         return service.findById(id).map { toModel(it) }
     }
 
-    override fun findByUser(user: String): List<NoteModel> {
-        return service.findByUser(user).map { toModel(it) }
+    override fun findByAuthor(author: String): List<NoteModel> {
+        return service.findByAuthor(author).map { toModel(it) }
     }
 
     override fun findByTitle(title: String): List<NoteModel> {

@@ -32,11 +32,6 @@ dependencies {
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
 
-	testImplementation("com.h2database:h2")
-	runtime("org.postgresql:postgresql")
-
-//	compile("org.liquibase:liquibase-core:3.8.9")
-
 }
 
 tasks.withType<Test> {
