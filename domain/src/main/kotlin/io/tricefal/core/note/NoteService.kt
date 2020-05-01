@@ -8,7 +8,7 @@ interface INotesService<T, U> {
     fun delete(id: U)
     fun findAll(): List<T>
     fun findById(id: U): Optional<T>
-    fun findByUser(user: String): List<T>
+    fun findByAuthor(author: String): List<T>
     fun findByTitle(title: String): List<T>
 }
 
@@ -33,7 +33,7 @@ class NoteService(private var noteRepository: NotesRepository<NoteDomain, Long>)
         return noteRepository.findById(id)
     }
 
-    override fun findByUser(author: String): List<NoteDomain> {
+    override fun findByAuthor(author: String): List<NoteDomain> {
         return noteRepository.findByAuthor(author)
     }
 
