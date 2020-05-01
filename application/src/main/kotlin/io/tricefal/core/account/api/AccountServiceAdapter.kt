@@ -9,12 +9,12 @@ import java.util.*
 
 @Service
 class AccountServiceAdapter(val accounService: IAccountService<AccountDomain, Long>) : IAccountService<AccountModel, Long> {
-    override fun create(model: AccountModel) {
-        accounService.create(toDomain(model))
+    override fun create(account: AccountModel) {
+        accounService.create(toDomain(account))
     }
 
-    override fun update(domain: AccountModel) {
-        accounService.update(toDomain(domain))
+    override fun update(account: AccountModel) {
+        accounService.update(toDomain(account))
     }
 
     override fun delete(id: Long) {

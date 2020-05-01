@@ -34,7 +34,7 @@ class JwtAuthorizationFilter(val oktaJwtVerifier: OktaJwtVerifier) : OncePerRequ
 
         val claims = extractClaims(jwtToken)
 
-        if (claims?.get("authorities") != null) {
+        if (claims["authorities"] != null) {
             setUpSpringAuthentication(claims)
         } else {
             SecurityContextHolder.clearContext()
