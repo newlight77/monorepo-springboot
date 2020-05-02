@@ -89,7 +89,7 @@ dependencies {
 	testImplementation("com.h2database:h2")
 	runtime("org.postgresql:postgresql")
 
-//	compile("org.liquibase:liquibase-core:3.8.9")
+	compile("org.liquibase:liquibase-core:3.8.9")
 
 }
 
