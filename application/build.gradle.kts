@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jmailen.gradle.kotlinter.tasks.LintTask
+//import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
-	application
+//	application
 	idea
 	`java-library`
 	id("org.springframework.boot") version "2.2.5.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
-	id("org.jmailen.kotlinter") version "2.3.2"
-	id("com.diffplug.gradle.spotless") version "3.27.2"
+//	id("org.jmailen.kotlinter") version "2.3.2"
+//	id("com.diffplug.gradle.spotless") version "3.27.2"
 	kotlin("jvm")
 	kotlin("plugin.spring") version "1.3.70"
 	kotlin("plugin.jpa") version "1.3.70"
@@ -232,45 +232,32 @@ jacoco {
 	reportsDir = file("$buildDir/jacoco")
 }
 
-spotless {
-	kotlin {
-		ktlint()
-	}
-	kotlinGradle {
-		target(fileTree(projectDir).apply {
-			include("*.gradle.kts")
-		} + fileTree("src").apply {
-			include("**/*.gradle.kts")
-		})
-		ktlint()
-	}
-}
+//spotless {
+//	kotlin {
+//		ktlint()
+//	}
+//	kotlinGradle {
+//		target(fileTree(projectDir).apply {
+//			include("*.gradle.kts")
+//		} + fileTree("src").apply {
+//			include("**/*.gradle.kts")
+//		})
+//		ktlint()
+//	}
+//}
 
-kotlinter {
-	ignoreFailures = false
-	indentSize = 4
-	reporters = arrayOf("checkstyle", "plain")
-	experimentalRules = false
-	disabledRules = emptyArray<String>()
-	fileBatchSize = 30
-}
+//kotlinter {
+//	ignoreFailures = false
+//	indentSize = 4
+//	reporters = arrayOf("checkstyle", "plain")
+//	experimentalRules = false
+//	disabledRules = emptyArray<String>()
+//	fileBatchSize = 30
+//}
 
 // custom linting
-tasks {
-	"lintKotlinMain"(LintTask::class) {
-		exclude("**/*Generated.kt")
-	}
-}
-
-//sonarqube.properties["sonar.host.url"] = "http://localhost:9000"
-//sonarqube.properties["sonar.projectName"] = "tricefal-core"
-//sonarqube.properties["sonar.language"] = "kotlin"
-//sonarqube.properties["sonar.login"] = "admin"
-//sonarqube.properties["sonar.passwrod"] = "admin"
-
-//sonarqube {
-//	properties {
-//		property "detekt.sonar.kotlin.config.path", "$project.rootDir/detekt.yml"
-//		property "detekt.sonar.kotlin.filters", ".*/test/.*,.*/resources/.*,.*/build/.*,.*/target/.*"
+//tasks {
+//	"lintKotlinMain"(LintTask::class) {
+//		exclude("**/*Generated.kt")
 //	}
 //}
