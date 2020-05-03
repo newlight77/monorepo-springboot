@@ -1,6 +1,7 @@
 package io.tricefal.core.security
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -11,6 +12,10 @@ import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.security.web.csrf.CsrfTokenRepository
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
 import org.springframework.security.web.util.matcher.RequestMatcher
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 
 
 @EnableWebSecurity
@@ -24,6 +29,11 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
         //@formatter:off
         http
+            .cors()
+            .configurationSource {
+                CorsConfiguration().applyPermitDefaultValues()
+            }
+            .and()
             .authorizeRequests().anyRequest().authenticated()
                 .and()
             .oauth2Login()
@@ -36,7 +46,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
             }).requiresSecure()
 
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-        http.addFilterAfter(CsrfHeaderFilter(), CsrfFilter::class.java)
+        http.addFilterAfter(CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter::class.java)
         http.addFilterAfter(JwtAuthorizationFilter(oktaJwtVerifier), UsernamePasswordAuthenticationFilter::class.java)
 
         //@formatter:on
