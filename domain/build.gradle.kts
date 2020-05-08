@@ -7,7 +7,7 @@ plugins {
 
 group = "io.tricefal"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+
 
 repositories {
 	mavenCentral()
@@ -23,15 +23,4 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")
 	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-}
-
-tasks.withType<Test> {
-	useJUnitPlatform()
-}
-
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "11"
-	}
 }
