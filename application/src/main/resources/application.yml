@@ -27,3 +27,26 @@ spring:
         generate-ddl: true
         hibernate:
             ddl-auto: update
+#    liquibase:
+#        change-log=classpath: db/changelog/db.changelog-master.xml
+
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 10MB
+            max-request-size: 10MB
+
+#javax:
+#    persistence:
+#        schema-generation:
+#            scripts:
+#                create-target: schema.sql
+
+logging:
+#    config: classpath:logback-spring.xml
+    file: core.log
+
+data:
+    files:
+        path: /data/files/resumes
