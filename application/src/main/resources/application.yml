@@ -23,10 +23,10 @@ spring:
         platform: postgresql
         driver-class-name: org.postgresql.Driver
     jpa:
-        show-sql: true
-        generate-ddl: true
+        show-sql: ${JPA_SHOW_SQL}
+        generate-ddl: ${JPA_GENERATE_DDL}
         hibernate:
-            ddl-auto: update
+            ddl-auto: ${HIBERNATE_DDL_AUTO}
 #    liquibase:
 #        change-log=classpath: db/changelog/db.changelog-master.xml
 
@@ -43,10 +43,12 @@ spring:
 #            scripts:
 #                create-target: schema.sql
 
+data:
+    files:
+        path: ${DATA_FILES_PATH}
+
+
 logging:
 #    config: classpath:logback-spring.xml
     file: core.log
-
-data:
-    files:
-        path: /data/files/resumes
+    path: ${DATA_LOGS_PATH}

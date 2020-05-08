@@ -21,6 +21,12 @@ spring:
         driver-class-name: org.h2.Driver
     jpa:
         show-sql: true
+        generate-ddl: true
+        hibernate:
+            ddl-auto: create-drop
+data:
+    files:
+        path: /tmp/data/files
 
 logging:
     level:
@@ -30,3 +36,5 @@ logging:
         io.tricefal.core: DEBUG
     pattern:
         console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    file: core.log
+    path: /tmp/data/logs
