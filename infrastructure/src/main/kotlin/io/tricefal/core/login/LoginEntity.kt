@@ -1,11 +1,6 @@
 package io.tricefal.core.login
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import io.tricefal.core.account.entity.AuthorityEntity
-import io.tricefal.core.login.LoginDomain
-import org.hibernate.annotations.BatchSize
 import java.time.Instant
-import java.util.*
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern

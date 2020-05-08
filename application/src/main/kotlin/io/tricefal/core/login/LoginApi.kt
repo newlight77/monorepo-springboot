@@ -12,7 +12,7 @@ class LoginApi(val loginService: ILoginService<LoginModel, Long>) {
     }
 
     @GetMapping("")
-    fun find(@RequestParam username: String) {
-        loginService.findByUsername(username)
+    fun find(@RequestParam username: String) : List<LoginModel>{
+        return loginService.findByUsername(username)
     }
 }

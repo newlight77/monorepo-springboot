@@ -1,10 +1,10 @@
 package io.tricefal.core.login
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
@@ -41,5 +41,24 @@ class LoginApiTest {
         // Arrange
         Mockito.verify(repository).save(loginEntity)
 
+    }
+
+    @Test
+    fun `should retrieve last logins by username`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val login1 = LoginModel(1, username, Instant.now(), "ip", true)
+        val login2 = LoginModel(1, username, Instant.now(), "ip", true)
+        val login3 = LoginModel(1, username, Instant.now(), "ip", true)
+
+        val logins = arrayListOf(login1, login2, login3, login3)
+
+        Mockito.`when`(repository.findByUsername(username)).thenReturn(logins.map { toEntity(fromModel(it)) })
+
+        // Act
+        val result = service.findByUsername(username)
+
+        // Arrange
+        Assertions.assertArrayEquals(logins.toArray(), result.toTypedArray())
     }
 }
