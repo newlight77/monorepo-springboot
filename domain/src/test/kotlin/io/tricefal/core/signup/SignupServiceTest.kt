@@ -26,8 +26,14 @@ class SignupServiceTest {
     @Test
     fun `should do a signup`() {
         // Arrange
-        val signup = SignupDomain( 0, "kong@gmail.com", "kong", "to",
-                "1234567890", Instant.now(), "123456", Status.FREELANCE)
+        val signup = SignupDomain.Builder("kong@gmail.com")
+                .firstname("kong")
+                .lastname("to")
+                .phoneNumber("1234567890")
+                .signupDate(Instant.now())
+                .activationCode("123456")
+                .status(Status.FREELANCE)
+                .build()
 
         Mockito.doNothing().`when`(repository).save(signup)
 
@@ -43,9 +49,15 @@ class SignupServiceTest {
     @Test
     fun `should find a signup by username`() {
         // Arrange
-        val username ="kong@gmail.com"
-        val signup = SignupDomain( 0, username, "kong", "to",
-                "1234567890", Instant.now(), "123456", Status.FREELANCE)
+        val username = "kong@gmail.com"
+        val signup = SignupDomain.Builder(username)
+                .firstname("kong")
+                .lastname("to")
+                .phoneNumber("1234567890")
+                .signupDate(Instant.now())
+                .activationCode("123456")
+                .status(Status.FREELANCE)
+                .build()
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signup))
 
@@ -61,11 +73,24 @@ class SignupServiceTest {
     @Test
     fun `should update the signup status`() {
         // Arrange
-        val username ="kong@gmail.com"
-        val signup = SignupDomain( 0, username, "kong", "to",
-                "1234567890", Instant.now(), "123456", Status.FREELANCE)
-        val expected = SignupDomain( 0, username, "kong", "to",
-                "1234567890", signup.signupDate, "123456", Status.EMPLOYEE)
+        val username = "kong@gmail.com"
+        val signup = SignupDomain.Builder(username)
+                .firstname("kong")
+                .lastname("to")
+                .phoneNumber("1234567890")
+                .signupDate(Instant.now())
+                .activationCode("123456")
+                .status(Status.FREELANCE)
+                .build()
+
+        val expected = SignupDomain.Builder(username)
+                .firstname("kong")
+                .lastname("to")
+                .phoneNumber("1234567890")
+                .signupDate(signup.signupDate)
+                .activationCode("123456")
+                .status(Status.EMPLOYEE)
+                .build()
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signup))
         Mockito.doNothing().`when`(repository).update(expected)

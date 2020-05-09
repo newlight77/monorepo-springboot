@@ -13,7 +13,7 @@ const val EMAIL_REGEX = " ^[\\\\w!#\$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#\$%&’*
 data class SignupEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        val id: Long,
+        val id: Long? = null,
 
         @NotNull
         @Pattern(regexp = EMAIL_REGEX)
@@ -22,19 +22,19 @@ data class SignupEntity(
         var username: String,
 
         @Column(name = "firstname", length = 50)
-        var firstname: String,
+        var firstname: String? = null,
 
         @Column(name = "lastname", length = 50)
-        var lastname: String,
+        var lastname: String? = null,
 
         @Column(name = "phone", length = 50)
-        var phoneNumber: String,
+        var phoneNumber: String? = null,
 
         @Column(name = "signup_date")
-        var signupDate: Instant,
+        var signupDate: Instant? = null,
 
         @Column(name = "activation_code")
-        var activationCode: String,
+        var activationCode: String? = null,
 
         @Column(name = "status", length = 50)
         var status: String
@@ -42,28 +42,26 @@ data class SignupEntity(
 
 fun toEntity(domain: SignupDomain): SignupEntity {
         return SignupEntity(
-                domain.id,
+                null,
                 domain.username,
                 domain.firstname,
                 domain.lastname,
                 domain.phoneNumber,
                 domain.signupDate,
 
-                domain.activationcode,
+                domain.activationCode,
                 domain.status.toString()
         )
 }
 
 fun fromEntity(entity: SignupEntity): SignupDomain {
-        return SignupDomain(
-                entity.id,
-                entity.username,
-                entity.firstname,
-                entity.lastname,
-                entity.phoneNumber,
-                entity.signupDate,
+        return SignupDomain.Builder(entity.username)
+                .firstname(entity.firstname)
+                .lastname(entity.lastname)
+                .phoneNumber(entity.phoneNumber)
+                .signupDate(entity.signupDate)
+                .activationCode(entity.activationCode)
+                .status(Status.valueOf(entity.status))
+                .build()
 
-                entity.activationCode,
-                Status.valueOf(entity.status)
-        )
 }

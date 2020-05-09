@@ -1,7 +1,6 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
-import java.io.InputStream
 import java.util.*
 
 class SignupService(private var repository: ISignupRepository) : ISignupService {

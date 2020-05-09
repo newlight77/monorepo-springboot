@@ -29,9 +29,15 @@ class SignupApiTest {
     @Test
     fun `should do a signup`() {
         // Arrange
-        val signup = SignupModel( "kong@gmail.com", "password", "kong", "to", "1234567890", Instant.now())
-        signup.activationCode = "123455"
-        signup.status = Status.FREELANCE
+        val signup = SignupModel.Builder("kong@gmail.com")
+                .password("password")
+                .firstname("kong")
+                .lastname("to")
+                .phoneNumber("1234567890")
+                .signupDate(Instant.now())
+                .activationCode("123456")
+                .status(Status.FREELANCE)
+                .build()
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.doNothing().`when`(repository).save(signupEntity)
@@ -46,9 +52,26 @@ class SignupApiTest {
     @Test
     fun `should find a signup by username`() {
         // Arrange
-        val username ="kong@gmail.com"
-        val signup = SignupModel( username, "password", "kong", "to",
-                "1234567890", Instant.now(), "123456", Status.FREELANCE)
+        val username = "kong@gmail.com"
+        val signup = SignupModel.Builder(username)
+                .password("password")
+                .firstname("kong")
+                .lastname("to")
+                .phoneNumber("1234567890")
+                .signupDate(Instant.now())
+                .activationCode("123456")
+                .status(Status.FREELANCE)
+                .build()
+
+        val expected = SignupModel.Builder(username)
+                .password("")
+                .firstname("kong")
+                .lastname("to")
+                .phoneNumber("1234567890")
+                .signupDate(signup.signupDate)
+                .activationCode("123456")
+                .status(Status.FREELANCE)
+                .build()
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
@@ -57,19 +80,26 @@ class SignupApiTest {
         val result = service.findByUsername(username)
 
         // Arrange
-        val expected = SignupModel( username, "", "kong", "to",
-                "1234567890", signup.signupDate, "123456", Status.FREELANCE)
         Assertions.assertTrue(result.isPresent)
-        Assertions.assertEquals(expected, result.get())
+        Assertions.assertEquals(expected.username, result.get().username)
+        Assertions.assertEquals(null, result.get().password)
     }
 
     @Test
     fun `should update the signup status`() {
         // Arrange
         val username ="kong@gmail.com"
-        val signup = SignupModel( username, "password", "kong", "to",
-                "1234567890", Instant.now(), "123456", Status.FREELANCE)
-        val expected = SignupEntity( 0, username, "kong", "to",
+        val signup = SignupModel.Builder(username)
+                .password("password")
+                .firstname("kong")
+                .lastname("to")
+                .phoneNumber("1234567890")
+                .signupDate(Instant.now())
+                .activationCode("123456")
+                .status(Status.FREELANCE)
+                .build()
+
+        val expected = SignupEntity( null, username, "kong", "to",
                 "1234567890", signup.signupDate, "123456", Status.EMPLOYEE.toString())
 
         val signupEntity = toEntity(fromModel(signup))
