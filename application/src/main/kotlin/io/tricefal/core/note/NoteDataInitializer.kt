@@ -18,14 +18,6 @@ class NoteDataInitializer(val service: INotesService<NoteModel, Long>) : Applica
 
 fun modelData(): List<NoteModel> {
     return listOf(
-            NoteModel(title = "Note 1", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user"),
-            NoteModel(title = "Note 2", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user"),
-            NoteModel(title = "Note 3", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user"),
-            NoteModel(title = "Note 4", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user"),
-            NoteModel(title = "Note 5", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user"),
-            NoteModel(title = "Note 6", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user"),
-            NoteModel(title = "Note 7", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user"),
-            NoteModel(title = "Note 8", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user"),
-            NoteModel(title = "Note 9", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user")
+            NoteModel(title = "Note 1", text = "Some text to enable scrolling.. Lorem ipsum dolor sit amet", author = "user")
     )
 }

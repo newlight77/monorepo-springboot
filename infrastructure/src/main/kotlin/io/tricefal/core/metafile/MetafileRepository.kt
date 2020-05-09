@@ -19,25 +19,19 @@ class MetafileRepository(val repository: MetafileJpaRepository) {
     }
 
     fun findById(id: Long): Optional<MetafileDomain> {
-        println("findById $id")
         return repository.findById(id).map {
-            println("map : $id")
             fromEntity(it)
         }
     }
 
     fun findByFilename(filename: String): List<MetafileDomain> {
-        println("findByUsername$filename")
         return repository.findByFilename(filename).map {
-            println("map : $filename")
             fromEntity(it)
         }
     }
 
     fun findByUsername(username: String): List<MetafileDomain> {
-        println("findByUsername$username")
         return repository.findByUsername(username).map {
-            println("map : $username")
             fromEntity(it)
         }
     }
