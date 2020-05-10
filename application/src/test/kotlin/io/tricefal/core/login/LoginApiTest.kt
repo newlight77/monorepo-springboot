@@ -23,7 +23,7 @@ import java.time.Instant
 //@EnableAutoConfiguration
 class LoginApiTest {
     @Autowired
-    lateinit var service: ILoginService<LoginModel, Long>
+    lateinit var service: LoginWebHandler
 
     @MockBean
     lateinit var repository: LoginJpaRepository
@@ -31,12 +31,12 @@ class LoginApiTest {
     @Test
     fun `should create a login successfully`() {
         // Arrange
-        val login = LoginModel(1, "kong@gmail.com", Instant.now(), "ip", true)
+        val login = LoginModel("kong@gmail.com", Instant.now(), "ip","firefox on Iphone11", true)
         val loginEntity = toEntity(fromModel(login))
         Mockito.doNothing().`when`(repository).save(loginEntity)
 
         // Act
-        service.create(login)
+        service.login(login)
 
         // Arrange
         Mockito.verify(repository).save(loginEntity)
@@ -47,11 +47,11 @@ class LoginApiTest {
     fun `should retrieve last logins by username`() {
         // Arrange
         val username = "kong@gmail.com"
-        val login1 = LoginModel(1, username, Instant.now(), "ip", true)
-        val login2 = LoginModel(1, username, Instant.now(), "ip", true)
-        val login3 = LoginModel(1, username, Instant.now(), "ip", true)
+        val login1 = LoginModel(username, Instant.now(), "ip", "firefox", true)
+        val login2 = LoginModel(username, Instant.now(), "ip", "firefox", true)
+        val login3 = LoginModel(username, Instant.now(), "ip", "firefox", true)
 
-        val logins = arrayListOf(login1, login2, login3, login3)
+        val logins = arrayListOf(login1, login2, login3)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(logins.map { toEntity(fromModel(it)) })
 

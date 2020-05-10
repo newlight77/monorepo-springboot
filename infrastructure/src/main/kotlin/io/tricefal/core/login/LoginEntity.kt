@@ -13,7 +13,7 @@ data class LoginEntity(
 //        @SequenceGenerator(name = "sequenceGenerator")
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        val id: Long,
+        val id: Long?,
 
         @NotNull
         @Pattern(regexp = EMAIL_REGEX)
@@ -21,11 +21,14 @@ data class LoginEntity(
         @Column(name = "username", length = 50)
         var username: String,
 
-        @Column(name = "last_login")
-        var lastLogin: Instant,
+        @Column(name = "login_date")
+        var loginDate: Instant,
 
         @Column(name = "ip_address", length = 30)
         var ipAddress: String,
+
+        @Column(name = "device", length = 100)
+        val device: String,
 
         @Column(name = "success")
         var success: Boolean
@@ -33,20 +36,21 @@ data class LoginEntity(
 
 fun toEntity(domain: LoginDomain): LoginEntity {
         return LoginEntity(
-                domain.id,
+                null,
                 domain.username,
-                domain.lastLogin,
+                domain.loginDate,
                 domain.ipAddress,
+                domain.device,
                 domain.success
         )
 }
 
 fun fromEntity(entity: LoginEntity): LoginDomain {
         return LoginDomain(
-                entity.id,
                 entity.username,
-                entity.lastLogin,
+                entity.loginDate,
                 entity.ipAddress,
+                entity.device,
                 entity.success
         )
 }

@@ -13,14 +13,14 @@ import java.time.Instant
 class LoginServiceTest {
 
     @Mock
-    lateinit var repository: ILoginRepository<LoginDomain, Long>
+    lateinit var repository: ILoginRepository
 
-    lateinit var service: ILoginService<LoginDomain, Long>
+    lateinit var service: ILoginService
 
     @Test
     fun `should create a login successfully`() {
         // Arrange
-        val login = LoginDomain(1, "kong@gmail.com", Instant.now(), "ip", true)
+        val login = LoginDomain("kong@gmail.com", Instant.now(), "ip", "firefox", true)
         Mockito.doNothing().`when`(repository).save(login)
         service = LoginService(repository)
 
@@ -35,9 +35,9 @@ class LoginServiceTest {
     fun `should retrieve last logins by username`() {
         // Arrange
         val username = "kong@gmail.com"
-        val login1 = LoginDomain(1, username, Instant.now(), "ip", true)
-        val login2 = LoginDomain(1, username, Instant.now(), "ip", true)
-        val login3 = LoginDomain(1, username, Instant.now(), "ip", true)
+        val login1 = LoginDomain(username, Instant.now(), "ip", "firefox", true)
+        val login2 = LoginDomain(username, Instant.now(), "ip", "firefox", true)
+        val login3 = LoginDomain(username, Instant.now(), "ip", "firefox",true)
 
         val logins = arrayListOf(login1, login2, login3, login3)
 

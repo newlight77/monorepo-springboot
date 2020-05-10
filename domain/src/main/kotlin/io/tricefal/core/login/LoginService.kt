@@ -1,6 +1,6 @@
 package io.tricefal.core.login
 
-class LoginService(private var repository: ILoginRepository<LoginDomain, Long>) : ILoginService<LoginDomain, Long> {
+class LoginService(private var repository: ILoginRepository) : ILoginService {
     override fun create(login: LoginDomain) {
         repository.save(login)
     }

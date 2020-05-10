@@ -1,18 +1,20 @@
 package io.tricefal.core.login
 
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("login")
-class LoginApi(val loginService: ILoginService<LoginModel, Long>) {
+@RequestMapping("logins")
+class LoginApi(val loginHandler: LoginWebHandler) {
 
     @PostMapping("")
-    fun create(@RequestBody login: LoginModel) {
-        loginService.create(login)
+    fun login(@RequestBody login: LoginModel) {
+        loginHandler.login(login)
     }
 
     @GetMapping("")
-    fun find(@RequestParam username: String) : List<LoginModel>{
-        return loginService.findByUsername(username)
+    fun list() : List<LoginModel>{
+        val username: String =  SecurityContextHolder.getContext().getAuthentication().name
+        return loginHandler.findByUsername(username)
     }
 }

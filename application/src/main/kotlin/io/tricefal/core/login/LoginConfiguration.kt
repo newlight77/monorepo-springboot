@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 class LoginConfiguration {
 
     @Bean("loginService")
-    fun loginService(loginRepository: ILoginRepository<LoginDomain, Long>): ILoginService<LoginDomain, Long> {
+    fun loginService(loginRepository: ILoginRepository): ILoginService {
         return LoginService(loginRepository)
     }
 }

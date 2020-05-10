@@ -1,6 +1,6 @@
 package io.tricefal.core.login
 
-interface ILoginService<T, U> {
-    fun create(login: T)
-    fun findByUsername(username: String): List<T>
+interface ILoginService {
+    fun create(login: LoginDomain)
+    fun findByUsername(username: String): List<LoginDomain>
 }
