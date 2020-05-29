@@ -1,4 +1,3 @@
-//import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
 //	application
@@ -6,9 +5,6 @@ plugins {
 	`java-library`
 	id("org.springframework.boot") version "2.2.5.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
-//	id("org.jmailen.kotlinter") version "2.3.2"
-//	id("com.diffplug.gradle.spotless") version "3.27.2"
-	id("com.adarshr.test-logger") //version ("2.0.0")
 	kotlin("jvm")
 	kotlin("plugin.spring") version "1.3.70"
 	kotlin("plugin.jpa") version "1.3.70"
@@ -105,44 +101,9 @@ testlogger {
 	showStackTraces = true
 	showFullStackTraces = true
 	showCauses = true
-	slowThreshold = 2000
 	showSummary = true
-	showSimpleNames = false
-	showPassed = true
-	showSkipped = true
-	showFailed = true
 	showStandardStreams = false
 	showPassedStandardStreams = true
 	showSkippedStandardStreams = true
 	showFailedStandardStreams = true
 }
-
-//spotless {
-//	kotlin {
-//		ktlint()
-//	}
-//	kotlinGradle {
-//		target(fileTree(projectDir).apply {
-//			include("*.gradle.kts")
-//		} + fileTree("src").apply {
-//			include("**/*.gradle.kts")
-//		})
-//		ktlint()
-//	}
-//}
-
-//kotlinter {
-//	ignoreFailures = false
-//	indentSize = 4
-//	reporters = arrayOf("checkstyle", "plain")
-//	experimentalRules = false
-//	disabledRules = emptyArray<String>()
-//	fileBatchSize = 30
-//}
-
-// custom linting
-//tasks {
-//	"lintKotlinMain"(LintTask::class) {
-//		exclude("**/*Generated.kt")
-//	}
-//}

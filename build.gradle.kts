@@ -1,10 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+//import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
 	kotlin("jvm")
 	id("com.adarshr.test-logger") version ("2.0.0")
+//	id("org.jmailen.kotlinter") version "2.3.2"
+//	id("com.diffplug.gradle.spotless") version "3.27.2"
 	checkstyle
 	jacoco
 }
@@ -22,6 +25,9 @@ subprojects {
 	apply { plugin("jacoco") }
 	apply { plugin("checkstyle") }
 	apply { plugin("com.adarshr.test-logger") }
+//	apply { plugin("org.jmailen.kotlinter") }
+//	apply { plugin("com.diffplug.gradle.spotless") }
+
 
 	java {
 		sourceCompatibility = JavaVersion.VERSION_11
@@ -42,21 +48,13 @@ subprojects {
 
 	tasks.withType<Test> {
 		useJUnitPlatform()
-		testLogging {
-			events = mutableSetOf(org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED, org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED, org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED)
-			exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-			showExceptions = true
-			showCauses = true
-			showStackTraces = true
-			showStandardStreams = true
-		}
-
-		val failedTests = mutableListOf<TestDescriptor>()
-		val skippedTests = mutableListOf<TestDescriptor>()
 
 		// See https://technology.lastminute.com/junit5-kotlin-and-gradle-dsl/
 		// See https://github.com/gradle/kotlin-dsl/issues/836
 		addTestListener(object : TestListener {
+			val failedTests = mutableListOf<TestDescriptor>()
+			val skippedTests = mutableListOf<TestDescriptor>()
+
 			override fun beforeSuite(suite: TestDescriptor) {}
 			override fun beforeTest(testDescriptor: TestDescriptor) {}
 			override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {
@@ -155,6 +153,29 @@ subprojects {
 		jacocoTestReport?.mustRunAfter(tasks.findByName("test"))
 		tasks.findByName("jacocoTestCoverageVerification")?.mustRunAfter(jacocoTestReport)
 	}
+
+//	spotless {
+//		kotlin {
+//			ktlint()
+//		}
+//		kotlinGradle {
+//			target(fileTree(projectDir).apply {
+//				include("*.gradle.kts")
+//			} + fileTree("src").apply {
+//				include("**/*.gradle.kts")
+//			})
+//			ktlint()
+//		}
+//	}
+
+//	kotlinter {
+//		ignoreFailures = false
+//		indentSize = 4
+//		reporters = arrayOf("checkstyle", "plain")
+//		experimentalRules = false
+//		disabledRules = emptyArray<String>()
+//		fileBatchSize = 30
+//	}
 
 }
 
