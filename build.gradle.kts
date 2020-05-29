@@ -1,8 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
 	kotlin("jvm")
 	id("com.adarshr.test-logger") version ("2.0.0")
+	checkstyle
+	jacoco
 }
 
 group = "io.tricefal"
@@ -15,6 +19,8 @@ repositories {
 subprojects {
 
 	apply { plugin("java") }
+	apply { plugin("jacoco") }
+	apply { plugin("checkstyle") }
 	apply { plugin("com.adarshr.test-logger") }
 
 	java {
@@ -94,4 +100,67 @@ subprojects {
 	testlogger {
 		theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
 	}
+
+	tasks.checkstyleMain { group = "verification" }
+	tasks.checkstyleTest { group = "verification" }
+
+	tasks.jacocoTestReport {
+		reports {
+			xml.isEnabled = false
+			csv.isEnabled = false
+			html.isEnabled = true
+			html.destination = file("$buildDir/jacocoHtml")
+		}
+	}
+
+	tasks.jacocoTestCoverageVerification {
+		violationRules {
+			rule {
+				limit {
+					minimum = "0.5".toBigDecimal()
+				}
+			}
+
+			rule {
+				enabled = false
+				element = "CLASS"
+				includes = listOf("io.tricefal.*")
+
+				limit {
+					counter = "LINE"
+					value = "TOTALCOUNT"
+					maximum = "0.3".toBigDecimal()
+				}
+			}
+		}
+		classDirectories.setFrom(
+				sourceSets.main.get().output.asFileTree.matching {
+					// exclude main()
+					exclude("io/tricefal/core/TricefalApplicationKt.class")
+				}
+		)
+	}
+
+	jacoco {
+		toolVersion = "0.8.5"
+		reportsDir = file("$buildDir/jacoco")
+	}
+
+	val testCoverage by tasks.registering {
+		group = "verification"
+		description = "Runs the unit tests with coverage."
+
+		dependsOn(":test", ":jacocoTestReport", ":jacocoTestCoverageVerification")
+		val jacocoTestReport = tasks.findByName("jacocoTestReport")
+		jacocoTestReport?.mustRunAfter(tasks.findByName("test"))
+		tasks.findByName("jacocoTestCoverageVerification")?.mustRunAfter(jacocoTestReport)
+	}
+
 }
+
+
+
+
+
+
+
