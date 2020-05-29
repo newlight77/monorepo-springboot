@@ -11,6 +11,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
 //	id("org.jmailen.kotlinter") version "2.3.2"
 //	id("com.diffplug.gradle.spotless") version "3.27.2"
+	id("com.adarshr.test-logger") //version ("2.0.0")
 	kotlin("jvm")
 	kotlin("plugin.spring") version "1.3.70"
 	kotlin("plugin.jpa") version "1.3.70"
@@ -73,23 +74,25 @@ dependencies {
 	testImplementation("io.cucumber:cucumber-spring:5.6.0")
 	testImplementation("com.github.cukedoctor:cukedoctor-converter:1.2.1")
 
-	testImplementation("io.rest-assured:rest-assured:4.3.0") {
-		exclude("com.sun.xml.bind", "jaxb-osgi")
-//		exclude("org.codehaus.groovy", "groovy")
-	}
-	testImplementation("io.rest-assured:json-path:4.3.0")
-	testImplementation("io.rest-assured:xml-path:4.3.0")
+    testImplementation("io.rest-assured:spring-mock-mvc:4.3.0") {
+        exclude("com.sun.xml.bind:jaxb-osgi")
+    }
+	// testImplementation("io.rest-assured:rest-assured:4.3.0") {
+	// 	exclude("com.sun.xml.bind", "jaxb-osgi")
+	// }
+	// testImplementation("io.rest-assured:json-path:4.3.0")
+	// testImplementation("io.rest-assured:xml-path:4.3.0")
+
 //	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 //	testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")
 //	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 
 
-
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.2.5.RELEASE")
 	testImplementation("com.h2database:h2")
-	runtime("org.postgresql:postgresql")
+	implementation("org.postgresql:postgresql")
 
-	compile("org.liquibase:liquibase-core:3.8.9")
+	implementation("org.liquibase:liquibase-core:3.8.9")
 
 }
 
@@ -155,6 +158,24 @@ val testCoverage by tasks.registering {
 jacoco {
 	toolVersion = "0.8.5"
 	reportsDir = file("$buildDir/jacoco")
+}
+
+testlogger {
+	theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
+	showExceptions = true
+	showStackTraces = true
+	showFullStackTraces = true
+	showCauses = true
+	slowThreshold = 2000
+	showSummary = true
+	showSimpleNames = false
+	showPassed = true
+	showSkipped = true
+	showFailed = true
+	showStandardStreams = false
+	showPassedStandardStreams = true
+	showSkippedStandardStreams = true
+	showFailedStandardStreams = true
 }
 
 //spotless {

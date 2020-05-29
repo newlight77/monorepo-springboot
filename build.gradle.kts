@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	kotlin("jvm")
+	id("com.adarshr.test-logger") version ("2.0.0")
 }
 
 group = "io.tricefal"
@@ -14,6 +15,7 @@ repositories {
 subprojects {
 
 	apply { plugin("java") }
+	apply { plugin("com.adarshr.test-logger") }
 
 	java {
 		sourceCompatibility = JavaVersion.VERSION_11
@@ -89,4 +91,7 @@ subprojects {
 		}
 	}
 
+	testlogger {
+		theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
+	}
 }
