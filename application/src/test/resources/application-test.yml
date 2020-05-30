@@ -6,6 +6,7 @@ server:
 security:
     basic:
         enabled: false
+#    ignored: /**
 
 #    jwt:
 #        key-store: classpath:keystore.jks
@@ -14,6 +15,8 @@ security:
 #        key-pair-password: changeme
 
 spring:
+    autoconfigure:
+        exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
     datasource:
         url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
         username: sa
@@ -24,6 +27,14 @@ spring:
         generate-ddl: true
         hibernate:
             ddl-auto: create-drop
+
+        properties:
+            hibernate:
+                show_sql: false
+
+    liquibase:
+        enabled: false
+
 data:
     files:
         path: /tmp/data/files
@@ -34,6 +45,7 @@ logging:
         liquibase: ERROR
         org.hibernate: ERROR
         io.tricefal.core: DEBUG
+        com.zaxxer: ERROR
     pattern:
         console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
     file: core.log

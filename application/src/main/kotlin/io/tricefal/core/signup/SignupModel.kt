@@ -10,6 +10,7 @@ class SignupModel
         val firstname: String?,
         val lastname: String?,
         val phoneNumber: String?,
+
         val signupDate: Instant?,
 
         var activationCode: String?,
@@ -28,17 +29,19 @@ class SignupModel
             var status: Status? = null,
             var metafile: MetafileModel? = null
     ) {
-        fun password(password: String) = apply { this.password = password }
+        fun password(password: String?) = apply { this.password = password }
         fun firstname(firstname: String?) = apply { this.firstname = firstname }
         fun lastname(lastname: String?) = apply { this.lastname = lastname }
         fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
+
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
+
         fun activationCode(activationCode: String?) = apply { this.activationCode = activationCode }
         fun status(status: Status) = apply { this.status = status }
         fun metafile(metafile: MetafileModel?) = apply { this.metafile = metafile }
 
         fun build() = SignupModel(username, password, firstname, lastname,
-                phoneNumber, signupDate, activationCode, status, metafile)
+                phoneNumber, signupDate ?: Instant.now(), activationCode, status, metafile)
     }
 }
 
@@ -61,7 +64,7 @@ fun fromModel(model: SignupModel): SignupDomain {
             .phoneNumber(model.phoneNumber)
             .signupDate(model.signupDate)
             .activationCode(model.activationCode)
-            .status(model.status!!)
+            .status(model.status ?: Status.UNKNOWN)
             .metafile(model.metafile?.let { io.tricefal.core.metafile.fromModel(it) })
             .build()
 }

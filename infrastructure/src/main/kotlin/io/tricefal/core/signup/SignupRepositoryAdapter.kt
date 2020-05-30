@@ -7,9 +7,10 @@ import java.util.*
 
 @Repository
 class SignupRepositoryAdapter(private var repository: SignupJpaRepository) : ISignupRepository {
-    override fun save(signup: SignupDomain) {
+    override fun save(signup: SignupDomain): SignupDomain {
         println(signup)
-        repository.save(toEntity(signup))
+        val signupEntity = repository.save(toEntity(signup))
+        return fromEntity(signupEntity)
     }
 
     override fun findByUsername(username: String): Optional<SignupDomain> {
@@ -20,8 +21,9 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository) : ISi
         }
     }
 
-    override fun update(signup: SignupDomain) {
-        repository.save(toEntity(signup))
+    override fun update(signup: SignupDomain): SignupDomain {
+        val signupEntity = repository.save(toEntity(signup))
+        return fromEntity(signupEntity)
     }
 
 }

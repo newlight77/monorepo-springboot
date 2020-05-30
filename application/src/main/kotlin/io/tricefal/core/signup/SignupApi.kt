@@ -10,26 +10,26 @@ class SignupApi(val signupHandler: SignupHandler) {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    fun signup(@RequestBody signup: SignupModel) {
-        signupHandler.signup(signup)
+    fun signup(@RequestBody signup: SignupModel): SignupResult {
+        return signupHandler.signup(signup)
     }
 
     @PostMapping("activate")
     @ResponseStatus(HttpStatus.OK)
-    fun activate(@RequestParam username : String, @RequestParam code: Int) {
-        signupHandler.activate(username, code.toString())
+    fun activate(@RequestParam username : String, @RequestParam code: Int): SignupResult {
+        return signupHandler.activate(username, code.toString())
     }
 
     @PostMapping("upload")
     @ResponseStatus(HttpStatus.OK)
-    fun upload(@RequestParam username : String, @RequestBody file: MultipartFile) {
-        signupHandler.upload(username, file)
+    fun upload(@RequestParam username : String, @RequestBody file: MultipartFile): SignupModel {
+        return signupHandler.upload(username, file)
     }
 
     @PostMapping("status")
     @ResponseStatus(HttpStatus.OK)
-    fun updateStatus(@RequestParam username : String, @RequestParam status: String) {
-        signupHandler.updateStatus(username, status)
+    fun updateStatus(@RequestParam username : String, @RequestParam status: String): SignupModel {
+        return signupHandler.updateStatus(username, status)
     }
 
 }

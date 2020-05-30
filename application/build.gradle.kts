@@ -48,6 +48,7 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
 	implementation("com.github.ben-manes.caffeine:caffeine:2.8.1")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -60,6 +61,7 @@ dependencies {
 		exclude("junit", "junit")
 	}
 
+	testImplementation("io.cucumber:cucumber-java:5.6.0")
 	testImplementation("io.cucumber:cucumber-java8:5.6.0")
 	testImplementation("io.cucumber:cucumber-junit-platform-engine:5.6.0")
 	testImplementation("io.cucumber:cucumber-spring:5.6.0")
@@ -71,8 +73,8 @@ dependencies {
 	// testImplementation("io.rest-assured:rest-assured:4.3.0") {
 	// 	exclude("com.sun.xml.bind", "jaxb-osgi")
 	// }
-	// testImplementation("io.rest-assured:json-path:4.3.0")
-	// testImplementation("io.rest-assured:xml-path:4.3.0")
+//	testImplementation("io.rest-assured:json-path:4.3.0")
+//	testImplementation("io.rest-assured:xml-path:4.3.0")
 
 //	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 //	testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")

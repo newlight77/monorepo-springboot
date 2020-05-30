@@ -35,15 +35,16 @@ class SignupServiceTest {
                 .status(Status.FREELANCE)
                 .build()
 
-        Mockito.doNothing().`when`(repository).save(signup)
+        Mockito.`when`(repository.save(signup)).thenReturn(signup)
 
         service = SignupService(repository)
 
         // Act
-        service.signup(signup)
+        val result = service.signup(signup)
 
         // Arrange
         Mockito.verify(repository).save(signup)
+        Assertions.assertNotEquals("", result.activationCode)
     }
 
     @Test
@@ -93,7 +94,7 @@ class SignupServiceTest {
                 .build()
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signup))
-        Mockito.doNothing().`when`(repository).update(expected)
+        Mockito.`when`(repository.update(expected)).thenReturn(signup)
 
         service = SignupService(repository)
 
@@ -101,7 +102,6 @@ class SignupServiceTest {
         service.updateStatus(username, Status.EMPLOYEE)
 
         // Arrange
-
         Mockito.verify(repository).findByUsername(username)
         Mockito.verify(repository).update(expected)
     }

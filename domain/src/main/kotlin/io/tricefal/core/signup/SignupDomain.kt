@@ -4,7 +4,7 @@ import io.tricefal.core.metafile.MetafileDomain
 import java.time.Instant
 
 data class SignupDomain
-    private constructor(
+    constructor(
         val username: String,
         val firstname: String?,
         val lastname: String?,
@@ -39,20 +39,8 @@ data class SignupDomain
     }
 }
 
-data class SSS (
-        var id: Long,
-        var username: String,
-        val firstname: String?,
-        val lastname: String?,
-        val phoneNumber: String?,
-        val signupDate: Instant? = Instant.now(),
-
-        var activationcode: String?,
-        var status: Status?,
-        var metafile: MetafileDomain? = null
-)
-
 enum class Status {
+    UNKNOWN,
     FREELANCE,
     EMPLOYEE
 }

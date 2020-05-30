@@ -27,7 +27,7 @@ class SignupApiTest {
     lateinit var repository: SignupJpaRepository
 
     @Test
-    fun `should do a signup`() {
+    fun `should do a signup successfully`() {
         // Arrange
         val signup = SignupModel.Builder("kong@gmail.com")
                 .password("password")
@@ -40,13 +40,14 @@ class SignupApiTest {
                 .build()
 
         val signupEntity = toEntity(fromModel(signup))
-        Mockito.doNothing().`when`(repository).save(signupEntity)
+        Mockito.`when`(repository.save(signupEntity)).thenReturn(signupEntity)
 
         // Act
-        service.signup(signup)
+        val result = service.signup(signup)
 
         // Arrange
         Mockito.verify(repository).save(signupEntity)
+        Assertions.assertTrue(result.created!!)
     }
 
     @Test
@@ -86,6 +87,14 @@ class SignupApiTest {
     }
 
     @Test
+    fun `should upload a file for the profile`() {
+    }
+
+    @Test
+    fun `should activate the account by code`() {
+    }
+
+    @Test
     fun `should update the signup status`() {
         // Arrange
         val username ="kong@gmail.com"
@@ -104,12 +113,13 @@ class SignupApiTest {
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
-        Mockito.doNothing().`when`(repository).save(expected)
+        Mockito.`when`(repository.save(expected)).thenReturn(expected)
 
         // Act
         val result = service.updateStatus(username, Status.EMPLOYEE.toString())
 
         // Arrange
         Mockito.verify(repository).save(expected)
+        Assertions.assertEquals(Status.EMPLOYEE.toString(), result.status.toString())
     }
 }
