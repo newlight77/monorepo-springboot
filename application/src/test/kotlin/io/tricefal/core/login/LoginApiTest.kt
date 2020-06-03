@@ -31,7 +31,7 @@ class LoginApiTest {
     @Test
     fun `should create a login successfully`() {
         // Arrange
-        val login = LoginModel("kong@gmail.com", Instant.now(), "ip","firefox on Iphone11", true)
+        val login = LoginModel("kong@gmail.com", Instant.now(), "ip", "paris", "ile de france", "firefox on Iphone11", true)
         val loginEntity = toEntity(fromModel(login))
         Mockito.doNothing().`when`(repository).save(loginEntity)
 
@@ -47,9 +47,9 @@ class LoginApiTest {
     fun `should retrieve last logins by username`() {
         // Arrange
         val username = "kong@gmail.com"
-        val login1 = LoginModel(username, Instant.now(), "ip", "firefox", true)
-        val login2 = LoginModel(username, Instant.now(), "ip", "firefox", true)
-        val login3 = LoginModel(username, Instant.now(), "ip", "firefox", true)
+        val login1 = LoginModel(username, Instant.now(), "ip", "paris", "ile de france", "firefox", true)
+        val login2 = LoginModel(username, Instant.now(), "ip", "paris", "ile de france", "firefox", true)
+        val login3 = LoginModel(username, Instant.now(), "ip", "paris", "ile de france", "firefox", true)
 
         val logins = arrayListOf(login1, login2, login3)
 
