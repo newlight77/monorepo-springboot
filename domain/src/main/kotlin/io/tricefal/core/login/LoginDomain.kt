@@ -10,6 +10,8 @@ data class LoginDomain(
         var username: String,
         val loginDate: Instant = Instant.now(),
         val ipAddress: String,
+        val city: String,
+        val region: String,
         val device: String,
         val success: Boolean = false,
         val authorities: Set<String> = HashSet()

@@ -27,6 +27,12 @@ data class LoginEntity(
         @Column(name = "ip_address", length = 30)
         var ipAddress: String,
 
+        @Column(name = "city", length = 50)
+        var city: String,
+
+        @Column(name = "region", length = 100)
+        var region: String,
+
         @Column(name = "device", length = 100)
         val device: String,
 
@@ -40,6 +46,8 @@ fun toEntity(domain: LoginDomain): LoginEntity {
                 domain.username,
                 domain.loginDate,
                 domain.ipAddress,
+                domain.city,
+                domain.region,
                 domain.device,
                 domain.success
         )
@@ -50,6 +58,8 @@ fun fromEntity(entity: LoginEntity): LoginDomain {
                 entity.username,
                 entity.loginDate,
                 entity.ipAddress,
+                entity.city,
+                entity.region,
                 entity.device,
                 entity.success
         )

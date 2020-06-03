@@ -12,6 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.web.multipart.MultipartFile
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.time.Instant
 import java.util.*
 
@@ -88,10 +91,31 @@ class SignupApiTest {
 
     @Test
     fun `should upload a file for the profile`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val multipart = Mockito.mock(MultipartFile::class.java)
+        Mockito.`when`(multipart.originalFilename).thenReturn("test-filename")
+        Mockito.`when`(multipart.contentType).thenReturn("txt")
+        Mockito.`when`(multipart.inputStream).thenReturn(ByteArrayInputStream("testing data".toByteArray()))
+
+        // Act
+        val result = service.upload(username, multipart)
+
+        // Arrange
+        Assertions.assertEquals(multipart.originalFilename, result.metafile?.filename)
     }
 
     @Test
     fun `should activate the account by code`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val code = "123456"
+
+        // Act
+        val result = service.activate(username, code)
+
+        // Arrange
+        Assertions.assertTrue(result.activated!!)
     }
 
     @Test
