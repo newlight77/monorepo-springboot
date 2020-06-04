@@ -3,10 +3,10 @@ plugins {
 //	application
 	idea
 	`java-library`
-	id("org.springframework.boot") version "2.2.5.RELEASE"
+	id("org.springframework.boot") version "2.3.0.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
 	kotlin("jvm")
-	kotlin("plugin.spring") version "1.3.70"
+	kotlin("plugin.spring") version "1.3.72"
 	kotlin("plugin.jpa") version "1.3.70"
 }
 
@@ -27,13 +27,16 @@ dependencies {
 	implementation(project(":core:domain"))
 	implementation(project(":core:infrastructure"))
 
-	compile("org.springframework.boot:spring-boot-devtools")
+	implementation("org.springframework.boot:spring-boot-devtools")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 
+//	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+//	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.2.5.RELEASE")
-//	implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.6.RELEASE")
+//	implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.3.0.RELEASE")
 //	implementation("org.springframework.security.oauth:spring-security-oauth2:2.4.1.RELEASE")
 //	implementation("org.springframework.security:spring-security-oauth2-jose:5.3.1.RELEASE")
 
@@ -44,6 +47,10 @@ dependencies {
 	implementation("com.okta.spring:okta-spring-boot-starter:1.4.0")
 	implementation("com.okta.jwt:okta-jwt-verifier:0.4.0")
 	implementation("com.okta.jwt:okta-jwt-verifier-impl:0.4.0")
+
+//	implementation("com.okta.authn.sdk:okta-authn-sdk-api:1.6.0")
+//	implementation("com.okta.authn.sdk:okta-authn-sdk-impl:1.6.0")
+//	implementation("com.okta.sdk:okta-sdk-httpclient:1.6.0")
 
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 

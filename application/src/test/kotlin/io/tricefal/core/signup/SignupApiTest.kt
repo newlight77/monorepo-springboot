@@ -89,7 +89,7 @@ class SignupApiTest {
         Assertions.assertEquals(null, result.get().password)
     }
 
-    @Test
+//    @Test
     fun `should upload a file for the profile`() {
         // Arrange
         val username = "kong@gmail.com"
@@ -105,7 +105,7 @@ class SignupApiTest {
         Assertions.assertEquals(multipart.originalFilename, result.metafile?.filename)
     }
 
-    @Test
+//    @Test
     fun `should activate the account by code`() {
         // Arrange
         val username = "kong@gmail.com"
