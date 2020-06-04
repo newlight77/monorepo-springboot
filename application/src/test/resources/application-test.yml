@@ -15,8 +15,11 @@ security:
 #        key-pair-password: changeme
 
 spring:
+    # it seems the exclusion is not working
     autoconfigure:
-        exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+        exclude:
+            - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+            - org.springframework.boot.actuate.autoconfigure.ManagementSecurityAutoConfiguration
     datasource:
         url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
         username: sa
