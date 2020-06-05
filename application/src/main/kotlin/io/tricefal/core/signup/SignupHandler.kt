@@ -1,5 +1,7 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.mail.MailMessage
+import io.tricefal.core.mail.MailService
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.metafile.MetafileRepository
 import org.springframework.beans.factory.annotation.Value
@@ -10,13 +12,30 @@ import java.time.Instant
 import java.util.*
 
 @Service
-class SignupHandler(val signupService: ISignupService, val metafileRepository: MetafileRepository) {
+class SignupHandler(val signupService: ISignupService,
+                    val metafileRepository: MetafileRepository,
+                    val mailService: MailService) {
 
     @Value("{data.files.path}")
     lateinit var filesPath: String
 
+    val mailSubject = "Tricefal Registration"
+    val mailContent = "Hi,\n" +
+            "\n" +
+            "Thanks you for registering to our system. " +
+            "An account has been created using OKTA provider for authentication."
+
     fun signup(signup: SignupModel): SignupResult {
+
+        // TODO create account on okta
+
+        val message = MailMessage(signup.username,mailSubject, mailContent)
+        mailService.send(message)
+
         val signupDomain = signupService.signup(fromModel(signup))
+
+        // TODO send activation code via sms to phone number
+        // create a SMS notification infra adapter 
 
         return SignupResult.Builder(signupDomain.username)
                 .signup(toModel(signupDomain))
@@ -24,11 +43,6 @@ class SignupHandler(val signupService: ISignupService, val metafileRepository: M
                 .emailSent(true)
                 .activationCodeSent(true)
                 .build()
-
-        // create account on okta
-        // send an email
-        // send activation code via sms to phone number
-        // create a SMS notification infra adapter
     }
 
     fun findByUsername(username: String): Optional<SignupModel> {
