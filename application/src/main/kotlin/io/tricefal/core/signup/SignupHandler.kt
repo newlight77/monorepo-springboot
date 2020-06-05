@@ -4,38 +4,43 @@ import io.tricefal.core.mail.MailMessage
 import io.tricefal.core.mail.MailService
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.metafile.MetafileRepository
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 import java.util.*
 
+
 @Service
 class SignupHandler(val signupService: ISignupService,
                     val metafileRepository: MetafileRepository,
                     val mailService: MailService) {
 
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     @Value("{data.files.path}")
     lateinit var filesPath: String
 
-    val mailSubject = "Tricefal Registration"
-    val mailContent = "Hi,\n" +
-            "\n" +
-            "Thanks you for registering to our system. " +
-            "An account has been created using OKTA provider for authentication."
+    @Autowired
+    lateinit var messageSource: MessageSource
+
+    val locale: Locale = LocaleContextHolder.getLocale()
 
     fun signup(signup: SignupModel): SignupResult {
 
         // TODO create account on okta
 
-        val message = MailMessage(signup.username,mailSubject, mailContent)
-        mailService.send(message)
+        sendEmail(signup)
 
         val signupDomain = signupService.signup(fromModel(signup))
 
         // TODO send activation code via sms to phone number
-        // create a SMS notification infra adapter 
+        // create a SMS notification infra adapter
 
         return SignupResult.Builder(signupDomain.username)
                 .signup(toModel(signupDomain))
@@ -75,4 +80,12 @@ class SignupHandler(val signupService: ISignupService,
         return toModel(signup)
     }
 
+    private fun sendEmail(signup: SignupModel) {
+        logger.info("Sending an email")
+        val mailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
+        val mailContent = messageSource.getMessage("signup.mail.content", arrayOf(), locale)
+        val message = MailMessage(signup.username, mailSubject, mailContent)
+        mailService.send(message)
+        logger.info("An Email has been sent")
+    }
 }

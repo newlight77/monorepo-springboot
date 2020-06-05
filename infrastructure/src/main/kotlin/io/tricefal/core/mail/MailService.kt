@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service
 class MailService(private val mailSender: JavaMailSender,
                   private val mailConfig: MailConfig) {
 
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     fun send(mailMessage: MailMessage) {
 
         val messagePreparator = MimeMessagePreparator { mimeMessage ->
@@ -30,10 +32,6 @@ class MailService(private val mailSender: JavaMailSender,
         } catch (e: MailException) {
             throw RuntimeException("An error occurred while sending an email", e)
         }
-    }
-
-    companion object {
-        private val logger = LoggerFactory.getLogger(MailService::class.java)
     }
 }
 
