@@ -5,6 +5,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 data class MailConfig(
-    @Value("\${service.mail.from}")
+    @Value("\${mail.from}")
     var from: String
 )

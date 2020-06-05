@@ -30,10 +30,16 @@ spring:
 #    liquibase:
 #        change-log=classpath: db/changelog/db.changelog-master.xml
     mail:
-        from: newlight77@gmail.com
-        host: localhost
-        port: 25
-
+        host: ${SMTP_HOST}
+        port: ${SMTP_PORT}
+        username: ${SMTP_USERNAME}
+        password: ${SMPT_PASSWORD}
+#        properties:
+#            mail:
+#                smtp:
+#                    auth: true
+#                    starttls:
+#                        enable: true
     servlet:
         multipart:
             enabled: true
@@ -47,12 +53,18 @@ spring:
 #            scripts:
 #                create-target: schema.sql
 
-data:
-    files:
-        path: ${DATA_FILES_PATH}
-
-
 logging:
 #    config: classpath:logback-spring.xml
     file: core.log
     path: ${DATA_LOGS_PATH}
+
+
+
+#### Custom
+
+data:
+    files:
+        path: ${DATA_FILES_PATH}
+
+mail:
+    from: ${MAIL_FROM}

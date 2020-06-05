@@ -36,16 +36,13 @@ spring:
                 show_sql: false
 
     mail:
-        from: newlight77@gmail.com
-        host: localhost
-        port: 25
+        host: ssl0.ovh.net
+        port: 587
+        username: kong@tricefal.com
+        password: tricefal
 
     liquibase:
         enabled: false
-
-data:
-    files:
-        path: /tmp/data/files
 
 logging:
     level:
@@ -58,3 +55,8 @@ logging:
         console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
     file: core.log
     path: /tmp/data/logs
+
+
+data:
+    files:
+        path: /tmp/data/files
