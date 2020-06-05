@@ -29,6 +29,10 @@ spring:
             ddl-auto: ${HIBERNATE_DDL_AUTO}
 #    liquibase:
 #        change-log=classpath: db/changelog/db.changelog-master.xml
+    mail:
+        from: newlight77@gmail.com
+        host: localhost
+        port: 25
 
     servlet:
         multipart:

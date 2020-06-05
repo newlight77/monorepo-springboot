@@ -35,6 +35,11 @@ spring:
             hibernate:
                 show_sql: false
 
+    mail:
+        from: newlight77@gmail.com
+        host: localhost
+        port: 25
+
     liquibase:
         enabled: false
 
