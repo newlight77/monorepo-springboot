@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	kotlin("jvm")
 //	id("io.spring.dependency-management") version "1.0.9.RELEASE"
-	kotlin("plugin.spring") version "1.3.70"
-	kotlin("plugin.jpa") version "1.3.70"
+	kotlin("plugin.spring") version "1.3.72"
+	kotlin("plugin.jpa") version "1.3.72"
 	idea
 }
 
@@ -20,8 +20,10 @@ repositories {
 dependencies {
 	implementation(project(":core:domain"))
 
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.2.5.RELEASE")
-	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.2.5.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.3.0.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter-mail:2.3.0.RELEASE")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.70")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70")

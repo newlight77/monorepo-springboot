@@ -35,13 +35,13 @@ dependencies {
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-//	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.2.5.RELEASE")
+//	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.3.0.RELEASE")
 //	implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.3.0.RELEASE")
 //	implementation("org.springframework.security.oauth:spring-security-oauth2:2.4.1.RELEASE")
 //	implementation("org.springframework.security:spring-security-oauth2-jose:5.3.1.RELEASE")
 
-//	implementation("org.springframework.security.oauth:spring-security-oauth2:2.2.5.RELEASE")
-//	implementation("org.springframework.boot:spring-security-oauth2:2.2.5.RELEASE")
+//	implementation("org.springframework.security.oauth:spring-security-oauth2:2.3.0.RELEASE")
+//	implementation("org.springframework.boot:spring-security-oauth2:2.3.0.RELEASE")
 //	implementation("org.springframework.security:spring-security-jwt:1.1.0.RELEASE")
 
 	implementation("com.okta.spring:okta-spring-boot-starter:1.4.0")
@@ -88,7 +88,7 @@ dependencies {
 //	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 
 
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.2.5.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	testImplementation("com.h2database:h2")
 	implementation("org.postgresql:postgresql")
 
