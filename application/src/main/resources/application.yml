@@ -33,7 +33,7 @@ spring:
         host: ${SMTP_HOST}
         port: ${SMTP_PORT}
         username: ${SMTP_USERNAME}
-        password: ${SMPT_PASSWORD}
+        password: ${SMTP_PASSWORD}
 #        properties:
 #            mail:
 #                smtp:
