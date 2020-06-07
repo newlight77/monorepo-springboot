@@ -1,7 +1,8 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.mail.MailMessage
-import io.tricefal.core.mail.MailService
+import io.tricefal.core.email.EmailMessage
+import io.tricefal.core.email.EmailService
+import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.metafile.MetafileRepository
 import org.slf4j.LoggerFactory
@@ -14,17 +15,21 @@ import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 import java.util.*
+import kotlin.collections.HashMap
 
 
 @Service
 class SignupHandler(val signupService: ISignupService,
                     val metafileRepository: MetafileRepository,
-                    val mailService: MailService) {
+                    val mailService: EmailService) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @Value("{data.files.path}")
+    @Value("\${data.files.path}")
     lateinit var filesPath: String
+
+    @Value("\${mail.from}")
+    lateinit var from: String
 
     @Autowired
     lateinit var messageSource: MessageSource
@@ -84,7 +89,14 @@ class SignupHandler(val signupService: ISignupService,
         logger.info("Sending an email")
         val mailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
         val mailContent = messageSource.getMessage("signup.mail.content", arrayOf(), locale)
-        val message = MailMessage(signup.username, mailSubject, mailContent)
+        val message = EmailMessage.Builder()
+                .from(from)
+                .to(signup.username)
+                .subject(mailSubject)
+                .content(mailContent)
+                .emailTemplate(EmailTemplate.SIGNUP)
+                .model(hashMapOf("content" to mailContent))
+                .build()
         mailService.send(message)
         logger.info("An Email has been sent")
     }
