@@ -60,3 +60,7 @@ logging:
 data:
     files:
         path: /tmp/data/files
+
+notification:
+    mail:
+        from: from@mail.com

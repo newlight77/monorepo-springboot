@@ -5,6 +5,8 @@ import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.metafile.MetafileRepository
+import io.tricefal.core.twilio.SmsMessage
+import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -15,21 +17,25 @@ import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 import java.util.*
-import kotlin.collections.HashMap
 
 
 @Service
 class SignupHandler(val signupService: ISignupService,
                     val metafileRepository: MetafileRepository,
-                    val mailService: EmailService) {
+                    val mailService: EmailService,
+                    val smsService: SmsService) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @Value("\${data.files.path}")
     lateinit var filesPath: String
 
-    @Value("\${mail.from}")
-    lateinit var from: String
+    @Value("\${notification.mail.from}")
+    lateinit var emailFrom: String
+
+    @Value("\${notification.sms.from}")
+    lateinit var smsFrom: String
+
 
     @Autowired
     lateinit var messageSource: MessageSource
@@ -45,7 +51,8 @@ class SignupHandler(val signupService: ISignupService,
         val signupDomain = signupService.signup(fromModel(signup))
 
         // TODO send activation code via sms to phone number
-        // create a SMS notification infra adapter
+        sendSms(signup)
+
 
         return SignupResult.Builder(signupDomain.username)
                 .signup(toModel(signupDomain))
@@ -85,12 +92,22 @@ class SignupHandler(val signupService: ISignupService,
         return toModel(signup)
     }
 
+    private fun sendSms(signup: SignupModel) {
+        val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname), locale)
+        val message = SmsMessage.Builder()
+                .from(smsFrom)
+                .to(signup.phoneNumber!!)
+                .content(smsContent)
+                .build()
+        smsService.send(message)
+    }
+
     private fun sendEmail(signup: SignupModel) {
         logger.info("Sending an email")
         val mailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
-        val mailContent = messageSource.getMessage("signup.mail.content", arrayOf(), locale)
+        val mailContent = messageSource.getMessage("signup.mail.content", arrayOf(signup.firstname), locale)
         val message = EmailMessage.Builder()
-                .from(from)
+                .from(emailFrom)
                 .to(signup.username)
                 .subject(mailSubject)
                 .content(mailContent)
@@ -100,4 +117,5 @@ class SignupHandler(val signupService: ISignupService,
         mailService.send(message)
         logger.info("An Email has been sent")
     }
+
 }

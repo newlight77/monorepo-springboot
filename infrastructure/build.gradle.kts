@@ -26,6 +26,8 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-mail:2.3.0.RELEASE")
 	implementation("org.freemarker:freemarker:2.3.30")
+	implementation("com.twilio.sdk:twilio:7.51.0")
+
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.70")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70")
