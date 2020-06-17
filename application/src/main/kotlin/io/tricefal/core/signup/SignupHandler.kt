@@ -5,6 +5,7 @@ import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.metafile.MetafileRepository
+import io.tricefal.core.okta.OktaService
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
@@ -15,6 +16,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
+import java.security.SecureRandom
 import java.time.Instant
 import java.util.*
 
@@ -22,6 +24,7 @@ import java.util.*
 @Service
 class SignupHandler(val signupService: ISignupService,
                     val metafileRepository: MetafileRepository,
+                    val oktaService: OktaService,
                     val mailService: EmailService,
                     val smsService: SmsService) {
 
@@ -36,7 +39,6 @@ class SignupHandler(val signupService: ISignupService,
     @Value("\${notification.sms.from}")
     lateinit var smsFrom: String
 
-
     @Autowired
     lateinit var messageSource: MessageSource
 
@@ -44,15 +46,11 @@ class SignupHandler(val signupService: ISignupService,
 
     fun signup(signup: SignupModel): SignupResult {
 
-        // TODO create account on okta
-
+        oktaService.register(fromModel(signup))
+        signup.activationCode = generateCode()
         sendEmail(signup)
-
         val signupDomain = signupService.signup(fromModel(signup))
-
-        // TODO send activation code via sms to phone number
         sendSms(signup)
-
 
         return SignupResult.Builder(signupDomain.username)
                 .signup(toModel(signupDomain))
@@ -67,8 +65,10 @@ class SignupHandler(val signupService: ISignupService,
     }
 
     fun activate(username: String, code: String): SignupResult {
-        TODO("Not yet implemented")
-        // actrivation de compte
+        // activation de compte
+//        val signup = this.signupService.findByUsername(username)
+//        signup.ifPresent { s: SignupDomain -> if (s.activationCode.equals(code)) signupService.activate()}
+        return SignupResult.Builder(username).build()
     }
 
     fun upload(username: String, file: MultipartFile): SignupModel {
@@ -93,7 +93,7 @@ class SignupHandler(val signupService: ISignupService,
     }
 
     private fun sendSms(signup: SignupModel) {
-        val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname), locale)
+        val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname, signup.activationCode), locale)
         val message = SmsMessage.Builder()
                 .from(smsFrom)
                 .to(signup.phoneNumber!!)
@@ -116,6 +116,10 @@ class SignupHandler(val signupService: ISignupService,
                 .build()
         mailService.send(message)
         logger.info("An Email has been sent")
+    }
+
+    fun generateCode(): String {
+        return SecureRandom().nextGaussian().toString().takeLast(6)
     }
 
 }

@@ -37,10 +37,10 @@ dependencies {
 
 //	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.3.0.RELEASE")
 //	implementation("org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.3.0.RELEASE")
-//	implementation("org.springframework.security.oauth:spring-security-oauth2:2.4.1.RELEASE")
-//	implementation("org.springframework.security:spring-security-oauth2-jose:5.3.1.RELEASE")
-
 //	implementation("org.springframework.security.oauth:spring-security-oauth2:2.3.0.RELEASE")
+//	implementation("org.springframework.security:spring-security-oauth2-jose:5.3.1.RELEASE")
+	implementation("org.springframework.security:spring-security-oauth2-client")
+	implementation("org.springframework.security:spring-security-oauth2-jose")
 //	implementation("org.springframework.boot:spring-security-oauth2:2.3.0.RELEASE")
 //	implementation("org.springframework.security:spring-security-jwt:1.1.0.RELEASE")
 

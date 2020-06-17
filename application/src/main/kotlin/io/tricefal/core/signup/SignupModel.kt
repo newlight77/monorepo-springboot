@@ -47,6 +47,7 @@ class SignupModel
 
 fun toModel(domain: SignupDomain): SignupModel {
     return SignupModel.Builder(domain.username)
+            .password(domain.password)
             .firstname(domain.firstname)
             .lastname(domain.lastname)
             .phoneNumber(domain.phoneNumber)
@@ -59,6 +60,7 @@ fun toModel(domain: SignupDomain): SignupModel {
 
 fun fromModel(model: SignupModel): SignupDomain {
     return SignupDomain.Builder(model.username)
+            .password(model.password)
             .firstname(model.firstname)
             .lastname(model.lastname)
             .phoneNumber(model.phoneNumber)

@@ -2,6 +2,8 @@ package io.tricefal.core.encryption
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import io.tricefal.core.okta.BcryptPassword
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.security.Key
 import java.time.Instant
@@ -12,6 +14,8 @@ import javax.xml.bind.DatatypeConverter
 
 @Service
 class  EncryptionService(val encryptionProperties: EncrpyptionProperties) {
+
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
     fun encode(id: String, subject: String, ttlMillis: Long): String {
 

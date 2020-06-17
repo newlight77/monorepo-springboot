@@ -1,0 +1,2 @@
+okta:
+  baseUrl: ${OKTA_OAUTH2_BASE_URL}
