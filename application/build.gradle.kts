@@ -25,7 +25,15 @@ repositories {
 
 dependencies {
 	implementation(project(":core:domain"))
-	implementation(project(":core:infrastructure"))
+//	implementation(project(":core:infrastructure"))
+	implementation(project(":core:infrastructure:account"))
+	implementation(project(":core:infrastructure:encryption"))
+	implementation(project(":core:infrastructure:login"))
+	implementation(project(":core:infrastructure:notification"))
+	implementation(project(":core:infrastructure:note"))
+	implementation(project(":core:infrastructure:okta-client"))
+	implementation(project(":core:infrastructure:signup"))
+	implementation(project(":core:infrastructure:storage"))
 
 	implementation("org.springframework.boot:spring-boot-devtools")
 
@@ -86,6 +94,11 @@ dependencies {
 //	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 //	testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")
 //	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+
+	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
+	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
+	testImplementation("org.assertj:assertj-core:3.11.1")
+	testImplementation("com.icegreen:greenmail:1.5.13")
 
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")

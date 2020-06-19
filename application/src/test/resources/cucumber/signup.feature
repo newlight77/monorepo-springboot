@@ -1,6 +1,7 @@
 Feature: signup
   Signup process for new users to create an account on okta, then activate using code send by SMS.
 
+  @Disabled
   Scenario: subscription of new user
     Given a user with the given details
       | email                 | password | lastname | firstname  | phoneNumber |

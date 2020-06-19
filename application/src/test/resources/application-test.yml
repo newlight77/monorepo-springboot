@@ -36,8 +36,8 @@ spring:
                 show_sql: false
 
     mail:
-        host: ssl0.ovh.net
-        port: 587
+        host: localhost
+        port: 2525
         username: kong@tricefal.com
         password: tricefal
 
@@ -64,3 +64,13 @@ data:
 notification:
     mail:
         from: from@mail.com
+    sms:
+        twilio:
+            phoneNumber: 33644601054
+            accountSid: AC497ba2b4c6a9ecf212ea611537e0be92
+            authToken: 56dfdab0b2c07ed9d861b4a182d10e00
+okta:
+    baseUrl: https://dev-769725.okta.com
+
+encryption:
+    secretKey: oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGh

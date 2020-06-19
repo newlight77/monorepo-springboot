@@ -69,3 +69,15 @@ data:
 notification:
     mail:
         from: ${MAIL_FROM}
+
+    sms:
+        twilio:
+            phoneNumber: ${TWILIO_PHONE_NUMBER}
+            accountSid: ${TWILIO_ACCOUNT_SID}
+            authToken: ${TWILIO_AUTH_TOKEN}
+
+okta:
+    baseUrl: ${OKTA_OAUTH2_BASE_URL}
+
+encryption:
+    secretKey: ${ENCRYPTION_SECRET_KEY}

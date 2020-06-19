@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
+import org.springframework.context.annotation.PropertySource
 import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
@@ -22,31 +24,25 @@ import java.util.*
 
 
 @Service
+@PropertySource("classpath:application.yml", "classpath:twilio.yml", "classpath:okta.yml")
 class SignupHandler(val signupService: ISignupService,
                     val metafileRepository: MetafileRepository,
                     val oktaService: OktaService,
                     val mailService: EmailService,
-                    val smsService: SmsService) {
+                    val smsService: SmsService,
+                    private final val env: Environment,
+                    private final val messageSource: MessageSource) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @Value("\${data.files.path}")
-    lateinit var filesPath: String
-
-    @Value("\${notification.mail.from}")
-    lateinit var emailFrom: String
-
-    @Value("\${notification.sms.from}")
-    lateinit var smsFrom: String
-
-    @Autowired
-    lateinit var messageSource: MessageSource
+    private var emailFrom = env.getProperty("notification.mail.from")!!
+    private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
 
     val locale: Locale = LocaleContextHolder.getLocale()
 
     fun signup(signup: SignupModel): SignupResult {
 
-        oktaService.register(fromModel(signup))
+        //oktaService.register(fromModel(signup))
         signup.activationCode = generateCode()
         sendEmail(signup)
         val signupDomain = signupService.signup(fromModel(signup))
@@ -105,14 +101,15 @@ class SignupHandler(val signupService: ISignupService,
     private fun sendEmail(signup: SignupModel) {
         logger.info("Sending an email")
         val mailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
-        val mailContent = messageSource.getMessage("signup.mail.content", arrayOf(signup.firstname), locale)
+        val mailGreeting = messageSource.getMessage("signup.mail.greeting", arrayOf(signup.firstname), locale)
+        val mailContent = messageSource.getMessage("signup.mail.content", arrayOf(), locale)
         val message = EmailMessage.Builder()
                 .from(emailFrom)
                 .to(signup.username)
                 .subject(mailSubject)
                 .content(mailContent)
                 .emailTemplate(EmailTemplate.SIGNUP)
-                .model(hashMapOf("content" to mailContent))
+                .model(hashMapOf("greeting" to mailGreeting, "content" to mailContent))
                 .build()
         mailService.send(message)
         logger.info("An Email has been sent")

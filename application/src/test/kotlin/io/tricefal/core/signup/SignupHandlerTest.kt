@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.context.MessageSource
+import org.springframework.core.env.Environment
 import java.time.Instant
 import java.util.*
 
@@ -27,6 +29,10 @@ class SignupHandlerTest {
     lateinit var mailService: EmailService
     @Mock
     lateinit var smsService: SmsService
+    @Mock
+    lateinit var env: Environment
+    @Mock
+    lateinit var messageSource: MessageSource
 
     @BeforeEach
     fun beforeEach() {
@@ -35,12 +41,16 @@ class SignupHandlerTest {
         Mockito.reset(oktaService)
         Mockito.reset(mailService)
         Mockito.reset(smsService)
+        Mockito.reset(env)
+        Mockito.reset(messageSource)
     }
 
     @Test
-    fun `should do a signup`() {
+    fun `should generate an activation code with 6 digits`() {
         // Arrange
-        val handler = SignupHandler(service, metafileRepository, oktaService, mailService, smsService)
+        Mockito.`when`(env.getProperty("notification.mail.from")).thenReturn("from@mail.com")
+        Mockito.`when`(env.getProperty("notification.sms.twilio.phoneNumber")).thenReturn("555555555")
+        val handler = SignupHandler(service, metafileRepository, oktaService, mailService, smsService, env, messageSource)
 
         // Act
         val result = handler.generateCode()
