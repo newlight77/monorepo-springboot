@@ -1,26 +1,50 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
+import java.security.SecureRandom
 import java.util.*
 
-class SignupService(private var repository: ISignupRepository) : ISignupService {
-    override fun signup(signup: SignupDomain): SignupDomain {
-        return repository.save(signup)
+class SignupService(private var adapter: ISignupAdapter) : ISignupService {
+
+    override fun signup(signup: SignupDomain, notification: SignupNotificationDomain): SignupStateDomain {
+        signup.activationCode = generateCode()
+
+        signup.state = SignupStateDomain.Builder(signup.username)
+                .oktaRegistered(adapter.oktaRegister(signup))
+                .emailSent(adapter.sendEmail(notification))
+                .activationCodeSent(adapter.sendSms(notification))
+                .build()
+
+        adapter.signup(signup)
+
+        return signup.state!!
     }
 
     override fun findByUsername(username: String): Optional<SignupDomain> {
-        return repository.findByUsername(username)
+        return adapter.findByUsername(username)
     }
 
-    override fun updateStatus(username: String, status: Status): SignupDomain {
-        val signup = repository.findByUsername(username).get()
+    override fun activate(signup: SignupDomain, code: String): SignupStateDomain {
+        signup.state?.activatedByCode = signup.activationCode.equals(code)
+        adapter.update(signup)
+        return signup.state!!
+    }
+
+    override fun resumeUploaded(signup: SignupDomain, resumeFileDomain: MetafileDomain): SignupStateDomain {
+        signup.resumeFile = resumeFileDomain
+        signup.state!!.resumeUploaded = true
+        adapter.update(signup)
+        return signup.state!!
+    }
+
+    override fun updateStatus(signup: SignupDomain, status: Status): SignupStateDomain {
         signup.status = status
-        return repository.update(signup)
+        signup.state!!.statusUpdated = true
+        adapter.update(signup)
+        return signup.state!!
     }
 
-    override fun updateMetafile(username: String, metafile: MetafileDomain): SignupDomain {
-        val signup = repository.findByUsername(username).get()
-        signup.metafile = metafile
-        return repository.update(signup)
+    fun generateCode(): String {
+        return SecureRandom().nextGaussian().toString().takeLast(6)
     }
 }

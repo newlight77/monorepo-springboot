@@ -14,18 +14,28 @@ import java.util.*
 class SignupServiceTest {
 
     @Mock
-    lateinit var repository: ISignupRepository
+    lateinit var adapter: ISignupAdapter
 
     lateinit var service: ISignupService
 
     @BeforeEach
     fun beforeEach() {
-        Mockito.reset(repository)
+        Mockito.reset(adapter)
     }
 
     @Test
     fun `should do a signup`() {
-        // Arrange
+        // Arranges
+        val notification = SignupNotificationDomain.Builder("kong")
+                .smsFrom("smsFrom")
+                .smsTo("smsTo")
+                .smsContent("smsContent")
+                .emailFrom("emailFrom")
+                .emailTo("emailTo")
+                .emailSubject("emailSubject")
+                .emailGreeting("emailGreeting")
+                .emailContent("emailContent")
+                .build()
         val signup = SignupDomain.Builder("kong@gmail.com")
                 .firstname("kong")
                 .lastname("to")
@@ -33,18 +43,24 @@ class SignupServiceTest {
                 .signupDate(Instant.now())
                 .activationCode("123456")
                 .status(Status.FREELANCE)
+//                .notification(notification)
                 .build()
 
-        Mockito.`when`(repository.save(signup)).thenReturn(signup)
+        Mockito.`when`(adapter.signup(signup)).thenReturn(signup)
+        Mockito.`when`(adapter.oktaRegister(signup)).thenReturn(true)
+        Mockito.`when`(adapter.sendEmail(notification)).thenReturn(true)
+        Mockito.`when`(adapter.sendSms(notification)).thenReturn(true)
 
-        service = SignupService(repository)
+        service = SignupService(adapter)
 
         // Act
-        val result = service.signup(signup)
+        val result = service.signup(signup, notification)
 
         // Arrange
-        Mockito.verify(repository).save(signup)
-        Assertions.assertNotEquals("", result.activationCode)
+        Mockito.verify(adapter).signup(signup)
+        Assertions.assertTrue(result.oktaRegistered!!)
+        Assertions.assertTrue(result.emailSent!!)
+        Assertions.assertTrue(result.activationCodeSent!!)
     }
 
     @Test
@@ -60,9 +76,9 @@ class SignupServiceTest {
                 .status(Status.FREELANCE)
                 .build()
 
-        Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signup))
+        Mockito.`when`(adapter.findByUsername(username)).thenReturn(Optional.of(signup))
 
-        service = SignupService(repository)
+        service = SignupService(adapter)
 
         // Act
         val result = service.findByUsername(username)
@@ -75,6 +91,11 @@ class SignupServiceTest {
     fun `should update the signup status`() {
         // Arrange
         val username = "kong@gmail.com"
+
+        val state = SignupStateDomain.Builder("kong")
+                .statusUpdated(true)
+                .build()
+
         val signup = SignupDomain.Builder(username)
                 .firstname("kong")
                 .lastname("to")
@@ -82,27 +103,29 @@ class SignupServiceTest {
                 .signupDate(Instant.now())
                 .activationCode("123456")
                 .status(Status.FREELANCE)
+                .state(state)
                 .build()
 
-        val expected = SignupDomain.Builder(username)
-                .firstname("kong")
-                .lastname("to")
-                .phoneNumber("1234567890")
-                .signupDate(signup.signupDate)
-                .activationCode("123456")
-                .status(Status.EMPLOYEE)
-                .build()
+        Mockito.`when`(adapter.update(signup)).thenReturn(signup)
 
-        Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signup))
-        Mockito.`when`(repository.update(expected)).thenReturn(signup)
-
-        service = SignupService(repository)
+        service = SignupService(adapter)
 
         // Act
-        service.updateStatus(username, Status.EMPLOYEE)
+        val result = service.updateStatus(signup, Status.EMPLOYEE)
 
         // Arrange
-        Mockito.verify(repository).findByUsername(username)
-        Mockito.verify(repository).update(expected)
+        Mockito.verify(adapter).update(signup)
+        Assertions.assertTrue(result.statusUpdated!!)
+    }
+
+    @Test
+    fun `should generate an activation code with 6 digits`() {
+        // Arrange
+
+        // Act
+        val result = SignupService(adapter).generateCode()
+
+        // Arrange
+        Assertions.assertEquals(6, result.length)
     }
 }

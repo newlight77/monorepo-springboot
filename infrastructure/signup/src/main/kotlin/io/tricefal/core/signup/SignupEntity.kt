@@ -30,14 +30,18 @@ data class SignupEntity(
         @Column(name = "phone", length = 50)
         var phoneNumber: String? = null,
 
-        @Column(name = "signup_date")
-        var signupDate: Instant? = null,
-
         @Column(name = "activation_code")
         var activationCode: String? = null,
 
         @Column(name = "status", length = 50)
-        var status: String
+        var status: String,
+
+        @Column(name = "signup_date")
+        var signupDate: Instant? = null,
+
+        @OneToOne
+        @JoinColumn(name = "state")
+        var signupState: SignupStateEntity? = null
 )
 
 fun toEntity(domain: SignupDomain): SignupEntity {
@@ -47,11 +51,10 @@ fun toEntity(domain: SignupDomain): SignupEntity {
                 domain.firstname,
                 domain.lastname,
                 domain.phoneNumber,
-                domain.signupDate,
-
                 domain.activationCode,
-                domain.status.toString()
-        )
+                domain.status.toString(),
+                domain.signupDate,
+                toEntity(domain.state!!))
 }
 
 fun fromEntity(entity: SignupEntity): SignupDomain {
@@ -59,9 +62,9 @@ fun fromEntity(entity: SignupEntity): SignupDomain {
                 .firstname(entity.firstname)
                 .lastname(entity.lastname)
                 .phoneNumber(entity.phoneNumber)
-                .signupDate(entity.signupDate)
                 .activationCode(entity.activationCode)
                 .status(Status.valueOf(entity.status))
+                .signupDate(entity.signupDate)
+                .state(fromEntity(entity.signupState!!))
                 .build()
-
 }

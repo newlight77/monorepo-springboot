@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 class SignupConfiguration {
 
     @Bean
-    fun signupService(signupRepository: ISignupRepository): ISignupService {
-        return SignupService(signupRepository)
+    fun signupService(signupAdapter: ISignupAdapter): ISignupService {
+        return SignupService(signupAdapter)
     }
 }
