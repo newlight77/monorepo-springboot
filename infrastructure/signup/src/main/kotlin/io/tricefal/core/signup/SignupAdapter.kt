@@ -39,8 +39,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun oktaRegister(signup: SignupDomain): Boolean {
-        oktaService.register(signup)
-        return true
+        return oktaService.register(signup)
     }
 
     override fun sendSms(notification: SignupNotificationDomain): Boolean {
@@ -50,9 +49,9 @@ class SignupAdapter(private var repository: SignupJpaRepository,
                 .to(notification.smsTo!!)
                 .content(notification.smsContent!!)
                 .build()
-        smsService.send(message)
+        val result = smsService.send(message).matches(Regex("^SM[a-z0-9]*"))
         logger.info("An SMS has been sent")
-        return true
+        return result
     }
 
     override fun sendEmail(notification: SignupNotificationDomain): Boolean {

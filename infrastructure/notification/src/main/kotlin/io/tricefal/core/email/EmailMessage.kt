@@ -2,13 +2,18 @@ package io.tricefal.core.email
 
 import java.io.InputStream
 
-data class EmailMessage(val from: String,
-                        val to: String,
-                        val subject: String,
-                        val content: String,
-                        var attachment: InputStream? = null,
-                        var emailTemplate: EmailTemplate? = null,
-                        var model: Map<String, String>? = null) {
+class EmailMessage(var from: String,
+                   val to: String,
+                   val subject: String,
+                   val content: String,
+                   var attachment: InputStream? = null,
+                   var emailTemplate: EmailTemplate? = null,
+                   var model: Map<String, String>? = null) {
+
+    constructor() : this(from = "",
+                        to = "",
+                        subject = "",
+                        content= "")
 
     class Builder {
         private lateinit var from: String

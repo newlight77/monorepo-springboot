@@ -13,9 +13,10 @@ class OktaService(private val env: Environment) {
     private val baseUrl = env.getProperty("okta.baseUrl")
     private val oktaClient: OktaClient = OktaClient.Builder(baseUrl!!).build()
 
-    fun register(signup: SignupDomain) {
+    fun register(signup: SignupDomain): Boolean {
         val response = oktaClient.createUser(toOktaUser(signup))
         logger.info(response.toString())
+        return "ACTIVE".equals(response.created)
     }
 
 }

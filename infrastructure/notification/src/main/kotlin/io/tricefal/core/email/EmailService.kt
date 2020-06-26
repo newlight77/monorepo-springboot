@@ -19,11 +19,12 @@ class EmailService(private val emailSender: JavaMailSender,
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun send(emailMessage: EmailMessage) {
+    fun send(emailMessage: EmailMessage): Boolean {
         val messagePreparator = prepareMessage(emailMessage)
         try {
             emailSender.send(messagePreparator)
             logger.info("Email sent successfully")
+            return true
         } catch (e: MailException) {
             throw RuntimeException("An error occurred while sending an email", e)
         }
