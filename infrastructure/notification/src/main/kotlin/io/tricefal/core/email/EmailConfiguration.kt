@@ -17,12 +17,13 @@ class EmailConfiguration {
     @Autowired
     private lateinit var env: Environment
 
-    @Bean
-    fun freeMarkerConfiguration(): FreeMarkerConfigurationFactoryBean? {
-        val bean = FreeMarkerConfigurationFactoryBean()
-        bean.setTemplateLoaderPath("classpath:/templates/")
-        return bean
-    }
+//    @Bean
+//    fun freeMarkerConfiguration(): FreeMarkerConfigurationFactoryBean? {
+//        val bean = FreeMarkerConfigurationFactoryBean()
+//        bean.setTemplateLoaderPath("classpath:/templates/")
+//        bean.setDefaultEncoding("UTF-8")
+//        return bean
+//    }
 
     @Bean
     fun javaMailSender(): JavaMailSender {

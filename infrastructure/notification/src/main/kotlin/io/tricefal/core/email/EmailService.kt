@@ -19,6 +19,11 @@ class EmailService(private val emailSender: JavaMailSender,
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    init {
+        freemarkerConfig.setClassForTemplateLoading(this::class.java, "/templates")
+        freemarkerConfig.defaultEncoding = "UTF-8"
+    }
+
     fun send(emailMessage: EmailMessage): Boolean {
         val messagePreparator = prepareMessage(emailMessage)
         try {

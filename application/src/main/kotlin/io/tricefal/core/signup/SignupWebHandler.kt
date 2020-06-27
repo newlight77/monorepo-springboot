@@ -18,10 +18,10 @@ import java.util.function.Consumer
 
 @Service
 @PropertySource("classpath:application.yml", "classpath:twilio.yml", "classpath:okta.yml")
-class SignupHandler(val signupService: ISignupService,
-                    val metafileRepository: MetafileRepository,
-                    private final val env: Environment,
-                    private final val messageSource: MessageSource) {
+class SignupWebHandler(val signupService: ISignupService,
+                       val metafileRepository: MetafileRepository,
+                       private final val env: Environment,
+                       private final val messageSource: MessageSource) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 

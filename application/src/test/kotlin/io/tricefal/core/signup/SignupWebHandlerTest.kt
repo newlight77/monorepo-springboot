@@ -2,11 +2,11 @@ package io.tricefal.core.signup
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
+import io.tricefal.core.InfrastructureMockBeans
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
-import io.tricefal.core.metafile.MetafileEntity
 import io.tricefal.core.metafile.MetafileRepository
 import io.tricefal.core.okta.OktaService
 import io.tricefal.core.twilio.SmsMessage
@@ -20,8 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
@@ -29,28 +29,29 @@ import java.io.InputStream
 import java.time.Instant
 import java.util.*
 
-@ExtendWith(SpringExtension::class, MockitoExtension::class)
-@ComponentScan("io.tricefal.core")
+//@ExtendWith(SpringExtension::class, MockitoExtension::class)
+@ExtendWith(MockitoExtension::class)
 @ActiveProfiles("test")
 @DataJpaTest
+@ContextConfiguration(classes = [InfrastructureMockBeans::class])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class SignupApiTest {
+class SignupWebHandlerTest {
     @Autowired
-    lateinit var service: SignupHandler
+    lateinit var signupWebHandler: SignupWebHandler
 
     @MockBean
-    lateinit var repository: SignupJpaRepository
+    lateinit var signupJpaRepository: SignupJpaRepository
 
-    @MockBean
+    @Autowired
     lateinit var oktaService: OktaService
 
-    @MockBean
+    @Autowired
     lateinit var emailService: EmailService
 
-    @MockBean
+    @Autowired
     lateinit var smsService: SmsService
 
-    @MockBean
+    @Autowired
     lateinit var metaFileRepository: MetafileRepository
 
     @Captor
@@ -79,8 +80,6 @@ class SignupApiTest {
         val username = "kong@gmail.com"
         val state = SignupStateModel.Builder(username)
                 .build()
-        val notification = SignupNotificationModel.Builder(username)
-                .build()
         val signup = SignupModel.Builder(username)
                 .password("password")
                 .firstname("kong")
@@ -93,13 +92,13 @@ class SignupApiTest {
                 .build()
 
         val signupEntity = toEntity(fromModel(signup))
-        Mockito.`when`(repository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
+        Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
         Mockito.`when`(oktaService.register(any(SignupDomain::class.java))).thenReturn(true)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
         Mockito.`when`(smsService.send(any(SmsMessage::class.java))).thenReturn("SM235g4fwee4qf32gqg8g")
 
         // Act
-        val result = service.signup(signup)
+        val result = signupWebHandler.signup(signup)
 
         // Arrange
         Assertions.assertTrue(result.oktaRegistered!!)
@@ -132,15 +131,14 @@ class SignupApiTest {
                 .signupDate(signup.signupDate)
                 .activationCode("123456")
                 .status(Status.FREELANCE)
-//                .notification(notification)
                 .state(state)
                 .build()
 
         val signupEntity = toEntity(fromModel(signup))
-        Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
 
         // Act
-        val result = service.findByUsername(username)
+        val result = signupWebHandler.findByUsername(username)
 
         // Arrange
         Assertions.assertTrue(result.isPresent)
@@ -168,12 +166,12 @@ class SignupApiTest {
         Mockito.`when`(multipart.originalFilename).thenReturn("test-filename")
         Mockito.`when`(multipart.contentType).thenReturn("txt")
         Mockito.`when`(multipart.inputStream).thenReturn(ByteArrayInputStream("testing data".toByteArray()))
-        Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
-        Mockito.`when`(repository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
+        Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
         Mockito.doNothing().`when`(metaFileRepository).save(any(MetafileDomain::class.java), any(InputStream::class.java))
 
         // Act
-        val result = service.uploadResume(username, multipart)
+        val result = signupWebHandler.uploadResume(username, multipart)
 
         // Arrange
         Assertions.assertTrue(result.resumeUploaded!!)
@@ -197,11 +195,11 @@ class SignupApiTest {
                 .state(state)
                 .build()
         val signupEntity = toEntity(fromModel(signup))
-        Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
-        Mockito.`when`(repository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
+        Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
 
         // Act
-        val result = service.activate(username, code)
+        val result = signupWebHandler.activate(username, code)
 
         // Arrange
         Assertions.assertTrue(result.activatedByCode!!)
@@ -229,11 +227,11 @@ class SignupApiTest {
                 signup.signupDate, signupState=toEntity(fromModel(state)))
 
         val signupEntity = toEntity(fromModel(signup))
-        Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
-        Mockito.`when`(repository.save(any(SignupEntity::class.java))).thenReturn(expected)
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
+        Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(expected)
 
         // Act
-        val result = service.updateStatus(username, Status.EMPLOYEE.toString())
+        val result = signupWebHandler.updateStatus(username, Status.EMPLOYEE.toString())
 
         // Arrange
         Assertions.assertTrue(result.statusUpdated!!)
