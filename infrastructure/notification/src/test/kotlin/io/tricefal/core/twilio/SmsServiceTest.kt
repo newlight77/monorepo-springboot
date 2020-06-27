@@ -14,7 +14,7 @@ internal class SmsServiceTest {
     @Mock
     val env: Environment = Mockito.mock(Environment::class.java)
 
-    @Test
+//    @Test
     fun `should send a SMS with a twilio valid phone number`() {
         // arrange
         val message = SmsMessage.Builder()
