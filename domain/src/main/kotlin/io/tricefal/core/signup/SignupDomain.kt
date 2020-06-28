@@ -11,6 +11,7 @@ data class SignupDomain
             val lastname: String?,
             val phoneNumber: String?,
             var activationCode: String?,
+            var activationToken: String?,
             var status: Status?,
             val signupDate: Instant?,
 
@@ -25,6 +26,7 @@ data class SignupDomain
             var lastname: String? = null,
             var phoneNumber: String? = null,
             var activationCode: String? = null,
+            var activationToken: String? = null,
             var status: Status? = null,
             var signupDate: Instant? = null,
 
@@ -36,6 +38,7 @@ data class SignupDomain
         fun lastname(lastname: String?) = apply { this.lastname = lastname }
         fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
         fun activationCode(activationCode: String?) = apply { this.activationCode = activationCode }
+        fun activationToken(activationToken: String?) = apply { this.activationToken = activationToken }
         fun status(status: Status) = apply { this.status = status }
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
         fun resumeFile(resumeFile: MetafileDomain?) = apply { this.resumeFile = resumeFile }
@@ -47,6 +50,7 @@ data class SignupDomain
                 lastname,
                 phoneNumber,
                 activationCode,
+                activationToken,
                 status,
                 signupDate,
                 resumeFile,

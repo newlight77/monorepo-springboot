@@ -86,7 +86,6 @@ class SignupWebHandlerTest {
                 .lastname("to")
                 .phoneNumber("1234567890")
                 .signupDate(Instant.now())
-                .activationCode("123456")
                 .status(Status.FREELANCE)
                 .state(state)
                 .build()
@@ -118,7 +117,6 @@ class SignupWebHandlerTest {
                 .lastname("to")
                 .phoneNumber("1234567890")
                 .signupDate(Instant.now())
-                .activationCode("123456")
                 .status(Status.FREELANCE)
                 .state(state)
                 .build()
@@ -129,7 +127,6 @@ class SignupWebHandlerTest {
                 .lastname("to")
                 .phoneNumber("1234567890")
                 .signupDate(signup.signupDate)
-                .activationCode("123456")
                 .status(Status.FREELANCE)
                 .state(state)
                 .build()
@@ -190,11 +187,12 @@ class SignupWebHandlerTest {
                 .lastname("to")
                 .phoneNumber("1234567890")
                 .signupDate(Instant.now())
-                .activationCode(code)
                 .status(Status.FREELANCE)
                 .state(state)
                 .build()
-        val signupEntity = toEntity(fromModel(signup))
+        val domain = fromModel(signup)
+        domain.activationCode = "123456"
+        val signupEntity = toEntity(domain)
         Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
 
@@ -217,14 +215,13 @@ class SignupWebHandlerTest {
                 .lastname("to")
                 .phoneNumber("1234567890")
                 .signupDate(Instant.now())
-                .activationCode("123456")
                 .status(Status.FREELANCE)
                 .state(state)
                 .build()
 
         val expected = SignupEntity( null, username, "kong", "to",
-                "1234567890", "123456", Status.EMPLOYEE.toString(),
-                signup.signupDate, signupState=toEntity(fromModel(state)))
+                "1234567890", "123456", "as3af3af34faf3",
+                Status.EMPLOYEE.toString(), signup.signupDate, signupState=toEntity(fromModel(state)))
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
@@ -248,6 +245,30 @@ class SignupWebHandlerTest {
 
         // Arrange
         Assertions.assertEquals(6, result.length)
+    }
+
+    @Test
+    fun `should generate a random string`() {
+        // Arrange
+
+        // Act
+        val result = signupWebHandler.randomString()
+
+        // Arrange
+        Assertions.assertEquals(12, result.length)
+    }
+
+    @Test
+    fun `should encode and decode a string`() {
+        // Arrange
+        val code = "123456"
+
+        // Act
+        val encoded = signupWebHandler.encode(code)
+        val decoded = signupWebHandler.decode(encoded)
+
+        // Arrange
+        Assertions.assertEquals("123456", decoded)
     }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)

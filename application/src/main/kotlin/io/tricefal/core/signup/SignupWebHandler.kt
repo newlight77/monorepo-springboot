@@ -1,20 +1,17 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.metafile.*
-import io.tricefal.core.signup.fromModel
+import io.tricefal.core.metafile.MetafileRepository
+import io.tricefal.core.metafile.fromModel
+import io.tricefal.core.metafile.toMetafile
 import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
-import org.springframework.util.StringUtils
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.multipart.MultipartFile
 import java.security.SecureRandom
-import java.time.Instant
 import java.util.*
-import java.util.function.Consumer
 
 
 @Service
@@ -32,9 +29,11 @@ class SignupWebHandler(val signupService: ISignupService,
     val locale: Locale = LocaleContextHolder.getLocale()
 
     fun signup(signup: SignupModel): SignupStateModel {
-        signup.activationCode = generateCode()
-        val notification = notificationModel(signup)
-        val result = signupService.signup(fromModel(signup), fromModel(notification))
+        val activationCode = generateCode()
+        val domain = fromModel(signup)
+        domain.activationCode = activationCode
+        domain.activationToken = encode(activationCode) + "." + encode(signup.username) + "." + randomString()
+        val result = signupService.signup(domain, notification(domain))
         return toModel(result)
     }
 
@@ -47,6 +46,17 @@ class SignupWebHandler(val signupService: ISignupService,
                 .orElseThrow { IllegalStateException() }
 
         return toModel(this.signupService.activate(signup, code))
+    }
+
+    fun activateByToken(token: String): SignupStateModel {
+        val values = token.split(".")
+        val activationCode = decode(values[0])
+        val username = decode(values[1])
+
+        val signup = this.signupService.findByUsername(username)
+                .orElseThrow { IllegalStateException() }
+
+        return toModel(this.signupService.activate(signup, activationCode))
     }
 
     fun updateStatus(username: String, status: String): SignupStateModel {
@@ -66,13 +76,13 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
     }
 
-    private fun notificationModel(signup: SignupModel): SignupNotificationModel {
+    private fun notification(signup: SignupDomain): SignupNotificationDomain {
         val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname, signup.activationCode), locale)
         val emailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
         val emailGreeting = messageSource.getMessage("signup.mail.greeting", arrayOf(signup.firstname), locale)
         val emailContent = messageSource.getMessage("signup.mail.content", arrayOf(), locale)
 
-        return SignupNotificationModel.Builder(signup.username)
+        return SignupNotificationDomain.Builder(signup.username)
                 .smsFrom(smsFrom)
                 .smsTo(signup.phoneNumber)
                 .smsContent(smsContent)
@@ -86,6 +96,18 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun generateCode(): String {
         return SecureRandom().nextGaussian().toString().takeLast(6)
+    }
+
+    fun encode(code: String): String = Base64.getEncoder().encodeToString(code.toByteArray())
+
+    fun decode(code: String): String = String(Base64.getDecoder().decode(code.toByteArray()))
+
+    fun randomString(): String {
+        val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return (1..12)
+            .map { i -> kotlin.random.Random.nextInt(0, charPool.size) }
+            .map(charPool::get)
+            .joinToString("")
     }
 
 }

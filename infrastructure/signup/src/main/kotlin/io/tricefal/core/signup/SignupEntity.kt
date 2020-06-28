@@ -33,6 +33,9 @@ data class SignupEntity(
         @Column(name = "activation_code")
         var activationCode: String? = null,
 
+        @Column(name = "activation_token")
+        var activationToken: String? = null,
+
         @Column(name = "status", length = 50)
         var status: String,
 
@@ -52,6 +55,7 @@ fun toEntity(domain: SignupDomain): SignupEntity {
                 domain.lastname,
                 domain.phoneNumber,
                 domain.activationCode,
+                domain.activationToken,
                 domain.status.toString(),
                 domain.signupDate,
                 domain.state?.let { toEntity(it) })
@@ -63,6 +67,7 @@ fun fromEntity(entity: SignupEntity): SignupDomain {
                 .lastname(entity.lastname)
                 .phoneNumber(entity.phoneNumber)
                 .activationCode(entity.activationCode)
+                .activationToken(entity.activationToken)
                 .status(Status.valueOf(entity.status))
                 .signupDate(entity.signupDate)
                 .state(entity.signupState?.let { fromEntity(it) })

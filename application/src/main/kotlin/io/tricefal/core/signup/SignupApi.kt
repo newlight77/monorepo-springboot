@@ -12,7 +12,6 @@ class SignupApi(val signupWebHandler: SignupWebHandler) {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     fun signup(@RequestBody signup: SignupModel): SignupStateModel {
-        signup.activationCode = ""
         return signupWebHandler.signup(signup)
     }
 
@@ -20,6 +19,12 @@ class SignupApi(val signupWebHandler: SignupWebHandler) {
     @ResponseStatus(HttpStatus.OK)
     fun activate(@RequestParam username : String, @RequestParam code: Int): SignupStateModel {
         return signupWebHandler.activate(username, code.toString())
+    }
+
+    @PostMapping("verify/email")
+    @ResponseStatus(HttpStatus.OK)
+    fun activateByToken(@RequestParam token: String): SignupStateModel {
+        return signupWebHandler.activateByToken(token)
     }
 
     @PostMapping("upload")

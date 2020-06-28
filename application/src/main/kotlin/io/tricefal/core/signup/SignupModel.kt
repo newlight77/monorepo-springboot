@@ -10,7 +10,6 @@ class SignupModel
         val firstname: String?,
         val lastname: String?,
         val phoneNumber: String?,
-        var activationCode: String?, // to be removed in the model
         var status: Status?,
         val signupDate: Instant?,
 
@@ -24,7 +23,6 @@ class SignupModel
             var firstname: String? = null,
             var lastname: String? = null,
             var phoneNumber: String? = null,
-            var activationCode: String? = null,
             var status: Status? = null,
             var signupDate: Instant? = null,
 
@@ -36,7 +34,6 @@ class SignupModel
         fun firstname(firstname: String?) = apply { this.firstname = firstname }
         fun lastname(lastname: String?) = apply { this.lastname = lastname }
         fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
-        fun activationCode(activationCode: String?) = apply { this.activationCode = activationCode }
         fun status(status: Status) = apply { this.status = status }
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
 
@@ -48,7 +45,6 @@ class SignupModel
                 firstname,
                 lastname,
                 phoneNumber,
-                activationCode,
                 status,
                 signupDate ?: Instant.now(),
                 resumeFile,
@@ -63,7 +59,6 @@ fun toModel(domain: SignupDomain): SignupModel {
             .firstname(domain.firstname)
             .lastname(domain.lastname)
             .phoneNumber(domain.phoneNumber)
-            .activationCode(domain.activationCode)
             .status(domain.status!!)
             .signupDate(domain.signupDate)
             .resumeFile(domain.resumeFile?.let { io.tricefal.core.metafile.toModel(it) })
@@ -77,7 +72,6 @@ fun fromModel(model: SignupModel): SignupDomain {
             .firstname(model.firstname)
             .lastname(model.lastname)
             .phoneNumber(model.phoneNumber)
-            .activationCode(model.activationCode)
             .status(model.status ?: Status.UNKNOWN)
             .signupDate(model.signupDate)
             .resumeFile(model.resumeFile?.let { io.tricefal.core.metafile.fromModel(it) })
