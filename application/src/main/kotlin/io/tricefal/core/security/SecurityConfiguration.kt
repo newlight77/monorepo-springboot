@@ -32,7 +32,8 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
                 .antMatchers("/hello")
                 .antMatchers(HttpMethod.POST,"/logins")
                 .antMatchers(HttpMethod.POST,"/signup")
-                .antMatchers(HttpMethod.POST,"/signup/activate")
+                .antMatchers(HttpMethod.POST,"/signup/activate**")
+                .antMatchers(HttpMethod.GET,"/signup/verify/email**")
     }
 
     override fun configure(http: HttpSecurity) {

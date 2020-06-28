@@ -81,3 +81,6 @@ okta:
 
 encryption:
     secretKey: ${ENCRYPTION_SECRET_KEY}
+
+core:
+    baseUrl: ${CORE_BASE_URL}

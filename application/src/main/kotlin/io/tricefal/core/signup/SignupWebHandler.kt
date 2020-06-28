@@ -23,6 +23,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    private var backendBaseUrl = env.getProperty("core.baseUrl")!!
     private var emailFrom = env.getProperty("notification.mail.from")!!
     private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
 
@@ -50,6 +51,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun activateByToken(token: String): SignupStateModel {
         val values = token.split(".")
+        if (values.size < 3) throw java.lang.IllegalStateException("verify email by token : the token is invalid")
         val activationCode = decode(values[0])
         val username = decode(values[1])
 
@@ -77,10 +79,11 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     private fun notification(signup: SignupDomain): SignupNotificationDomain {
+        val emailActivationLink = emailValidationLink(signup)
         val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname, signup.activationCode), locale)
         val emailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
         val emailGreeting = messageSource.getMessage("signup.mail.greeting", arrayOf(signup.firstname), locale)
-        val emailContent = messageSource.getMessage("signup.mail.content", arrayOf(), locale)
+        val emailContent = messageSource.getMessage("signup.mail.content", arrayOf(emailActivationLink), locale)
 
         return SignupNotificationDomain.Builder(signup.username)
                 .smsFrom(smsFrom)
@@ -92,6 +95,10 @@ class SignupWebHandler(val signupService: ISignupService,
                 .emailGreeting(emailGreeting)
                 .emailContent(emailContent)
                 .build()
+    }
+
+    private fun emailValidationLink(signup: SignupDomain): String {
+        return backendBaseUrl + "/signup/verify/email?toeken" + signup.activationToken + "." + randomString()
     }
 
     fun generateCode(): String {

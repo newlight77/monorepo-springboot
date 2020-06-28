@@ -74,3 +74,6 @@ okta:
 
 encryption:
     secretKey: oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGh
+
+core:
+    baseUrl: http://localhost/api

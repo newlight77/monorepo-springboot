@@ -6,17 +6,14 @@ import io.jsonwebtoken.impl.DefaultClaims
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-private const val HEADER = "Authorization"
-private const val PREFIX = "Bearer "
-private const val SECRET = "mySecretKey"
-
-class JwtAuthorizationFilter(val oktaJwtVerifier: OktaJwtVerifier) : OncePerRequestFilter() {
+class JwtAuthorizationFilter(private val oktaJwtVerifier: OktaJwtVerifier) : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         try {
@@ -42,10 +39,9 @@ class JwtAuthorizationFilter(val oktaJwtVerifier: OktaJwtVerifier) : OncePerRequ
     }
 
     private fun jwtTokenInHeader(request: HttpServletRequest): String {
-        if (request.getHeader(HEADER).startsWith(PREFIX)) {
-            return request.getHeader(HEADER).replace(PREFIX, "")
-        }
-        return ""
+        val authorizationHeader = request.getHeader("Authorization")
+        return if (StringUtils.isEmpty(authorizationHeader)) ""
+        else authorizationHeader.replace("Bearer ", "")
     }
 
     private fun extractClaims(jwtToken: String): Claims {

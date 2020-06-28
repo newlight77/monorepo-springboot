@@ -21,7 +21,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler) {
         return signupWebHandler.activate(username, code.toString())
     }
 
-    @PostMapping("verify/email")
+    @GetMapping("verify/email")
     @ResponseStatus(HttpStatus.OK)
     fun activateByToken(@RequestParam token: String): SignupStateModel {
         return signupWebHandler.activateByToken(token)
