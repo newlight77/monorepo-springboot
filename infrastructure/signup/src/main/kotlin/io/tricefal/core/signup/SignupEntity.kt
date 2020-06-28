@@ -39,7 +39,7 @@ data class SignupEntity(
         @Column(name = "signup_date")
         var signupDate: Instant? = null,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")
         var signupState: SignupStateEntity? = null
 )
@@ -54,7 +54,7 @@ fun toEntity(domain: SignupDomain): SignupEntity {
                 domain.activationCode,
                 domain.status.toString(),
                 domain.signupDate,
-                toEntity(domain.state!!))
+                domain.state?.let { toEntity(it) })
 }
 
 fun fromEntity(entity: SignupEntity): SignupDomain {
@@ -65,6 +65,6 @@ fun fromEntity(entity: SignupEntity): SignupDomain {
                 .activationCode(entity.activationCode)
                 .status(Status.valueOf(entity.status))
                 .signupDate(entity.signupDate)
-                .state(fromEntity(entity.signupState!!))
+                .state(entity.signupState?.let { fromEntity(it) })
                 .build()
 }

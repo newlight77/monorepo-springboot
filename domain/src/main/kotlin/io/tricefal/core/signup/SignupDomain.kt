@@ -15,7 +15,6 @@ data class SignupDomain
             val signupDate: Instant?,
 
             var resumeFile: MetafileDomain? = null,
-//            var notification: SignupNotificationDomain? = null,
             var state: SignupStateDomain? = null
     ) {
 
@@ -30,7 +29,6 @@ data class SignupDomain
             var signupDate: Instant? = null,
 
             var resumeFile: MetafileDomain? = null,
-//            var notification: SignupNotificationDomain? = null,
             var state: SignupStateDomain? = null
     ) {
         fun password(password: String?) = apply { this.password = password }
@@ -41,7 +39,6 @@ data class SignupDomain
         fun status(status: Status) = apply { this.status = status }
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
         fun resumeFile(resumeFile: MetafileDomain?) = apply { this.resumeFile = resumeFile }
-//        fun notification(notification: SignupNotificationDomain?) = apply { this.notification = notification }
         fun state(state: SignupStateDomain?) = apply { this.state = state }
 
         fun build() = SignupDomain(username,
@@ -53,7 +50,6 @@ data class SignupDomain
                 status,
                 signupDate,
                 resumeFile,
-//                notification,
                 state
         )
     }

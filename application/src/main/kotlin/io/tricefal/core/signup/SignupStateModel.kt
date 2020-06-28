@@ -1,7 +1,6 @@
 package io.tricefal.core.signup
 
-class SignupStateModel
-    private constructor(
+class SignupStateModel(
         val username: String,
         var oktaRegistered: Boolean? = null,
         var emailSent: Boolean? = null,

@@ -16,7 +16,7 @@ class OktaService(private val env: Environment) {
     fun register(signup: SignupDomain): Boolean {
         val response = oktaClient.createUser(toOktaUser(signup))
         logger.info(response.toString())
-        return "ACTIVE".equals(response.created)
+        return "ACTIVE" == response.execute().body()?.created
     }
 
 }

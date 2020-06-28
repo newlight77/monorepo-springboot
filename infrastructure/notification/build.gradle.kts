@@ -28,7 +28,7 @@ dependencies {
 
 	// notification
 	implementation("org.springframework.boot:spring-boot-starter-mail:2.3.0.RELEASE")
-	implementation("org.freemarker:freemarker:2.3.30")
+	api("org.freemarker:freemarker:2.3.30")
 	testImplementation("com.icegreen:greenmail:1.5.13")
 
 	// twilio

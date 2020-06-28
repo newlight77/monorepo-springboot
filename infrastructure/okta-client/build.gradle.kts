@@ -36,6 +36,7 @@ dependencies {
 
 	// okta service
 	implementation("com.squareup.retrofit2:retrofit:2.9.0")
+	implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 	implementation("org.mindrot:jbcrypt:0.4")
 //	implementation("com.squareup.moshi:moshi-kotlin-codegen:1.9.3")
 

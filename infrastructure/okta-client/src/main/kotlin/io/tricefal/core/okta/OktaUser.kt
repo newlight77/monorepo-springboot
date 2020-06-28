@@ -2,9 +2,8 @@ package io.tricefal.core.okta
 
 import io.tricefal.core.signup.SignupDomain
 
-class OktaUser
-    private constructor(private val profile: Profile,
-              private val credentials: Credentials) {
+class OktaUser(val profile: Profile,
+               val credentials: Credentials) {
 
     class Builder {
         private var firstName: String? = null
@@ -30,13 +29,13 @@ class OktaUser
 
     }
 
-    private class Profile(val firstName: String,
+    class Profile(val firstName: String,
                   val lastname: String,
                   val email: String,
                   val login: String,
                   val mobilePhone: String)
 
-    private class Credentials(val bcryptPassword: BcryptPassword)
+    class Credentials(val bcryptPassword: BcryptPassword)
 }
 
 

@@ -15,7 +15,6 @@ class SignupModel
         val signupDate: Instant?,
 
         var resumeFile: MetafileModel? = null,
-//        var notification: SignupNotificationModel? = null,
         var state: SignupStateModel? = null
     ) {
 
@@ -30,7 +29,6 @@ class SignupModel
             var signupDate: Instant? = null,
 
             var resumeFile: MetafileModel? = null,
-//            var notification: SignupNotificationModel? = null,
             var state: SignupStateModel? = null
     ) {
 
@@ -43,7 +41,6 @@ class SignupModel
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
 
         fun resumeFile(resumeFile: MetafileModel?) = apply { this.resumeFile = resumeFile }
-//        fun notification(notification: SignupNotificationModel?) = apply { this.notification = notification }
         fun state(state: SignupStateModel?) = apply { this.state = state }
 
         fun build() = SignupModel(username,
@@ -55,7 +52,6 @@ class SignupModel
                 status,
                 signupDate ?: Instant.now(),
                 resumeFile,
-//                notification,
                 state
         )
     }
@@ -71,8 +67,7 @@ fun toModel(domain: SignupDomain): SignupModel {
             .status(domain.status!!)
             .signupDate(domain.signupDate)
             .resumeFile(domain.resumeFile?.let { io.tricefal.core.metafile.toModel(it) })
-//            .notification(toModel(domain.notification!!))
-            .state(toModel(domain.state!!))
+            .state(domain.state?.let { toModel(it) })
             .build()
 }
 
@@ -86,6 +81,6 @@ fun fromModel(model: SignupModel): SignupDomain {
             .status(model.status ?: Status.UNKNOWN)
             .signupDate(model.signupDate)
             .resumeFile(model.resumeFile?.let { io.tricefal.core.metafile.fromModel(it) })
-            .state(fromModel(model.state!!))
+            .state(model.state?.let { fromModel(it) })
             .build()
 }
