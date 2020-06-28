@@ -3,6 +3,7 @@ package io.tricefal.core.signup
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import kotlin.math.sign
 
 @RestController
 @RequestMapping("signup")
@@ -11,6 +12,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler) {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     fun signup(@RequestBody signup: SignupModel): SignupStateModel {
+        signup.activationCode = ""
         return signupWebHandler.signup(signup)
     }
 

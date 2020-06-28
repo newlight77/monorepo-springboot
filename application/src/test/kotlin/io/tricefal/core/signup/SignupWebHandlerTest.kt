@@ -239,6 +239,17 @@ class SignupWebHandlerTest {
 //        Assertions.assertEquals(Status.EMPLOYEE.toString(), signupCaptor.value.status)
     }
 
+    @Test
+    fun `should generate an activation code with 6 digits`() {
+        // Arrange
+
+        // Act
+        val result = signupWebHandler.generateCode()
+
+        // Arrange
+        Assertions.assertEquals(6, result.length)
+    }
+
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
 
 }

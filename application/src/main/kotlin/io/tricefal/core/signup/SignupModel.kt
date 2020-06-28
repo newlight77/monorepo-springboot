@@ -10,7 +10,7 @@ class SignupModel
         val firstname: String?,
         val lastname: String?,
         val phoneNumber: String?,
-        var activationCode: String?,
+        var activationCode: String?, // to be removed in the model
         var status: Status?,
         val signupDate: Instant?,
 

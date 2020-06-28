@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.multipart.MultipartFile
+import java.security.SecureRandom
 import java.time.Instant
 import java.util.*
 import java.util.function.Consumer
@@ -31,6 +32,7 @@ class SignupWebHandler(val signupService: ISignupService,
     val locale: Locale = LocaleContextHolder.getLocale()
 
     fun signup(signup: SignupModel): SignupStateModel {
+        signup.activationCode = generateCode()
         val notification = notificationModel(signup)
         val result = signupService.signup(fromModel(signup), fromModel(notification))
         return toModel(result)
@@ -80,6 +82,10 @@ class SignupWebHandler(val signupService: ISignupService,
                 .emailGreeting(emailGreeting)
                 .emailContent(emailContent)
                 .build()
+    }
+
+    fun generateCode(): String {
+        return SecureRandom().nextGaussian().toString().takeLast(6)
     }
 
 }

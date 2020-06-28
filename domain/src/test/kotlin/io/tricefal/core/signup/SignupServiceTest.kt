@@ -117,15 +117,4 @@ class SignupServiceTest {
         Mockito.verify(adapter).update(signup)
         Assertions.assertTrue(result.statusUpdated!!)
     }
-
-    @Test
-    fun `should generate an activation code with 6 digits`() {
-        // Arrange
-
-        // Act
-        val result = SignupService(adapter).generateCode()
-
-        // Arrange
-        Assertions.assertEquals(6, result.length)
-    }
 }

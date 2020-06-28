@@ -7,8 +7,6 @@ import java.util.*
 class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
     override fun signup(signup: SignupDomain, notification: SignupNotificationDomain): SignupStateDomain {
-        signup.activationCode = generateCode()
-
         signup.state = SignupStateDomain.Builder(signup.username)
                 .oktaRegistered(adapter.oktaRegister(signup))
                 .emailSent(adapter.sendEmail(notification))
@@ -44,7 +42,4 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         return signup.state!!
     }
 
-    fun generateCode(): String {
-        return SecureRandom().nextGaussian().toString().takeLast(6)
-    }
 }
