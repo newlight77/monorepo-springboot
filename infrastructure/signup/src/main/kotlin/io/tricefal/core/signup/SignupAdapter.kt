@@ -8,6 +8,7 @@ import io.tricefal.core.okta.OktaService
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -20,21 +21,25 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun signup(signup: SignupDomain): SignupDomain {
-        println(signup)
+        repository.findByUsername(signup.username).ifPresent {
+            throw DuplicateKeyException("a signup with username ${signup.username} is already taken")
+        }
         val signupEntity = repository.save(toEntity(signup))
         return fromEntity(signupEntity)
     }
 
     override fun findByUsername(username: String): Optional<SignupDomain> {
-        println("findByUsername$username")
         return repository.findByUsername(username).map {
-            println("map : $username")
             fromEntity(it)
         }
     }
 
     override fun update(signup: SignupDomain): SignupDomain {
-        val signupEntity = repository.save(toEntity(signup))
+        val entity = toEntity(signup)
+        repository.findByUsername(signup.username).ifPresent {
+            entity.id = it.id
+        }
+        val signupEntity = repository.save(entity)
         return fromEntity(signupEntity)
     }
 

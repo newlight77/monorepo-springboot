@@ -13,7 +13,7 @@ const val EMAIL_REGEX = " ^[\\\\w!#\$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#\$%&’*
 data class SignupEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        val id: Long? = null,
+        var id: Long? = null,
 
         @NotNull
         @Pattern(regexp = EMAIL_REGEX)

@@ -33,7 +33,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val activationCode = generateCode()
         val domain = fromModel(signup)
         domain.activationCode = activationCode
-        domain.activationToken = encode(activationCode) + "." + encode(signup.username) + "." + randomString()
+        domain.activationToken = encode(activationCode) + "." + encode(signup.username)
         val result = signupService.signup(domain, notification(domain))
         return toModel(result)
     }
@@ -43,8 +43,10 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun activate(username: String, code: String): SignupStateModel {
+        if (username.isEmpty()) throw IllegalStateException("username is $username")
+
         val signup = this.signupService.findByUsername(username)
-                .orElseThrow { IllegalStateException() }
+                .orElseThrow { IllegalStateException("username $username not found") }
 
         return toModel(this.signupService.activate(signup, code))
     }
@@ -55,8 +57,10 @@ class SignupWebHandler(val signupService: ISignupService,
         val activationCode = decode(values[0])
         val username = decode(values[1])
 
+        if (username.isEmpty()) throw IllegalStateException("username is $username")
+
         val signup = this.signupService.findByUsername(username)
-                .orElseThrow { IllegalStateException() }
+                .orElseThrow { IllegalStateException("username $username not found") }
 
         return toModel(this.signupService.activate(signup, activationCode))
     }
@@ -98,16 +102,17 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     private fun emailValidationLink(signup: SignupDomain): String {
-        return backendBaseUrl + "/signup/verify/email?toeken" + signup.activationToken + "." + randomString()
+        return backendBaseUrl + "/signup/verify/email?token=" + signup.activationToken + "." + randomString()
     }
 
     fun generateCode(): String {
         return SecureRandom().nextGaussian().toString().takeLast(6)
     }
 
-    fun encode(code: String): String = Base64.getEncoder().encodeToString(code.toByteArray())
+    fun encode(code: String): String = Base64.getUrlEncoder()
+            .encodeToString(code.toByteArray())
 
-    fun decode(code: String): String = String(Base64.getDecoder().decode(code.toByteArray()))
+    fun decode(code: String): String = String(Base64.getUrlDecoder().decode(code.toByteArray()))
 
     fun randomString(): String {
         val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')

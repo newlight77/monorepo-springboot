@@ -6,6 +6,10 @@ import java.util.*
 class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
     override fun signup(signup: SignupDomain, notification: SignupNotificationDomain): SignupStateDomain {
+        adapter.findByUsername(signup.username).ifPresent {
+            throw UsernameUniquenessException("a signup with username ${signup.username} is already taken")
+        }
+
         signup.state = SignupStateDomain.Builder(signup.username)
                 .oktaRegistered(adapter.oktaRegister(signup))
                 .emailSent(adapter.sendEmail(notification))
@@ -42,3 +46,5 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     }
 
 }
+
+class UsernameUniquenessException(val s: String) : Throwable()
