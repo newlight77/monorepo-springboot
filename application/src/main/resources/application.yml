@@ -78,6 +78,7 @@ notification:
 
 okta:
     baseUrl: ${OKTA_OAUTH2_BASE_URL}
+    apiToken: ${OKTA_API_TOKEN}
 
 encryption:
     secretKey: ${ENCRYPTION_SECRET_KEY}

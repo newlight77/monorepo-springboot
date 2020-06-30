@@ -71,6 +71,7 @@ notification:
             authToken: 56dfdab0b2c07ed9d861b4a182d10e00
 okta:
     baseUrl: https://dev-769725.okta.com
+    apiToken: 00m6e7g8VBqhtFOu2HdVSkeGgcm3eH5VFScBHD00sI
 
 encryption:
     secretKey: oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGh

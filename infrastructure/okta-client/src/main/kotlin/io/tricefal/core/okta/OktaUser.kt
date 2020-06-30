@@ -7,35 +7,37 @@ class OktaUser(val profile: Profile,
 
     class Builder {
         private var firstName: String? = null
-        private var lastname: String? = null
+        private var lastName: String? = null
         private var email: String? = null
         private var mobilePhone: String? = null
         private var password: String? = null
 
         fun firstName(firstName: String) =  apply { this.firstName = firstName }
-        fun lastname(lastname: String) =  apply { this.lastname = lastname }
+        fun lastName(lastName: String) =  apply { this.lastName = lastName }
         fun email(email: String) =  apply { this.email = email }
         fun mobilePhone(mobilePhone: String) =  apply { this.mobilePhone = mobilePhone }
         fun password(password: String) = apply { this.password = password}
 
         fun build(): OktaUser {
-            val profile = Profile(firstName!!, lastname!!, email!!, email!!, mobilePhone!!)
-            val bcryptPassword = BcryptPassword.Builder()
+            val profile = Profile(firstName!!, lastName!!, email!!, email!!, mobilePhone!!)
+            val passwordHash = PasswordHash.Builder()
                     .workFactor(10)
                     .password(password!!)
                     .build()
-            return OktaUser(profile, Credentials(bcryptPassword))
+            return OktaUser(profile, Credentials(Password(passwordHash)))
         }
 
     }
 
     class Profile(val firstName: String,
-                  val lastname: String,
+                  val lastName: String,
                   val email: String,
                   val login: String,
                   val mobilePhone: String)
 
-    class Credentials(val bcryptPassword: BcryptPassword)
+    class Credentials(val password: Password)
+
+    class Password(val hash: PasswordHash)
 }
 
 
@@ -44,7 +46,7 @@ fun toOktaUser(domain: SignupDomain): OktaUser {
             .email(domain.username)
             .password(domain.password!!)
             .firstName(domain.firstname!!)
-            .lastname(domain.lastname!!)
+            .lastName(domain.lastname!!)
             .mobilePhone(domain.phoneNumber!!)
             .build()
 }
