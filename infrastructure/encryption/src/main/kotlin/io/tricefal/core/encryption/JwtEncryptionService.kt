@@ -15,7 +15,7 @@ import javax.xml.bind.DatatypeConverter
 
 @Service
 @PropertySource("encryption.yml")
-class  EncryptionService(private final val env: Environment) {
+class  JwtEncryptionService(private final val env: Environment) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
     private var secretKey = env.getProperty("encryption.secretKey")!!

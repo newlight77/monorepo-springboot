@@ -5,23 +5,22 @@ import io.jsonwebtoken.security.SecurityException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.core.env.Environment
 
 @ExtendWith(MockitoExtension::class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class EncryptionServiceTest {
+class JwtEncryptionServiceTest {
 
-    private lateinit var encryptionService: EncryptionService
+    private lateinit var encryptionService: JwtEncryptionService
     private lateinit var env: Environment
 
     @BeforeEach
     internal fun before() {
         env = Mockito.mock(Environment::class.java)
         Mockito.`when`(env.getProperty("encryption.secretKey")).thenReturn("secretKey254hsdh345asdfasdfasdfasdfasdfasfywreht35sgtgr")
-        encryptionService = EncryptionService(env)
+        encryptionService = JwtEncryptionService(env)
     }
 
     @Test
@@ -38,7 +37,7 @@ class EncryptionServiceTest {
         )
 
         // act
-        val decoded = EncryptionService(env).decode(jwt)
+        val decoded = encryptionService.decode(jwt)
 
         // assert
         assertEquals(jwtSubject, decoded)
