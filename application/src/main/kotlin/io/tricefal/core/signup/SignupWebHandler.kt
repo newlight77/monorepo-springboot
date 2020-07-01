@@ -1,5 +1,7 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.exception.NotAcceptedException
+import io.tricefal.core.exception.NotFoundException
 import io.tricefal.core.metafile.MetafileRepository
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
@@ -56,7 +58,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun activateByToken(token: String): SignupStateModel {
         val values = token.split(".")
-        if (values.size < 3) throw java.lang.IllegalStateException("verify email by token : the token is invalid")
+        if (values.size < 3) throw NotAcceptedException("verify email by token : the token is invalid")
         val activationCode = decode(values[0])
         val username = decode(values[1])
 
@@ -81,9 +83,9 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     private fun findSignup(username: String): SignupDomain {
-        if (username.isEmpty()) throw IllegalStateException("username is $username")
+        if (username.isEmpty()) throw NotAcceptedException("username is $username")
         val signup = this.signupService.findByUsername(username)
-                .orElseThrow { IllegalStateException("username $username not found") }
+                .orElseThrow { NotFoundException("username $username not found") }
         return signup
     }
 
