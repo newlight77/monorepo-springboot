@@ -43,12 +43,15 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun activate(username: String, code: String): SignupStateModel {
-        if (username.isEmpty()) throw IllegalStateException("username is $username")
-
-        val signup = this.signupService.findByUsername(username)
-                .orElseThrow { IllegalStateException("username $username not found") }
+        val signup = findSignup(username)
 
         return toModel(this.signupService.activate(signup, code))
+    }
+
+    fun state(username: String): SignupStateModel {
+        val signup = findSignup(username)
+
+        return toModel(signup.state!!)
     }
 
     fun activateByToken(token: String): SignupStateModel {
@@ -57,29 +60,31 @@ class SignupWebHandler(val signupService: ISignupService,
         val activationCode = decode(values[0])
         val username = decode(values[1])
 
-        if (username.isEmpty()) throw IllegalStateException("username is $username")
-
-        val signup = this.signupService.findByUsername(username)
-                .orElseThrow { IllegalStateException("username $username not found") }
+        val signup = findSignup(username)
 
         return toModel(this.signupService.activate(signup, activationCode))
     }
 
     fun updateStatus(username: String, status: String): SignupStateModel {
-        val signup = this.signupService.findByUsername(username)
-                .orElseThrow { IllegalStateException() }
+        val signup = findSignup(username)
 
         return toModel(signupService.updateStatus(signup, Status.valueOf(status)))
     }
 
     fun uploadResume(username: String, file: MultipartFile): SignupStateModel {
-        val signup = this.signupService.findByUsername(username)
-                .orElseThrow { IllegalStateException() }
+        val signup = findSignup(username)
 
         val resumeMetaFile = fromModel(toMetafile(username, file))
         metafileRepository.save(resumeMetaFile, file.inputStream)
 
         return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
+    }
+
+    private fun findSignup(username: String): SignupDomain {
+        if (username.isEmpty()) throw IllegalStateException("username is $username")
+        val signup = this.signupService.findByUsername(username)
+                .orElseThrow { IllegalStateException("username $username not found") }
+        return signup
     }
 
     private fun notification(signup: SignupDomain): SignupNotificationDomain {
