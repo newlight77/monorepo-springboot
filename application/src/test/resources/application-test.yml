@@ -78,3 +78,4 @@ encryption:
 
 core:
     baseUrl: http://localhost/api
+    frontendUrl: http://localhost

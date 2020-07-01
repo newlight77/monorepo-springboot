@@ -1,13 +1,20 @@
 package io.tricefal.core.signup
 
+import org.springframework.core.env.Environment
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import kotlin.math.sign
+import javax.servlet.http.HttpServletResponse
+
 
 @RestController
 @RequestMapping("signup")
-class SignupApi(val signupWebHandler: SignupWebHandler) {
+class SignupApi(val signupWebHandler: SignupWebHandler,
+                private final val env: Environment) {
+
+    private var frontendBaseUrl = env.getProperty("core.frontendUrl")!!
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
@@ -23,8 +30,9 @@ class SignupApi(val signupWebHandler: SignupWebHandler) {
 
     @GetMapping("verify/email")
     @ResponseStatus(HttpStatus.OK)
-    fun activateByToken(@RequestParam token: String): SignupStateModel {
-        return signupWebHandler.activateByToken(token)
+    fun activateByToken(response: HttpServletResponse, @RequestParam token: String): ResponseEntity<Any> {
+        signupWebHandler.activateByToken(token)
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, frontendBaseUrl).build();
     }
 
     @PostMapping("upload")

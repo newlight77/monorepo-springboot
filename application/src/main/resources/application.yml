@@ -85,3 +85,4 @@ encryption:
 
 core:
     baseUrl: ${CORE_BASE_URL}
+    frontendUrl: ${CORE_FRONTEND_URL}
