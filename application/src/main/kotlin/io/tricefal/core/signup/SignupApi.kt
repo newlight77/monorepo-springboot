@@ -28,16 +28,16 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.activate(username, code.toString())
     }
 
-    @GetMapping("state")
+    @GetMapping("state/{username}")
     @ResponseStatus(HttpStatus.OK)
-    fun state(@RequestParam username : String): SignupStateModel {
+    fun state(@PathVariable username : String): SignupStateModel {
         return signupWebHandler.state(username)
     }
 
     @GetMapping("verify/email")
     @ResponseStatus(HttpStatus.OK)
-    fun activateByToken(response: HttpServletResponse, @RequestParam token: String): ResponseEntity<Any> {
-        val state = signupWebHandler.activateByToken(token)
+    fun everifyByEmail(response: HttpServletResponse, @RequestParam token: String): ResponseEntity<Any> {
+        val state = signupWebHandler.verifyByToken(token)
         val url = frontendBaseUrl + "/register/activated/" + state.username
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, url).build()
     }

@@ -56,7 +56,8 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(signup.state!!)
     }
 
-    fun activateByToken(token: String): SignupStateModel {
+    fun verifyByToken(token: String): SignupStateModel {
+        // the received token has 3 parts, the third is intentionally ignored as overfilled
         val values = token.split(".")
         if (values.size < 3) throw NotAcceptedException("verify email by token : the token is invalid")
         val activationCode = decode(values[0])
@@ -64,7 +65,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val signup = findSignup(username)
 
-        return toModel(this.signupService.activate(signup, activationCode))
+        return toModel(this.signupService.verifyFromToken(signup, activationCode))
     }
 
     fun updateStatus(username: String, status: String): SignupStateModel {
@@ -124,7 +125,7 @@ class SignupWebHandler(val signupService: ISignupService,
     fun randomString(): String {
         val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         return (1..12)
-            .map { i -> kotlin.random.Random.nextInt(0, charPool.size) }
+            .map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
             .joinToString("")
     }

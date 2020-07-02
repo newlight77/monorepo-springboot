@@ -31,6 +31,12 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         return signup.state!!
     }
 
+    override fun verifyFromToken(signup: SignupDomain, code: String): SignupStateDomain {
+        signup.state?.emailValidated = signup.activationCode.equals(code)
+        adapter.update(signup)
+        return signup.state!!
+    }
+
     override fun resumeUploaded(signup: SignupDomain, resumeFileDomain: MetafileDomain): SignupStateDomain {
         signup.resumeFile = resumeFileDomain
         signup.state!!.resumeUploaded = true
