@@ -24,8 +24,8 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
 
     @PostMapping("activate")
     @ResponseStatus(HttpStatus.OK)
-    fun activate(@RequestParam username : String, @RequestParam code: Int): SignupStateModel {
-        return signupWebHandler.activate(username, code.toString())
+    fun activate(@RequestBody activateModel: SignupActivateModel): SignupStateModel {
+        return signupWebHandler.activate(activateModel.username, activateModel.code.toString())
     }
 
     @GetMapping("state/{username}")
@@ -42,16 +42,22 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, url).build()
     }
 
-    @PostMapping("upload")
+    @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
-    fun upload(@RequestParam username : String, @RequestBody file: MultipartFile): SignupStateModel {
+    fun uploadCv(@RequestParam username: String, @RequestParam file : MultipartFile): SignupStateModel {
+        return signupWebHandler.uploadResume(username, file)
+    }
+
+    @PostMapping("upload/ref", consumes = [ "multipart/form-data" ])
+    @ResponseStatus(HttpStatus.OK)
+    fun uploadRef(@RequestParam username: String, @RequestParam file : MultipartFile): SignupStateModel {
         return signupWebHandler.uploadResume(username, file)
     }
 
     @PostMapping("status")
     @ResponseStatus(HttpStatus.OK)
-    fun updateStatus(@RequestParam username : String, @RequestParam status: String): SignupStateModel {
-        return signupWebHandler.updateStatus(username, status)
+    fun updateStatus(@RequestBody statusModel : SignupStatusModel): SignupStateModel {
+        return signupWebHandler.updateStatus(statusModel.username, statusModel.status)
     }
 
 }
