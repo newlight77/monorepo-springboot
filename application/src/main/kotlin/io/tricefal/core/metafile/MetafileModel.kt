@@ -50,7 +50,7 @@ fun fromModel(model: MetafileModel): MetafileDomain {
 
 fun toMetafile(username: String, file: MultipartFile): MetafileModel {
     val fileName: String = StringUtils.cleanPath(file.originalFilename!!)
-    return MetafileModel.Builder(Long.MIN_VALUE)
+    return MetafileModel.Builder(0L)
             .username(username)
             .type(file.contentType!!)
             .filename(fileName)

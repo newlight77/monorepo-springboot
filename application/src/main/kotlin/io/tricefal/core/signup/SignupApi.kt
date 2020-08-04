@@ -4,6 +4,8 @@ import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import javax.servlet.http.HttpServletResponse
@@ -44,14 +46,16 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
 
     @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadCv(@RequestParam username: String, @RequestParam file : MultipartFile): SignupStateModel {
-        return signupWebHandler.uploadResume(username, file)
+    fun uploadCv(@RequestParam file : MultipartFile): SignupStateModel {
+        val authentication: Authentication = SecurityContextHolder.getContext().authentication
+        return signupWebHandler.uploadResume(authentication.name, file)
     }
 
     @PostMapping("upload/ref", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadRef(@RequestParam username: String, @RequestParam file : MultipartFile): SignupStateModel {
-        return signupWebHandler.uploadResume(username, file)
+    fun uploadRef(@RequestParam file : MultipartFile): SignupStateModel {
+        val authentication: Authentication = SecurityContextHolder.getContext().authentication
+        return signupWebHandler.uploadResume(authentication.name, file)
     }
 
     @PostMapping("status")

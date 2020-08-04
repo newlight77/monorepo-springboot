@@ -1,7 +1,6 @@
 package io.tricefal.core.metafile
 
 import io.tricefal.core.storage.FileStorage
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Repository
@@ -13,13 +12,12 @@ import java.util.*
 @PropertySource("storage.yml")
 class MetafileRepository(val repository: MetafileJpaRepository, private final val env: Environment) {
 
-//    @Value("{data.files.path}")
-//    lateinit var dataFilesPath: String
     private val dataFilesPath = env.getProperty("data.files.path")!!
 
     fun save(metafile: MetafileDomain, inpputStream: InputStream) {
-        repository.save(toEntity(metafile))
-        FileStorage().save(inpputStream, Paths.get(dataFilesPath))
+        val metafileEntity = repository.save(toEntity(metafile))
+        val filename = "${metafileEntity.username}-${metafileEntity.id}-${metafileEntity.filename}"
+        FileStorage().save(inpputStream, Paths.get("$dataFilesPath/${filename}"))
     }
 
     fun findById(id: Long): Optional<MetafileDomain> {
