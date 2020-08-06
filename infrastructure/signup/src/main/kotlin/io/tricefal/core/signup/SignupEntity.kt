@@ -68,7 +68,7 @@ fun fromEntity(entity: SignupEntity): SignupDomain {
                 .phoneNumber(entity.phoneNumber)
                 .activationCode(entity.activationCode)
                 .activationToken(entity.activationToken)
-                .status(Status.valueOf(entity.status))
+                .status(toStatus(entity.status))
                 .signupDate(entity.signupDate)
                 .state(entity.signupState?.let { fromEntity(it) })
                 .build()

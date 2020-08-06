@@ -68,10 +68,10 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(this.signupService.verifyFromToken(signup, activationCode))
     }
 
-    fun updateStatus(username: String, status: String): SignupStateModel {
+    fun updateStatus(username: String, status: Status): SignupStateModel {
         val signup = findSignup(username)
 
-        return toModel(signupService.updateStatus(signup, Status.valueOf(status)))
+        return toModel(signupService.updateStatus(signup, status))
     }
 
     fun uploadResume(username: String, file: MultipartFile): SignupStateModel {

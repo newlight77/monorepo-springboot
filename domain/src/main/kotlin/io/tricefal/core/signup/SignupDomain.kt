@@ -60,7 +60,16 @@ data class SignupDomain
 }
 
 enum class Status {
-    UNKNOWN,
+    NONE,
+    STUDENT,
     FREELANCE,
-    EMPLOYEE
+    EMPLOYEE;
+}
+
+fun toStatus(status: String): Status {
+    try {
+        return Status.valueOf(status.toUpperCase())
+    } catch (ex: Exception) {
+        throw IllegalArgumentException("invalid argument : status=$status")
+    }
 }

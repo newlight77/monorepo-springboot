@@ -61,7 +61,8 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @PostMapping("status")
     @ResponseStatus(HttpStatus.OK)
     fun updateStatus(@RequestBody statusModel : SignupStatusModel): SignupStateModel {
-        return signupWebHandler.updateStatus(statusModel.username, statusModel.status)
+        val status = toStatus(statusModel.status)
+        return signupWebHandler.updateStatus(statusModel.username, status)
     }
 
 }

@@ -76,7 +76,7 @@ fun fromModel(model: SignupModel): SignupDomain {
             .firstname(model.firstname)
             .lastname(model.lastname)
             .phoneNumber(model.phoneNumber)
-            .status(model.status ?: Status.UNKNOWN)
+            .status(model.status ?: Status.NONE)
             .signupDate(model.signupDate)
             .resumeFile(model.resumeFile?.let { io.tricefal.core.metafile.fromModel(it) })
             .state(model.state?.let { fromModel(it) })

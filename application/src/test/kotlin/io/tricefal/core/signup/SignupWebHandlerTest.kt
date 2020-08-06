@@ -228,7 +228,7 @@ class SignupWebHandlerTest {
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(expected)
 
         // Act
-        val result = signupWebHandler.updateStatus(username, Status.EMPLOYEE.toString())
+        val result = signupWebHandler.updateStatus(username, Status.EMPLOYEE)
 
         // Arrange
         Assertions.assertTrue(result.statusUpdated!!)
