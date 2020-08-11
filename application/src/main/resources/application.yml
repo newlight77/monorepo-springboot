@@ -57,7 +57,7 @@ logging:
 #    config: classpath:logback-spring.xml
     file: core.log
     path: ${DATA_LOGS_PATH}
-
+    org.apache.catalina: DEBUG
 
 
 #### Custom
@@ -86,3 +86,26 @@ encryption:
 core:
     baseUrl: ${CORE_BASE_URL}
     frontendUrl: ${CORE_FRONTEND_URL}
+
+## Can be set to false to disable security during local development
+#management:
+#    endpoints:
+#        web:
+#            cors:
+#                allowed-origins: *
+#                allowed-headers: *
+#                allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+#                max-age: 3600
+
+keycloak:
+    configurationFile: classpath:keycloak.json
+#    enabled: true
+#    cors: true
+#    realm: dev.tricefal.io
+#    auth-server-url: http://localhost:9080/auth
+#    ssl-required: external
+#    resource: core-api
+#    bearer-only: true
+#    credentials:
+#        secret:
+#    public-client: true
