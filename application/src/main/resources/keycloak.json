@@ -1,7 +1,7 @@
 {
   "realm": "dev.tricefal.io",
   "bearer-only": true,
-  "auth-server-url": "http://localhost:1080/auth",
+  "auth-server-url": "https://localhost:1080/auth",
   "ssl-required": "external",
   "resource": "dev.tricefal.backend-localhost-8080",
   "verify-token-audience": true,
