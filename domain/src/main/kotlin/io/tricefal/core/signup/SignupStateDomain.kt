@@ -3,7 +3,7 @@ package io.tricefal.core.signup
 class SignupStateDomain
     private constructor(
         val username: String,
-        val oktaRegistered: Boolean?,
+        val registered: Boolean?,
         val emailSent: Boolean?,
         var emailValidated: Boolean? = null,
         val activationCodeSent: Boolean?,
@@ -15,7 +15,7 @@ class SignupStateDomain
 
     data class Builder (
             val username: String,
-            var oktaRegistered: Boolean? = null,
+            var registered: Boolean? = null,
             var emailSent: Boolean? = null,
             var emailValidated: Boolean? = null,
             var activationCodeSent: Boolean? = null,
@@ -23,7 +23,7 @@ class SignupStateDomain
             var resumeUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
             var validated: Boolean? = null) {
-        fun oktaRegistered(oktaRegistered: Boolean?) = apply { this.oktaRegistered = oktaRegistered }
+        fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
         fun activationCodeSent(activationCodeSent: Boolean?) = apply { this.activationCodeSent = activationCodeSent }
@@ -33,7 +33,7 @@ class SignupStateDomain
         fun validated(validated: Boolean?) = apply { this.validated = validated }
         fun build() = SignupStateDomain(
                 username,
-                oktaRegistered,
+                registered,
                 emailSent,
                 emailValidated,
                 activationCodeSent,

@@ -100,7 +100,7 @@ class SignupWebHandlerTest {
         val result = signupWebHandler.signup(signup)
 
         // Arrange
-        Assertions.assertTrue(result.oktaRegistered!!)
+        Assertions.assertTrue(result.registered!!)
         Assertions.assertTrue(result.emailSent!!)
         Assertions.assertTrue(result.activationCodeSent!!)
     }

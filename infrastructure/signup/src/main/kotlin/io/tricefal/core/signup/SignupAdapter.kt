@@ -43,7 +43,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return fromEntity(signupEntity)
     }
 
-    override fun oktaRegister(signup: SignupDomain): Boolean {
+    override fun register(signup: SignupDomain): Boolean {
         return oktaService.register(signup)
     }
 

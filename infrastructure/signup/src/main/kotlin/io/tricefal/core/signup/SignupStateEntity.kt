@@ -19,7 +19,7 @@ class SignupStateEntity(
             var username: String,
 
             @Column(name = "okta_registered")
-            val oktaRegistered: Boolean?,
+            val registered: Boolean?,
 
             @Column(name = "email_sent")
             val emailSent: Boolean?,
@@ -47,7 +47,7 @@ fun toEntity(domain: SignupStateDomain): SignupStateEntity {
     return SignupStateEntity(
             null,
             domain.username,
-            domain.oktaRegistered,
+            domain.registered,
             domain.emailSent,
             domain.emailValidated,
             domain.activationCodeSent,
@@ -60,7 +60,7 @@ fun toEntity(domain: SignupStateDomain): SignupStateEntity {
 
 fun fromEntity(entity: SignupStateEntity): SignupStateDomain {
     return SignupStateDomain.Builder(entity.username)
-            .oktaRegistered(entity.oktaRegistered)
+            .registered(entity.registered)
             .emailSent(entity.emailSent)
             .emailValidated(entity.emailValidated)
             .activationCodeSent(entity.activationCodeSent)

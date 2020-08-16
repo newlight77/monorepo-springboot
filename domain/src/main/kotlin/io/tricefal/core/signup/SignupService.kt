@@ -11,7 +11,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         }
 
         signup.state = SignupStateDomain.Builder(signup.username)
-                .oktaRegistered(adapter.oktaRegister(signup))
+                .registered(adapter.register(signup))
                 .emailSent(adapter.sendEmail(notification))
                 .activationCodeSent(adapter.sendSms(notification))
                 .build()

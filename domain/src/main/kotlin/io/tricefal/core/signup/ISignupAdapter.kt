@@ -7,7 +7,7 @@ interface ISignupAdapter {
     fun findByUsername(username: String): Optional<SignupDomain>
     fun update(signup: SignupDomain): SignupDomain
 
-    fun oktaRegister(signup: SignupDomain) : Boolean
+    fun register(signup: SignupDomain) : Boolean
     fun sendEmail(notification: SignupNotificationDomain) : Boolean
     fun sendSms(notification: SignupNotificationDomain) : Boolean
 }

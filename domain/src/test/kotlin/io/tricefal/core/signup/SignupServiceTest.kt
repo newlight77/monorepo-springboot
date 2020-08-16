@@ -47,7 +47,7 @@ class SignupServiceTest {
                 .build()
 
         Mockito.`when`(adapter.signup(signup)).thenReturn(signup)
-        Mockito.`when`(adapter.oktaRegister(signup)).thenReturn(true)
+        Mockito.`when`(adapter.register(signup)).thenReturn(true)
         Mockito.`when`(adapter.sendEmail(notification)).thenReturn(true)
         Mockito.`when`(adapter.sendSms(notification)).thenReturn(true)
 
@@ -58,7 +58,7 @@ class SignupServiceTest {
 
         // Arrange
         Mockito.verify(adapter).signup(signup)
-        Assertions.assertTrue(result.oktaRegistered!!)
+        Assertions.assertTrue(result.registered!!)
         Assertions.assertTrue(result.emailSent!!)
         Assertions.assertTrue(result.activationCodeSent!!)
     }

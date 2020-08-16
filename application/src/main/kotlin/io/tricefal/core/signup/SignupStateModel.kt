@@ -2,7 +2,7 @@ package io.tricefal.core.signup
 
 class SignupStateModel(
         val username: String,
-        var oktaRegistered: Boolean? = null,
+        var registered: Boolean? = null,
         var emailSent: Boolean? = null,
         var emailValidated: Boolean? = null,
         var activationCodeSent: Boolean? = null,
@@ -13,7 +13,7 @@ class SignupStateModel(
 
     data class Builder (
             val username: String,
-            var oktaRegistered: Boolean? = null,
+            var registered: Boolean? = null,
             var emailSent: Boolean? = null,
             var emailValidated: Boolean? = null,
             var activationCodeSent: Boolean? = null,
@@ -21,7 +21,7 @@ class SignupStateModel(
             var resumeUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
             var validated: Boolean? = null) {
-        fun oktaRegistered(oktaRegistered: Boolean?) = apply { this.oktaRegistered = oktaRegistered }
+        fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
         fun activationCodeSent(activationCodeSent: Boolean?) = apply { this.activationCodeSent = activationCodeSent }
@@ -32,7 +32,7 @@ class SignupStateModel(
 
         fun build() = SignupStateModel(
                 username,
-                oktaRegistered,
+                registered,
                 emailSent,
                 emailValidated,
                 activationCodeSent,
@@ -46,7 +46,7 @@ class SignupStateModel(
 
 fun toModel(domain: SignupStateDomain): SignupStateModel {
     return SignupStateModel.Builder(domain.username)
-            .oktaRegistered(domain.oktaRegistered)
+            .registered(domain.registered)
             .emailSent(domain.emailSent)
             .emailValidated(domain.emailValidated)
             .activationCodeSent(domain.activationCodeSent)
@@ -59,7 +59,7 @@ fun toModel(domain: SignupStateDomain): SignupStateModel {
 
 fun fromModel(model: SignupStateModel): SignupStateDomain {
     return SignupStateDomain.Builder(model.username)
-            .oktaRegistered(model.oktaRegistered)
+            .registered(model.registered)
             .emailSent(model.emailSent)
             .emailValidated(model.emailValidated)
             .activationCodeSent(model.activationCodeSent)
