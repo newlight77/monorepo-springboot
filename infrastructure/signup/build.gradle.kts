@@ -23,7 +23,7 @@ dependencies {
 	implementation(project(":core:infrastructure:account"))
 	implementation(project(":core:infrastructure:encryption"))
 	implementation(project(":core:infrastructure:notification"))
-	implementation(project(":core:infrastructure:okta-client"))
+	implementation(project(":core:infrastructure:keycloak-client"))
 	implementation(project(":core:infrastructure:storage"))
 
 

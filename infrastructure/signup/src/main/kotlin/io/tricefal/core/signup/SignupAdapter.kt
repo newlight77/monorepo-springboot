@@ -4,7 +4,7 @@ import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.login.SignupJpaRepository
-import io.tricefal.core.okta.OktaService
+import io.tricefal.core.keycloak.KeycloakService
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
@@ -14,7 +14,7 @@ import java.util.*
 
 @Repository
 class SignupAdapter(private var repository: SignupJpaRepository,
-                    val oktaService: OktaService,
+                    val keycloakService: KeycloakService,
                     val mailService: EmailService,
                     val smsService: SmsService) : ISignupAdapter {
 
@@ -44,7 +44,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun register(signup: SignupDomain): Boolean {
-        return oktaService.register(signup)
+        return keycloakService.register(signup)
     }
 
     override fun sendSms(notification: SignupNotificationDomain): Boolean {

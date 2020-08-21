@@ -5,10 +5,10 @@ import com.icegreen.greenmail.util.ServerSetup
 import io.tricefal.core.InfrastructureMockBeans
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
+import io.tricefal.core.keycloak.KeycloakService
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.metafile.MetafileRepository
-import io.tricefal.core.okta.OktaService
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.junit.jupiter.api.*
@@ -43,7 +43,7 @@ class SignupWebHandlerTest {
     lateinit var signupJpaRepository: SignupJpaRepository
 
     @Autowired
-    lateinit var oktaService: OktaService
+    lateinit var keycloakService: KeycloakService
 
     @Autowired
     lateinit var emailService: EmailService
@@ -92,7 +92,7 @@ class SignupWebHandlerTest {
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
-        Mockito.`when`(oktaService.register(any(SignupDomain::class.java))).thenReturn(true)
+        Mockito.`when`(keycloakService.register(any(SignupDomain::class.java))).thenReturn(true)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
         Mockito.`when`(smsService.send(any(SmsMessage::class.java))).thenReturn("SM235g4fwee4qf32gqg8g")
 

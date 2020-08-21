@@ -17,7 +17,7 @@ import java.util.*
 
 
 @Service
-@PropertySource("classpath:application.yml", "classpath:twilio.yml", "classpath:okta.yml")
+@PropertySource("classpath:application.yml", "classpath:twilio.yml", "classpath:keycloak.yml")
 class SignupWebHandler(val signupService: ISignupService,
                        val metafileRepository: MetafileRepository,
                        private final val env: Environment,
