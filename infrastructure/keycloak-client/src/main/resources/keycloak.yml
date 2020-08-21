@@ -1,0 +1,6 @@
+keycloak:
+  realm: ${KEYCLOAK_REALM}
+  baseUrl: ${KEYCLOAK_TOKEN_URL}
+  grantType: ${KEYCLOAK_GRANT_TYPE}
+  clientId: ${KEYCLOAK_ClIENT_ID}
+  clientSecret: ${KEYCLOAK_CLIENT_SECRET}

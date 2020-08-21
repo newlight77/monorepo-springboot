@@ -1,0 +1,7 @@
+
+keycloak:
+  realm: dev.tricefal.io
+  baseUrl: https://localhost/auth
+  grantType: password
+  clientId: dev.tricefal.frontend-http-localhost
+  clientSecret: 3ce3d1c5-ab8f-412d-9880-217cfa2f2e7a
