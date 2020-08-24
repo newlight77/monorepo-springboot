@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service
 @PropertySource("classpath:keycloak.yml")
 class KeycloakService(private val env: Environment) {
     private val logger = LoggerFactory.getLogger(this::class.java)
-    private val baseUrl = env.getProperty("keycloak.baseUrl")
+    private val baseUrl = env.getProperty("keycloak.base-url")
     private val realm = env.getProperty("keycloak.realm")
-    private val clientId = env.getProperty("keycloak.clientId")
-    private val clientSecret = env.getProperty("keycloak.clientSecret")
-    private val grantType = env.getProperty("keycloak.grantType")
+    private val clientId = env.getProperty("keycloak.client-id")
+    private val clientSecret = env.getProperty("keycloak.client-secret")
+    private val grantType = env.getProperty("keycloak.grant-type")
 
     private val keycloakClient: KeycloakClient = KeycloakClient
             .Builder(baseUrl!!, realm!!)

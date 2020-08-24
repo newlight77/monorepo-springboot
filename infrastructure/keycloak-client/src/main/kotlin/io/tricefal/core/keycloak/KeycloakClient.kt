@@ -11,14 +11,14 @@ interface KeycloakClient {
 
     @Headers("Accept: application/json",
                     "Content-Type: application/json")
-    @POST("/realms/{realm}/protocol/openid-connect/token")
+    @POST("/auth/realms/{realm}/protocol/openid-connect/token")
     fun login(@Path("realm") realm: String,
               @Body user: KeycloakPasswordGrantType): Call<KeycloakTokenResponse>
 
 
     @Headers("Accept: application/json",
                     "Content-Type: application/json")
-    @POST("/admin/realms/{realm}/users")
+    @POST("/auth/admin/realms/{realm}/users")
     fun createUser(@Path("realm") realm: String,
                    @Body user: KeycloakNewUser): Call<KeycloakRegisterResponse>
 
