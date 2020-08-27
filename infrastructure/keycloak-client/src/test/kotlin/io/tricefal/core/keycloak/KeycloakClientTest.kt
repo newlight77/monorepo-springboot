@@ -74,24 +74,24 @@ internal class KeycloakClientTest {
     @Test
     fun `should create a user on Keycloak`() {
         // arrange
-        val grantType = "client_credentials"
+        val grantType = "password"
         val clientId = "admin-cli"
         val clientSecret = "b344021f-a496-4719-979e-a7c9167f6f54"
-
+        val username = "user-admin"
+        val password = "TriPa55w0rd"
 
         val newUser = KeycloakNewUser.Builder()
                 .firstName("Kong1")
                 .lastName("To1")
-                .mobilePhone("0600000000")
-                .username("newlight77@gmail.com")
-                .password("BonusMalus11")
+                .username("newlight77+ut4@gmail.com")
+//                .password("BonusMalus11")
                 .build()
 
         val token =
-                this.client.clientToken("master",
+                this.client.login("master",
                         grantType = grantType,
-                        clientId = clientId,
-                        clientSecret = clientSecret)
+                        clientId = clientId, clientSecret = clientSecret,
+                        username = username, password = password)
                         .execute().body()?.accessToken
 
         // act

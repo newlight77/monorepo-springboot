@@ -36,7 +36,7 @@ class KeycloakAccountService(private val env: Environment) {
             throw KeycloakUnsuccessfulException("the response code is: " + result.raw())
         }
 
-        return "201" == result.body()?.code
+        return result.isSuccessful
     }
 
     private fun clientToken(): KeycloakTokenResponse {

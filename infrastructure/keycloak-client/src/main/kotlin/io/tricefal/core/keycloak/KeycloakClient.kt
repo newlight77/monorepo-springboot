@@ -33,7 +33,7 @@ interface KeycloakClient {
     @POST("/auth/admin/realms/{realm}/users")
     fun createUser(@Path("realm") realm: String,
                    @Header("Authorization") bearerToken: String,
-                   @Body user: KeycloakNewUser): Call<KeycloakRegisterResponse>
+                   @Body user: KeycloakNewUser): Call<Void>
 
 
     class Builder(private val keycloakBaseUrl: String) {
