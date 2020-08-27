@@ -5,7 +5,7 @@ keycloak:
     realm: dev.tricefal.io
     clientId: dev.tricefal.backend-bearer
     clientSecret: 3ce3d1c5-ab8f-412d-9880-217cfa2f2e7a
-  account:
+  admin:
     realm: master
     clientId: account
     clientSecret: 2969ee71-91c4-4c57-b990-440eeaee53f0

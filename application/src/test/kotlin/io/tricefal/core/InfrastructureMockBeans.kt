@@ -1,7 +1,7 @@
 package io.tricefal.core
 
 import io.tricefal.core.email.EmailService
-import io.tricefal.core.keycloak.KeycloakService
+import io.tricefal.core.keycloak.KeycloakAccountService
 import io.tricefal.core.metafile.MetafileRepository
 import io.tricefal.core.twilio.SmsService
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles
 class InfrastructureMockBeans {
     
     @MockBean
-    lateinit var keycloakService: KeycloakService
+    lateinit var keycloakService: KeycloakAccountService
 
     @MockBean
     lateinit var emailService: EmailService

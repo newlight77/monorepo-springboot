@@ -12,16 +12,18 @@ import org.springframework.stereotype.Service
 class KeycloakAccountService(private val env: Environment) {
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val baseUrl = env.getProperty("keycloak.base-url")
-    private val realm = env.getProperty("keycloak.account.realm")
-    private val clientId = env.getProperty("keycloak.account.client-id")
-    private val clientSecret = env.getProperty("keycloak.account.client-secret")
+    private val realm = env.getProperty("keycloak.admin.realm")
+    private val clientId = env.getProperty("keycloak.admin.client-id")
+    private val clientSecret = env.getProperty("keycloak.admin.client-secret")
+    private val adminUser = env.getProperty("keycloak.admin.user")
+    private val adminPassword = env.getProperty("keycloak.admin.password")
 
     val keycloakClient: KeycloakClient = KeycloakClient
             .Builder(baseUrl!!)
             .build()
 
     fun register(signup: SignupDomain): Boolean {
-        val token = this.clientToken().accessToken
+        val token = this.adminToken().accessToken
         val user = toKeycloakNewUser(signup)
         val response = keycloakClient.createUser(this.realm!!, "Bearer $token", user)
         val result = response.execute()
@@ -31,7 +33,7 @@ class KeycloakAccountService(private val env: Environment) {
         logger.info("keycloak code : ${result.code()}")
         logger.info("keycloak raw : ${result.raw()}")
 
-        if (result.code() != 200 and 201) {
+        if (result.code() != 200 or 201) {
             logger.error("registration failed with : ${result.raw()}")
             throw KeycloakUnsuccessfulException("the response code is: " + result.raw())
         }
@@ -39,12 +41,13 @@ class KeycloakAccountService(private val env: Environment) {
         return result.isSuccessful
     }
 
-    private fun clientToken(): KeycloakTokenResponse {
+    private fun adminToken(): KeycloakTokenResponse {
 
         val result =
-                this.keycloakClient.clientToken(
+                this.keycloakClient.login(
                         realm =this.realm!!,
-                        grantType = "client_credentials",
+                        grantType = "password",
+                        username = this.adminUser!!, password = this.adminPassword!!,
                         clientId = this.clientId!!, clientSecret = this.clientSecret!!)
                         .execute()
 

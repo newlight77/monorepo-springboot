@@ -5,7 +5,7 @@ import com.icegreen.greenmail.util.ServerSetup
 import io.tricefal.core.InfrastructureMockBeans
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
-import io.tricefal.core.keycloak.KeycloakService
+import io.tricefal.core.keycloak.KeycloakAccountService
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.metafile.MetafileRepository
@@ -43,7 +43,7 @@ class SignupWebHandlerTest {
     lateinit var signupJpaRepository: SignupJpaRepository
 
     @Autowired
-    lateinit var keycloakService: KeycloakService
+    lateinit var keycloakService: KeycloakAccountService
 
     @Autowired
     lateinit var emailService: EmailService

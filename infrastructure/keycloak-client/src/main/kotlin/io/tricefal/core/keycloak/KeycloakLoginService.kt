@@ -1,6 +1,5 @@
 package io.tricefal.core.keycloak
 
-import com.google.gson.Gson
 import io.tricefal.core.signup.SignupDomain
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource

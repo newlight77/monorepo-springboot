@@ -4,7 +4,7 @@ keycloak:
     realm: ${KEYCLOAK_APP_REALM}
     clientId: ${KEYCLOAK_APP_ClIENT_ID}
     clientSecret: ${KEYCLOAK_APP_ClIENT_SECRET}
-  account:
-    realm: ${KEYCLOAK_ACCOUNT_REALM}
-    clientId: ${KEYCLOAK_ACCOUNT_ClIENT_ID}
-    clientSecret: ${KEYCLOAK_ACCOUNT_ClIENT_SECRET}
+  admin:
+    realm: ${KEYCLOAK_ADMIN_REALM}
+    clientId: ${KEYCLOAK_ADMIN_CLIENT_ID}
+    clientSecret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
