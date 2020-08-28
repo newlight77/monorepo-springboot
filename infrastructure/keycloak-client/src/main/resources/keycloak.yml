@@ -8,3 +8,5 @@ keycloak:
     realm: ${KEYCLOAK_ADMIN_REALM}
     clientId: ${KEYCLOAK_ADMIN_CLIENT_ID}
     clientSecret: ${KEYCLOAK_ADMIN_CLIENT_SECRET}
+    user: ${KEYCLOAK_ADMIN_USER}
+    password: ${KEYCLOAK_ADMIN_PASSWORD}

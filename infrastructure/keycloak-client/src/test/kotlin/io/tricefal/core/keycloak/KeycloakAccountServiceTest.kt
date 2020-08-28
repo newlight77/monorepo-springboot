@@ -18,6 +18,7 @@ internal class KeycloakAccountServiceTest {
     fun `should create a user on Keycloak`() {
         // arrange
         Mockito.`when`(env.getProperty("keycloak.base-url")).thenReturn("http://localhost:1080")
+        Mockito.`when`(env.getProperty("keycloak.app.realm")).thenReturn("dev.app")
         Mockito.`when`(env.getProperty("keycloak.admin.realm")).thenReturn("master")
         Mockito.`when`(env.getProperty("keycloak.admin.client-id")).thenReturn("admin-cli")
         Mockito.`when`(env.getProperty("keycloak.admin.client-secret")).thenReturn("b344021f-a496-4719-979e-a7c9167f6f54")

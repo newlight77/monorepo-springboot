@@ -12,9 +12,10 @@ import org.springframework.stereotype.Service
 class KeycloakAccountService(private val env: Environment) {
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val baseUrl = env.getProperty("keycloak.base-url")
-    private val realm = env.getProperty("keycloak.admin.realm")
-    private val clientId = env.getProperty("keycloak.admin.client-id")
-    private val clientSecret = env.getProperty("keycloak.admin.client-secret")
+    private val appRealm = env.getProperty("keycloak.app.realm")
+    private val adminRealm = env.getProperty("keycloak.admin.realm")
+    private val adminClientId = env.getProperty("keycloak.admin.client-id")
+    private val adminClientSecret = env.getProperty("keycloak.admin.client-secret")
     private val adminUser = env.getProperty("keycloak.admin.user")
     private val adminPassword = env.getProperty("keycloak.admin.password")
 
@@ -25,7 +26,7 @@ class KeycloakAccountService(private val env: Environment) {
     fun register(signup: SignupDomain): Boolean {
         val token = this.adminToken().accessToken
         val user = toKeycloakNewUser(signup)
-        val response = keycloakClient.createUser(this.realm!!, "Bearer $token", user)
+        val response = keycloakClient.createUser(this.appRealm!!, "Bearer $token", user)
         val result = response.execute()
 
         print(Gson().toJson(user))
@@ -45,10 +46,10 @@ class KeycloakAccountService(private val env: Environment) {
 
         val result =
                 this.keycloakClient.login(
-                        realm =this.realm!!,
+                        realm = this.adminRealm!!,
                         grantType = "password",
                         username = this.adminUser!!, password = this.adminPassword!!,
-                        clientId = this.clientId!!, clientSecret = this.clientSecret!!)
+                        clientId = this.adminClientId!!, clientSecret = this.adminClientSecret!!)
                         .execute()
 
         logger.info("keycloak body : ${result.body()}")
