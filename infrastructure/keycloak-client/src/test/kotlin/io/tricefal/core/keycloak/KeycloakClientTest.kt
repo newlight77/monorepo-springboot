@@ -24,7 +24,8 @@ internal class KeycloakClientTest {
 //        HttpsURLConnection.setDefaultHostnameVerifier { hostname, sslSession -> hostname == "localhost" }
 //    }
 
-    @Test
+    // purposely ignore because this test is used to validate th integration with keycloak
+    // @Test
     fun `should retrieve access token when using password grant`() {
         // arrange
         val grantType = "password"
@@ -47,7 +48,8 @@ internal class KeycloakClientTest {
         tokenResponse.body()?.accessToken?.isNotEmpty()?.let { assertTrue(it) }
     }
 
-    @Test
+    // purposely ignore because this test is used to validate th integration with keycloak
+    // @Test
     fun `should retrieve access token when using client credentials`() {
         // arrange
         val grantType = "client_credentials"
@@ -71,7 +73,8 @@ internal class KeycloakClientTest {
         tokenResponse.body()?.accessToken?.isNotEmpty()?.let { assertTrue(it) }
     }
 
-    @Test
+    // purposely ignore because this test is used to validate th integration with keycloak
+    // @Test
     fun `should create a user on Keycloak`() {
         // arrange
         val grantType = "password"
