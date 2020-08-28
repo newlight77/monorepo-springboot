@@ -22,7 +22,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
 import java.io.InputStream
@@ -43,7 +42,7 @@ class SignupWebHandlerTest {
     lateinit var signupJpaRepository: SignupJpaRepository
 
     @Autowired
-    lateinit var keycloakService: KeycloakAccountService
+    lateinit var keycloakAccountService: KeycloakAccountService
 
     @Autowired
     lateinit var emailService: EmailService
@@ -92,7 +91,7 @@ class SignupWebHandlerTest {
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
-        Mockito.`when`(keycloakService.register(any(SignupDomain::class.java))).thenReturn(true)
+        Mockito.`when`(keycloakAccountService.register(any(SignupDomain::class.java))).thenReturn(true)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
         Mockito.`when`(smsService.send(any(SmsMessage::class.java))).thenReturn("SM235g4fwee4qf32gqg8g")
 
