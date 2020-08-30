@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-infrastructure-note"
+rootProject.name = "tricefal-infrastructure-login"

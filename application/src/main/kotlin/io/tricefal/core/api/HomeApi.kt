@@ -1,4 +1,4 @@
-package io.tricefal.core
+package io.tricefal.core.api
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping

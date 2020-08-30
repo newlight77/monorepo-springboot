@@ -1,5 +1,8 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.metafile.IMetafileAdapter
+import io.tricefal.core.metafile.IMetafileService
+import io.tricefal.core.metafile.MetafileService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -10,4 +13,10 @@ class SignupConfiguration {
     fun signupService(signupAdapter: ISignupAdapter): ISignupService {
         return SignupService(signupAdapter)
     }
+
+    @Bean
+    fun metafileService(metafileAdapter: IMetafileAdapter): IMetafileService {
+        return MetafileService(metafileAdapter)
+    }
+
 }

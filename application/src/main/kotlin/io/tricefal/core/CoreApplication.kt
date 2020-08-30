@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class TricefalApplication
+class CoreApplication
 
 fun main(args: Array<String>) {
-	runApplication<TricefalApplication>(*args)
+	runApplication<CoreApplication>(*args)
 }

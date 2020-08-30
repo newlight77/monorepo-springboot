@@ -1,4 +1,4 @@
-package io.tricefal.core.account.api
+package io.tricefal.core.api
 
 import org.keycloak.KeycloakPrincipal
 import org.keycloak.representations.AccessToken

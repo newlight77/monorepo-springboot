@@ -1,12 +1,12 @@
 package cucumber.config
 
 import io.cucumber.java.Before
-import io.tricefal.core.TricefalApplication
+import io.tricefal.core.CoreApplication
 import org.apache.commons.logging.LogFactory
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest(classes = [TricefalApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [CoreApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class SpringIntegrationTest {
     val logger = LogFactory.getLog(javaClass)!!

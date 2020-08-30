@@ -8,7 +8,9 @@ import io.tricefal.core.email.EmailService
 import io.tricefal.core.keycloak.KeycloakAccountService
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
-import io.tricefal.core.metafile.MetafileRepository
+import io.tricefal.core.metafile.MetafileEntity
+import io.tricefal.core.metafile.MetafileJpaRepository
+import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.junit.jupiter.api.*
@@ -25,8 +27,12 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
 import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.security.SecureRandom
 import java.time.Instant
 import java.util.*
+import kotlin.math.absoluteValue
 
 //@ExtendWith(SpringExtension::class, MockitoExtension::class)
 @ExtendWith(MockitoExtension::class)
@@ -38,9 +44,6 @@ class SignupWebHandlerTest {
     @Autowired
     lateinit var signupWebHandler: SignupWebHandler
 
-    @MockBean
-    lateinit var signupJpaRepository: SignupJpaRepository
-
     @Autowired
     lateinit var keycloakAccountService: KeycloakAccountService
 
@@ -50,8 +53,11 @@ class SignupWebHandlerTest {
     @Autowired
     lateinit var smsService: SmsService
 
-    @Autowired
-    lateinit var metaFileRepository: MetafileRepository
+    @MockBean
+    lateinit var signupJpaRepository: SignupJpaRepository
+
+    @MockBean
+    lateinit var metaFileRepository: MetafileJpaRepository
 
     @Captor
     var signupCaptor: ArgumentCaptor<SignupEntity> = ArgumentCaptor.forClass(SignupEntity::class.java)
@@ -159,18 +165,28 @@ class SignupWebHandlerTest {
                 .build()
         val signupEntity = toEntity(fromModel(signup))
         val multipart = Mockito.mock(MultipartFile::class.java)
-        Mockito.`when`(multipart.originalFilename).thenReturn("test-filename")
+        val filename = "test-file-" + Random().nextInt().absoluteValue + ".txt"
+        Mockito.`when`(multipart.originalFilename).thenReturn(filename)
         Mockito.`when`(multipart.contentType).thenReturn("txt")
         Mockito.`when`(multipart.inputStream).thenReturn(ByteArrayInputStream("testing data".toByteArray()))
         Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
-        Mockito.doNothing().`when`(metaFileRepository).save(any(MetafileDomain::class.java), any(InputStream::class.java))
+        val metafileEntity = io.tricefal.core.metafile.toEntity(
+                io.tricefal.core.metafile.fromModel(
+                        MetafileModel.Builder(0L)
+                            .filename(filename)
+                            .type("txt")
+                            .username(username).build()))
+        Mockito.`when`(metaFileRepository.save(any(MetafileEntity::class.java))).thenReturn(metafileEntity)
 
         // Act
         val result = signupWebHandler.uploadResume(username, multipart)
 
         // Arrange
         Assertions.assertTrue(result.resumeUploaded!!)
+        val expected = "/tmp/data/files/${username}-0-${filename}"
+        Assertions.assertTrue(Files.exists(Paths.get(expected)))
+        Files.deleteIfExists(Paths.get(expected))
     }
 
     @Test

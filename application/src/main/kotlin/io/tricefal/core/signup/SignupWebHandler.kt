@@ -2,7 +2,7 @@ package io.tricefal.core.signup
 
 import io.tricefal.core.exception.NotAcceptedException
 import io.tricefal.core.exception.NotFoundException
-import io.tricefal.core.metafile.MetafileRepository
+import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
 import org.slf4j.LoggerFactory
@@ -19,7 +19,7 @@ import java.util.*
 @Service
 @PropertySource("classpath:application.yml", "classpath:twilio.yml", "classpath:keycloak.yml")
 class SignupWebHandler(val signupService: ISignupService,
-                       val metafileRepository: MetafileRepository,
+                       val metafileService: IMetafileService,
                        private final val env: Environment,
                        private final val messageSource: MessageSource) {
 
@@ -78,7 +78,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val signup = findSignup(username)
 
         val resumeMetaFile = fromModel(toMetafile(username, file))
-        metafileRepository.save(resumeMetaFile, file.inputStream)
+        metafileService.save(resumeMetaFile, file.inputStream)
 
         return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
     }
