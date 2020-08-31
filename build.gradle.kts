@@ -134,7 +134,7 @@ subprojects {
 		classDirectories.setFrom(
 				sourceSets.main.get().output.asFileTree.matching {
 					// exclude main()
-					exclude("io/tricefal/core/TricefalApplicationKt.class")
+					exclude("io/tricefal/core/AuthenticationApplicationKt.class")
 				}
 		)
 	}

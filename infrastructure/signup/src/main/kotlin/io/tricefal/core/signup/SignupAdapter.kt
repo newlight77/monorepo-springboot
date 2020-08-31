@@ -14,7 +14,7 @@ import java.util.*
 
 @Repository
 class SignupAdapter(private var repository: SignupJpaRepository,
-                    val keycloakService: KeycloakAccountService,
+                    val keycloakAccountService: KeycloakAccountService,
                     val mailService: EmailService,
                     val smsService: SmsService) : ISignupAdapter {
 
@@ -44,7 +44,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun register(signup: SignupDomain): Boolean {
-        return keycloakService.register(signup)
+        return keycloakAccountService.register(signup)
     }
 
     override fun sendSms(notification: SignupNotificationDomain): Boolean {
