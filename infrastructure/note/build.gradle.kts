@@ -20,29 +20,9 @@ repositories {
 
 dependencies {
 	implementation(project(":core:domain:note"))
-//	implementation(project(":core:infrastructure:account"))
-//	implementation(project(":core:infrastructure:encryption"))
-//	implementation(project(":core:infrastructure:notification"))
-//	implementation(project(":core:infrastructure:okta-client"))
-//	implementation(project(":core:infrastructure:storage"))
-
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
-//	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.3.0.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
-
-	// notification
-//	implementation("org.springframework.boot:spring-boot-starter-mail:2.3.0.RELEASE")
-//	implementation("org.freemarker:freemarker:2.3.30")
-//	testImplementation("com.icegreen:greenmail:1.5.13")
-
-	// twilio
-//	implementation("com.twilio.sdk:twilio:7.51.0")
-
-	// okta service
-//	implementation("com.squareup.retrofit2:retrofit:2.9.0")
-//	implementation("org.mindrot:jbcrypt:0.4")
-//	implementation("com.squareup.moshi:moshi-kotlin-codegen:1.9.3")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
@@ -55,7 +35,4 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
-
-//	testImplementation("org.jetbrains.kotlin:kotlin-test")
-//	testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

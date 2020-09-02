@@ -22,23 +22,11 @@ dependencies {
 	implementation(project(":core:domain:authentication"))
 
 	implementation("org.springframework.boot:spring-boot-starter:2.3.0.RELEASE")
-//	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
-//	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.3.0.RELEASE")
-//	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
-
-	// notification
-//	implementation("org.springframework.boot:spring-boot-starter-mail:2.3.0.RELEASE")
-//	implementation("org.freemarker:freemarker:2.3.30")
-//	testImplementation("com.icegreen:greenmail:1.5.13")
-
-	// twilio
-//	implementation("com.twilio.sdk:twilio:7.51.0")
 
 	// okta service
 	implementation("com.squareup.retrofit2:retrofit:2.9.0")
 	implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 	implementation("org.mindrot:jbcrypt:0.4")
-//	implementation("com.squareup.moshi:moshi-kotlin-codegen:1.9.3")
 
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.70")
@@ -50,6 +38,4 @@ dependencies {
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
 
-//	testImplementation("org.jetbrains.kotlin:kotlin-test")
-//	testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

@@ -41,34 +41,10 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
 	implementation("com.github.ben-manes.caffeine:caffeine:2.8.1")
 
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
-	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.3.5")
-
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 		exclude("junit", "junit")
 	}
-
-    testImplementation("io.rest-assured:spring-mock-mvc:4.3.0") {
-        exclude("com.sun.xml.bind:jaxb-osgi")
-    }
-
-	testImplementation("io.cucumber:cucumber-java:5.6.0")
-	testImplementation("io.cucumber:cucumber-java8:5.6.0")
-	testImplementation("io.cucumber:cucumber-junit-platform-engine:5.6.0")
-	testImplementation("io.cucumber:cucumber-spring:5.6.0")
-	testImplementation("com.github.cukedoctor:cukedoctor-converter:1.2.1")
-
-	testImplementation("io.rest-assured:spring-mock-mvc:4.3.0") {
-		exclude("com.sun.xml.bind:jaxb-osgi")
-	}
-
-	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
-	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
-	testImplementation("org.assertj:assertj-core:3.11.1")
-
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	testImplementation("com.h2database:h2")
