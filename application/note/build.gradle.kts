@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain"))
-//	implementation(project(":core:infrastructure:note"))
+	implementation(project(":core:domain:note"))
+	implementation(project(":core:infrastructure:note"))
 
 //	implementation("org.springframework:spring-core:5.2.8.RELEASE")
 //	implementation("org.springframework:spring-context:5.2.8.RELEASE")

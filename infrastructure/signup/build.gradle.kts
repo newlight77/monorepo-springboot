@@ -19,8 +19,8 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain"))
-	implementation(project(":core:infrastructure:account"))
+	implementation(project(":core:domain:authentication"))
+//	implementation(project(":core:infrastructure:signup"))
 	implementation(project(":core:infrastructure:encryption"))
 	implementation(project(":core:infrastructure:notification"))
 	implementation(project(":core:infrastructure:keycloak-client"))

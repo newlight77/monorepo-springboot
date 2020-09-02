@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain"))
+	implementation(project(":core:domain:authentication"))
 
 	implementation("org.springframework.boot:spring-boot-starter:2.3.0.RELEASE")
 

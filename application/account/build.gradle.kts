@@ -24,13 +24,17 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain"))
-//	implementation(project(":core:infrastructure:account"))
+	implementation(project(":core:domain:account"))
+	implementation(project(":core:infrastructure:account"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 
-
+	implementation("org.springframework.security:spring-security-oauth2-client")
+	implementation("org.springframework.security:spring-security-oauth2-jose")
+	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.0")
+	implementation("com.okta.jwt:okta-jwt-verifier:0.4.0")
+	implementation("com.okta.jwt:okta-jwt-verifier-impl:0.4.0")
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -57,12 +61,20 @@ dependencies {
 	testImplementation("io.cucumber:cucumber-spring:5.6.0")
 	testImplementation("com.github.cukedoctor:cukedoctor-converter:1.2.1")
 
+	testImplementation("io.rest-assured:spring-mock-mvc:4.3.0") {
+		exclude("com.sun.xml.bind:jaxb-osgi")
+	}
+
 	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
 
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
+	testImplementation("com.h2database:h2")
+	implementation("org.postgresql:postgresql")
+
+	implementation("org.liquibase:liquibase-core:3.8.9")
 }
 
 tasks.withType<Jar>() {

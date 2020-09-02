@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
 
-	implementation(project(":core:domain"))
+	implementation(project(":core:domain:authentication"))
 
 //	implementation(project(":core:infrastructure"))
 //	implementation(project(":core:infrastructure:account"))
