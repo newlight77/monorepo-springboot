@@ -8,7 +8,7 @@ plugins {
 	idea
 }
 
-group = "io.tricefal"
+group = "io.tricefal.infrastructure"
 version = "0.0.1-SNAPSHOT"
 
 
@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-//	implementation(project(":core:domain"))
+	implementation(project(":core:domain:authentication"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 //	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.3.0.RELEASE")

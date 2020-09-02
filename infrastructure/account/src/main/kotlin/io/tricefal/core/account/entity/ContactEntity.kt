@@ -1,10 +1,11 @@
 package io.tricefal.core.account.entity
 
 import io.tricefal.core.account.domain.ContactDomain
-import io.tricefal.core.login.EMAIL_REGEX
 import javax.persistence.*
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
+
+const val EMAIL_REGEX = " ^[\\\\w!#\$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#\$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}\$"
 
 @Entity
 @Table(name = "contact")

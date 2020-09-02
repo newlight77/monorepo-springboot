@@ -4,7 +4,7 @@ plugins {
 	kotlin("jvm")
 }
 
-group = "io.tricefal"
+group = "io.tricefal.application"
 version = "0.0.1-SNAPSHOT"
 
 

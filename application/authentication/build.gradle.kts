@@ -15,7 +15,7 @@ buildscript {
 			.resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
 }
 
-group = "io.tricefal"
+group = "io.tricefal.application"
 version = "0.0.1-SNAPSHOT"
 
 

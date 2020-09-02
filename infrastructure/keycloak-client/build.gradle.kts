@@ -6,7 +6,7 @@ plugins {
 	idea
 }
 
-group = "io.tricefal"
+group = "io.tricefal.infrastructure"
 version = "0.0.1-SNAPSHOT"
 
 

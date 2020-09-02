@@ -5,7 +5,7 @@ plugins {
 	kotlin("plugin.spring") version "1.3.70"
 }
 
-group = "io.tricefal"
+group = "io.tricefal.domain"
 version = "0.0.1-SNAPSHOT"
 
 
