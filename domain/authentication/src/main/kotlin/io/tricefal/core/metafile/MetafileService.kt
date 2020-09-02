@@ -1,5 +1,6 @@
 package io.tricefal.core.metafile
 
+import io.tricefal.core.metafile.MetafileDomain
 import java.io.InputStream
 import java.util.*
 
