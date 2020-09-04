@@ -1,0 +1,81 @@
+server:
+    port: 9080
+    servlet:
+        context-path: /api
+
+security:
+    basic:
+        enabled: false
+#    ignored: /**
+
+#    jwt:
+#        key-store: classpath:keystore.jks
+#        key-store-password: letmein
+#        key-pair-alias: mytestkey
+#        key-pair-password: changeme
+
+spring:
+    # it seems the exclusion is not working
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+            - org.springframework.boot.actuate.autoconfigure.ManagementSecurityAutoConfiguration
+    datasource:
+        url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+        username: sa
+        password: sa
+        driver-class-name: org.h2.Driver
+    jpa:
+        show-sql: true
+        generate-ddl: true
+        hibernate:
+            ddl-auto: create-drop
+
+        properties:
+            hibernate:
+                show_sql: false
+
+    mail:
+        host: localhost
+        port: 2525
+        username: kong@tricefal.com
+        password: tricefal
+
+    liquibase:
+        enabled: false
+
+logging:
+    level:
+        org.springframework: ERROR
+        liquibase: ERROR
+        org.hibernate: ERROR
+        io.tricefal.core: DEBUG
+        com.zaxxer: ERROR
+    pattern:
+        console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    file: core.log
+    path: /tmp/data/logs
+
+
+data:
+    files:
+        path: /tmp/data/files
+
+notification:
+    mail:
+        from: from@mail.com
+    sms:
+        twilio:
+            phoneNumber: 33644601054
+            accountSid: AC497ba2b4c6a9ecf212ea611537e0be92
+            authToken: 56dfdab0b2c07ed9d861b4a182d10e00
+okta:
+    baseUrl: https://dev-769725.okta.com
+    apiToken: 00m6e7g8VBqhtFOu2HdVSkeGgcm3eH5VFScBHD00sI
+
+encryption:
+    secretKey: oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGh
+
+core:
+    baseUrl: http://localhost/api
+    frontendUrl: http://localhost
