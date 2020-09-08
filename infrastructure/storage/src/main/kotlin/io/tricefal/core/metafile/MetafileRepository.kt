@@ -16,8 +16,7 @@ class MetafileRepository(val repository: MetafileJpaRepository, private final va
 
     override fun save(metafile: MetafileDomain, inpputStream: InputStream) {
         val metafileEntity = repository.save(toEntity(metafile))
-        val filename = "${metafileEntity.username}-${metafileEntity.id}-${metafileEntity.filename}"
-        FileStorage().save(inpputStream, Paths.get("$dataFilesPath/${filename}"))
+        FileStorage().save(inpputStream, Paths.get("$dataFilesPath/${metafileEntity.filename}"))
     }
 
     override fun findById(id: Long): Optional<MetafileDomain> {

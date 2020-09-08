@@ -162,7 +162,7 @@ class SignupWebHandlerTest {
                 .build()
         val signupEntity = toEntity(fromModel(signup))
         val multipart = Mockito.mock(MultipartFile::class.java)
-        val filename = "test-file-" + Random().nextInt().absoluteValue + ".txt"
+        val filename = "${username}-test-file-" + Random().nextInt().absoluteValue + ".txt"
         Mockito.`when`(multipart.originalFilename).thenReturn(filename)
         Mockito.`when`(multipart.contentType).thenReturn("txt")
         Mockito.`when`(multipart.inputStream).thenReturn(ByteArrayInputStream("testing data".toByteArray()))
@@ -181,7 +181,7 @@ class SignupWebHandlerTest {
 
         // Arrange
         Assertions.assertTrue(result.resumeUploaded!!)
-        val expected = "/tmp/data/files/${username}-0-${filename}"
+        val expected = "/tmp/data/files/${filename}"
         Assertions.assertTrue(Files.exists(Paths.get(expected)))
         Files.deleteIfExists(Paths.get(expected))
     }
