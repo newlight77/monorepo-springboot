@@ -20,14 +20,15 @@ repositories {
 
 dependencies {
 	implementation(project(":core:domain:authentication"))
-	implementation(project(":core:infrastructure:encryption"))
-	implementation(project(":core:infrastructure:notification"))
-	implementation(project(":core:infrastructure:storage"))
-
 	implementation(project(":core:infrastructure:iam-client:iam-client-interface"))
 
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
-	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter:2.3.0.RELEASE")
+
+	// okta service
+	implementation("com.squareup.retrofit2:retrofit:2.9.0")
+	implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+	implementation("org.mindrot:jbcrypt:0.4")
+
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.70")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70")
@@ -37,4 +38,5 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
+
 }

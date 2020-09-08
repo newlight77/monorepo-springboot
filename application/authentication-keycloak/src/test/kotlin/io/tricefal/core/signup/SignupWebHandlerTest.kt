@@ -5,9 +5,8 @@ import com.icegreen.greenmail.util.ServerSetup
 import io.tricefal.core.InfrastructureMockBeans
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
-import io.tricefal.core.keycloak.KeycloakAccountService
+import io.tricefal.core.keycloak.KeycloakRegistrationService
 import io.tricefal.core.login.SignupJpaRepository
-import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.metafile.MetafileEntity
 import io.tricefal.core.metafile.MetafileJpaRepository
 import io.tricefal.core.metafile.MetafileModel
@@ -26,10 +25,8 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
-import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.security.SecureRandom
 import java.time.Instant
 import java.util.*
 import kotlin.math.absoluteValue
@@ -45,7 +42,7 @@ class SignupWebHandlerTest {
     lateinit var signupWebHandler: SignupWebHandler
 
     @Autowired
-    lateinit var keycloakAccountService: KeycloakAccountService
+    lateinit var keycloakRegistrationService: KeycloakRegistrationService
 
     @Autowired
     lateinit var emailService: EmailService
@@ -97,7 +94,7 @@ class SignupWebHandlerTest {
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
-        Mockito.`when`(keycloakAccountService.register(any(SignupDomain::class.java))).thenReturn(true)
+        Mockito.`when`(keycloakRegistrationService.register(any(SignupDomain::class.java))).thenReturn(true)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
         Mockito.`when`(smsService.send(any(SmsMessage::class.java))).thenReturn("SM235g4fwee4qf32gqg8g")
 
