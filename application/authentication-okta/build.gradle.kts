@@ -1,6 +1,6 @@
 
 plugins {
-//	application
+	application
 	idea
 	`java-library`
 	id("org.springframework.boot") version "2.3.0.RELEASE"
@@ -70,12 +70,12 @@ dependencies {
 
 }
 
-//application {
-//	mainClassName = "io.github.newlight77.bootstrap.HelloWorldKt"
-//}
+application {
+	mainClassName = "io.tricefal.core.OktaAuthApplicationKt"
+}
 
 tasks.withType<Jar>() {
-    baseName = "core-application"
+    baseName = "okta-auth-app"
 }
 
 testlogger {

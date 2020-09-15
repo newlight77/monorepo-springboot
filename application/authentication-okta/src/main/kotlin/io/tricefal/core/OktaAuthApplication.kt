@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class AuthenticationApplication
+class OktaAuthApplication
 
 fun main(args: Array<String>) {
-	runApplication<AuthenticationApplication>(*args)
+	runApplication<OktaAuthApplication>(*args)
 }

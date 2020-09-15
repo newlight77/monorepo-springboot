@@ -1,6 +1,6 @@
 
 plugins {
-//	application
+	application
 	idea
 	`java-library`
 	id("org.springframework.boot") version "2.3.0.RELEASE"
@@ -53,8 +53,12 @@ dependencies {
 	implementation("org.liquibase:liquibase-core:3.8.9")
 }
 
+application {
+	mainClassName = "io.tricefal.core.AccountApplicationKt"
+}
+
 tasks.withType<Jar>() {
-    baseName = "core-api"
+    baseName = "account-app"
 }
 
 testlogger {

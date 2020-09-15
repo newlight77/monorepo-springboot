@@ -1,6 +1,6 @@
 
 plugins {
-//	application
+	application
 	idea
 	`java-library`
 	id("org.springframework.boot") version "2.3.0.RELEASE"
@@ -54,8 +54,12 @@ dependencies {
 
 }
 
+application {
+	mainClassName = "io.tricefal.core.NoteApplicationKt"
+}
+
 tasks.withType<Jar>() {
-    baseName = "core-application-note"
+    baseName = "note-appl"
 }
 
 testlogger {

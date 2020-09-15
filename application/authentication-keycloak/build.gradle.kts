@@ -1,6 +1,6 @@
 
 plugins {
-//	application
+	application
 	idea
 	`java-library`
 	id("org.springframework.boot") version "2.3.0.RELEASE"
@@ -71,12 +71,12 @@ dependencies {
 
 }
 
-//application {
-//	mainClassName = "io.github.newlight77.bootstrap.HelloWorldKt"
-//}
+application {
+	mainClassName = "io.tricefal.core.KeycloakAuthApplicationKt"
+}
 
 tasks.withType<Jar>() {
-    baseName = "core-application"
+    baseName = "auth-keycloak-app"
 }
 
 testlogger {

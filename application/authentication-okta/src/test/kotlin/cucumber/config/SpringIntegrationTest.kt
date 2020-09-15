@@ -1,12 +1,12 @@
 package cucumber.config
 
 import io.cucumber.java.Before
-import io.tricefal.core.AuthenticationApplication
+import io.tricefal.core.OktaAuthApplication
 import org.apache.commons.logging.LogFactory
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest(classes = [AuthenticationApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = [OktaAuthApplication::class], webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class SpringIntegrationTest {
     val logger = LogFactory.getLog(javaClass)!!
