@@ -3,7 +3,6 @@ package io.tricefal.core
 
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.keycloak.KeycloakRegistrationService
-import io.tricefal.core.keycloak.KeycloakLoginService
 import io.tricefal.core.twilio.SmsService
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
@@ -14,9 +13,6 @@ import org.springframework.test.context.ActiveProfiles
 class InfrastructureMockBeans {
     @MockBean
     lateinit var keycloakRegistrationService: KeycloakRegistrationService
-
-    @MockBean
-    lateinit var keycloakLoginService: KeycloakLoginService
 
     @MockBean
     lateinit var emailService: EmailService
