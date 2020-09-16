@@ -29,14 +29,14 @@ internal class KeycloakClientTest {
     fun `should retrieve access token when using password grant`() {
         // arrange
         val grantType = "password"
-        val clientId = "dev.backend.confidential"
+        val clientId = "local.backend.confidential"
         val clientSecret = "2964cce2-e875-4c22-92ae-225d544d3571"
         val username = "newlight77+test1@gmail.com"
         val password = "BonusMalus11"
 
         // act
         val tokenResponse =
-                this.client.login("dev.app",
+                this.client.login("local.app",
                         grantType = grantType,
                         clientId = clientId, clientSecret = clientSecret,
                         username = username, password = password)
@@ -56,12 +56,12 @@ internal class KeycloakClientTest {
 //        val clientId = "account"
 //        val clientSecret = "2969ee71-91c4-4c57-b990-440eeaee53f0"
 
-        val clientId = "dev.backend.confidential"
+        val clientId = "local.backend.confidential"
         val clientSecret = "2964cce2-e875-4c22-92ae-225d544d3571"
 
         // act
         val tokenResponse =
-                this.client.clientToken("dev.app",
+                this.client.clientToken("local.app",
                         grantType = grantType,
                         clientId = clientId,
                         clientSecret = clientSecret)
@@ -100,7 +100,7 @@ internal class KeycloakClientTest {
         // act
         val tokenResponse =
                 this.client.createUser(
-                        realm = "dev.app",
+                        realm = "local.app",
                         bearerToken = "Bearer $token",
                         user = newUser)
                     .execute()

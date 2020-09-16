@@ -2,6 +2,7 @@ package io.tricefal.core.keycloak
 
 import io.tricefal.core.signup.SignupDomain
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.core.env.Environment
@@ -12,11 +13,11 @@ internal class KeycloakRegistrationServiceTest {
     val env: Environment = Mockito.mock(Environment::class.java)
 
     // purposely ignore because this test is used to validate th integration with keycloak
-    // @Test
+//     @Test
     fun `should create a user on Keycloak`() {
         // arrange
         Mockito.`when`(env.getProperty("keycloak.base-url")).thenReturn("http://localhost:1080")
-        Mockito.`when`(env.getProperty("keycloak.app.realm")).thenReturn("dev.app")
+        Mockito.`when`(env.getProperty("keycloak.app.realm")).thenReturn("local.app")
         Mockito.`when`(env.getProperty("keycloak.admin.realm")).thenReturn("master")
         Mockito.`when`(env.getProperty("keycloak.admin.client-id")).thenReturn("admin-cli")
         Mockito.`when`(env.getProperty("keycloak.admin.client-secret")).thenReturn("b344021f-a496-4719-979e-a7c9167f6f54")
