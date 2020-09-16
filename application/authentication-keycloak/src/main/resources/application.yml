@@ -17,6 +17,9 @@ security:
 #        key-pair-password: changeme
 
 spring:
+    main:
+        allow-bean-definition-overriding: true
+
     datasource:
         url: ${POSTGRES_URL}
         username: ${POSTGRES_USER}

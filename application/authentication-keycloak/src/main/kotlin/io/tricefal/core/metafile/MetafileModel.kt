@@ -4,55 +4,63 @@ import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
 
-class MetafileModel(val id: Long,
-                    val username: String,
+class MetafileModel(val username: String,
                     val filename: String,
-                    val type: String,
+                    val contentType: String,
+                    val size: Long,
+                    val representation: Representation,
                     val creationDate: Instant = Instant.now()) {
     data class Builder (
-            val id: Long,
             var username: String? = null,
             var filename: String? = null,
-            var type: String? = null) {
+            var contentType: String? = null,
+            var size: Long? = null,
+            var representation: Representation? = null) {
 
         fun username(username: String) = apply { this.username = username }
         fun filename(filename: String) = apply { this.filename = filename }
-        fun type(type: String) = apply { this.type = type }
+        fun contentType(contentType: String) = apply { this.contentType = contentType }
+        fun size(size: Long) = apply { this.size = size }
+        fun representation(representation: Representation) = apply { this.representation = representation }
 
         fun build(): MetafileModel {
             if (this.filename!!.contains("..")) {
                 throw IllegalArgumentException("Sorry! Filename contains invalid path sequence $this.fileName")
             }
-            return MetafileModel(id, username!!, filename!!, type!!)
+            return MetafileModel(username!!, filename!!, contentType!!, size!!, representation!!)
         }
     }
 }
 
 fun toModel(domain: MetafileDomain): MetafileModel {
     return MetafileModel(
-            domain.id,
             domain.username,
             domain.filename,
-            domain.type,
+            domain.contentType,
+            domain.size,
+            domain.representation,
             domain.creationDate
     )
 }
 
 fun fromModel(model: MetafileModel): MetafileDomain {
     return MetafileDomain(
-            model.id,
             model.username,
             model.filename,
-            model.type,
+            model.contentType,
+            model.size,
+            model.representation,
             model.creationDate
     )
 }
 
-fun toMetafile(username: String, file: MultipartFile): MetafileModel {
-    val fileName: String = StringUtils.cleanPath(file.originalFilename!!)
-    return MetafileModel.Builder(0L)
+fun toMetafile(username: String, file: MultipartFile, dataFilesPath: String, representation: Representation): MetafileModel {
+    val fileName: String = StringUtils.cleanPath("${dataFilesPath}/${file.originalFilename!!}")
+    return MetafileModel.Builder()
             .username(username)
-            .type(file.contentType!!)
+            .contentType(file.contentType!!)
+            .size(file.size)
+            .representation(representation)
             .filename(fileName)
             .build()
 }

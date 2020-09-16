@@ -30,6 +30,7 @@ dependencies {
 	implementation(project(":core:infrastructure:encryption"))
 	implementation(project(":core:infrastructure:login"))
 	implementation(project(":core:infrastructure:notification"))
+	implementation(project(":core:infrastructure:profile"))
 	implementation(project(":core:infrastructure:signup"))
 	implementation(project(":core:infrastructure:storage"))
 

@@ -9,14 +9,11 @@ import java.nio.file.Paths
 import java.util.*
 
 @Repository
-@PropertySource("storage.yml")
-class MetafileRepository(val repository: MetafileJpaRepository, private final val env: Environment): IMetafileAdapter {
-
-    private val dataFilesPath = env.getProperty("data.files.path")!!
+class MetafileRepository(val repository: MetafileJpaRepository): IMetafileAdapter {
 
     override fun save(metafile: MetafileDomain, inpputStream: InputStream) {
         val metafileEntity = repository.save(toEntity(metafile))
-        FileStorage().save(inpputStream, Paths.get("$dataFilesPath/${metafileEntity.filename}"))
+        FileStorage().save(inpputStream, Paths.get(metafileEntity.filename))
     }
 
     override fun findById(id: Long): Optional<MetafileDomain> {

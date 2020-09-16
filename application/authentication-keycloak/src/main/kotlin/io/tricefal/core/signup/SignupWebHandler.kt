@@ -3,6 +3,7 @@ package io.tricefal.core.signup
 import io.tricefal.core.exception.NotAcceptedException
 import io.tricefal.core.exception.NotFoundException
 import io.tricefal.core.metafile.IMetafileService
+import io.tricefal.core.metafile.Representation
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
 import org.slf4j.LoggerFactory
@@ -24,7 +25,7 @@ class SignupWebHandler(val signupService: ISignupService,
                        private final val messageSource: MessageSource) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
-
+    private val dataFilesPath = env.getProperty("data.files.path")!!
     private var backendBaseUrl = env.getProperty("core.baseUrl")!!
     private var emailFrom = env.getProperty("notification.mail.from")!!
     private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
@@ -74,10 +75,28 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(signupService.updateStatus(signup, status))
     }
 
+    fun uploadPortrait(username: String, file: MultipartFile): SignupStateModel {
+        val signup = findSignup(username)
+
+        val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
+        metafileService.save(resumeMetaFile, file.inputStream)
+
+        return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
+    }
+
     fun uploadResume(username: String, file: MultipartFile): SignupStateModel {
         val signup = findSignup(username)
 
-        val resumeMetaFile = fromModel(toMetafile(username, file))
+        val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV))
+        metafileService.save(resumeMetaFile, file.inputStream)
+
+        return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
+    }
+
+    fun uploadRef(username: String, file: MultipartFile): SignupStateModel {
+        val signup = findSignup(username)
+
+        val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
         metafileService.save(resumeMetaFile, file.inputStream)
 
         return toModel(signupService.resumeUploaded(signup, resumeMetaFile))

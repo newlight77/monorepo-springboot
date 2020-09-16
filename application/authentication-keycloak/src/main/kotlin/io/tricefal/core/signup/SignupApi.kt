@@ -44,6 +44,13 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, url).build()
     }
 
+    @PostMapping("upload/portrait", consumes = [ "multipart/form-data" ])
+    @ResponseStatus(HttpStatus.OK)
+    fun uploadPortrait(@RequestParam file : MultipartFile): SignupStateModel {
+        val authentication: Authentication = SecurityContextHolder.getContext().authentication
+        return signupWebHandler.uploadPortrait(authentication.name, file)
+    }
+
     @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadCv(@RequestParam file : MultipartFile): SignupStateModel {
@@ -55,7 +62,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @ResponseStatus(HttpStatus.OK)
     fun uploadRef(@RequestParam file : MultipartFile): SignupStateModel {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return signupWebHandler.uploadResume(authentication.name, file)
+        return signupWebHandler.uploadRef(authentication.name, file)
     }
 
     @PostMapping("status")

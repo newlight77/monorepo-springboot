@@ -5,8 +5,8 @@ import java.util.*
 
 @Repository
 class ProfileRepositoryAdapter(private var repository: ProfileJpaRepository) : IProfileAdapter {
-    override fun save(login: ProfileDomain) {
-        val entity = toEntity(login)
+    override fun save(profile: ProfileDomain) {
+        val entity = toEntity(profile)
         repository.save(entity)
     }
 
