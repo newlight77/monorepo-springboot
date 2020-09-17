@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain:account"))
+	implementation(project(":domain:account"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.3.0.RELEASE")

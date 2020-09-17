@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
 
-	implementation(project(":core:domain:authentication"))
+	implementation(project(":domain:authentication"))
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.3.70")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.70")

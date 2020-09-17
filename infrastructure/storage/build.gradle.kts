@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain:authentication"))
+	implementation(project(":domain:authentication"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")

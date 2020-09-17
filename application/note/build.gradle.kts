@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain:note"))
-	implementation(project(":core:infrastructure:note"))
+	implementation(project(":domain:note"))
+	implementation(project(":infrastructure:note"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")

@@ -4,7 +4,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 //import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
-	kotlin("jvm")
+	kotlin("jvm") version "1.3.70"
 	id("com.adarshr.test-logger") version ("2.0.0")
 //	id("org.jmailen.kotlinter") version "2.3.2"
 //	id("com.diffplug.gradle.spotless") version "3.27.2"

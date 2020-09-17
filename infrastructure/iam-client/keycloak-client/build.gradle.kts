@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain:authentication"))
-	implementation(project(":core:infrastructure:iam-client:iam-client-interface"))
+	implementation(project(":domain:authentication"))
+	implementation(project(":infrastructure:iam-client:iam-client-interface"))
 
 	implementation("org.springframework.boot:spring-boot-starter:2.3.0.RELEASE")
 

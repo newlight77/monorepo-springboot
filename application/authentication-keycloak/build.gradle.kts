@@ -25,17 +25,17 @@ repositories {
 
 dependencies {
 
-	implementation(project(":core:domain:authentication"))
+	implementation(project(":domain:authentication"))
 
-	implementation(project(":core:infrastructure:encryption"))
-	implementation(project(":core:infrastructure:login"))
-	implementation(project(":core:infrastructure:notification"))
-	implementation(project(":core:infrastructure:profile"))
-	implementation(project(":core:infrastructure:signup"))
-	implementation(project(":core:infrastructure:storage"))
+	implementation(project(":infrastructure:encryption"))
+	implementation(project(":infrastructure:login"))
+	implementation(project(":infrastructure:notification"))
+	implementation(project(":infrastructure:profile"))
+	implementation(project(":infrastructure:signup"))
+	implementation(project(":infrastructure:storage"))
 
-	implementation(project(":core:infrastructure:iam-client:iam-client-interface"))
-	implementation(project(":core:infrastructure:iam-client:keycloak-client"))
+	implementation(project(":infrastructure:iam-client:iam-client-interface"))
+	implementation(project(":infrastructure:iam-client:keycloak-client"))
 
 	implementation("org.springframework.boot:spring-boot-devtools")
 

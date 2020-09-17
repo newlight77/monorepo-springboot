@@ -24,8 +24,8 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain:account"))
-	implementation(project(":core:infrastructure:account"))
+	implementation(project(":domain:account"))
+	implementation(project(":infrastructure:account"))
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")

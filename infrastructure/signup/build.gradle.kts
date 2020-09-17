@@ -19,12 +19,12 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":core:domain:authentication"))
-	implementation(project(":core:infrastructure:encryption"))
-	implementation(project(":core:infrastructure:notification"))
-	implementation(project(":core:infrastructure:storage"))
+	implementation(project(":domain:authentication"))
+	implementation(project(":infrastructure:encryption"))
+	implementation(project(":infrastructure:notification"))
+	implementation(project(":infrastructure:storage"))
 
-	implementation(project(":core:infrastructure:iam-client:iam-client-interface"))
+	implementation(project(":infrastructure:iam-client:iam-client-interface"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
