@@ -1,6 +1,7 @@
 package io.tricefal.core.okta
 
 import com.google.gson.Gson
+import io.tricefal.core.right.AccessRight
 import io.tricefal.core.signup.SignupDomain
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
@@ -31,6 +32,10 @@ class OktaService(private val env: Environment): IamRegisterService {
         }
 
         return "ACTIVE" == result.body()?.created
+    }
+
+    override fun addRole(username: String, role: AccessRight): Boolean {
+        return false
     }
 
 }

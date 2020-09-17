@@ -106,7 +106,7 @@ class SignupServiceTest {
                 .state(state)
                 .build()
 
-        Mockito.`when`(adapter.update(signup)).thenReturn(signup)
+        Mockito.`when`(adapter.updateStatus(signup)).thenReturn(signup)
 
         service = SignupService(adapter)
 
@@ -114,7 +114,7 @@ class SignupServiceTest {
         val result = service.updateStatus(signup, Status.EMPLOYEE)
 
         // Arrange
-        Mockito.verify(adapter).update(signup)
+        Mockito.verify(adapter).updateStatus(signup)
         Assertions.assertTrue(result.statusUpdated!!)
     }
 }

@@ -61,7 +61,7 @@ data class SignupDomain
 
 enum class Status {
     NONE,
-    STUDENT,
+    CLIENT,
     FREELANCE,
     EMPLOYEE;
 }

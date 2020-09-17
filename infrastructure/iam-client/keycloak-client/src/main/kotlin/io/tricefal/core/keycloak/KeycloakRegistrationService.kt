@@ -65,11 +65,13 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         return true
     }
 
-    private fun addRoleToRealm(username: String, role: AccessRight) {
+    override fun addRole(username: String, role: AccessRight): Boolean {
         val testerRealmRole = rolesResource[role.label].toRepresentation()
         val userId = realmResource.users().search(username).last().id
         val userResource = usersResource[userId]
         userResource.roles().realmLevel().add(listOf(testerRealmRole))
+
+        return true
     }
 
     private fun toKeycloakCredential(signup: SignupDomain): CredentialRepresentation {

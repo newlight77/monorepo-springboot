@@ -5,6 +5,7 @@ import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.okta.IamRegisterService
+import io.tricefal.core.right.AccessRight
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
@@ -16,7 +17,8 @@ import java.util.*
 class SignupAdapter(private var repository: SignupJpaRepository,
                     val registrationService: IamRegisterService,
                     val mailService: EmailService,
-                    val smsService: SmsService) : ISignupAdapter {
+                    val smsService: SmsService,
+                    val keycloakRegisterService: IamRegisterService) : ISignupAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -73,6 +75,17 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         logger.info("An Email has been sent")
         return true
     }
+
+    override fun updateStatus(signup: SignupDomain): SignupDomain {
+        keycloakRegisterService.addRole(signup.username, statusToRole[signup.status]!!)
+        return update(signup)
+    }
+
+    val statusToRole = mapOf(
+            Status.FREELANCE to AccessRight.AC_FREELANCE_READ,
+            Status.EMPLOYEE to AccessRight.AC_COLLABORATOR_READ,
+            Status.CLIENT to AccessRight.AC_CLIENT_READ
+    )
 }
 
 

@@ -5,7 +5,8 @@ import java.util.*
 
 class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
-    override fun signup(signup: SignupDomain, notification: SignupNotificationDomain): SignupStateDomain {
+    override fun signup(signup: SignupDomain,
+                        notification: SignupNotificationDomain): SignupStateDomain {
         adapter.findByUsername(signup.username).ifPresent {
             throw UsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
@@ -47,7 +48,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     override fun updateStatus(signup: SignupDomain, status: Status): SignupStateDomain {
         signup.status = status
         signup.state!!.statusUpdated = true
-        adapter.update(signup)
+        adapter.updateStatus(signup)
         return signup.state!!
     }
 
