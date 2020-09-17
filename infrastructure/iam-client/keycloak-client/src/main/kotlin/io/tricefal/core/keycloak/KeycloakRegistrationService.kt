@@ -1,11 +1,14 @@
 package io.tricefal.core.keycloak
 
 import io.tricefal.core.okta.IamRegisterService
+import io.tricefal.core.right.AccessRight
 import io.tricefal.core.signup.SignupDomain
 import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
+import org.keycloak.admin.client.resource.RealmResource
+import org.keycloak.admin.client.resource.RolesResource
 import org.keycloak.admin.client.resource.UsersResource
 import org.keycloak.representations.idm.CredentialRepresentation
 import org.keycloak.representations.idm.UserRepresentation
@@ -38,7 +41,9 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
             .password(adminPassword) //
             .build()
 
-    val usersResource: UsersResource = keycloak.realm(appRealm).users()
+    private final val realmResource: RealmResource = keycloak.realm(appRealm)
+    val usersResource: UsersResource = realmResource.users()
+    var rolesResource: RolesResource = realmResource.roles()
 
     override fun register(signup: SignupDomain): Boolean {
         val user = toKeycloakUser(signup)
@@ -58,6 +63,13 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         userResource.resetPassword(userCredential)
 
         return true
+    }
+
+    private fun addRoleToRealm(username: String, role: AccessRight) {
+        val testerRealmRole = rolesResource[role.label].toRepresentation()
+        val userId = realmResource.users().search(username).last().id
+        val userResource = usersResource[userId]
+        userResource.roles().realmLevel().add(listOf(testerRealmRole))
     }
 
     private fun toKeycloakCredential(signup: SignupDomain): CredentialRepresentation {
