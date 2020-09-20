@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse
 
 
 @KeycloakConfiguration
-@Profile(value = ["prod", "dev"])
+@Profile(value = ["prod", "dev", "local"])
 class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
 
     @Autowired

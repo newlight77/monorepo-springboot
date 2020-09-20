@@ -1,0 +1,89 @@
+#!/bin/bash
+
+#############################################
+## Global variables
+#############################################
+if [ -x /usr/bin/tput ]; then
+  red=`tput setaf 1` # error
+  green=`tput setaf 2` # nice
+  yellow=`tput setaf 3` # warning
+  blue=`tput setaf 4` # info
+  purple=`tput setaf 5` # command
+  teal=`tput setaf 6` # detail
+  white=`tput setaf 7` #
+  reset=`tput sgr0`
+fi
+
+BASE_DIR=$(dirname $0)
+ROOT_DIR="$(cd $BASE_DIR && pwd -P)"
+
+echo "root dir = $ROOT_DIR"
+
+SPRING_PROFILE=dev
+DEBUG=false
+DEBUG_ARG=
+CLASSPATH_DIR=/app/config
+
+LOG_FILE=$(basename $0).log
+echo "" > ${LOG_FILE}
+
+#############################################
+## Functions
+#############################################
+logInfo() {
+  echo ${reset} $@ ${reset}  2>&1 | tee -a ${LOG_FILE}
+}
+
+logError() {
+  echo ${red} $@ ${reset}  2>&1 | tee -a ${LOG_FILE}
+}
+
+logWarning() {
+  echo ${yellow} $@ ${reset}  2>&1 | tee -a ${LOG_FILE}
+}
+
+logCmd() {
+  echo ${green} $@ ${reset}  2>&1 | tee -a ${LOG_FILE}
+}
+
+usage() {
+  echo "Usage: $0 [options]"
+  echo ""
+  echo "${blue}Options:    ${reset}"
+  echo "${blue}          -c, --classpath =[classpath dir]       classpath dir${reset}"
+  echo "${blue}          -d, --debug                            enable debug remotely for java app${reset}"
+  echo "${blue}          -h,  --help                            help ${reset}"
+  echo "${blue}                                                 ${reset}"
+  echo "${blue}By default, this will run with --spring.profiles.active=test ${reset}"
+  exit 1
+}
+
+#############################################
+## Check arguments
+#############################################
+for i in "$@"
+  do
+    case $i in
+      -c=*|--classpath=*)          CLASSPATH_DIR="${i#*=}"   ;;
+      -d|--debug)                  DEBUG="true"        ;;
+      -h|--help)                   usage               ;;
+      *)                           usage               ;;
+    esac
+done
+
+
+#############################################
+## Run
+#############################################
+sed 's/\(.*=\)/export &/g' < ./config/core/local/app.localhost.env > .env
+source .env
+env
+rm .env
+
+if [ $DEBUG == 'true' ]; then
+  DEBUG_ARG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080"
+fi
+
+logInfo "launching the application with these arguments: --spring.profiles.active=${SPRING_PROFILE}"
+echo "java ${DEBUG_ARG} -cp ${CLASSPATH_DIR} -jar /app/libs/application.jar --spring.profiles.active=${SPRING_PROFILE}"
+java ${DEBUG_ARG} -cp ${CLASSPATH_DIR} -jar $ROOT_DIR/application/authentication-keycloak/build/libs/auth-keycloak-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=${SPRING_PROFILE}
