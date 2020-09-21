@@ -19,7 +19,6 @@ ROOT_DIR="$(cd $BASE_DIR && pwd -P)"
 
 echo "root dir = $ROOT_DIR"
 
-SPRING_PROFILE=dev
 DEBUG=false
 DEBUG_ARG=
 CLASSPATH_DIR=/app/config
@@ -84,6 +83,6 @@ if [ $DEBUG == 'true' ]; then
   DEBUG_ARG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080"
 fi
 
-logInfo "launching the application with these arguments: --spring.profiles.active=${SPRING_PROFILE}"
-echo "java ${DEBUG_ARG} -cp ${CLASSPATH_DIR} -jar /app/libs/application.jar --spring.profiles.active=${SPRING_PROFILE}"
-java ${DEBUG_ARG} -cp ${CLASSPATH_DIR} -jar $ROOT_DIR/application/authentication-keycloak/build/libs/auth-keycloak-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=${SPRING_PROFILE}
+logInfo "launching the application with these arguments: --spring.profiles.active=${ENV}"
+echo "java ${DEBUG_ARG} -cp ${CLASSPATH_DIR} -jar /app/libs/application.jar --spring.profiles.active=${ENV}"
+java ${DEBUG_ARG} -cp ${CLASSPATH_DIR} -jar $ROOT_DIR/application/authentication-keycloak/build/libs/auth-keycloak-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=${ENV}
