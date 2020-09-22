@@ -19,7 +19,6 @@ ROOT_DIR="$(cd $BASE_DIR && pwd -P)"
 
 echo "root dir = $ROOT_DIR"
 
-DEBUG=false
 DEBUG_ARG=
 CLASSPATH_DIR=/app/config
 
@@ -64,7 +63,7 @@ for i in "$@"
   do
     case $i in
       -c=*|--classpath=*)          CLASSPATH_DIR="${i#*=}"   ;;
-      -d|--debug)                  DEBUG="true"        ;;
+      -d|--debug)                  REMOTE_DEBUG="true"       ;;
       -h|--help)                   usage               ;;
       *)                           usage               ;;
     esac
@@ -79,7 +78,7 @@ source .env
 env
 rm .env
 
-if [ $DEBUG == 'true' ]; then
+if [ REMOTE_DEBUG == 'true' ]; then
   DEBUG_ARG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080"
 fi
 
