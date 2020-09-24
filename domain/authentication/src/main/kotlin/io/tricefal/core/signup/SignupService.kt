@@ -26,13 +26,13 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         return adapter.findByUsername(username)
     }
 
-    override fun activate(signup: SignupDomain, code: String): SignupStateDomain {
+    override fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain {
         signup.state?.activatedByCode = signup.activationCode.equals(code)
         adapter.update(signup)
         return signup.state!!
     }
 
-    override fun verifyFromToken(signup: SignupDomain, code: String): SignupStateDomain {
+    override fun verifyByEmail(signup: SignupDomain, code: String): SignupStateDomain {
         signup.state?.emailValidated = signup.activationCode.equals(code)
         adapter.update(signup)
         return signup.state!!

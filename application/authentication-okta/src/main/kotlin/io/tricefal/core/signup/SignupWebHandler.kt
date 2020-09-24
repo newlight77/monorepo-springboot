@@ -49,7 +49,7 @@ class SignupWebHandler(val signupService: ISignupService,
     fun activate(username: String, code: String): SignupStateModel {
         val signup = findSignup(username)
 
-        return toModel(this.signupService.activate(signup, code))
+        return toModel(this.signupService.verifyByCode(signup, code))
     }
 
     fun state(username: String): SignupStateModel {
@@ -67,7 +67,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val signup = findSignup(username)
 
-        return toModel(this.signupService.verifyFromToken(signup, activationCode))
+        return toModel(this.signupService.verifyByEmail(signup, activationCode))
     }
 
     fun updateStatus(username: String, status: Status): SignupStateModel {
@@ -130,7 +130,7 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     private fun emailValidationLink(signup: SignupDomain): String {
-        return backendBaseUrl + "/signup/verify/email?token=" + signup.activationToken + "." + randomString()
+        return backendBaseUrl + "/signup/email/verify?token=" + signup.activationToken + "." + randomString()
     }
 
     fun generateCode(): String {

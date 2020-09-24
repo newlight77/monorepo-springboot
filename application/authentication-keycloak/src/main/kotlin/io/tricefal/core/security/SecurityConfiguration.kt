@@ -34,7 +34,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
                 .antMatchers(HttpMethod.POST,"/logins")
                 .antMatchers(HttpMethod.POST,"/signup")
                 .antMatchers(HttpMethod.POST,"/signup/activate**")
-                .antMatchers(HttpMethod.GET,"/signup/verify/email**")
+                .antMatchers(HttpMethod.GET,"/signup/email/verify**")
                 .antMatchers(HttpMethod.GET,"/signup/state/*")
     }
 

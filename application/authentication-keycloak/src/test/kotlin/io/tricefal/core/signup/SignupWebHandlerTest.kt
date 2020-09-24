@@ -13,7 +13,6 @@ import io.tricefal.core.twilio.SmsService
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.io.TempDir
-import org.junit.rules.TemporaryFolder
 import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mockito
@@ -217,7 +216,7 @@ class SignupWebHandlerTest {
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
 
         // Act
-        val result = signupWebHandler.activate(username, code)
+        val result = signupWebHandler.verifyByCode(username, code)
 
         // Arrange
         Assertions.assertTrue(result.activatedByCode!!)

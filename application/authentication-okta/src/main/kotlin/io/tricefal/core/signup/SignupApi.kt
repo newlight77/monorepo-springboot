@@ -36,7 +36,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.state(username)
     }
 
-    @GetMapping("verify/email")
+    @GetMapping("email/verify")
     @ResponseStatus(HttpStatus.OK)
     fun everifyByEmail(response: HttpServletResponse, @RequestParam token: String): ResponseEntity<Any> {
         val state = signupWebHandler.verifyByToken(token)
