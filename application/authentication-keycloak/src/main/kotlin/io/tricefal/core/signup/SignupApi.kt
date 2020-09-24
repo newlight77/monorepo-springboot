@@ -24,9 +24,27 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.signup(signup)
     }
 
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    fun signups(): List<SignupModel> {
+        return signupWebHandler.findAll()
+    }
+
+    @PostMapping("activate/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun activate(@PathVariable username: String): SignupStateModel {
+        return signupWebHandler.activate(username)
+    }
+
+    @PostMapping("deactivate/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun deactivate(@PathVariable username: String): SignupStateModel {
+        return signupWebHandler.deactivate(username)
+    }
+
     @PostMapping("code/verify")
     @ResponseStatus(HttpStatus.OK)
-    fun activate(@RequestBody activateModel: SignupActivateModel): SignupStateModel {
+    fun verifyByCode(@RequestBody activateModel: SignupActivateModel): SignupStateModel {
         return signupWebHandler.verifyByCode(activateModel.username, activateModel.code.toString())
     }
 

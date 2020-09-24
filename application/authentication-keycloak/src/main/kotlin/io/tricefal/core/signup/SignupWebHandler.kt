@@ -45,6 +45,20 @@ class SignupWebHandler(val signupService: ISignupService,
         return signupService.findByUsername(username).map { signupDomain -> toModel(signupDomain) }
     }
 
+    fun findAll(): List<SignupModel> {
+        return signupService.findAll().map { signupDomain -> toModel(signupDomain) }
+    }
+
+    fun activate(username: String): SignupStateModel {
+        val signup = findSignup(username)
+        return toModel(this.signupService.activate(signup))
+    }
+
+    fun deactivate(username: String): SignupStateModel {
+        val signup = findSignup(username)
+        return toModel(this.signupService.activate(signup))
+    }
+
     fun verifyByCode(username: String, code: String): SignupStateModel {
         val signup = findSignup(username)
 

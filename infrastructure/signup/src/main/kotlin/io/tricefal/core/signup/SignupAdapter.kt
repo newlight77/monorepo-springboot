@@ -30,6 +30,12 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return fromEntity(signupEntity)
     }
 
+    override fun findAll(): List<SignupDomain> {
+        return repository.findAll().map {
+            fromEntity(it)
+        }
+    }
+
     override fun findByUsername(username: String): Optional<SignupDomain> {
         return repository.findByUsername(username).map {
             fromEntity(it)
