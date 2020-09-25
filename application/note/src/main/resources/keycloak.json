@@ -1,9 +1,9 @@
 {
-  "realm": "dev.tricefal.io",
+  "realm": "local.app",
   "bearer-only": true,
-  "auth-server-url": "https://localhost:1080/auth",
+  "auth-server-url": "http://keycloak:8080/auth",
   "ssl-required": "external",
-  "resource": "dev.tricefal.backend-localhost-8080",
+  "resource": "local.backend.bearer",
   "verify-token-audience": true,
   "credentials": {
     "secret": "3ce3d1c5-ab8f-412d-9880-217cfa2f2e7a"
