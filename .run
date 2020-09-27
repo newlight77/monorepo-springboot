@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 #############################################
 ## Global variables
@@ -16,11 +16,12 @@ fi
 
 BASE_DIR=$(dirname $0)
 ROOT_DIR="$(cd $BASE_DIR && pwd -P)"
-
 echo "root dir = $ROOT_DIR"
 
 DEBUG_ARG=
-CLASSPATH_DIR=/app/config
+SPRING_PROFILE_ARG=--spring.profiles.active=local
+KEYCLOAK_CONFIG_ARG=
+CLASSPATH_DIR=
 
 LOG_FILE=$(basename $0).log
 echo "" > ${LOG_FILE}
@@ -48,10 +49,11 @@ usage() {
   echo "Usage: $0 [options]"
   echo ""
   echo "${blue}Options:    ${reset}"
-  echo "${blue}          -c, --classpath =[classpath dir]       classpath dir${reset}"
-  echo "${blue}          -d, --debug                            enable debug remotely for java app${reset}"
-  echo "${blue}          -h,  --help                            help ${reset}"
-  echo "${blue}                                                 ${reset}"
+  echo "${blue}          -c, --classpath =[classpath]                           classpath${reset}"
+  echo "${blue}          -k, --keycloak-configFile =[keycloak.json file path]     keycloak.json file path${reset}"
+  echo "${blue}          -d, --debug                                            enable debug remotely for java app${reset}"
+  echo "${blue}          -h,  --help                                            help ${reset}"
+  echo "${blue}                                                                 ${reset}"
   echo "${blue}By default, this will run with --spring.profiles.active=test ${reset}"
   exit 1
 }
@@ -62,26 +64,38 @@ usage() {
 for i in "$@"
   do
     case $i in
-      -c=*|--classpath=*)          CLASSPATH_DIR="${i#*=}"   ;;
-      -d|--debug)                  REMOTE_DEBUG="true"       ;;
-      -h|--help)                   usage               ;;
-      *)                           usage               ;;
+      -c=*|--classpath=*)              CLASSPATH_DIR="${i#*=}"   ;;
+      -k=*|--keycloak-configFile=*)     KEYCLOAK_CONFIGFILE="${i#*=}"   ;;
+      -d|--debug)                      REMOTE_DEBUG="true"       ;;
+      -h|--help)                       usage               ;;
+      *)                               usage               ;;
     esac
 done
-
 
 #############################################
 ## Run
 #############################################
 sed 's/\(.*=\)/export &/g' < ./config/core/local/app.localhost.env > .env
-source .env
+. .env
 env
 rm .env
 
-if [ REMOTE_DEBUG == 'true' ]; then
+if [ "${REMOTE_DEBUG}" = 'true' ]; then
   DEBUG_ARG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080"
 fi
 
-logInfo "launching the application with these arguments: --spring.profiles.active=${SPRING_PROFILE}"
-echo "java ${DEBUG_ARG} -cp ${CLASSPATH_DIR} -jar /app/libs/application.jar --spring.profiles.active=${SPRING_PROFILE}"
-java ${DEBUG_ARG} -cp ${CLASSPATH_DIR} -jar $ROOT_DIR/application/authentication-keycloak/build/libs/auth-keycloak-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=${SPRING_PROFILE}
+if [ x"${SPRING_PROFILE}" != 'x' ]; then
+  SPRING_PROFILE_ARG="--spring.profiles.active=${SPRING_PROFILE}"
+fi
+
+if [ x"${KEYCLOAK_CONFIGFILE}" != 'x' ]; then
+  KEYCLOAK_CONFIG_ARG="--keycloak.configurationFile=${KEYCLOAK_CONFIGFILE}"
+fi
+
+if [ x"${CLASSPATH_DIR}" != 'x' ]; then
+  CLASSPATH_ARG="-cp ${CLASSPATH_DIR}"
+fi
+
+logInfo "launching the application"
+echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ./core/application/authentication-keycloak/build/libs/auth-keycloak-app-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
+java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ./core/application/authentication-keycloak/build/libs/auth-keycloak-app-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}

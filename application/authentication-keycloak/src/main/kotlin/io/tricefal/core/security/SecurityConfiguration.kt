@@ -20,7 +20,7 @@ import org.springframework.web.cors.CorsConfiguration
 @Configuration
 @EnableWebSecurity
 @Order(1)
-@Profile(value = ["prod", "dev"])
+@Profile(value = ["prod", "dev", "local"])
 class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired

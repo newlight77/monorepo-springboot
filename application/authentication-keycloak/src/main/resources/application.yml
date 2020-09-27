@@ -102,14 +102,15 @@ core:
 #                max-age: 3600
 
 keycloak:
-    configurationFile: classpath:keycloak.json
-#    enabled: true
-#    cors: true
-#    realm: dev.tricefal.io
-#    auth-server-url: http://localhost:9080/auth
-#    ssl-required: external
-#    resource: core-api
-#    bearer-only: true
-#    credentials:
-#        secret:
-#    public-client: true
+#    configurationFile: ${KEYCLOAK_CONFIGFILE}
+    enabled: true
+    cors: true
+    realm: ${KEYCLOAK_ADAPTER_REALM}
+    auth-server-url: ${KEYCLOAK_ADAPTER_AUTH_SERVER_URL}
+    ssl-required: ${KEYCLOAK_ADAPTER_SSL_REQUIRED}
+    resource: ${KEYCLOAK_ADAPTER_RESOURCE}
+    bearer-only: ${KEYCLOAK_ADAPTER_BEARER_ONLY}
+    credentials:
+        secret: ${KEYCLOAK_ADAPTER_CREDENTIALS_SECRET}
+    public-client: ${KEYCLOAK_ADAPTER_PUBLIC_CLIENT}
+    verify-token-audience: ${KEYCLOAK_ADAPTER_VERIFY_TOKEN_AUDIENCE}
