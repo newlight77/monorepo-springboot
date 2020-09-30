@@ -194,7 +194,7 @@ class SignupWebHandlerTest {
     }
 
     @Test
-    fun `should activate the account by code`() {
+    fun `should verify the account by code`() {
         // Arrange
         val username = "kong@gmail.com"
         val code = "123456"
@@ -216,7 +216,7 @@ class SignupWebHandlerTest {
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
 
         // Act
-        val result = signupWebHandler.activate(username, code)
+        val result = signupWebHandler.verifyByCode(username, code)
 
         // Arrange
         Assertions.assertTrue(result.activatedByCode!!)

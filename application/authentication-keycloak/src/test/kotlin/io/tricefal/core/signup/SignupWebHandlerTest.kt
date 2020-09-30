@@ -194,7 +194,7 @@ class SignupWebHandlerTest {
     }
 
     @Test
-    fun `should activate the account by code`() {
+    fun `should verify the account by code`() {
         // Arrange
         val username = "kong@gmail.com"
         val code = "123456"
