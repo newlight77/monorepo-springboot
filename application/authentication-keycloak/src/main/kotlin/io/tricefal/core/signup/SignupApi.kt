@@ -27,10 +27,8 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @GetMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun signup(username: String): SignupModel {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        if (authentication.isAuthenticated() && authentication.name == username)
-            return signupWebHandler.findByUsername(username).get()
-        return SignupModel.Builder("").build()
+        validateUser(username)
+        return signupWebHandler.findByUsername(username).get()
     }
 
     @GetMapping("")
@@ -39,28 +37,32 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.findAll()
     }
 
-    @PostMapping("activate/{username}")
+    // admin
+    @PostMapping("{username}/activate")
     @ResponseStatus(HttpStatus.OK)
     fun activate(@PathVariable username: String): SignupStateModel {
         return signupWebHandler.activate(username)
     }
 
-    @PostMapping("deactivate/{username}")
+    // admin
+    @PostMapping("{username}/deactivate")
     @ResponseStatus(HttpStatus.OK)
     fun deactivate(@PathVariable username: String): SignupStateModel {
         return signupWebHandler.deactivate(username)
     }
 
-    @PostMapping("code/verify")
-    @ResponseStatus(HttpStatus.OK)
-    fun verifyByCode(@RequestBody activateModel: SignupActivateModel): SignupStateModel {
-        return signupWebHandler.verifyByCode(activateModel.username, activateModel.code.toString())
-    }
-
-    @GetMapping("state/{username}")
+    @GetMapping("{username}/state")
     @ResponseStatus(HttpStatus.OK)
     fun state(@PathVariable username : String): SignupStateModel {
+        validateUser(username)
         return signupWebHandler.state(username)
+    }
+
+    @PostMapping("code/verify")
+    @ResponseStatus(HttpStatus.OK)
+    fun verifyByCode(@RequestBody codeModel : SignupCodeModel): SignupStateModel {
+        validateUser(codeModel.username)
+        return signupWebHandler.verifyByCode(codeModel.name, codeModel.code.toString())
     }
 
     @GetMapping("email/verify")
@@ -78,6 +80,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.uploadPortrait(authentication.name, file)
     }
 
+    // upcoming frontend
     @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadCv(@RequestParam file : MultipartFile): SignupStateModel {
@@ -95,8 +98,15 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @PostMapping("status")
     @ResponseStatus(HttpStatus.OK)
     fun updateStatus(@RequestBody statusModel : SignupStatusModel): SignupStateModel {
+        validateUser(statusModel.username)
         val status = toStatus(statusModel.status)
         return signupWebHandler.updateStatus(statusModel.username, status)
     }
 
+    private fun validateUser(username: String): String {
+        val authentication: Authentication = SecurityContextHolder.getContext().authentication
+        if (!authentication.isAuthenticated() || authentication.name != username)
+            throw IllegalArgumentException("username not expected")
+        return username
+    }
 }
