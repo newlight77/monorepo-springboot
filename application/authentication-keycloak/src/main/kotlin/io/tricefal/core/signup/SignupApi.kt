@@ -24,12 +24,12 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.signup(signup)
     }
 
-    @GetMapping("")
+    @GetMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
-    fun signup(): SignupModel {
+    fun signup(username: String): SignupModel {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        if (authentication.isAuthenticated())
-            return signupWebHandler.findByUsername(authentication.name).get()
+        if (authentication.isAuthenticated() && authentication.name == username)
+            return signupWebHandler.findByUsername(username).get()
         return SignupModel.Builder("").build()
     }
 
