@@ -62,7 +62,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @ResponseStatus(HttpStatus.OK)
     fun verifyByCode(@RequestBody codeModel : SignupCodeModel): SignupStateModel {
         validateUser(codeModel.username)
-        return signupWebHandler.verifyByCode(codeModel.name, codeModel.code.toString())
+        return signupWebHandler.verifyByCode(codeModel.username, codeModel.code.toString())
     }
 
     @GetMapping("email/verify")
@@ -73,6 +73,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, url).build()
     }
 
+    // upcoming frontend
     @PostMapping("upload/portrait", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadPortrait(@RequestParam file : MultipartFile): SignupStateModel {
@@ -80,7 +81,6 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.uploadPortrait(authentication.name, file)
     }
 
-    // upcoming frontend
     @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadCv(@RequestParam file : MultipartFile): SignupStateModel {
