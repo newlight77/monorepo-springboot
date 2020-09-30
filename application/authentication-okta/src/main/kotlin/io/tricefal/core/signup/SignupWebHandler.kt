@@ -46,16 +46,19 @@ class SignupWebHandler(val signupService: ISignupService,
         return signupService.findByUsername(username).map { signupDomain -> toModel(signupDomain) }
     }
 
-    fun activate(username: String, code: String): SignupStateModel {
+    fun activate(username: String): SignupStateModel {
         val signup = findSignup(username)
-
-        return toModel(this.signupService.verifyByCode(signup, code))
+        return toModel(this.signupService.activate(signup))
     }
 
     fun state(username: String): SignupStateModel {
         val signup = findSignup(username)
-
         return toModel(signup.state!!)
+    }
+
+    fun verifyByCode(username: String, code: String): SignupStateModel {
+        val signup = findSignup(username)
+        return toModel(this.signupService.verifyByCode(signup, code))
     }
 
     fun verifyByToken(token: String): SignupStateModel {

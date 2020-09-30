@@ -24,21 +24,36 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.signup(signup)
     }
 
-    @PostMapping("activate")
+    // admin
+    @PostMapping("{username}/activate")
     @ResponseStatus(HttpStatus.OK)
-    fun activate(@RequestBody activateModel: SignupActivateModel): SignupStateModel {
-        return signupWebHandler.activate(activateModel.username, activateModel.code.toString())
+    fun activate(@PathVariable username: String): SignupStateModel {
+        return signupWebHandler.activate(username)
     }
 
-    @GetMapping("state/{username}")
+    // admin
+    @GetMapping("{username}/state")
     @ResponseStatus(HttpStatus.OK)
     fun state(@PathVariable username : String): SignupStateModel {
         return signupWebHandler.state(username)
     }
 
+    @GetMapping("state")
+    @ResponseStatus(HttpStatus.OK)
+    fun state(): SignupStateModel {
+        val authentication: Authentication = SecurityContextHolder.getContext().authentication
+        return signupWebHandler.state(authentication.name)
+    }
+
+    @GetMapping("code/verify")
+    @ResponseStatus(HttpStatus.OK)
+    fun verifyByCode(@RequestBody activateModel: SignupActivateModel): SignupStateModel {
+        return signupWebHandler.verifyByCode(activateModel.username, activateModel.code.toString())
+    }
+
     @GetMapping("email/verify")
     @ResponseStatus(HttpStatus.OK)
-    fun everifyByEmail(response: HttpServletResponse, @RequestParam token: String): ResponseEntity<Any> {
+    fun verifyByEmail(response: HttpServletResponse, @RequestParam token: String): ResponseEntity<Any> {
         val state = signupWebHandler.verifyByToken(token)
         val url = frontendBaseUrl + "/register/activated/" + state.username
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, url).build()
