@@ -11,9 +11,11 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.core.annotation.Order
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
@@ -77,6 +79,18 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
         return registrationBean
     }
 
+    override fun configure(webSecurity: WebSecurity) {
+        webSecurity
+                .ignoring()
+                // All of Spring Security will ignore the requests
+                .antMatchers("/hello")
+                .antMatchers(HttpMethod.POST,"/logins")
+                .antMatchers(HttpMethod.POST,"/signup")
+                .antMatchers(HttpMethod.POST,"/signup/code/verify**")
+                .antMatchers(HttpMethod.GET,"/signup/email/verify**")
+                .antMatchers(HttpMethod.GET,"/signup/*/state")
+    }
+
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         super.configure(http)
@@ -118,6 +132,7 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         http.addFilterAfter(CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter::class.java)
 
+        // need usename/password to auto-login during signup
         http.addFilterAfter(JwtAuthorizationFilter(oktaJwtVerifier), UsernamePasswordAuthenticationFilter::class.java)
         //@formatter:on
     }

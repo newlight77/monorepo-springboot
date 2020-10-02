@@ -1,6 +1,5 @@
 package io.tricefal.core.security
 
-//import com.okta.spring.boot.oauth.Okta
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -17,10 +16,10 @@ import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 
 
-@Configuration
-@EnableWebSecurity
-@Order(1)
-@Profile(value = ["prod", "dev", "local", "localhost"])
+//@Configuration
+//@EnableWebSecurity
+//@Order(2)
+//@Profile(value = ["prod", "dev", "local", "localhost"])
 class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired
@@ -65,7 +64,6 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 //        http.addFilterAfter(CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter::class.java)
 //        http.addFilterAfter(JwtAuthorizationFilter(oktaJwtVerifier), UsernamePasswordAuthenticationFilter::class.java)
 //
-//        Okta.configureResourceServer401ResponseBody(http);
 //        //@formatter:on
     }
 

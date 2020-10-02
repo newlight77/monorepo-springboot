@@ -115,7 +115,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
 
     private fun validateUser(username: String): String {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        if (!authentication.isAuthenticated() || authentication.name != username)
+        if (!authentication.isAuthenticated || authentication.name != username)
             throw IllegalArgumentException("username not expected")
         return username
     }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.client.ResourceAccessException
+import java.lang.RuntimeException
 import java.time.Instant
 import javax.servlet.http.HttpServletRequest
 
@@ -90,7 +91,14 @@ class GlobalExceptionHandler {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(java.lang.Exception::class)
+    @ExceptionHandler(
+            Exception::class,
+            java.lang.Exception::class,
+            NullPointerException::class,
+            java.lang.NullPointerException::class,
+            RuntimeException::class,
+            java.lang.RuntimeException::class
+    )
     fun handle500Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
         return ExceptionDetail.Builder()
                 .classname(ex.javaClass.name)
