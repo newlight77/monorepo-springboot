@@ -12,7 +12,7 @@ plugins {
 	jacoco
 }
 
-group = "io.tricefal.infrastructure"
+group = "io.tricefal.core"
 version = "0.0.1-SNAPSHOT"
 
 repositories {

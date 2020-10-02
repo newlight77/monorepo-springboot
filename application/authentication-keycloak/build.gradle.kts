@@ -1,3 +1,4 @@
+import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
 	application
@@ -45,7 +46,7 @@ dependencies {
 	implementation("org.springframework.security:spring-security-oauth2-client")
 	implementation("org.springframework.security:spring-security-oauth2-jose")
 
-//	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.0")
+	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.0")
 	implementation("org.keycloak:keycloak-spring-boot-starter:11.0.0")
 
 	implementation("com.okta.jwt:okta-jwt-verifier:0.4.0")
@@ -75,6 +76,16 @@ dependencies {
 
 application {
 	mainClassName = "io.tricefal.core.KeycloakAuthApplicationKt"
+}
+
+tasks.withType<BootRun> {
+	jvmArgs = listOf(
+			"-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5080"
+
+	)
+	args = listOf(
+			"--spring.profiles.active=localhost"
+	)
 }
 
 tasks.withType<Jar>() {

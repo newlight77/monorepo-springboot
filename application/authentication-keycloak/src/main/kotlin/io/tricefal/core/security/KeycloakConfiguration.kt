@@ -1,7 +1,5 @@
 package io.tricefal.core.security
 
-//import org.keycloak.adapters.KeycloakConfigResolver
-//import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver
 import org.keycloak.adapters.KeycloakConfigResolver
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration
@@ -9,14 +7,16 @@ import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurer
 import org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
-import org.springframework.core.io.Resource
+import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.logout.LogoutFilter
 import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter
@@ -28,7 +28,9 @@ import org.springframework.web.cors.CorsConfiguration
 
 
 @KeycloakConfiguration
-@Profile(value = ["prod", "dev", "local"])
+@Profile(value = ["prod", "dev", "local", "localhost"])
+@EnableGlobalMethodSecurity(jsr250Enabled = true)
+@Order(1)
 class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
 
     @Autowired
@@ -39,10 +41,19 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
         return KeycloakSpringBootConfigResolver()
     }
 
+    @Bean
+    fun grantedAuthoritiesMapper(): GrantedAuthoritiesMapper? {
+        val mapper = SimpleAuthorityMapper()
+        mapper.setConvertToUpperCase(true)
+        return mapper
+    }
+
     @Autowired
     @Throws(java.lang.Exception::class)
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(keycloakAuthenticationProvider())
+        val provider = keycloakAuthenticationProvider()
+        auth.authenticationProvider(provider)
+        provider.setGrantedAuthoritiesMapper(grantedAuthoritiesMapper());
     }
 
     @Bean

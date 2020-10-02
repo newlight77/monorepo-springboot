@@ -3,6 +3,9 @@ server:
     servlet:
         context-path: /api
 
+    shutdown:
+        grace-period: 30s
+
 security:
     oauth:
         issuer: ${OKTA_OAUTH2_ISSUER}
@@ -109,6 +112,7 @@ keycloak:
     auth-server-url: ${KEYCLOAK_ADAPTER_AUTH_SERVER_URL}
     ssl-required: ${KEYCLOAK_ADAPTER_SSL_REQUIRED}
     resource: ${KEYCLOAK_ADAPTER_RESOURCE}
+    use-resource-role-mappings: ${KEYCLOAK_ADAPTER_USER_RESOURCE_ROLE_MAPPINGS}
     bearer-only: ${KEYCLOAK_ADAPTER_BEARER_ONLY}
     credentials:
         secret: ${KEYCLOAK_ADAPTER_CREDENTIALS_SECRET}
