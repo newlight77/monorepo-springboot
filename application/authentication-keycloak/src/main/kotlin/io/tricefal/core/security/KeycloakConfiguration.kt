@@ -19,19 +19,26 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
+import org.springframework.security.core.session.SessionRegistryImpl
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.logout.LogoutFilter
 import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
+import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 
 
 @KeycloakConfiguration
 @Profile(value = ["prod", "dev", "local", "localhost"])
-@EnableGlobalMethodSecurity(jsr250Enabled = true)
+@EnableGlobalMethodSecurity(
+//        securedEnabled = true, // @Secured
+        jsr250Enabled = true // @RolesAllowed
+//        prePostEnabled = true // @PreAuthorize and @PostAuthorize
+)
 @Order(1)
 class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
 
@@ -46,7 +53,8 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
     @Bean
     fun grantedAuthoritiesMapper(): GrantedAuthoritiesMapper? {
         val mapper = SimpleAuthorityMapper()
-        mapper.setConvertToUpperCase(true)
+        mapper.setPrefix("ROLE_");
+        mapper.setConvertToLowerCase(true)
         return mapper
     }
 
@@ -89,6 +97,7 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 .antMatchers(HttpMethod.POST,"/signup/code/verify**")
                 .antMatchers(HttpMethod.GET,"/signup/email/verify**")
                 .antMatchers(HttpMethod.GET,"/signup/*/state")
+                .antMatchers(HttpMethod.POST,"/signup/upload/*")
     }
 
     @Throws(Exception::class)
@@ -109,17 +118,17 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 // delegate logout endpoint to spring security
                 .and()
                 .logout().addLogoutHandler(keycloakLogoutHandler())
-                .logoutUrl("/logout")
+                .logoutUrl("/logout").permitAll()
 
-                .and() //
-                .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter::class.java) //
-                .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter::class.java) //
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()) //
+//                .and() //
+//                .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter::class.java) //
+//                .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter::class.java) //
+//                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()) //
 
                 .and().authorizeRequests() //
                 .antMatchers("/**").authenticated()
-                .antMatchers("/users*").hasRole("USER") //
-                .antMatchers("/admin*").hasRole("ADMIN") //
+//                .antMatchers("/users*").hasRole("USER") //
+//                .antMatchers("/admin*").hasRole("ADMIN") //
                 .anyRequest().denyAll() //
 
 
@@ -128,12 +137,16 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                     r.getHeader("XSRF-TOKEN") != null
                 }).requiresSecure()
 
-//                .csrf().disable() //
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-        http.addFilterAfter(CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter::class.java)
+        http.headers().frameOptions().disable()
+//        http .csrf().disable()
+
+        http.addFilterAfter(CustomFilter(), CsrfFilter::class.java)
+
+//        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//        http.addFilterAfter(CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter::class.java)
 
         // need usename/password to auto-login during signup
-        http.addFilterAfter(JwtAuthorizationFilter(oktaJwtVerifier), UsernamePasswordAuthenticationFilter::class.java)
+//        http.addFilterAfter(JwtAuthorizationFilter(oktaJwtVerifier), UsernamePasswordAuthenticationFilter::class.java)
         //@formatter:on
     }
 
