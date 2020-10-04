@@ -13,7 +13,7 @@ data class MetafileEntity(
         @Column(name = "username", length = 50)
         val username: String,
 
-        @Column(name = "filename", length = 50)
+        @Column(name = "filename", length = 255)
         val filename: String,
 
         @Column(name = "content_type", length = 30)
