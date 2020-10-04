@@ -7,6 +7,7 @@ import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurer
 import org.keycloak.adapters.springsecurity.filter.KeycloakAuthenticationProcessingFilter
 import org.keycloak.adapters.springsecurity.filter.KeycloakPreAuthActionsFilter
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
@@ -19,14 +20,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
-import org.springframework.security.core.session.SessionRegistryImpl
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.security.web.authentication.logout.LogoutFilter
-import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.csrf.CsrfFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.cors.CorsConfiguration
@@ -41,6 +36,9 @@ import org.springframework.web.cors.CorsConfiguration
 )
 @Order(1)
 class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
+
+    @Value("\${security.csrf.enabled}")
+    private val csrfEnabled = false
 
     @Autowired
     lateinit var oktaJwtVerifier: OktaJwtVerifier
@@ -92,11 +90,11 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 .ignoring()
                 // All of Spring Security will ignore the requests
                 .antMatchers("/hello")
-                .antMatchers(HttpMethod.POST,"/logins")
-                .antMatchers(HttpMethod.POST,"/signup")
-                .antMatchers(HttpMethod.POST,"/signup/code/verify**")
-                .antMatchers(HttpMethod.GET,"/signup/email/verify**")
-                .antMatchers(HttpMethod.GET,"/signup/*/state")
+                .antMatchers(HttpMethod.POST, "/logins")
+                .antMatchers(HttpMethod.POST, "/signup")
+                .antMatchers(HttpMethod.POST, "/signup/code/verify**")
+                .antMatchers(HttpMethod.GET, "/signup/email/verify**")
+                .antMatchers(HttpMethod.GET, "/signup/*/state")
 //                .antMatchers(HttpMethod.POST,"/signup/upload/test")
 //                .antMatchers(HttpMethod.POST,"/signup/upload/cv")
 //                .antMatchers(HttpMethod.POST,"/signup/upload/ref")
@@ -140,7 +138,9 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 }).requiresSecure()
 
         http.headers().frameOptions().disable()
-        http .csrf().disable()
+
+        if (!csrfEnabled)
+            http .csrf().disable()
 
         http.addFilterAfter(CustomFilter(), CsrfFilter::class.java)
 

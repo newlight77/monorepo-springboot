@@ -8,7 +8,8 @@ server:
 
 security:
     enabled: ${SECURITY_ENABLED}
-    enable-csrf: ${SECURITY_ENABLED_CSRF}
+    csrf:
+        enabled: ${SECURITY_ENABLED_CSRF}
     oauth:
         issuer: ${OKTA_OAUTH2_ISSUER}
         audience: ${OKTA_OAUTH2_AUDIENCE}

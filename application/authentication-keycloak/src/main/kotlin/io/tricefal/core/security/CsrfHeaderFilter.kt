@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse
 class CsrfHeaderFilter : OncePerRequestFilter() {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-        addHeader(response)
+//        addHeader(response)
         val csrf: CsrfToken = request.getAttribute(CsrfToken::class.java.name) as CsrfToken
         var cookie: Cookie? = WebUtils.getCookie(request, "XSRF-TOKEN")
         val token: String = csrf.token
@@ -23,10 +23,10 @@ class CsrfHeaderFilter : OncePerRequestFilter() {
         filterChain.doFilter(request, response)
     }
 
-    fun addHeader(response: HttpServletResponse) {
-        response.addHeader("Content-Security-Policy", "frame-ancestors 'self' http://localhost:1080")
-        response.addHeader("X-Frame-Options", "SAMEORIGIN")
-//        response.addHeader("X-Frame-Options", "ALLOW-FROM http://localhost:1080")
-    }
+//    fun addHeader(response: HttpServletResponse) {
+//        response.addHeader("Content-Security-Policy", "frame-ancestors 'self' http://localhost:1080")
+//        response.addHeader("X-Frame-Options", "SAMEORIGIN")
+////        response.addHeader("X-Frame-Options", "ALLOW-FROM http://localhost:1080")
+//    }
 
 }
