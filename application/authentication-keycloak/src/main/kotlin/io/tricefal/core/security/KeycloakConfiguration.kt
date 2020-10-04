@@ -97,7 +97,9 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 .antMatchers(HttpMethod.POST,"/signup/code/verify**")
                 .antMatchers(HttpMethod.GET,"/signup/email/verify**")
                 .antMatchers(HttpMethod.GET,"/signup/*/state")
-                .antMatchers(HttpMethod.POST,"/signup/upload/*")
+//                .antMatchers(HttpMethod.POST,"/signup/upload/test")
+//                .antMatchers(HttpMethod.POST,"/signup/upload/cv")
+//                .antMatchers(HttpMethod.POST,"/signup/upload/ref")
     }
 
     @Throws(Exception::class)
@@ -126,9 +128,9 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
 //                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()) //
 
                 .and().authorizeRequests() //
+//                .antMatchers("/**").hasRole("user-role")
+//                .antMatchers("/signup/upload/test").hasRole("user-role")
                 .antMatchers("/**").authenticated()
-//                .antMatchers("/users*").hasRole("USER") //
-//                .antMatchers("/admin*").hasRole("ADMIN") //
                 .anyRequest().denyAll() //
 
 
@@ -138,7 +140,7 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 }).requiresSecure()
 
         http.headers().frameOptions().disable()
-//        http .csrf().disable()
+        http .csrf().disable()
 
         http.addFilterAfter(CustomFilter(), CsrfFilter::class.java)
 

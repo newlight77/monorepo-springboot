@@ -8,6 +8,7 @@ server:
 
 security:
     enabled: ${SECURITY_ENABLED}
+    enable-csrf: ${SECURITY_ENABLED_CSRF}
     oauth:
         issuer: ${OKTA_OAUTH2_ISSUER}
         audience: ${OKTA_OAUTH2_AUDIENCE}
@@ -50,10 +51,10 @@ spring:
 #                        enable: true
     servlet:
         multipart:
-            enabled: false
+            enabled: true
             file-size-threshold: 2KB
-            max-file-size: 3MB
-            max-request-size: 3MB
+            max-file-size: 5MB
+            max-request-size: 5MB
 
 #javax:
 #    persistence:

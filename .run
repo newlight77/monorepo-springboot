@@ -77,9 +77,16 @@ done
 #############################################
 ## Run
 #############################################
+#PID=$(ps -ef | grep java | grep 'tricefal' | cut -d' ' -f4 | awk '{print}' ORS=' ')
+PID=$(ps -ef | grep java | grep 'tricefal' | cut -d' ' -f4 | awk '{ printf("%s ", $0) }')
+echo "killing springboot app with pid=${PID}"
+kill -9 ${PID}
+ps -ef | grep java
+
+
 sed 's/\(.*=\)/export &/g' < ./config/core/localhost/app.localhost.env > .env
 . .env
-env
+#env
 rm .env
 
 if [ "${REMOTE_DEBUG}" = 'true' ]; then
@@ -101,7 +108,7 @@ fi
 logInfo "launching the application"
 
 if [ "${SPRING_BOOT}" = 'true' ]; then
-  cd core && ./gradlew :application:authentication-keycloak:bootRun
+  cd core && ./gradlew clean :application:authentication-keycloak:bootRun
 else
   echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ./core/application/authentication-keycloak/build/libs/auth-keycloak-app-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
   java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ./core/application/authentication-keycloak/build/libs/auth-keycloak-app-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
