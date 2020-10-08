@@ -111,6 +111,7 @@ keycloak:
 #    configurationFile: ${KEYCLOAK_CONFIGFILE}
     enabled: ${KEYCLOAK_ENABLED}
     cors: true
+    enable-basic-auth: ${KEYCLOAK_ENABLE_BASIC_AUTH}
     realm: ${KEYCLOAK_ADAPTER_REALM}
     auth-server-url: ${KEYCLOAK_ADAPTER_AUTH_SERVER_URL}
     ssl-required: ${KEYCLOAK_ADAPTER_SSL_REQUIRED}
@@ -122,6 +123,15 @@ keycloak:
     public-client: ${KEYCLOAK_ADAPTER_PUBLIC_CLIENT}
     verify-token-audience: ${KEYCLOAK_ADAPTER_VERIFY_TOKEN_AUDIENCE}
     principal-attribute: preferred_username
+
+#    proxy-url: ${KEYCLOAL_ADAPTER_PROXY_URL}
+#    disable-trust-manager: ${KEYCLOAL_ADAPTER_DISABLE_TRUST_MANAGER}
+#    allow-any-hostname : ${KEYCLOAL_ADAPTER_ALLOW_ANY_HOSTNAME}
+#    truststore: ${KEYCLOAL_ADAPTER_TRUSTSTORE},
+#    truststore-password: ${KEYCLOAL_ADAPTER_TRUSTSTOR_PASSWORD}",
+#    client-keystore: ${KEYCLOAL_ADAPTER_KEYSTORE},
+#    client-keystore-password: ${KEYCLOAL_ADAPTER_KEYSTORE_PASSWORD},
+#    client-key-password: ${KEYCLOAL_ADAPTER_KEYS_PASSWORD},
 
     securityConstraints[0]:
         authRoles[0]: ROLE_user-role
