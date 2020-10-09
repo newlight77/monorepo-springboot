@@ -3,6 +3,8 @@ package io.tricefal.core.metafile
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MetafileModel(val username: String,
                     val filename: String,
@@ -55,7 +57,8 @@ fun fromModel(model: MetafileModel): MetafileDomain {
 }
 
 fun toMetafile(username: String, file: MultipartFile, dataFilesPath: String, representation: Representation): MetafileModel {
-    val fileName: String = StringUtils.cleanPath("${dataFilesPath}/${file.originalFilename!!}")
+    val timestamp: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MdyHmss"))
+    val fileName: String = StringUtils.cleanPath("${dataFilesPath}/${username}/${representation}/${timestamp}-${file.originalFilename!!}")
     return MetafileModel.Builder()
             .username(username)
             .contentType(file.contentType!!)
