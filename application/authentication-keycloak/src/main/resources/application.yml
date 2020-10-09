@@ -128,7 +128,7 @@ keycloak:
 #    disable-trust-manager: ${KEYCLOAL_ADAPTER_DISABLE_TRUST_MANAGER}
 #    allow-any-hostname : ${KEYCLOAL_ADAPTER_ALLOW_ANY_HOSTNAME}
 #    truststore: ${KEYCLOAL_ADAPTER_TRUSTSTORE},
-#    truststore-password: ${KEYCLOAL_ADAPTER_TRUSTSTOR_PASSWORD}",
+#    truststore-password: ${KEYCLOAL_ADAPTER_TRUSTSTORE_PASSWORD},
 #    client-keystore: ${KEYCLOAL_ADAPTER_KEYSTORE},
 #    client-keystore-password: ${KEYCLOAL_ADAPTER_KEYSTORE_PASSWORD},
 #    client-key-password: ${KEYCLOAL_ADAPTER_KEYS_PASSWORD},
