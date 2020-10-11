@@ -3,8 +3,8 @@ package io.tricefal.core.signup
 import io.tricefal.core.metafile.MetafileModel
 import java.time.Instant
 
-class SignupCodeModel(val username: String, val code: Int)
-class SignupStatusModel( val username: String, val status: String)
+class SignupCodeModel(val code: Int)
+class SignupStatusModel(val status: String)
 
 class SignupModel
     private constructor(

@@ -59,6 +59,17 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(this.signupService.activate(signup))
     }
 
+    fun resendCode(username: String): SignupStateModel {
+        val domain = findSignup(username)
+
+        val activationCode = generateCode()
+        domain.activationCode = activationCode
+
+        domain.activationToken = encode(activationCode) + "." + encode(domain.username)
+        val result = signupService.resendCode(domain, notification(domain))
+        return toModel(result)
+    }
+
     fun verifyByCode(username: String, code: String): SignupStateModel {
         val signup = findSignup(username)
 

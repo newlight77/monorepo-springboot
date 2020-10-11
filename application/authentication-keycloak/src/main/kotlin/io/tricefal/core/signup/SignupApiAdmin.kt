@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("signup")
-class SignupAdminApi(val signupWebHandler: SignupWebHandler,
+class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
                      private final val env: Environment) {
 
     private val logger = LoggerFactory.getLogger(javaClass)

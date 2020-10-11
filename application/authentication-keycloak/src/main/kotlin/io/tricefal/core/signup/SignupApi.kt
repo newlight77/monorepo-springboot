@@ -1,5 +1,7 @@
 package io.tricefal.core.signup
 
+import org.keycloak.KeycloakPrincipal
+import org.keycloak.representations.AccessToken
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
@@ -35,47 +37,29 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @GetMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun signup(username: String): SignupModel {
-        validateUser(username)
         return signupWebHandler.findByUsername(username).get()
-    }
-
-    @RolesAllowed("ROLE_ac_tricefal_w")
-    @GetMapping("")
-    @ResponseStatus(HttpStatus.OK)
-    fun signups(): List<SignupModel> {
-        return signupWebHandler.findAll()
-    }
-
-    // admin
-    @RolesAllowed("ROLE_ac_tricefal_w")
-    @PostMapping("{username}/activate")
-    @ResponseStatus(HttpStatus.OK)
-    fun activate(@PathVariable username: String): SignupStateModel {
-        logger.info("signup activation requested")
-        return signupWebHandler.activate(username)
-    }
-
-    // admin
-    @RolesAllowed("ROLE_ac_tricefal_w")
-    @PostMapping("{username}/deactivate")
-    @ResponseStatus(HttpStatus.OK)
-    fun deactivate(@PathVariable username: String): SignupStateModel {
-        logger.info("signup deactivation requested")
-        return signupWebHandler.deactivate(username)
     }
 
     @GetMapping("{username}/state")
     @ResponseStatus(HttpStatus.OK)
-    fun state(@PathVariable username : String): SignupStateModel {
-        validateUser(username)
-        return signupWebHandler.state(username)
+    fun state(principal: KeycloakPrincipal<*>, @PathVariable username : String): SignupStateModel {
+        // make sure the username is the one authenticated
+        return signupWebHandler.state(validateUser(principal, username))
+    }
+
+    @PostMapping("code/resend")
+    @ResponseStatus(HttpStatus.OK)
+    fun resendCode(principal: KeycloakPrincipal<*>, @RequestBody resendCodeModel : SignupCodeModel): SignupStateModel {
+        logger.info("signup resend code requested")
+        // make sure the username is the one authenticated
+        return signupWebHandler.resendCode(authenticatedUser())
     }
 
     @PostMapping("code/verify")
     @ResponseStatus(HttpStatus.OK)
-    fun verifyByCode(@RequestBody codeModel : SignupCodeModel): SignupStateModel {
+    fun verifyByCode(principal: KeycloakPrincipal<*>, @RequestBody codeModel : SignupCodeModel): SignupStateModel {
         logger.info("signup activation by code requested")
-        return signupWebHandler.verifyByCode(codeModel.username, codeModel.code.toString())
+        return signupWebHandler.verifyByCode(authenticatedUser(), codeModel.code.toString())
     }
 
     // not-secure
@@ -92,44 +76,54 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @RolesAllowed("ROLE_user-role")
     @PostMapping("upload/portrait", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadPortrait(@RequestParam file : MultipartFile): SignupStateModel {
+    fun uploadPortrait(principal: KeycloakPrincipal<*>, @RequestParam file : MultipartFile): SignupStateModel {
         logger.info("signup uploading portrait requested")
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return signupWebHandler.uploadPortrait(authentication.name, file)
+        return signupWebHandler.uploadPortrait(authenticatedUser(), file)
     }
 
 //    @PreAuthorize("hasRole('user-role')")
     @RolesAllowed("ROLE_user-role")
     @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadCv(@RequestParam file : MultipartFile): SignupStateModel {
+    fun uploadCv(principal: KeycloakPrincipal<*>, @RequestParam file : MultipartFile): SignupStateModel {
         logger.info("signup uploading cv requested")
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return signupWebHandler.uploadResume(authentication.name, file)
+        return signupWebHandler.uploadResume(authenticatedUser(), file)
     }
 
     @RolesAllowed("ROLE_user-role")
     @PostMapping("upload/ref", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadRef(@RequestParam file : MultipartFile): SignupStateModel {
+    fun uploadRef(principal: KeycloakPrincipal<*>, @RequestParam file : MultipartFile): SignupStateModel {
         logger.info("signup uploading ref requested")
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return signupWebHandler.uploadRef(authentication.name, file)
+        return signupWebHandler.uploadRef(authenticatedUser(), file)
     }
 
     @RolesAllowed("ROLE_user-role")
     @PostMapping("status")
     @ResponseStatus(HttpStatus.OK)
-    fun updateStatus(@RequestBody statusModel : SignupStatusModel): SignupStateModel {
+    fun updateStatus(principal: KeycloakPrincipal<*>, @RequestBody statusModel : SignupStatusModel): SignupStateModel {
         logger.info("signup updating status requested")
-        validateUser(statusModel.username)
         val status = toStatus(statusModel.status)
-        return signupWebHandler.updateStatus(statusModel.username, status)
+        return signupWebHandler.updateStatus(authenticatedUser(), status)
     }
 
-    private fun validateUser(username: String): String {
+    private fun authenticatedUser(principal: KeycloakPrincipal<*>): String {
+        val token: AccessToken = principal.keycloakSecurityContext.token
+        return token.email
+    }
+
+    private fun authenticatedUser(): String {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        if (!authentication.isAuthenticated || authentication.name != username)
+        if (!authentication.isAuthenticated)
+            throw IllegalArgumentException("username not expected")
+        return authentication.name
+    }
+
+    private fun validateUser(principal: KeycloakPrincipal<*>, username: String): String {
+        val token: AccessToken = principal.keycloakSecurityContext.token
+
+        val authentication: Authentication = SecurityContextHolder.getContext().authentication
+        if (!authentication.isAuthenticated || token.email != username)
             throw IllegalArgumentException("username not expected")
         return username
     }
