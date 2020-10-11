@@ -91,11 +91,11 @@ TOKEN=$(curl --insecure --location --request POST "${TOKEN_URL}" \
 
 echo "${TOKEN}"
 
-#RESULT=$(curl -H "Authorization: bearer ${TOKEN}" ${API_URL})
+RESULT=$(curl -H "Authorization: bearer ${TOKEN}" ${API_URL})
 
-#echo "${RESULT}"
+echo "${RESULT}"
 
-curl --location --request POST 'http://localhost:8080/api/signup/upload/cv' \
--H "Authorization: bearer ${TOKEN}" \
---form 'file=@/Users/kong/Downloads/contabo-11.pdf'
+# curl --location --request POST 'http://localhost:8080/api/signup/upload/cv' \
+# -H "Authorization: bearer ${TOKEN}" \
+# --form 'file=@/Users/kong/Downloads/contabo-11.pdf'
 
