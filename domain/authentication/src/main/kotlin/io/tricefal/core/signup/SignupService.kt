@@ -35,6 +35,10 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         }
     }
 
+    override fun delete(username: String) {
+        return adapter.delete(username)
+    }
+
     override fun findByUsername(username: String): Optional<SignupDomain> {
         return adapter.findByUsername(username)
     }

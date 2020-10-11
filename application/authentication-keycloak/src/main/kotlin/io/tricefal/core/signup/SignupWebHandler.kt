@@ -41,6 +41,10 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(result)
     }
 
+    fun delete(username: String) {
+        this.signupService.delete(username)
+    }
+
     fun findByUsername(username: String): Optional<SignupModel> {
         return signupService.findByUsername(username).map { signupDomain -> toModel(signupDomain) }
     }

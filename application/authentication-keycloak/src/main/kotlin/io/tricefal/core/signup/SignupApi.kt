@@ -33,6 +33,12 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.signup(signup)
     }
 
+    @DeleteMapping("")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteSignup(principal: KeycloakPrincipal<*>) {
+        signupWebHandler.delete(authenticatedUser(principal))
+    }
+
     @RolesAllowed("ROLE_user-role")
     @GetMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
@@ -52,14 +58,14 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     fun resendCode(principal: KeycloakPrincipal<*>, @RequestBody resendCodeModel : SignupCodeModel): SignupStateModel {
         logger.info("signup resend code requested")
         // make sure the username is the one authenticated
-        return signupWebHandler.resendCode(authenticatedUser())
+        return signupWebHandler.resendCode(authenticatedUser(principal))
     }
 
     @PostMapping("code/verify")
     @ResponseStatus(HttpStatus.OK)
     fun verifyByCode(principal: KeycloakPrincipal<*>, @RequestBody codeModel : SignupCodeModel): SignupStateModel {
         logger.info("signup activation by code requested")
-        return signupWebHandler.verifyByCode(authenticatedUser(), codeModel.code.toString())
+        return signupWebHandler.verifyByCode(authenticatedUser(principal), codeModel.code.toString())
     }
 
     // not-secure
@@ -78,7 +84,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @ResponseStatus(HttpStatus.OK)
     fun uploadPortrait(principal: KeycloakPrincipal<*>, @RequestParam file : MultipartFile): SignupStateModel {
         logger.info("signup uploading portrait requested")
-        return signupWebHandler.uploadPortrait(authenticatedUser(), file)
+        return signupWebHandler.uploadPortrait(authenticatedUser(principal), file)
     }
 
 //    @PreAuthorize("hasRole('user-role')")
@@ -87,7 +93,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @ResponseStatus(HttpStatus.OK)
     fun uploadCv(principal: KeycloakPrincipal<*>, @RequestParam file : MultipartFile): SignupStateModel {
         logger.info("signup uploading cv requested")
-        return signupWebHandler.uploadResume(authenticatedUser(), file)
+        return signupWebHandler.uploadResume(authenticatedUser(principal), file)
     }
 
     @RolesAllowed("ROLE_user-role")
@@ -95,7 +101,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @ResponseStatus(HttpStatus.OK)
     fun uploadRef(principal: KeycloakPrincipal<*>, @RequestParam file : MultipartFile): SignupStateModel {
         logger.info("signup uploading ref requested")
-        return signupWebHandler.uploadRef(authenticatedUser(), file)
+        return signupWebHandler.uploadRef(authenticatedUser(principal), file)
     }
 
     @RolesAllowed("ROLE_user-role")
@@ -104,19 +110,12 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     fun updateStatus(principal: KeycloakPrincipal<*>, @RequestBody statusModel : SignupStatusModel): SignupStateModel {
         logger.info("signup updating status requested")
         val status = toStatus(statusModel.status)
-        return signupWebHandler.updateStatus(authenticatedUser(), status)
+        return signupWebHandler.updateStatus(authenticatedUser(principal), status)
     }
 
     private fun authenticatedUser(principal: KeycloakPrincipal<*>): String {
         val token: AccessToken = principal.keycloakSecurityContext.token
         return token.email
-    }
-
-    private fun authenticatedUser(): String {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        if (!authentication.isAuthenticated)
-            throw IllegalArgumentException("username not expected")
-        return authentication.name
     }
 
     private fun validateUser(principal: KeycloakPrincipal<*>, username: String): String {

@@ -71,6 +71,22 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         return true
     }
 
+    override fun delete(username: String): Boolean {
+        val response = try {
+            realmUsersResource.delete(username)
+        } catch (ex: Exception) {
+            logger.error("delete keycloak account failed in realm $appRealm with exception: ${ex.localizedMessage}")
+            throw KeycloakUnsuccessfulException("delete keycloak account failed in realm $appRealm with exception: ${ex.stackTrace}")
+        }
+
+        if (response.status != 200 or 204) {
+            logger.error("deletion of account failed with : ${response.statusInfo}")
+            throw KeycloakUnsuccessfulException("the response code is: " + response.statusInfo)
+        }
+
+        return true
+    }
+
     override fun addRole(username: String, role: AccessRight): Boolean {
         val realmRole = realmRolesResource[role.label].toRepresentation()
 

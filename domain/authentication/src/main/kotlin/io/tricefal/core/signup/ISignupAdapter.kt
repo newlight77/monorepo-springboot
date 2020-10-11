@@ -4,6 +4,7 @@ import java.util.*
 
 interface ISignupAdapter {
     fun signup(signup: SignupDomain): SignupDomain
+    fun delete(username: String)
     fun findByUsername(username: String): Optional<SignupDomain>
     fun findAll(): List<SignupDomain>
     fun update(signup: SignupDomain): SignupDomain

@@ -30,6 +30,14 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return fromEntity(signupEntity)
     }
 
+    override fun delete(username: String) {
+        repository.findByUsername(username).ifPresent {
+            repository.delete(it)
+        }
+
+        registrationService.delete(username)
+    }
+
     override fun findAll(): List<SignupDomain> {
         return repository.findAll().map {
             fromEntity(it)

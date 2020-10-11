@@ -34,6 +34,10 @@ class OktaService(private val env: Environment): IamRegisterService {
         return "ACTIVE" == result.body()?.created
     }
 
+    override fun delete(username: String): Boolean {
+        return false
+    }
+
     override fun addRole(username: String, role: AccessRight): Boolean {
         return false
     }
