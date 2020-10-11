@@ -9,6 +9,7 @@ interface ISignupService {
     fun findAll(): List<SignupDomain>
     fun activate(signup: SignupDomain): SignupStateDomain
     fun deactivate(signup: SignupDomain): SignupStateDomain
+    fun resendCode(signup: SignupDomain, notification: SignupNotificationDomain): SignupStateDomain
     fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain
     fun verifyByEmail(signup: SignupDomain, code: String): SignupStateDomain
     fun resumeUploaded(signup: SignupDomain, resumeFileDomain: MetafileDomain): SignupStateDomain

@@ -25,8 +25,10 @@ class SignupStateDomain
             var validated: Boolean? = null) {
         fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
+//        fun emailSent(isEmailSent: () -> Boolean) = apply { this.emailSent = isEmailSent.invoke() }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
         fun activationCodeSent(activationCodeSent: Boolean?) = apply { this.activationCodeSent = activationCodeSent }
+//        fun activationCodeSent(isActivationCodeSent: () -> Boolean) = apply { this.activationCodeSent = isActivationCodeSent.invoke() }
         fun activatedByCode(activatedByCode: Boolean?) = apply { this.activatedByCode = activatedByCode }
         fun resumeUploaded(resumeUploaded: Boolean?) = apply { this.resumeUploaded = resumeUploaded }
         fun statusUpdated(statusUpdated: Boolean?) = apply { this.statusUpdated = statusUpdated }

@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.3")
+	implementation("org.slf4j:slf4j-api:1.7.30")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
