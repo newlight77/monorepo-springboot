@@ -40,7 +40,10 @@ class SignupStateEntity(
             var statusUpdated: Boolean? = null,
 
             @Column(name = "validated")
-            var validated: Boolean?)
+            var validated: Boolean? = null,
+
+            @Column(name = "completed")
+            var completed: Boolean? = null)
 
 
 fun toEntity(domain: SignupStateDomain): SignupStateEntity {
@@ -54,7 +57,8 @@ fun toEntity(domain: SignupStateDomain): SignupStateEntity {
             domain.activatedByCode,
             domain.resumeUploaded,
             domain.statusUpdated,
-            domain.validated
+            domain.validated,
+            domain.completed
     )
 }
 
@@ -68,6 +72,7 @@ fun fromEntity(entity: SignupStateEntity): SignupStateDomain {
             .resumeUploaded(entity.resumeUploaded)
             .statusUpdated(entity.statusUpdated)
             .validated(entity.validated)
+            .completed(entity.completed)
             .build()
 
 }

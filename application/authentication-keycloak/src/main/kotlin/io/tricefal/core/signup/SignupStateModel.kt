@@ -9,7 +9,8 @@ class SignupStateModel(
         var activatedByCode: Boolean? = null,
         var resumeUploaded: Boolean? = null,
         var statusUpdated: Boolean? = null,
-        val validated: Boolean?) {
+        var validated: Boolean? = null,
+        val completed: Boolean? = null) {
 
     data class Builder (
             val username: String,
@@ -20,7 +21,8 @@ class SignupStateModel(
             var activatedByCode: Boolean? = null,
             var resumeUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
-            var validated: Boolean? = null) {
+            var validated: Boolean? = null,
+            var completed: Boolean? = null) {
         fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
@@ -29,6 +31,7 @@ class SignupStateModel(
         fun resumeUploaded(resumeUploaded: Boolean?) = apply { this.resumeUploaded = resumeUploaded }
         fun statusUpdated(statusUpdated: Boolean?) = apply { this.statusUpdated = statusUpdated }
         fun validated(validated: Boolean?) = apply { this.validated = validated }
+        fun completed(completed: Boolean?) = apply { this.completed = completed }
 
         fun build() = SignupStateModel(
                 username,
@@ -39,7 +42,8 @@ class SignupStateModel(
                 activatedByCode,
                 resumeUploaded,
                 statusUpdated,
-                validated
+                validated,
+                completed
         )
     }
 }
@@ -54,6 +58,7 @@ fun toModel(domain: SignupStateDomain): SignupStateModel {
             .resumeUploaded(domain.resumeUploaded)
             .statusUpdated(domain.statusUpdated)
             .validated(domain.validated)
+            .completed(domain.completed)
             .build()
 }
 
@@ -67,5 +72,6 @@ fun fromModel(model: SignupStateModel): SignupStateDomain {
             .resumeUploaded(model.resumeUploaded)
             .statusUpdated(model.statusUpdated)
             .validated(model.validated)
+            .completed(model.completed)
             .build()
 }

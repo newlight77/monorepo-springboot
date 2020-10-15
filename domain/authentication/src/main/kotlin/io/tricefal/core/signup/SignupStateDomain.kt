@@ -10,7 +10,9 @@ class SignupStateDomain
         var activatedByCode: Boolean? = null,
         var resumeUploaded: Boolean? = null,
         var statusUpdated: Boolean? = null,
-        var validated: Boolean?) {
+        var validated: Boolean? = null,
+        var completed: Boolean? = null) {
+
 
 
     data class Builder (
@@ -22,7 +24,8 @@ class SignupStateDomain
             var activatedByCode: Boolean? = null,
             var resumeUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
-            var validated: Boolean? = null) {
+            var validated: Boolean? = null,
+            var completed: Boolean? = null) {
         fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
 //        fun emailSent(isEmailSent: () -> Boolean) = apply { this.emailSent = isEmailSent.invoke() }
@@ -33,6 +36,7 @@ class SignupStateDomain
         fun resumeUploaded(resumeUploaded: Boolean?) = apply { this.resumeUploaded = resumeUploaded }
         fun statusUpdated(statusUpdated: Boolean?) = apply { this.statusUpdated = statusUpdated }
         fun validated(validated: Boolean?) = apply { this.validated = validated }
+        fun completed(completed: Boolean?) = apply { this.completed = completed }
         fun build() = SignupStateDomain(
                 username,
                 registered,
@@ -42,6 +46,7 @@ class SignupStateDomain
                 activatedByCode,
                 resumeUploaded,
                 statusUpdated,
-                validated)
+                validated,
+                completed)
     }
 }
