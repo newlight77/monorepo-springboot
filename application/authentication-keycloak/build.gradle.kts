@@ -27,8 +27,10 @@ repositories {
 dependencies {
 
 	implementation(project(":domain:authentication"))
+	implementation(project(":domain:freelance"))
 
 	implementation(project(":infrastructure:encryption"))
+	implementation(project(":infrastructure:freelance"))
 	implementation(project(":infrastructure:login"))
 	implementation(project(":infrastructure:notification"))
 	implementation(project(":infrastructure:profile"))

@@ -51,6 +51,7 @@ fun toDomain(model: CompanyModel) : CompanyDomain {
             model.nomCommercial,
             model.formeJuridique,
             model.capital,
+
             model.rcs,
             model.siret,
             model.numDuns,
@@ -61,6 +62,7 @@ fun toDomain(model: CompanyModel) : CompanyDomain {
             model.kbisUrl,
             model.ribUrl,
             model.rcUrl,
+
             toDomain(model.contact),
             toDomain(model.bankInfo)
     )
