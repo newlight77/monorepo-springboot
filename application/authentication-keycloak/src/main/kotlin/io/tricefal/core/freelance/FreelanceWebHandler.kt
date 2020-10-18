@@ -29,7 +29,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     val locale: Locale = LocaleContextHolder.getLocale()
 
-    fun signup(freelanceModel: FreelanceModel): FreelanceModel {
+    fun create(freelanceModel: FreelanceModel): FreelanceModel {
         val domain = fromModel(freelanceModel)
         val result = freelanceService.create(domain)
         return toModel(result)
@@ -43,13 +43,49 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         return freelanceService.findAll().map { freelanceDomain -> toModel(freelanceDomain) }
     }
 
-    fun uploadResume(username: String, file: MultipartFile): FreelanceModel {
+    fun uploadKbis(username: String, file: MultipartFile): FreelanceModel {
         val signup = findSignup(username)
 
-        val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV))
-        metafileService.save(resumeMetaFile, file.inputStream)
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.KBIS))
+        metafileService.save(metaFile, file.inputStream)
 
-        return toModel(freelanceService.resumeUploaded(signup, resumeMetaFile))
+        return toModel(freelanceService.kbisUploaded(signup, metaFile))
+    }
+
+    fun uploadRib(username: String, file: MultipartFile): FreelanceModel {
+        val signup = findSignup(username)
+
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.RIB))
+        metafileService.save(metaFile, file.inputStream)
+
+        return toModel(freelanceService.ribUploaded(signup, metaFile))
+    }
+
+    fun uploadRc(username: String, file: MultipartFile): FreelanceModel {
+        val signup = findSignup(username)
+
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.RC))
+        metafileService.save(metaFile, file.inputStream)
+
+        return toModel(freelanceService.rcUploaded(signup, metaFile))
+    }
+
+    fun uploadUrssaf(username: String, file: MultipartFile): FreelanceModel {
+        val signup = findSignup(username)
+
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.URSSAF))
+        metafileService.save(metaFile, file.inputStream)
+
+        return toModel(freelanceService.urssafUploaded(signup, metaFile))
+    }
+
+    fun uploadFiscal(username: String, file: MultipartFile): FreelanceModel {
+        val signup = findSignup(username)
+
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.FISCAL))
+        metafileService.save(metaFile, file.inputStream)
+
+        return toModel(freelanceService.urssafUploaded(signup, metaFile))
     }
 
     private fun findSignup(username: String): FreelanceDomain {

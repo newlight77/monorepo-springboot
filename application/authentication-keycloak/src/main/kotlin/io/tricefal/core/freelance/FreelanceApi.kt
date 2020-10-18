@@ -17,31 +17,63 @@ import javax.servlet.http.HttpServletResponse
 
 
 @RestController
-@RequestMapping("freelance")
+@RequestMapping("freelance/company")
 class FreelanceApi(val freelanceWebHandler: FreelanceWebHandler) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    @RolesAllowed("ROLE_ac_tricefal_w-role")
+    @RolesAllowed("ROLE_ac_freelance_w")
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    fun signup(@RequestBody signup: FreelanceModel): FreelanceModel {
-        return freelanceWebHandler.signup(signup)
+    fun create(@RequestBody signup: FreelanceModel): FreelanceModel {
+        return freelanceWebHandler.create(signup)
     }
 
-    @RolesAllowed("ROLE_ac_tricefal_w")
+    @RolesAllowed("ROLE_ac_freelance_w")
     @GetMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
-    fun signup(username: String): FreelanceModel {
+    fun get(username: String): FreelanceModel {
         return freelanceWebHandler.findByUsername(username).get()
     }
 
-    @RolesAllowed("ROLE_ac_tricefal_w")
-    @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @PostMapping("upload/kbis", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadCv(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
+    fun uploadKbis(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
         logger.info("signup uploading cv requested")
-        return freelanceWebHandler.uploadResume(authenticatedUser(principal), file)
+        return freelanceWebHandler.uploadKbis(authenticatedUser(principal), file)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @PostMapping("upload/rib", consumes = [ "multipart/form-data" ])
+    @ResponseStatus(HttpStatus.OK)
+    fun uploadRib(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
+        logger.info("signup uploading cv requested")
+        return freelanceWebHandler.uploadRib(authenticatedUser(principal), file)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @PostMapping("upload/rc", consumes = [ "multipart/form-data" ])
+    @ResponseStatus(HttpStatus.OK)
+    fun uploadRc(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
+        logger.info("signup uploading cv requested")
+        return freelanceWebHandler.uploadRc(authenticatedUser(principal), file)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @PostMapping("upload/urssaf", consumes = [ "multipart/form-data" ])
+    @ResponseStatus(HttpStatus.OK)
+    fun uploadUrssaf(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
+        logger.info("signup uploading cv requested")
+        return freelanceWebHandler.uploadUrssaf(authenticatedUser(principal), file)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @PostMapping("upload/fiscal", consumes = [ "multipart/form-data" ])
+    @ResponseStatus(HttpStatus.OK)
+    fun uploadFiscal(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
+        logger.info("signup uploading cv requested")
+        return freelanceWebHandler.uploadFiscal(authenticatedUser(principal), file)
     }
 
     private fun authenticatedUser(principal: Principal): String {

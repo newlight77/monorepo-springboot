@@ -21,7 +21,7 @@ class FreelanceApiAdmin(val freelanceWebHandler: FreelanceWebHandler) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    @RolesAllowed("ROLE_ac_freelance_w")
+    @RolesAllowed("ROLE_ac_freelance_r")
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     fun freelancers(): List<FreelanceModel> {

@@ -5,7 +5,12 @@ import java.time.Instant
 enum class Representation {
     PORTRAIT,
     CV,
-    REF
+    REF,
+    KBIS,
+    RIB,
+    RC,
+    URSSAF,
+    FISCAL
 }
 
 class MetafileDomain(val username: String,

@@ -24,8 +24,37 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
         return adapter.findAll()
     }
 
-    override fun resumeUploaded(freelance: FreelanceDomain, resumeFileDomain: MetafileDomain): FreelanceDomain {
-        freelance.resumeFile = resumeFileDomain
+    override fun kbisUploaded(freelance: FreelanceDomain, kbisFileDomain: MetafileDomain): FreelanceDomain {
+        freelance.kbisFile = kbisFileDomain
+        freelance.state!!.kbisUploaded = true
+        adapter.update(freelance)
+        return freelance
+    }
+
+    override fun ribUploaded(freelance: FreelanceDomain, ribFileDomain: MetafileDomain): FreelanceDomain {
+        freelance.ribFile = ribFileDomain
+        freelance.state!!.ribUploaded = true
+        adapter.update(freelance)
+        return freelance
+    }
+
+    override fun rcUploaded(freelance: FreelanceDomain, rcFileDomain: MetafileDomain): FreelanceDomain {
+        freelance.rcFile = rcFileDomain
+        freelance.state!!.rcUploaded = true
+        adapter.update(freelance)
+        return freelance
+    }
+
+    override fun urssafUploaded(freelance: FreelanceDomain, urssafFileDomain: MetafileDomain): FreelanceDomain {
+        freelance.urssafFile = urssafFileDomain
+        freelance.state!!.urssafUploaded = true
+        adapter.update(freelance)
+        return freelance
+    }
+
+    override fun fiscalUploaded(freelance: FreelanceDomain, fiscalFileDomain: MetafileDomain): FreelanceDomain {
+        freelance.fiscalFile = fiscalFileDomain
+        freelance.state!!.fiscalUploaded = true
         adapter.update(freelance)
         return freelance
     }
