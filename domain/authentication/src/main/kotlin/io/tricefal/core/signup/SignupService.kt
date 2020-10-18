@@ -77,7 +77,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
             signup.state = SignupStateDomain.Builder(signup.username)
                     .registered(signup.state?.registered)
                     .emailValidated(signup.state?.emailValidated)
+                    .portraitUploaded(signup.state?.portraitUploaded)
                     .resumeUploaded(signup.state?.resumeUploaded)
+                    .refUploaded(signup.state?.refUploaded)
                     .statusUpdated(signup.state?.statusUpdated)
                     .validated(signup.state?.validated)
                     .emailSent(
@@ -109,9 +111,23 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         return signup.state!!
     }
 
-    override fun resumeUploaded(signup: SignupDomain, resumeFileDomain: MetafileDomain): SignupStateDomain {
-        signup.resumeFile = resumeFileDomain
+    override fun portraitUploaded(signup: SignupDomain, fileDomain: MetafileDomain): SignupStateDomain {
+        signup.resumeFile = fileDomain
+        signup.state!!.portraitUploaded = true
+        adapter.update(signup)
+        return signup.state!!
+    }
+
+    override fun resumeUploaded(signup: SignupDomain, fileDomain: MetafileDomain): SignupStateDomain {
+        signup.resumeFile = fileDomain
         signup.state!!.resumeUploaded = true
+        adapter.update(signup)
+        return signup.state!!
+    }
+
+    override fun refUploaded(signup: SignupDomain, fileDomain: MetafileDomain): SignupStateDomain {
+        signup.resumeFile = fileDomain
+        signup.state!!.refUploaded = true
         adapter.update(signup)
         return signup.state!!
     }

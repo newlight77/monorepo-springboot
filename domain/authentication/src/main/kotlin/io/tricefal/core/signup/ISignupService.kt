@@ -13,6 +13,8 @@ interface ISignupService {
     fun resendCode(signup: SignupDomain, notification: SignupNotificationDomain): SignupStateDomain
     fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain
     fun verifyByEmail(signup: SignupDomain, code: String): SignupStateDomain
+    fun portraitUploaded(signup: SignupDomain, portraitFileDomain: MetafileDomain): SignupStateDomain
     fun resumeUploaded(signup: SignupDomain, resumeFileDomain: MetafileDomain): SignupStateDomain
+    fun refUploaded(signup: SignupDomain, refFileDomain: MetafileDomain): SignupStateDomain
     fun updateStatus(signup: SignupDomain, status: Status): SignupStateDomain
 }

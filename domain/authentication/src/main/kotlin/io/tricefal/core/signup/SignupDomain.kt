@@ -15,7 +15,9 @@ data class SignupDomain
             var status: Status?,
             val signupDate: Instant?,
 
+            var portraitFile: MetafileDomain? = null,
             var resumeFile: MetafileDomain? = null,
+            var refFile: MetafileDomain? = null,
             var state: SignupStateDomain? = null
     ) {
 
@@ -30,7 +32,10 @@ data class SignupDomain
             var status: Status? = null,
             var signupDate: Instant? = null,
 
+            var portraitFile: MetafileDomain? = null,
             var resumeFile: MetafileDomain? = null,
+            var refFile: MetafileDomain? = null,
+
             var state: SignupStateDomain? = null
     ) {
         fun password(password: String?) = apply { this.password = password }
@@ -41,7 +46,10 @@ data class SignupDomain
         fun activationToken(activationToken: String?) = apply { this.activationToken = activationToken }
         fun status(status: Status) = apply { this.status = status }
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
+        fun portraitFile(portraitFile: MetafileDomain?) = apply { this.portraitFile = portraitFile }
         fun resumeFile(resumeFile: MetafileDomain?) = apply { this.resumeFile = resumeFile }
+        fun refFile(refFile: MetafileDomain?) = apply { this.refFile = refFile }
+
         fun state(state: SignupStateDomain?) = apply { this.state = state }
 
         fun build() = SignupDomain(username,
@@ -53,7 +61,9 @@ data class SignupDomain
                 activationToken,
                 status,
                 signupDate,
+                portraitFile,
                 resumeFile,
+                refFile,
                 state
         )
     }

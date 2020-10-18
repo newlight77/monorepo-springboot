@@ -110,7 +110,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
         metafileService.save(resumeMetaFile, file.inputStream)
 
-        return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
+        return toModel(signupService.portraitUploaded(signup, resumeMetaFile))
     }
 
     fun uploadResume(username: String, file: MultipartFile): SignupStateModel {
@@ -128,7 +128,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
         metafileService.save(resumeMetaFile, file.inputStream)
 
-        return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
+        return toModel(signupService.refUploaded(signup, resumeMetaFile))
     }
 
     private fun findSignup(username: String): SignupDomain {
