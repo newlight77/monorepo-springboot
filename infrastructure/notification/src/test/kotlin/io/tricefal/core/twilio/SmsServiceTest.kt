@@ -47,11 +47,11 @@ internal class SmsServiceTest {
         Mockito.`when`(env.getProperty("notification.sms.twilio.authToken")).thenReturn("56dfdab0b2c07ed9d861b4a182d10e00")
 
         // act
-        val exception: ApiException = assertThrows (ApiException::class.java) {
+        val exception: RuntimeException = assertThrows (RuntimeException::class.java) {
             SmsService(env).send(message)
         }
 
         // assert
-        assertEquals("The 'To' number 0659401130 is not a valid phone number.", exception.message)
+        assertEquals("An error occurred while sending a SMS", exception.message)
     }
 }
