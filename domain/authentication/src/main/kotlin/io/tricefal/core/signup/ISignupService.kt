@@ -5,7 +5,7 @@ import java.util.*
 
 interface ISignupService {
     fun signup(signup: SignupDomain, notification: SignupNotificationDomain) : SignupStateDomain
-    fun findByUsername(username: String): Optional<SignupDomain>
+    fun findByUsername(username: String): SignupDomain
     fun findAll(): List<SignupDomain>
     fun delete(username: String)
     fun activate(signup: SignupDomain): SignupStateDomain

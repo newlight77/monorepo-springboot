@@ -42,7 +42,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @GetMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun signup(username: String): SignupModel {
-        return signupWebHandler.findByUsername(username).get()
+        return signupWebHandler.findByUsername(username)
     }
 
     @GetMapping("{username}/state")

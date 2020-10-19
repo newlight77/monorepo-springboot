@@ -31,7 +31,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         } catch (ex: Exception) {
             logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
             logger.error("${ex.stackTrace}")
-            throw UserRegistraationException("a signup with username ${signup.username} has failed. ")
+            throw UserRegistrationException("a signup with username ${signup.username} has failed. ")
         }
     }
 
@@ -39,8 +39,10 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         return adapter.delete(username)
     }
 
-    override fun findByUsername(username: String): Optional<SignupDomain> {
+    override fun findByUsername(username: String): SignupDomain {
+        if (username.isEmpty()) throw UsernameNotFoundException("username is $username")
         return adapter.findByUsername(username)
+                .orElseThrow { NotFoundException("resource not found for username $username") }
     }
 
     override fun findAll(): List<SignupDomain> {
@@ -141,6 +143,8 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
 }
 
+class NotFoundException(val s: String) : Throwable()
+class UsernameNotFoundException(val s: String) : Throwable()
 class UsernameUniquenessException(val s: String) : Throwable()
-class UserRegistraationException(val s: String) : Throwable()
+class UserRegistrationException(val s: String) : Throwable()
 class ResendActivationCodeException(val s: String) : Throwable()

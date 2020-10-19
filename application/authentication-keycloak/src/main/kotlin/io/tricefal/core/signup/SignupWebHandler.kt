@@ -45,8 +45,9 @@ class SignupWebHandler(val signupService: ISignupService,
         this.signupService.delete(username)
     }
 
-    fun findByUsername(username: String): Optional<SignupModel> {
-        return signupService.findByUsername(username).map { signupDomain -> toModel(signupDomain) }
+    fun findByUsername(username: String): SignupModel {
+        if (username.isEmpty()) throw NotAcceptedException("username is $username")
+        return toModel(signupService.findByUsername(username))
     }
 
     fun findAll(): List<SignupModel> {
@@ -54,17 +55,17 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun activate(username: String): SignupStateModel {
-        val signup = findSignup(username)
-        return toModel(this.signupService.activate(signup))
+        val domain = signupService.findByUsername(username)
+        return toModel(this.signupService.activate(domain))
     }
 
     fun deactivate(username: String): SignupStateModel {
-        val signup = findSignup(username)
-        return toModel(this.signupService.activate(signup))
+        val domain = signupService.findByUsername(username)
+        return toModel(this.signupService.activate(domain))
     }
 
     fun resendCode(username: String): SignupStateModel {
-        val domain = findSignup(username)
+        val domain = signupService.findByUsername(username)
 
         val activationCode = generateCode()
         domain.activationCode = activationCode
@@ -75,15 +76,15 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun verifyByCode(username: String, code: String): SignupStateModel {
-        val signup = findSignup(username)
+        val domain = signupService.findByUsername(username)
 
-        return toModel(this.signupService.verifyByCode(signup, code))
+        return toModel(this.signupService.verifyByCode(domain, code))
     }
 
     fun state(username: String): SignupStateModel {
-        val signup = findSignup(username)
+        val domain = signupService.findByUsername(username)
 
-        return toModel(signup.state!!)
+        return toModel(domain.state!!)
     }
 
     fun verifyByEmailFromToken(token: String): SignupStateModel {
@@ -93,49 +94,42 @@ class SignupWebHandler(val signupService: ISignupService,
         val activationCode = decode(values[0])
         val username = decode(values[1])
 
-        val signup = findSignup(username)
+        val domain = signupService.findByUsername(username)
 
-        return toModel(this.signupService.verifyByEmail(signup, activationCode))
+        return toModel(this.signupService.verifyByEmail(domain, activationCode))
     }
 
     fun updateStatus(username: String, status: Status): SignupStateModel {
-        val signup = findSignup(username)
+        val domain = signupService.findByUsername(username)
 
-        return toModel(signupService.updateStatus(signup, status))
+        return toModel(signupService.updateStatus(domain, status))
     }
 
     fun uploadPortrait(username: String, file: MultipartFile): SignupStateModel {
-        val signup = findSignup(username)
+        val domain = signupService.findByUsername(username)
 
         val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
         metafileService.save(resumeMetaFile, file.inputStream)
 
-        return toModel(signupService.portraitUploaded(signup, resumeMetaFile))
+        return toModel(signupService.portraitUploaded(domain, resumeMetaFile))
     }
 
     fun uploadResume(username: String, file: MultipartFile): SignupStateModel {
-        val signup = findSignup(username)
+        val domain = signupService.findByUsername(username)
 
         val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV))
         metafileService.save(resumeMetaFile, file.inputStream)
 
-        return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
+        return toModel(signupService.resumeUploaded(domain, resumeMetaFile))
     }
 
     fun uploadRef(username: String, file: MultipartFile): SignupStateModel {
-        val signup = findSignup(username)
+        val domain = signupService.findByUsername(username)
 
         val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
         metafileService.save(resumeMetaFile, file.inputStream)
 
-        return toModel(signupService.refUploaded(signup, resumeMetaFile))
-    }
-
-    private fun findSignup(username: String): SignupDomain {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        val signup = this.signupService.findByUsername(username)
-                .orElseThrow { NotFoundException("username $username not found") }
-        return signup
+        return toModel(signupService.refUploaded(domain, resumeMetaFile))
     }
 
     private fun notification(signup: SignupDomain): SignupNotificationDomain {
