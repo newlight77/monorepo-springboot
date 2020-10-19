@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("freelance/company")
-class FreelanceApi(val freelanceWebHandler: FreelanceWebHandler) {
+class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -33,7 +33,7 @@ class FreelanceApi(val freelanceWebHandler: FreelanceWebHandler) {
     @GetMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun get(username: String): FreelanceModel {
-        return freelanceWebHandler.findByUsername(username).get()
+        return freelanceWebHandler.findByUsername(username)
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")

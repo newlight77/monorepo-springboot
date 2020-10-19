@@ -5,7 +5,7 @@ import java.util.*
 
 interface IFreelanceService {
     fun create(freelance: FreelanceDomain) : FreelanceDomain
-    fun findByUsername(username: String): Optional<FreelanceDomain>
+    fun findByUsername(username: String): FreelanceDomaincore/domain/freelance/src/main/kotlin/io/tricefal/core/freelance/IFreelanceService.kt
     fun findAll(): List<FreelanceDomain>
     fun kbisUploaded(freelance: FreelanceDomain, kbisFileDomain: MetafileDomain): FreelanceDomain
     fun ribUploaded(freelance: FreelanceDomain, ribFileDomain: MetafileDomain): FreelanceDomain

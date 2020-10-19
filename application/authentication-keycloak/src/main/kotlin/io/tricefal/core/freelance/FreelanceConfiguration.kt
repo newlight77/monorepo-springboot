@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration
 class FreelanceConfiguration {
 
     @Bean
-    fun freelanceService(signupAdapter: IFreelanceAdapter): IFreelanceService {
-        return FreelanceService(signupAdapter)
+    fun freelanceService(freelanceAdapter: IFreelanceAdapter): IFreelanceService {
+        return FreelanceService(freelanceAdapter)
     }
 
     @Bean

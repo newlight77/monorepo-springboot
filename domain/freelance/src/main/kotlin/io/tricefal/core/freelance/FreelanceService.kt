@@ -16,8 +16,10 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
         return adapter.create(freelance)
     }
 
-    override fun findByUsername(username: String): Optional<FreelanceDomain> {
+    override fun findByUsername(username: String): FreelanceDomain {
+        if (username.isEmpty()) throw UsernameNotFoundException("username is $username")
         return adapter.findByUsername(username)
+                .orElseThrow { NotFoundException("resource not found for username $username") }
     }
 
     override fun findAll(): List<FreelanceDomain> {
@@ -61,4 +63,5 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
 
 }
 
+class NotFoundException(val s: String) : Throwable()
 class UsernameNotFoundException(val s: String) : Throwable()
