@@ -70,7 +70,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @ResponseStatus(HttpStatus.OK)
     fun uploadRef(@RequestParam file : MultipartFile): SignupStateModel {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return signupWebHandler.uploadResume(authentication.name, file)
+        return signupWebHandler.uploadRef(authentication.name, file)
     }
 
     @PostMapping("status")

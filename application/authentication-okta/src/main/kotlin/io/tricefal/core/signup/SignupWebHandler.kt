@@ -42,22 +42,22 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(result)
     }
 
-    fun findByUsername(username: String): Optional<SignupModel> {
-        return signupService.findByUsername(username).map { signupDomain -> toModel(signupDomain) }
+    fun findByUsername(username: String): SignupModel {
+        return toModel(signupService.findByUsername(username))
     }
 
     fun activate(username: String): SignupStateModel {
-        val signup = findSignup(username)
+        val signup = signupService.findByUsername(username)
         return toModel(this.signupService.activate(signup))
     }
 
     fun state(username: String): SignupStateModel {
-        val signup = findSignup(username)
+        val signup = signupService.findByUsername(username)
         return toModel(signup.state!!)
     }
 
     fun verifyByCode(username: String, code: String): SignupStateModel {
-        val signup = findSignup(username)
+        val signup = signupService.findByUsername(username)
         return toModel(this.signupService.verifyByCode(signup, code))
     }
 
@@ -68,19 +68,19 @@ class SignupWebHandler(val signupService: ISignupService,
         val activationCode = decode(values[0])
         val username = decode(values[1])
 
-        val signup = findSignup(username)
+        val signup = signupService.findByUsername(username)
 
         return toModel(this.signupService.verifyByEmail(signup, activationCode))
     }
 
     fun updateStatus(username: String, status: Status): SignupStateModel {
-        val signup = findSignup(username)
+        val signup = signupService.findByUsername(username)
 
         return toModel(signupService.updateStatus(signup, status))
     }
 
     fun uploadPortrait(username: String, file: MultipartFile): SignupStateModel {
-        val signup = findSignup(username)
+        val signup = signupService.findByUsername(username)
 
         val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
         metafileService.save(resumeMetaFile, file.inputStream)
@@ -89,7 +89,7 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun uploadResume(username: String, file: MultipartFile): SignupStateModel {
-        val signup = findSignup(username)
+        val signup = signupService.findByUsername(username)
 
         val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV))
         metafileService.save(resumeMetaFile, file.inputStream)
@@ -98,19 +98,12 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun uploadRef(username: String, file: MultipartFile): SignupStateModel {
-        val signup = findSignup(username)
+        val signup = signupService.findByUsername(username)
 
         val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
         metafileService.save(resumeMetaFile, file.inputStream)
 
         return toModel(signupService.resumeUploaded(signup, resumeMetaFile))
-    }
-
-    private fun findSignup(username: String): SignupDomain {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        val signup = this.signupService.findByUsername(username)
-                .orElseThrow { NotFoundException("username $username not found") }
-        return signup
     }
 
     private fun notification(signup: SignupDomain): SignupNotificationDomain {

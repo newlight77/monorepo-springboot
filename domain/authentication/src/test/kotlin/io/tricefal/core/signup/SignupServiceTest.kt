@@ -84,7 +84,7 @@ class SignupServiceTest {
         val result = service.findByUsername(username)
 
         // Arrange
-        Assertions.assertEquals(signup, result.get())
+        Assertions.assertEquals(signup, result)
     }
 
     @Test

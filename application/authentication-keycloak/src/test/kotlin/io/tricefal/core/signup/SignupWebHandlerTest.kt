@@ -146,9 +146,8 @@ class SignupWebHandlerTest {
         val result = signupWebHandler.findByUsername(username)
 
         // Arrange
-        Assertions.assertTrue(result.isPresent)
-        Assertions.assertEquals(expected.username, result.get().username)
-        Assertions.assertEquals(null, result.get().password)
+        Assertions.assertEquals(expected.username, result.username)
+        Assertions.assertEquals(null, result.password)
     }
 
     @Test
