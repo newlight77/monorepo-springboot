@@ -28,7 +28,7 @@ class FreelanceMissionApi(val freelanceWebHandler: FreelanceWebHandler) {
     @GetMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun get(username: String): FreelanceModel {
-        return freelanceWebHandler.findByUsername(username).get()
+        return freelanceWebHandler.findByUsername(username)
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")

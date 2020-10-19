@@ -31,9 +31,9 @@ fun toEntity(domain: AddressDomain): AddressEntity {
             null,
             domain.address,
             domain.addressMention!!,
-            domain.postalCode,
-            domain.city,
-            domain.country
+            domain.postalCode!!,
+            domain.city!!,
+            domain.country!!
     );
 }
 

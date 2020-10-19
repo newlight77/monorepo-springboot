@@ -2,9 +2,9 @@ package io.tricefal.core.freelance
 
 data class AddressModel(var address: String,
                         var addressMention: String?,
-                        var postalCode: String,
-                        var city: String,
-                        var country: String
+                        var postalCode: String?,
+                        var city: String?,
+                        var country: String?
 ) {
     data class Builder(
             val address: String,
@@ -21,9 +21,9 @@ data class AddressModel(var address: String,
         fun build() = AddressModel(
                 address,
                 addressMention,
-                postalCode!!,
-                city!!,
-                country!!
+                postalCode,
+                city,
+                country
         )
     }
 }

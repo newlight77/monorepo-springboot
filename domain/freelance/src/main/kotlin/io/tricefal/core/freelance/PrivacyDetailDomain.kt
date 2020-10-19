@@ -32,13 +32,13 @@ class PrivacyDetailDomain(
 
         fun build() = PrivacyDetailDomain(
                 username,
-                birthDate!!,
-                birthCity!!,
-                birthCountry!!,
-                citizenship!!,
-                socialSecurityNumber!!,
-                nationalIdentityNumber!!,
-                information!!
+                birthDate,
+                birthCity,
+                birthCountry,
+                citizenship,
+                socialSecurityNumber,
+                nationalIdentityNumber,
+                information
         )
     }
 

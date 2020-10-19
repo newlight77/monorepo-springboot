@@ -47,15 +47,15 @@ data class FreelanceDomain
 
         fun build() = FreelanceDomain(
                 username,
-                contact!!,
-                company!!,
-                privacyDetail!!,
-                kbisFile!!,
-                ribFile!!,
-                rcFile!!,
-                urssafFile!!,
-                fiscalFile!!,
-                state!!
+                contact,
+                company,
+                privacyDetail,
+                kbisFile,
+                ribFile,
+                rcFile,
+                urssafFile,
+                fiscalFile,
+                state
         )
     }
 }

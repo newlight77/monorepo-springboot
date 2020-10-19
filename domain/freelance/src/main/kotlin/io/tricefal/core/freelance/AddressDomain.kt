@@ -2,9 +2,9 @@ package io.tricefal.core.freelance
 
 data class AddressDomain(val address: String,
                          var addressMention: String?,
-                         val postalCode: String,
-                         val city: String,
-                         val country: String)
+                         val postalCode: String?,
+                         val city: String?,
+                         val country: String?)
 {
     data class Builder(
             val address: String,
@@ -21,9 +21,9 @@ data class AddressDomain(val address: String,
         fun build() = AddressDomain(
                 address,
                 addressMention,
-                postalCode!!,
-                city!!,
-                country!!
+                postalCode,
+                city,
+                country
         )
     }
 }
