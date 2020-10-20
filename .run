@@ -77,15 +77,15 @@ done
 #############################################
 ## Run
 #############################################
-#PID=$(ps -ef | grep java | grep 'tricefal' | cut -d' ' -f4 | awk '{print}' ORS=' ')
-PID=$(ps -ef | grep java | grep 'tricefal' | cut -d' ' -f4 | awk '{ printf("%s ", $0) }')
+#PID=$(ps -ef | grep java | grep 'core' | cut -d' ' -f4 | awk '{print}' ORS=' ')
+PID=$(ps -ef | grep java | grep 'core' | cut -d' ' -f4 | awk '{ printf("%s ", $0) }')
 echo "killing springboot app with pid=${PID}"
 kill -9 ${PID}
 ps -ef | grep java
 
 
 sed 's/\(.*=\)/export &/g' < ./config/core/localhost/app.localhost.env > .env
-. .env
+. .env > /dev/null
 #env
 rm .env
 

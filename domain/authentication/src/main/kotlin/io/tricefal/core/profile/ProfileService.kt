@@ -5,20 +5,20 @@ import java.util.*
 
 class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
 
-    override fun portraitUploaded(profile: ProfileDomain, portraitFileDomain: MetafileDomain): ProfileDomain {
-        profile.resumeFilename = portraitFileDomain.filename
+    override fun portraitUploaded(profile: ProfileDomain, fileDomain: MetafileDomain): ProfileDomain {
+        profile.resumeFilename = fileDomain.filename
         adapter.save(profile)
         return profile
     }
 
-    override fun resumeUploaded(profile: ProfileDomain, resumeFileDomain: MetafileDomain): ProfileDomain {
-        profile.resumeFilename = resumeFileDomain.filename
+    override fun resumeUploaded(profile: ProfileDomain, fileDomain: MetafileDomain): ProfileDomain {
+        profile.resumeFilename = fileDomain.filename
         adapter.save(profile)
         return profile
     }
 
-    override fun refUploaded(profile: ProfileDomain, refFileDomain: MetafileDomain): ProfileDomain {
-        profile.resumeFilename = refFileDomain.filename
+    override fun refUploaded(profile: ProfileDomain, fileDomain: MetafileDomain): ProfileDomain {
+        profile.resumeFilename = fileDomain.filename
         adapter.save(profile)
         return profile
     }
