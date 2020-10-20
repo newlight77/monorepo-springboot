@@ -1,6 +1,5 @@
 rootProject.name = "tricefal-infrastructure"
 
-include("account")
 include("encryption")
 include("freelance")
 include("login")
