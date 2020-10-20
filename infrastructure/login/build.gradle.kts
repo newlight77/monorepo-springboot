@@ -33,3 +33,7 @@ dependencies {
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
 }
+
+tasks.withType<Jar>() {
+	baseName = "infra-login"
+}

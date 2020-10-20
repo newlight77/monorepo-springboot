@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
 	implementation(project(":domain:authentication"))
+	implementation(project(":domain:metafile"))
 	implementation(project(":infrastructure:iam-client:iam-client-interface"))
 
 	implementation("org.springframework.boot:spring-boot-starter:2.3.0.RELEASE")
@@ -40,4 +41,8 @@ dependencies {
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
 
+}
+
+tasks.withType<Jar>() {
+	baseName = "infra-keycloak-client"
 }

@@ -7,7 +7,6 @@ plugins {
 group = "io.tricefal.domain"
 version = "0.0.1-SNAPSHOT"
 
-
 repositories {
 	mavenCentral()
 }
@@ -22,4 +21,8 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.3")
 	testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+}
+
+tasks.withType<Jar>() {
+	baseName = "domain-note"
 }

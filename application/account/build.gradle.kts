@@ -18,7 +18,6 @@ buildscript {
 group = "io.tricefal.application"
 version = "0.0.1-SNAPSHOT"
 
-
 repositories {
 	mavenCentral()
 }
@@ -58,7 +57,7 @@ application {
 }
 
 tasks.withType<Jar>() {
-    baseName = "account-app"
+    baseName = "app-account"
 }
 
 testlogger {

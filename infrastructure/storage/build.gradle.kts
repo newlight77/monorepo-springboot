@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":domain:authentication"))
+	implementation(project(":domain:metafile"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
@@ -35,4 +35,8 @@ dependencies {
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
 
+}
+
+tasks.withType<Jar>() {
+	baseName = "infra-storaage"
 }

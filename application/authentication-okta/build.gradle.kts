@@ -18,7 +18,6 @@ buildscript {
 group = "io.tricefal.application"
 version = "0.0.1-SNAPSHOT"
 
-
 repositories {
 	mavenCentral()
 }
@@ -26,6 +25,7 @@ repositories {
 dependencies {
 
 	implementation(project(":domain:authentication"))
+	implementation(project(":domain:metafile"))
 
 	implementation(project(":infrastructure:encryption"))
 	implementation(project(":infrastructure:login"))
@@ -76,7 +76,7 @@ application {
 }
 
 tasks.withType<Jar>() {
-    baseName = "okta-auth-app"
+    baseName = "app-auth-okta"
 }
 
 testlogger {

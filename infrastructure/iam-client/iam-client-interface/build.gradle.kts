@@ -32,3 +32,7 @@ dependencies {
 	testImplementation("org.assertj:assertj-core:3.11.1")
 
 }
+
+tasks.withType<Jar>() {
+	baseName = "infra-iam-client-interface"
+}

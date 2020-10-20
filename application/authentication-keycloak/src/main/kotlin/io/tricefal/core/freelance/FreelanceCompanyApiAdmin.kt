@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse
 
 
 @RestController
-@RequestMapping("freelance")
+@RequestMapping("freelance/company")
 class FreelanceCompanyApiAdmin(val freelanceWebHandler: FreelanceWebHandler) {
 
     private val logger = LoggerFactory.getLogger(javaClass)

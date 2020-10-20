@@ -19,7 +19,6 @@ buildscript {
 group = "io.tricefal.application"
 version = "0.0.1-SNAPSHOT"
 
-
 repositories {
 	mavenCentral()
 }
@@ -28,11 +27,12 @@ dependencies {
 
 	implementation(project(":domain:authentication"))
 	implementation(project(":domain:freelance"))
+	implementation(project(":domain:metafile"))
 
 	implementation(project(":infrastructure:encryption"))
-	implementation(project(":infrastructure:freelance"))
 	implementation(project(":infrastructure:login"))
 	implementation(project(":infrastructure:notification"))
+	implementation(project(":infrastructure:freelance"))
 	implementation(project(":infrastructure:profile"))
 	implementation(project(":infrastructure:signup"))
 	implementation(project(":infrastructure:storage"))
@@ -91,7 +91,7 @@ tasks.withType<BootRun> {
 }
 
 tasks.withType<Jar>() {
-    baseName = "auth-keycloak-app"
+    baseName = "app-auth-keycloak"
 }
 
 testlogger {

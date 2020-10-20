@@ -8,7 +8,6 @@ plugins {
 group = "io.tricefal.infrastructure"
 version = "0.0.1-SNAPSHOT"
 
-
 repositories {
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/milestone") }

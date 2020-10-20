@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
 	implementation(project(":domain:authentication"))
+	implementation(project(":domain:metafile"))
 	implementation(project(":infrastructure:encryption"))
 	implementation(project(":infrastructure:notification"))
 	implementation(project(":infrastructure:storage"))
@@ -37,4 +38,8 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 	testImplementation("org.mockito:mockito-junit-jupiter:3.3.0")
 	testImplementation("org.assertj:assertj-core:3.11.1")
+}
+
+tasks.withType<Jar>() {
+	baseName = "infra-signup"
 }

@@ -1,7 +1,5 @@
-package io.tricefal.core.freelance.mission
+package io.tricefal.core.freelance
 
-import io.tricefal.core.freelance.FreelanceModel
-import io.tricefal.core.freelance.FreelanceWebHandler
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

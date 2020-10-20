@@ -8,6 +8,11 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class FreelanceConfiguration {
+//
+//    @Bean
+//    fun freelanceAdapter(freelanceJpaRepository: FreelanceJpaRepository): IFreelanceAdapter {
+//        return FreelanceAdapter(freelanceJpaRepository)
+//    }
 
     @Bean
     fun freelanceService(freelanceAdapter: IFreelanceAdapter): IFreelanceService {
