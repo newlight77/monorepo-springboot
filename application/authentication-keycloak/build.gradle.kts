@@ -40,6 +40,11 @@ dependencies {
 	implementation(project(":infrastructure:iam-client:iam-client-interface"))
 	implementation(project(":infrastructure:iam-client:keycloak-client"))
 
+	implementation("org.springdoc:springdoc-openapi-data-rest:1.4.3")
+	implementation("org.springdoc:springdoc-openapi-ui:1.4.3")
+//	implementation("org.springdoc:springdoc-openapi-webflux-ui:1.4.3")
+	implementation("org.springdoc:springdoc-openapi-kotlin:1.4.3")
+
 	implementation("org.springframework.boot:spring-boot-devtools")
 
 	implementation("org.springframework.boot:spring-boot-starter-web")

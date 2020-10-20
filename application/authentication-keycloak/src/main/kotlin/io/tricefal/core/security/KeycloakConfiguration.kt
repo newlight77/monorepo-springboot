@@ -90,6 +90,7 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 .ignoring()
                 // All of Spring Security will ignore the requests
                 .antMatchers("/hello")
+                .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html", "/v3/api-docs/**")
                 .antMatchers(HttpMethod.POST, "/logins")
                 .antMatchers(HttpMethod.POST, "/signup")
 //                .antMatchers(HttpMethod.POST, "/signup/code/verify**")

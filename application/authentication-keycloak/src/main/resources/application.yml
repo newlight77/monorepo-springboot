@@ -6,6 +6,12 @@ server:
     shutdown:
         grace-period: 30s
 
+springdoc:
+    api-docs:
+        enabled: ${OPEN_API_DOCS_ENABLED}
+    swagger-ui:
+        enabled: ${OPEN_API_SWAGGER_UI_ENABLED}
+
 security:
     enabled: ${SECURITY_ENABLED}
     csrf:
