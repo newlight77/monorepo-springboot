@@ -22,6 +22,10 @@ class ProfileWebHandler(val profileService: IProfileService,
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val dataFilesPath = env.getProperty("data.files.path")!!
 
+    fun find(username: String): ProfileModel {
+         return toModel(findProfile(username))
+    }
+
     fun uploadPortrait(username: String, file: MultipartFile): ProfileModel {
 
         val profile = findProfile(username)

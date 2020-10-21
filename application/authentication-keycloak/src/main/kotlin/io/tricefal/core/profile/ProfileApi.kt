@@ -1,19 +1,20 @@
 package io.tricefal.core.profile
 
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.springframework.core.env.Environment
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.io.FileInputStream
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.security.Principal
+import javax.annotation.security.RolesAllowed
 import javax.servlet.http.HttpServletResponse
 
 
@@ -24,45 +25,50 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler,
 
     private var frontendBaseUrl = env.getProperty("core.frontendUrl")!!
 
+    @RolesAllowed("ROLE_user-role")
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    fun profile(principal: Principal): ProfileModel {
+        return profileWebHandler.find(authenticatedUser(principal))
+    }
+
+    @RolesAllowed("ROLE_user-role")
     @PostMapping("portrait", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadPortrai(@RequestParam file: MultipartFile): ProfileModel {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return profileWebHandler.uploadPortrait(authentication.name, file)
+    fun uploadPortrai(principal: Principal, @RequestParam file: MultipartFile): ProfileModel {
+        return profileWebHandler.uploadPortrait(authenticatedUser(principal), file)
     }
 
+    @RolesAllowed("ROLE_user-role")
     @PostMapping("cv", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadCv(@RequestParam file: MultipartFile): ProfileModel {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return profileWebHandler.uploadResume(authentication.name, file)
+    fun uploadCv(principal: Principal, @RequestParam file: MultipartFile): ProfileModel {
+        return profileWebHandler.uploadResume(authenticatedUser(principal), file)
     }
 
+    @RolesAllowed("ROLE_user-role")
     @PostMapping("ref", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadRef(@RequestParam file: MultipartFile): ProfileModel {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return profileWebHandler.uploadRef(authentication.name, file)
+    fun uploadRef(principal: Principal, @RequestParam file: MultipartFile): ProfileModel {
+        return profileWebHandler.uploadRef(authenticatedUser(principal), file)
     }
 
+    @RolesAllowed("ROLE_user-role")
     @GetMapping("portrait")
     @ResponseStatus(HttpStatus.OK)
-    fun downloadPortrait(response: HttpServletResponse): StreamingResponseBody {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        profileWebHandler.portrait(authentication.name)
-
-        val metafile = profileWebHandler.portrait(authentication.name)
+    fun downloadPortrait(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = profileWebHandler.portrait(authenticatedUser(principal))
         response.contentType = metafile.contentType
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
         val inputStream =  FileInputStream(Paths.get(metafile.filename).toFile())
         return streamingResponseBody(inputStream)
     }
 
+    @RolesAllowed("ROLE_user-role")
     @GetMapping("cv")
     @ResponseStatus(HttpStatus.OK)
-    fun downloadCv(): ResponseEntity<ByteArrayResource> {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        val metafile = profileWebHandler.cv(authentication.name)
+    fun downloadCv(principal: Principal): ResponseEntity<ByteArrayResource> {
+        val metafile = profileWebHandler.cv(authenticatedUser(principal))
 
         val header = HttpHeaders()
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
@@ -79,11 +85,11 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler,
                 .body(resource);
     }
 
+    @RolesAllowed("ROLE_user-role")
     @GetMapping("ref")
     @ResponseStatus(HttpStatus.OK)
-    fun downloadRef(response: HttpServletResponse): StreamingResponseBody {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        val metafile = profileWebHandler.ref(authentication.name)
+    fun downloadRef(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = profileWebHandler.ref(authenticatedUser(principal))
         response.contentType = metafile.contentType
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
         val inputStream =  FileInputStream(Paths.get(metafile.filename).toFile())
@@ -98,6 +104,13 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler,
                 outputStream.write(buffer, 0, bytesRead)
             }
         }
+    }
+
+    private fun authenticatedUser(principal: Principal): String {
+        if (principal is KeycloakAuthenticationToken) {
+            return principal.account.keycloakSecurityContext.token.email
+        }
+        return principal.name
     }
 
 }
