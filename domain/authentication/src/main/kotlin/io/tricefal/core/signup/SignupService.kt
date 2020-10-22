@@ -1,7 +1,6 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
-import java.util.*
 import org.slf4j.LoggerFactory
 
 class SignupService(private var adapter: ISignupAdapter) : ISignupService {
@@ -16,7 +15,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
         trySignup(signup, notification)
 
-        adapter.signup(signup)
+        adapter.save(signup)
 
         return signup.state!!
     }
@@ -42,7 +41,10 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     override fun findByUsername(username: String): SignupDomain {
         if (username.isEmpty()) throw UsernameNotFoundException("username is $username")
         return adapter.findByUsername(username)
-                .orElseThrow { NotFoundException("resource not found for username $username") }
+                .orElseThrow {
+                    logger.error("resource not found for username $username")
+                    NotFoundException("resource not found for username $username")
+                }
     }
 
     override fun findAll(): List<SignupDomain> {
@@ -64,6 +66,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     override fun resendCode(signup: SignupDomain,
                         notification: SignupNotificationDomain): SignupStateDomain {
         adapter.findByUsername(signup.username).ifPresent {
+            logger.error("a signup with username ${signup.username} is already taken")
             throw UsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
 

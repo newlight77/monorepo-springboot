@@ -46,7 +46,7 @@ class SignupServiceTest {
 //                .notification(notification)
                 .build()
 
-        Mockito.`when`(adapter.signup(signup)).thenReturn(signup)
+        Mockito.`when`(adapter.save(signup)).thenReturn(signup)
         Mockito.`when`(adapter.register(signup)).thenReturn(true)
         Mockito.`when`(adapter.sendEmail(notification)).thenReturn(true)
         Mockito.`when`(adapter.sendSms(notification)).thenReturn(true)
@@ -57,7 +57,7 @@ class SignupServiceTest {
         val result = service.signup(signup, notification)
 
         // Arrange
-        Mockito.verify(adapter).signup(signup)
+        Mockito.verify(adapter).save(signup)
         Assertions.assertTrue(result.registered!!)
         Assertions.assertTrue(result.emailSent!!)
         Assertions.assertTrue(result.activationCodeSent!!)

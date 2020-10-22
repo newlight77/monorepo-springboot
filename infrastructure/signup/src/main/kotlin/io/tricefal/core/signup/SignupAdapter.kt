@@ -22,20 +22,26 @@ class SignupAdapter(private var repository: SignupJpaRepository,
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    override fun signup(signup: SignupDomain): SignupDomain {
+    override fun save(signup: SignupDomain): SignupDomain {
         repository.findByUsername(signup.username).ifPresent {
-            throw DuplicateKeyException("a signup with username ${signup.username} is already taken")
+            logger.error("a signup with username ${signup.username} is already taken")
+            throw DuplicateUsernameException("a signup with username ${signup.username} is already taken")
         }
         val signupEntity = repository.save(toEntity(signup))
         return fromEntity(signupEntity)
     }
 
     override fun delete(username: String) {
-        repository.findByUsername(username).ifPresent {
-            repository.delete(it)
-        }
-
-        registrationService.delete(username)
+        repository.findByUsername(username).ifPresentOrElse (
+            {
+                registrationService.delete(username)
+                repository.delete(it)
+            },
+            {
+                logger.error("unable to delete a registration with username $username")
+                throw SignupNotFoundException("unable to delete a registration with username $username")
+            }
+        )
     }
 
     override fun findAll(): List<SignupDomain> {
@@ -51,47 +57,72 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun update(signup: SignupDomain): SignupDomain {
-        val entity = toEntity(signup)
-        repository.findByUsername(signup.username).ifPresent {
-            entity.id = it.id
-        }
-        val signupEntity = repository.save(entity)
+        val mewEntity = toEntity(signup)
+        repository.findByUsername(signup.username).ifPresentOrElse(
+                { mewEntity.id = it.id },
+                {
+                    logger.error("unable to find a registration with username ${signup.username}")
+                    throw SignupNotFoundException("unable to find a registration with username ${signup.username}")
+                }
+        )
+        val signupEntity = repository.save(mewEntity)
         return fromEntity(signupEntity)
     }
 
     override fun register(signup: SignupDomain): Boolean {
-        return registrationService.register(signup)
+        return try {
+            registrationService.register(signup)
+        } catch (ex: Exception) {
+            logger.error("Failed to register a user on IAM server for usename ${signup.username}")
+            throw RegistrationException("Failed to register a user on IAM server for usename ${signup.username}")
+        }
     }
 
     override fun sendSms(notification: SignupNotificationDomain): Boolean {
         logger.info("Sending ans SMS")
-        val message = SmsMessage.Builder()
-                .from(notification.smsFrom!!)
-                .to(notification.smsTo!!)
-                .content(notification.smsContent!!)
-                .build()
-        val result = smsService.send(message).matches(Regex("^SM[a-z0-9]*"))
+        val result = try {
+            val message = SmsMessage.Builder()
+                    .from(notification.smsFrom!!)
+                    .to(notification.smsTo!!)
+                    .content(notification.smsContent!!)
+                    .build()
+            smsService.send(message).matches(Regex("^SM[a-z0-9]*"))
+        } catch (ex: Exception) {
+            logger.error("Failed to send a sms notification for user ${notification.smsTo}")
+            throw SignupSmsNotificationException("Failed to send a sms notification for user ${notification.smsTo}")
+        }
         logger.info("An SMS has been sent")
         return result
     }
 
     override fun sendEmail(notification: SignupNotificationDomain): Boolean {
         logger.info("Sending an email")
-        val message = EmailMessage.Builder()
-                .from(notification.emailFrom!!)
-                .to(notification.emailTo!!)
-                .subject(notification.emailSubject!!)
-                .content(notification.emailContent!!)
-                .emailTemplate(EmailTemplate.SIGNUP)
-                .model(hashMapOf("greeting" to notification.emailGreeting!!, "content" to notification.emailContent!!))
-                .build()
-        mailService.send(message)
+        try {
+            val message = EmailMessage.Builder()
+                    .from(notification.emailFrom!!)
+                    .to(notification.emailTo!!)
+                    .subject(notification.emailSubject!!)
+                    .content(notification.emailContent!!)
+                    .emailTemplate(EmailTemplate.SIGNUP)
+                    .model(hashMapOf("greeting" to notification.emailGreeting!!, "content" to notification.emailContent!!))
+                    .build()
+            mailService.send(message)
+        } catch (ex: Exception) {
+            logger.error("Failed to send an email notification for user ${notification.emailTo}")
+            throw SignupEmailNotificationException("Failed to send an email notification for user ${notification.emailTo}")
+        }
         logger.info("An Email has been sent")
         return true
     }
 
     override fun updateStatus(signup: SignupDomain): SignupDomain {
-        keycloakRegisterService.addRole(signup.username, statusToRole[signup.status]!!)
+        try {
+            keycloakRegisterService.addRole(signup.username, statusToRole[signup.status]!!)
+        } catch (ex: Exception) {
+            logger.error("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
+            throw RoleAssignationException("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
+        }
+        logger.info("User status updated to ${signup.status} and role ${statusToRole[signup.status]} has been assigned to user ${signup.username}")
         return update(signup)
     }
 
@@ -100,6 +131,13 @@ class SignupAdapter(private var repository: SignupJpaRepository,
             Status.EMPLOYEE to AccessRight.AC_COLLABORATOR_READ,
             Status.CLIENT to AccessRight.AC_CLIENT_READ
     )
+
+    class DuplicateUsernameException(private val msg: String) : Throwable(msg) {}
+    class SignupNotFoundException(private val msg: String) : Throwable(msg) {}
+    class SignupEmailNotificationException(private val msg: String) : Throwable(msg) {}
+    class SignupSmsNotificationException(private val msg: String) : Throwable(msg) {}
+    class RegistrationException(private val msg: String) : Throwable(msg) {}
+    class RoleAssignationException(private val msg: String) : Throwable(msg) {}
 }
 
 

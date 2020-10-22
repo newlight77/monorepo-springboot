@@ -12,6 +12,7 @@ class FreelanceAdapter(private var repository: FreelanceJpaRepository) : IFreela
 
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
         repository.findByUsername(freelance.username).ifPresent {
+            logger.error("a freelance with username ${freelance.username} is already taken")
             throw DuplicateKeyException("a freelance with username ${freelance.username} is already taken")
         }
         val freelanceEntity = repository.save(toEntity(freelance))
@@ -31,14 +32,22 @@ class FreelanceAdapter(private var repository: FreelanceJpaRepository) : IFreela
     }
 
     override fun update(freelance: FreelanceDomain): FreelanceDomain {
-        val entity = toEntity(freelance)
-        repository.findByUsername(freelance.username).ifPresent {
-            entity.id = it.id
-        }
-        val freelanceEntity = repository.save(entity)
+        val mewEntity = toEntity(freelance)
+        repository.findByUsername(freelance.username).ifPresentOrElse(
+            {
+                mewEntity.id = it.id
+            },
+            {
+                logger.error("unable to find a freelance with username ${freelance.username}")
+                throw SignupNotFoundException("unable to find a freelance with username ${freelance.username}")
+            }
+        )
+
+        val freelanceEntity = repository.save(mewEntity)
         return fromEntity(freelanceEntity)
     }
 
+    class SignupNotFoundException(private val msg: String) : Throwable(msg) {}
 }
 
 

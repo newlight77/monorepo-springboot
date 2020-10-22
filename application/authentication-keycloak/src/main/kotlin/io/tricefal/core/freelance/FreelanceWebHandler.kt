@@ -6,12 +6,14 @@ import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.Representation
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
+import io.tricefal.core.signup.SignupWebHandler
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.lang.Exception
 import java.util.*
 
 
@@ -28,7 +30,11 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     fun create(freelanceModel: FreelanceModel): FreelanceModel {
         val domain = fromModel(freelanceModel)
-        val result = freelanceService.create(domain)
+        val result = try {
+            freelanceService.create(domain)
+        } catch (ex: Exception) {
+            throw FreelanceCreationException("Failed to create a freelance profile with username ${freelanceModel.username}")
+        }
         return toModel(result)
     }
 
@@ -47,7 +53,14 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.KBIS))
         metafileService.save(metaFile, file.inputStream)
 
-        return toModel(freelanceService.kbisUploaded(domain, metaFile))
+        val result = try {
+            freelanceService.kbisUploaded(domain, metaFile)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the kbis document for user $username")
+            throw FreelanceUploadException("Failed to upload the kbis document for user $username")
+        }
+        logger.info("successfully upload the kbis document for user $username")
+        return toModel(result)
     }
 
     fun uploadRib(username: String, file: MultipartFile): FreelanceModel {
@@ -56,7 +69,14 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.RIB))
         metafileService.save(metaFile, file.inputStream)
 
-        return toModel(freelanceService.ribUploaded(domain, metaFile))
+        val result = try {
+            freelanceService.ribUploaded(domain, metaFile)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the rib document for user $username")
+            throw FreelanceUploadException("Failed to upload the rib document for user $username")
+        }
+        logger.info("successfully upload the rib document for user $username")
+        return toModel(result)
     }
 
     fun uploadRc(username: String, file: MultipartFile): FreelanceModel {
@@ -65,7 +85,14 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.RC))
         metafileService.save(metaFile, file.inputStream)
 
-        return toModel(freelanceService.rcUploaded(domain, metaFile))
+        val result = try {
+            freelanceService.rcUploaded(domain, metaFile)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the rc document for user $username")
+            throw FreelanceUploadException("Failed to upload the rc document for user $username")
+        }
+        logger.info("successfully upload the rc document for user $username")
+        return toModel(result)
     }
 
     fun uploadUrssaf(username: String, file: MultipartFile): FreelanceModel {
@@ -74,7 +101,14 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.URSSAF))
         metafileService.save(metaFile, file.inputStream)
 
-        return toModel(freelanceService.urssafUploaded(domain, metaFile))
+        val result = try {
+            freelanceService.urssafUploaded(domain, metaFile)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the urssaaf document for user $username")
+            throw FreelanceUploadException("Failed to upload the urssaaf document for user $username")
+        }
+        logger.info("successfully upload the urssaaf document for user $username")
+        return toModel(result)
     }
 
     fun uploadFiscal(username: String, file: MultipartFile): FreelanceModel {
@@ -83,8 +117,16 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.FISCAL))
         metafileService.save(metaFile, file.inputStream)
 
-        return toModel(freelanceService.urssafUploaded(domain, metaFile))
+        val result = try {
+            freelanceService.fiscalUploaded(domain, metaFile)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the fiscal document for user $username")
+            throw FreelanceUploadException("Failed to upload the fiscal document for user $username")
+        }
+        logger.info("successfully upload the fiscal document for user $username")
+        return toModel(result)
     }
 
-
+    class FreelanceCreationException(private val msg: String) : Throwable(msg) {}
+    class FreelanceUploadException(private val msg: String) : Throwable(msg) {}
 }

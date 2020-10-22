@@ -13,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.lang.Exception
 import java.security.SecureRandom
 import java.util.*
 
@@ -34,15 +35,29 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun signup(signup: SignupModel): SignupStateModel {
         val activationCode = generateCode()
+        logger.info("an activation code has been generated $activationCode")
         val domain = fromModel(signup)
         domain.activationCode = activationCode
         domain.activationToken = "${encode(activationCode)}.${encode(signup.username)}"
-        val result = signupService.signup(domain, notification(domain))
+        logger.info("an activation token has been generated ${domain.activationToken}")
+        val result = try {
+                signupService.signup(domain, notification(domain))
+            } catch (ex: Exception) {
+                logger.error("Failed to signup a new user ${signup.username}")
+                throw SignupRegistrationException("Failed to signup a new user ${signup.username}")
+            }
+        logger.info("successfully signed up a new user ${signup.username}")
         return toModel(result)
     }
 
     fun delete(username: String) {
-        this.signupService.delete(username)
+        try {
+            this.signupService.delete(username)
+        } catch (ex: Exception) {
+            logger.error("Failed to delete a signup with username $username")
+            throw SignupDeleteException("Failed to delete a signup with username $username")
+        }
+        logger.info("successfully delete a signup for user $username")
     }
 
     fun findByUsername(username: String): SignupModel {
@@ -56,29 +71,59 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun activate(username: String): SignupStateModel {
         val domain = signupService.findByUsername(username)
-        return toModel(this.signupService.activate(domain))
+        val model = try {
+            this.signupService.activate(domain)
+        } catch (ex: Exception) {
+            logger.error("Failed to activate the signup for username $username")
+            throw SignupActivationException("Failed to activate the signup for username $username")
+        }
+        logger.info("successfully activated signup for user $username")
+        return toModel(model)
     }
 
     fun deactivate(username: String): SignupStateModel {
         val domain = signupService.findByUsername(username)
-        return toModel(this.signupService.activate(domain))
+        val model = try {
+            this.signupService.deactivate(domain)
+        } catch (ex: Exception) {
+            logger.error("Failed to deactivate the signup for username $username")
+            throw SignupActivationException("Failed to deactivate the signup for username $username")
+        }
+        logger.info("successfully deactivated signup for user $username")
+        return toModel(model)
     }
 
     fun resendCode(username: String): SignupStateModel {
         val domain = signupService.findByUsername(username)
 
         val activationCode = generateCode()
+        logger.info("an activation code has been generated $activationCode")
         domain.activationCode = activationCode
 
-        domain.activationToken = encode(activationCode) + "." + encode(domain.username)
-        val result = signupService.resendCode(domain, notification(domain))
+        domain.activationToken = "${encode(activationCode)}.${encode(domain.username)}"
+        logger.info("an activation token has been generated ${domain.activationToken}")
+
+        val result = try {
+            signupService.resendCode(domain, notification(domain))
+        } catch (ex: Exception) {
+            logger.error("Failed to signup a new user $username")
+            throw SignupRegistrationException("Failed to signup a new user $username")
+        }
+        logger.info("successfully resent an activation code for user $username")
         return toModel(result)
     }
 
     fun verifyByCode(username: String, code: String): SignupStateModel {
         val domain = signupService.findByUsername(username)
 
-        return toModel(this.signupService.verifyByCode(domain, code))
+        val model = try {
+            this.signupService.verifyByCode(domain, code)
+        } catch (ex: Exception) {
+            logger.error("Failed to verify by code for the signup of username $username")
+            throw SignupActivationException("Failed to verify by code for the signup of username $username")
+        }
+        logger.info("successfully verified the activation code for user $username")
+        return toModel(model)
     }
 
     fun state(username: String): SignupStateModel {
@@ -96,40 +141,75 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val domain = signupService.findByUsername(username)
 
-        return toModel(this.signupService.verifyByEmail(domain, activationCode))
+        val model = try {
+            this.signupService.verifyByEmail(domain, activationCode)
+        } catch (ex: Exception) {
+            logger.error("Failed to verify by email from the token $token for the signup of username $username")
+            throw SignupActivationException("Failed to verify by email from the token $token for the signup of username $username")
+        }
+        logger.info("successfully verifyed the token by email for user $username")
+        return toModel(model)
     }
 
     fun updateStatus(username: String, status: Status): SignupStateModel {
         val domain = signupService.findByUsername(username)
 
-        return toModel(signupService.updateStatus(domain, status))
+        val model = try {
+            this.signupService.updateStatus(domain, status)
+        } catch (ex: Exception) {
+            logger.error("Failed to update the status of signup for username $username")
+            throw SignupStatusUpdateException("Failed to update the status of signup for username $username")
+        }
+        logger.info("successfully updated the status for user $username")
+        return toModel(model)
     }
 
     fun uploadPortrait(username: String, file: MultipartFile): SignupStateModel {
         val domain = signupService.findByUsername(username)
 
-        val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
-        metafileService.save(resumeMetaFile, file.inputStream)
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
+        metafileService.save(metaFile, file.inputStream)
 
-        return toModel(signupService.portraitUploaded(domain, resumeMetaFile))
+        val model = try {
+            this.signupService.portraitUploaded(domain, metaFile)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the portrait of username $username")
+            throw SignupUploadException("Failed to upload the portrait of username $username\"")
+        }
+        logger.info("successfully upload the portrait for user $username")
+        return toModel(model)
     }
 
     fun uploadResume(username: String, file: MultipartFile): SignupStateModel {
         val domain = signupService.findByUsername(username)
 
-        val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV))
-        metafileService.save(resumeMetaFile, file.inputStream)
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV))
+        metafileService.save(metaFile, file.inputStream)
 
-        return toModel(signupService.resumeUploaded(domain, resumeMetaFile))
+        val model = try {
+            this.signupService.portraitUploaded(domain, metaFile)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the resume of username $username")
+            throw SignupUploadException("Failed to upload the resume of username $username\"")
+        }
+        logger.info("successfully upload the resume for user $username")
+        return toModel(model)
     }
 
     fun uploadRef(username: String, file: MultipartFile): SignupStateModel {
         val domain = signupService.findByUsername(username)
 
-        val resumeMetaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
-        metafileService.save(resumeMetaFile, file.inputStream)
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
+        metafileService.save(metaFile, file.inputStream)
 
-        return toModel(signupService.refUploaded(domain, resumeMetaFile))
+        val model = try {
+            this.signupService.portraitUploaded(domain, metaFile)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the ref of username $username")
+            throw SignupUploadException("Failed to upload the ref of username $username\"")
+        }
+        logger.info("successfully upload the ref for user $username")
+        return toModel(model)
     }
 
     private fun notification(signup: SignupDomain): SignupNotificationDomain {
@@ -172,4 +252,9 @@ class SignupWebHandler(val signupService: ISignupService,
             .joinToString("")
     }
 
+    class SignupRegistrationException(private val msg: String) : Throwable(msg) {}
+    class SignupDeleteException(private val msg: String) : Throwable(msg) {}
+    class SignupActivationException(private val msg: String) : Throwable(msg) {}
+    class SignupStatusUpdateException(private val msg: String) : Throwable(msg) {}
+    class SignupUploadException(private val msg: String) : Throwable(msg) {}
 }

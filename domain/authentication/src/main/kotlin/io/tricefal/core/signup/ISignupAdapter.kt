@@ -3,7 +3,7 @@ package io.tricefal.core.signup
 import java.util.*
 
 interface ISignupAdapter {
-    fun signup(signup: SignupDomain): SignupDomain
+    fun save(signup: SignupDomain): SignupDomain
     fun delete(username: String)
     fun findByUsername(username: String): Optional<SignupDomain>
     fun findAll(): List<SignupDomain>
