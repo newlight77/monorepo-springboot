@@ -37,7 +37,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val activationCode = generateCode()
         val domain = fromModel(signup)
         domain.activationCode = activationCode
-        domain.activationToken = encode(activationCode) + "." + encode(signup.username)
+        domain.activationToken = "${encode(activationCode)}.${encode(signup.username)}"
         val result = signupService.signup(domain, notification(domain))
         return toModel(result)
     }

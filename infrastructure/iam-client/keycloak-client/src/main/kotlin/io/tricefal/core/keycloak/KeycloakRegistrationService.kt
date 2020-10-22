@@ -56,7 +56,12 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         }
 
         logger.info("Response: ${response.location} ${response.status} ${response.statusInfo}")
-        val userId = CreatedResponseUtil.getCreatedId(response)
+        val userId = try {
+            CreatedResponseUtil.getCreatedId(response)
+        } catch (ex: Exception) {
+            logger.error("failed to retrieve the created id for the created user inrealm $appRealm with exception: ${ex.localizedMessage}")
+            throw KeycloakUnsuccessfulException("failed to retrieve the created id for the created user inrealm $appRealm with exception: ${ex.localizedMessage}")
+        }
         logger.info("User created with userId: $userId")
 
         if (response.status != 200 or 201) {

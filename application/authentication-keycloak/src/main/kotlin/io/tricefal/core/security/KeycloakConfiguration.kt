@@ -95,7 +95,7 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 .antMatchers(HttpMethod.POST, "/signup")
 //                .antMatchers(HttpMethod.POST, "/signup/code/verify**")
                 .antMatchers(HttpMethod.GET, "/signup/email/verify**")
-//                .antMatchers(HttpMethod.GET, "/signup/*/state")
+                .antMatchers(HttpMethod.GET, "/signup/state")
 //                .antMatchers(HttpMethod.POST,"/signup/upload/test")
 //                .antMatchers(HttpMethod.POST,"/signup/upload/cv")
 //                .antMatchers(HttpMethod.POST,"/signup/upload/ref")
