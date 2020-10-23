@@ -4,12 +4,13 @@ import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.login.SignupJpaRepository
+import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.okta.IamRegisterService
+import io.tricefal.core.profile.ProfileEventPublisher
 import io.tricefal.core.right.AccessRight
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
-import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -18,7 +19,9 @@ class SignupAdapter(private var repository: SignupJpaRepository,
                     val registrationService: IamRegisterService,
                     val mailService: EmailService,
                     val smsService: SmsService,
-                    val keycloakRegisterService: IamRegisterService) : ISignupAdapter {
+                    val keycloakRegisterService: IamRegisterService,
+                    val profileEventListener: ProfileEventPublisher
+) : ISignupAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -124,6 +127,18 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         }
         logger.info("User status updated to ${signup.status} and role ${statusToRole[signup.status]} has been assigned to user ${signup.username}")
         return update(signup)
+    }
+
+    override fun portraitUploaded(fileDomain: MetafileDomain) {
+        this.profileEventListener.publishPortraitUploadedEvent(fileDomain)
+    }
+
+    override fun resumeUploaded(fileDomain: MetafileDomain) {
+        this.profileEventListener.publishResumeUploadedEvent(fileDomain)
+    }
+
+    override fun refUploaded(fileDomain: MetafileDomain) {
+        this.profileEventListener.publishRefUploadedEvent(fileDomain)
     }
 
     val statusToRole = mapOf(

@@ -120,6 +120,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         signup.resumeFile = fileDomain
         signup.state!!.portraitUploaded = true
         adapter.update(signup)
+        adapter.portraitUploaded(fileDomain)
         return signup.state!!
     }
 
@@ -127,6 +128,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         signup.resumeFile = fileDomain
         signup.state!!.resumeUploaded = true
         adapter.update(signup)
+        adapter.resumeUploaded(fileDomain)
         return signup.state!!
     }
 
@@ -134,6 +136,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         signup.resumeFile = fileDomain
         signup.state!!.refUploaded = true
         adapter.update(signup)
+        adapter.refUploaded(fileDomain)
         return signup.state!!
     }
 

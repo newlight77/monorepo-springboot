@@ -5,7 +5,7 @@ import java.time.Instant
 data class ProfileDomain(
         var username: String,
         val lastDate: Instant = Instant.now(),
-        val portraitFilename: String? = null,
+        var portraitFilename: String? = null,
         var resumeFilename: String? = null,
         var refFilename: String? = null
     ) {

@@ -23,6 +23,7 @@ dependencies {
 	implementation(project(":domain:metafile"))
 	implementation(project(":infrastructure:encryption"))
 	implementation(project(":infrastructure:notification"))
+	implementation(project(":infrastructure:profile"))
 	implementation(project(":infrastructure:storage"))
 
 	implementation(project(":infrastructure:iam-client:iam-client-interface"))

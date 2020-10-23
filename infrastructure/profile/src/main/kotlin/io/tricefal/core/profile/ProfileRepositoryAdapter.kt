@@ -5,9 +5,9 @@ import java.util.*
 
 @Repository
 class ProfileRepositoryAdapter(private var repository: ProfileJpaRepository) : IProfileAdapter {
-    override fun save(profile: ProfileDomain) {
+    override fun save(profile: ProfileDomain): ProfileDomain {
         val entity = toEntity(profile)
-        repository.save(entity)
+        return fromEntity(repository.save(entity))
     }
 
     override fun findByUsername(username: String): Optional<ProfileDomain> {
