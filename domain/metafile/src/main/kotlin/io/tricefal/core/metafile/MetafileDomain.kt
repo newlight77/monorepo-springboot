@@ -15,7 +15,7 @@ enum class Representation {
 
 class MetafileDomain(val username: String,
                  val filename: String,
-                 val contentType: String,
-                 val size: Long,
                  val representation: Representation,
-                 val creationDate: Instant = Instant.now())
+                 var contentType: String? = null,
+                 var size: Long? = null,
+                 var creationDate: Instant? = Instant.now())

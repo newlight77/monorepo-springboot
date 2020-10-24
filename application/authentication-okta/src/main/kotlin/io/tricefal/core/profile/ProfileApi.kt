@@ -74,7 +74,7 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler,
         val resource = ByteArrayResource(Files.readAllBytes(path))
 
         return ResponseEntity.ok()
-                .contentLength(metafile.size)
+                .contentLength(metafile.size!!)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource);
     }

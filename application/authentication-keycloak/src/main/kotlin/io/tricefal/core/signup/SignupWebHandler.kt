@@ -187,7 +187,7 @@ class SignupWebHandler(val signupService: ISignupService,
         metafileService.save(metaFile, file.inputStream)
 
         val model = try {
-            this.signupService.portraitUploaded(domain, metaFile)
+            this.signupService.resumeUploaded(domain, metaFile)
         } catch (ex: Exception) {
             logger.error("Failed to upload the resume of username $username")
             throw SignupUploadException("Failed to upload the resume of username $username\"")
@@ -203,7 +203,7 @@ class SignupWebHandler(val signupService: ISignupService,
         metafileService.save(metaFile, file.inputStream)
 
         val model = try {
-            this.signupService.portraitUploaded(domain, metaFile)
+            this.signupService.refUploaded(domain, metaFile)
         } catch (ex: Exception) {
             logger.error("Failed to upload the ref of username $username")
             throw SignupUploadException("Failed to upload the ref of username $username\"")

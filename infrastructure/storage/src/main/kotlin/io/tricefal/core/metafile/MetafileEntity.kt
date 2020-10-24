@@ -16,17 +16,17 @@ data class MetafileEntity(
         @Column(name = "filename", length = 255)
         val filename: String,
 
-        @Column(name = "content_type", length = 30)
-        val contentType: String,
-
-        @Column(name = "size")
-        val size: Long,
-
         @Column(name = "Representation", length = 50)
         val representation: String,
 
+        @Column(name = "content_type", length = 30)
+        var contentType: String? = null,
+
+        @Column(name = "size")
+        var size: Long? = null,
+
         @Column(name = "creation_date")
-        var creationDate: Instant)
+        var creationDate: Instant? = null)
 
 
 fun toEntity(domain: MetafileDomain): MetafileEntity {
@@ -34,9 +34,9 @@ fun toEntity(domain: MetafileDomain): MetafileEntity {
                 0L,
                 domain.username,
                 domain.filename,
+                domain.representation.toString(),
                 domain.contentType,
                 domain.size,
-                domain.representation.toString(),
                 domain.creationDate
         )
 }
@@ -45,9 +45,9 @@ fun fromEntity(entity: MetafileEntity): MetafileDomain {
         return MetafileDomain(
                 entity.username,
                 entity.filename,
+                Representation.valueOf(entity.representation),
                 entity.contentType,
                 entity.size,
-                Representation.valueOf(entity.representation),
                 entity.creationDate
         )
 }

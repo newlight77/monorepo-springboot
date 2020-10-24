@@ -22,16 +22,16 @@ data class ProfileEntity(
         var username: String,
 
         @Column(name = "last_date")
-        var lastDate: Instant,
+        var lastDate: Instant? = null,
 
         @Column(name = "portrait")
-        var portrait: String,
+        var portrait: String? = null,
 
         @Column(name = "resume")
-        var resume: String,
+        var resume: String? = null,
 
         @Column(name = "ref")
-        var ref: String
+        var ref: String? = null
 ) {
 }
 
@@ -40,9 +40,9 @@ fun toEntity(domain: ProfileDomain): ProfileEntity {
                 null,
                 domain.username,
                 domain.lastDate,
-                domain.portraitFilename!!,
-                domain.resumeFilename!!,
-                domain.refFilename!!
+                domain.portraitFilename,
+                domain.resumeFilename,
+                domain.refFilename
         )
 }
 

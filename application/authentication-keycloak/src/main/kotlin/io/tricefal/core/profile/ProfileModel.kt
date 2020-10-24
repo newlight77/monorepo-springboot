@@ -1,6 +1,7 @@
 package io.tricefal.core.profile
 
 import io.tricefal.core.metafile.MetafileModel
+import io.tricefal.core.metafile.Representation
 import java.time.Instant
 
 
@@ -41,9 +42,9 @@ class ProfileModel
 fun toModel(domain: ProfileDomain): ProfileModel {
     return ProfileModel.Builder(domain.username)
             .lastDate(domain.lastDate)
-            .portraitFile(domain.resumeFilename?.let { MetafileModel.Builder().filename(it).build() })
-            .resumeFile(domain.resumeFilename?.let { MetafileModel.Builder().filename(it).build() })
-            .refFile(domain.resumeFilename?.let { MetafileModel.Builder().filename(it).build() })
+            .portraitFile(domain.portraitFilename?.let { MetafileModel.Builder(domain.username, it, Representation.PORTRAIT).build() })
+            .resumeFile(domain.resumeFilename?.let { MetafileModel.Builder(domain.username, it, Representation.CV).build() })
+            .refFile(domain.refFilename?.let { MetafileModel.Builder(domain.username, it, Representation.REF).build() })
             .build()
 }
 

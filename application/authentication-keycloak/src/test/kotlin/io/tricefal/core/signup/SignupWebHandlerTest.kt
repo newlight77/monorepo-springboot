@@ -173,14 +173,12 @@ class SignupWebHandlerTest {
         Mockito.`when`(multipart.inputStream).thenReturn(ByteArrayInputStream("testing data".toByteArray()))
         Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
-        val metafileEntity = io.tricefal.core.metafile.toEntity(
-                io.tricefal.core.metafile.fromModel(
-                        MetafileModel.Builder()
-                            .filename(filename)
+        val metafileEntity = toEntity(
+                fromModel(
+                        MetafileModel.Builder(username, filename, Representation.PORTRAIT)
                             .contentType("application/octet-stream")
                             .size(12345)
-                            .representation(Representation.PORTRAIT)
-                            .username(username).build()))
+                            .build()))
         Mockito.`when`(metaFileRepository.save(any(MetafileEntity::class.java))).thenReturn(metafileEntity)
 
         // Act

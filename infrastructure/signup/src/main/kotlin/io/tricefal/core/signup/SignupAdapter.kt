@@ -76,8 +76,8 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return try {
             registrationService.register(signup)
         } catch (ex: Exception) {
-            logger.error("Failed to register a user on IAM server for usename ${signup.username}")
-            throw RegistrationException("Failed to register a user on IAM server for usename ${signup.username}")
+            logger.error("Failed to register a user on IAM server for username ${signup.username}")
+            throw RegistrationException("Failed to register a user on IAM server for username ${signup.username}")
         }
     }
 
@@ -92,7 +92,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
             smsService.send(message).matches(Regex("^SM[a-z0-9]*"))
         } catch (ex: Exception) {
             logger.error("Failed to send a sms notification for user ${notification.smsTo}")
-            throw SignupSmsNotificationException("Failed to send a sms notification for user ${notification.smsTo}")
+            throw SignupSmsNotificationException("Failed to send a sms notification for number ${notification.smsTo}")
         }
         logger.info("An SMS has been sent")
         return result

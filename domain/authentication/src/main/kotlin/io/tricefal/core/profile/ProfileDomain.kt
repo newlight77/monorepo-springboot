@@ -4,7 +4,7 @@ import java.time.Instant
 
 data class ProfileDomain(
         var username: String,
-        val lastDate: Instant = Instant.now(),
+        var lastDate: Instant? = Instant.now(),
         var portraitFilename: String? = null,
         var resumeFilename: String? = null,
         var refFilename: String? = null
@@ -24,7 +24,7 @@ data class ProfileDomain(
         fun refFilename(refFilename: String?) = apply { this.refFilename = refFilename }
 
         fun build() = ProfileDomain(username,
-                lastDate!!,
+                lastDate,
                 portraitFilename,
                 resumeFilename,
                 refFilename

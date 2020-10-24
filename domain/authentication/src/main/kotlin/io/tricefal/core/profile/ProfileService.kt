@@ -36,10 +36,10 @@ class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
     }
 
     override fun updateProfileOnPortraitUploaded(username: String, filename: String): Boolean {
-        val profile = ProfileDomain.Builder(username)
-                .portraitFilename(filename)
-                .build()
         try {
+            val profile = ProfileDomain.Builder(username)
+                    .portraitFilename(filename)
+                    .build()
             this.findByUsername(username)
                     .ifPresentOrElse(
                             {
@@ -56,10 +56,10 @@ class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
     }
 
     override fun updateProfileOnResumeUploaded(username: String, filename: String): Boolean {
-        val profile = ProfileDomain.Builder(username)
-                .resumeFilename(filename)
-                .build()
         try {
+            val profile = ProfileDomain.Builder(username)
+                    .resumeFilename(filename)
+                    .build()
             this.findByUsername(username)
                     .ifPresentOrElse(
                             {
@@ -76,10 +76,10 @@ class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
     }
 
     override fun updateProfileOnRefUploaded(username: String, filename: String): Boolean {
-        val profile = ProfileDomain.Builder(username)
-                .refFilename(filename)
-                .build()
         try {
+            val profile = ProfileDomain.Builder(username)
+                    .refFilename(filename)
+                    .build()
             this.findByUsername(username)
                     .ifPresentOrElse(
                             {
