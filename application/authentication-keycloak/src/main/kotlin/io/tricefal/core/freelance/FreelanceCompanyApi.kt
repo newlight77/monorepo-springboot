@@ -25,8 +25,8 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @RolesAllowed("ROLE_ac_freelance_w")
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody signup: FreelanceModel): FreelanceModel {
-        return freelanceWebHandler.create(signup)
+    fun create(@RequestBody freelance: FreelanceModel): FreelanceModel {
+        return freelanceWebHandler.create(freelance)
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")
@@ -40,7 +40,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @PostMapping("upload/kbis", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadKbis(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
-        logger.info("signup uploading cv requested")
+        logger.info("freelance uploading kbis requested")
         return freelanceWebHandler.uploadKbis(authenticatedUser(principal), file)
     }
 
@@ -48,7 +48,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @PostMapping("upload/rib", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadRib(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
-        logger.info("signup uploading cv requested")
+        logger.info("freelance uploading rib requested")
         return freelanceWebHandler.uploadRib(authenticatedUser(principal), file)
     }
 
@@ -56,7 +56,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @PostMapping("upload/rc", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadRc(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
-        logger.info("signup uploading cv requested")
+        logger.info("freelance uploading rc requested")
         return freelanceWebHandler.uploadRc(authenticatedUser(principal), file)
     }
 
@@ -64,7 +64,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @PostMapping("upload/urssaf", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadUrssaf(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
-        logger.info("signup uploading cv requested")
+        logger.info("freelance uploading urssaf requested")
         return freelanceWebHandler.uploadUrssaf(authenticatedUser(principal), file)
     }
 
@@ -72,7 +72,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @PostMapping("upload/fiscal", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadFiscal(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
-        logger.info("signup uploading cv requested")
+        logger.info("freelance uploading fiscal requested")
         return freelanceWebHandler.uploadFiscal(authenticatedUser(principal), file)
     }
 
