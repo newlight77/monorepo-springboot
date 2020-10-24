@@ -120,7 +120,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
 
     override fun updateStatus(signup: SignupDomain): SignupDomain {
         try {
-            keycloakRegisterService.addRole(signup.username, statusToRole[signup.status]!!)
+            statusToRole[signup.status]?.forEach { keycloakRegisterService.addRole(signup.username, it) }
         } catch (ex: Exception) {
             logger.error("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
             throw RoleAssignationException("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
@@ -142,9 +142,9 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     val statusToRole = mapOf(
-            Status.FREELANCE to AccessRight.AC_FREELANCE_READ,
-            Status.EMPLOYEE to AccessRight.AC_COLLABORATOR_READ,
-            Status.CLIENT to AccessRight.AC_CLIENT_READ
+            Status.FREELANCE to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_FREELANCE_WRITE),
+            Status.EMPLOYEE to listOf(AccessRight.AC_COLLABORATOR_READ, AccessRight.AC_COLLABORATOR_WRITE),
+            Status.CLIENT to listOf(AccessRight.AC_CLIENT_READ, AccessRight.AC_CLIENT_WRTIE)
     )
 
     class DuplicateUsernameException(private val msg: String) : Throwable(msg) {}
