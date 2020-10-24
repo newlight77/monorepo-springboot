@@ -30,10 +30,10 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")
-    @GetMapping("{username}")
+    @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    fun get(username: String): FreelanceModel {
-        return freelanceWebHandler.findByUsername(username)
+    fun get(principal: Principal): FreelanceModel {
+        return freelanceWebHandler.findByUsername(authenticatedUser(principal))
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")
