@@ -144,6 +144,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         signup.status = status
         signup.state!!.statusUpdated = true
         adapter.updateStatus(signup)
+        adapter.statusUpdated(signup)
         return signup.state!!
     }
 

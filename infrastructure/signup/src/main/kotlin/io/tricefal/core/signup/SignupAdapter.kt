@@ -3,6 +3,7 @@ package io.tricefal.core.signup
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
+import io.tricefal.core.freelance.FreelanceEventPublisher
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.okta.IamRegisterService
@@ -20,7 +21,8 @@ class SignupAdapter(private var repository: SignupJpaRepository,
                     val mailService: EmailService,
                     val smsService: SmsService,
                     val keycloakRegisterService: IamRegisterService,
-                    val profileEventListener: ProfileEventPublisher
+                    val profileEventPublisher: ProfileEventPublisher,
+                    val freelanceEventPublisher: FreelanceEventPublisher
 ) : ISignupAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -129,16 +131,20 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return update(signup)
     }
 
+    override fun statusUpdated(signup: SignupDomain) {
+        this.freelanceEventPublisher.publishStatusUpdatedEvent(signup.username, signup.status.toString())
+    }
+
     override fun portraitUploaded(fileDomain: MetafileDomain) {
-        this.profileEventListener.publishPortraitUploadedEvent(fileDomain)
+        this.profileEventPublisher.publishPortraitUploadedEvent(fileDomain)
     }
 
     override fun resumeUploaded(fileDomain: MetafileDomain) {
-        this.profileEventListener.publishResumeUploadedEvent(fileDomain)
+        this.profileEventPublisher.publishResumeUploadedEvent(fileDomain)
     }
 
     override fun refUploaded(fileDomain: MetafileDomain) {
-        this.profileEventListener.publishRefUploadedEvent(fileDomain)
+        this.profileEventPublisher.publishRefUploadedEvent(fileDomain)
     }
 
     val statusToRole = mapOf(

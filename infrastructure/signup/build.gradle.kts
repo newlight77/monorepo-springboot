@@ -22,6 +22,7 @@ dependencies {
 	implementation(project(":domain:authentication"))
 	implementation(project(":domain:metafile"))
 	implementation(project(":infrastructure:encryption"))
+	implementation(project(":infrastructure:freelance"))
 	implementation(project(":infrastructure:notification"))
 	implementation(project(":infrastructure:profile"))
 	implementation(project(":infrastructure:storage"))

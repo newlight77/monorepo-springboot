@@ -14,6 +14,9 @@ interface ISignupAdapter {
     fun sendEmail(notification: SignupNotificationDomain) : Boolean
     fun sendSms(notification: SignupNotificationDomain) : Boolean
     fun updateStatus(signup: SignupDomain): SignupDomain
+
+    // events
+    fun statusUpdated(signup: SignupDomain)
     fun portraitUploaded(fileDomain: MetafileDomain)
     fun resumeUploaded(fileDomain: MetafileDomain)
     fun refUploaded(fileDomain: MetafileDomain)
