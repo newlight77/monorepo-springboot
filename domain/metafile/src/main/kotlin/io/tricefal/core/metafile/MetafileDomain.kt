@@ -5,7 +5,7 @@ import java.time.Instant
 enum class Representation {
     PORTRAIT,
     CV,
-    REF,
+    CV_LINKEDIN,
     KBIS,
     RIB,
     RC,

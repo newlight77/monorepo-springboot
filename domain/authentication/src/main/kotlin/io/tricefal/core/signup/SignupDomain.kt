@@ -17,7 +17,7 @@ data class SignupDomain
 
             var portraitFile: MetafileDomain? = null,
             var resumeFile: MetafileDomain? = null,
-            var refFile: MetafileDomain? = null,
+            var resumeLinkedinFile: MetafileDomain? = null,
             var state: SignupStateDomain? = null
     ) {
 
@@ -34,7 +34,7 @@ data class SignupDomain
 
             var portraitFile: MetafileDomain? = null,
             var resumeFile: MetafileDomain? = null,
-            var refFile: MetafileDomain? = null,
+            var resumeLinkedinFile: MetafileDomain? = null,
 
             var state: SignupStateDomain? = null
     ) {
@@ -48,7 +48,7 @@ data class SignupDomain
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
         fun portraitFile(portraitFile: MetafileDomain?) = apply { this.portraitFile = portraitFile }
         fun resumeFile(resumeFile: MetafileDomain?) = apply { this.resumeFile = resumeFile }
-        fun refFile(refFile: MetafileDomain?) = apply { this.refFile = refFile }
+        fun resumeLinkedinFile(resumeLinkedinFile: MetafileDomain?) = apply { this.resumeLinkedinFile = resumeLinkedinFile }
 
         fun state(state: SignupStateDomain?) = apply { this.state = state }
 
@@ -63,7 +63,7 @@ data class SignupDomain
                 signupDate,
                 portraitFile,
                 resumeFile,
-                refFile,
+                resumeLinkedinFile,
                 state
         )
     }

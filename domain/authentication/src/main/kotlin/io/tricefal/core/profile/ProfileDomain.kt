@@ -7,7 +7,7 @@ data class ProfileDomain(
         var lastDate: Instant? = Instant.now(),
         var portraitFilename: String? = null,
         var resumeFilename: String? = null,
-        var refFilename: String? = null
+        var resumeLinkedinFilename: String? = null
     ) {
 
     data class Builder(
@@ -16,18 +16,18 @@ data class ProfileDomain(
 
             var portraitFilename: String? = null,
             var resumeFilename: String? = null,
-            var refFilename: String? = null
+            var resumeLinkedinFilename: String? = null
     ) {
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
         fun portraitFilename(portraitFilename: String?) = apply { this.portraitFilename = portraitFilename }
         fun resumeFilename(resumeFilename: String?) = apply { this.resumeFilename = resumeFilename }
-        fun refFilename(refFilename: String?) = apply { this.refFilename = refFilename }
+        fun resumeLinkedinFilename(resumeLinkedinFilename: String?) = apply { this.resumeLinkedinFilename = resumeLinkedinFilename }
 
         fun build() = ProfileDomain(username,
                 lastDate,
                 portraitFilename,
                 resumeFilename,
-                refFilename
+                resumeLinkedinFilename
         )
     }
 }

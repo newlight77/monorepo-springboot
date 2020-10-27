@@ -19,5 +19,5 @@ interface ISignupAdapter {
     fun statusUpdated(signup: SignupDomain)
     fun portraitUploaded(fileDomain: MetafileDomain)
     fun resumeUploaded(fileDomain: MetafileDomain)
-    fun refUploaded(fileDomain: MetafileDomain)
+    fun resumeLinkedinUploaded(fileDomain: MetafileDomain)
 }

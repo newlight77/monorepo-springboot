@@ -26,7 +26,7 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
 
     // admin
     @RolesAllowed("ROLE_ac_tricefal_w")
-    @GetMapping("")
+    @GetMapping("list")
     @ResponseStatus(HttpStatus.OK)
     fun signups(): List<SignupModel> {
         return signupWebHandler.findAll()

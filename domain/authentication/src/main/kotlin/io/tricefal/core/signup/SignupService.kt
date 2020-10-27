@@ -84,7 +84,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
                     .emailValidated(signup.state?.emailValidated)
                     .portraitUploaded(signup.state?.portraitUploaded)
                     .resumeUploaded(signup.state?.resumeUploaded)
-                    .refUploaded(signup.state?.refUploaded)
+                    .resumeLinkedinUploaded(signup.state?.resumeLinkedinUploaded)
                     .statusUpdated(signup.state?.statusUpdated)
                     .validated(signup.state?.validated)
                     .emailSent(
@@ -116,27 +116,27 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         return signup.state!!
     }
 
-    override fun portraitUploaded(signup: SignupDomain, fileDomain: MetafileDomain): SignupStateDomain {
-        signup.resumeFile = fileDomain
+    override fun portraitUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
+        signup.resumeFile = metafileDomain
         signup.state!!.portraitUploaded = true
         adapter.update(signup)
-        adapter.portraitUploaded(fileDomain)
+        adapter.portraitUploaded(metafileDomain)
         return signup.state!!
     }
 
-    override fun resumeUploaded(signup: SignupDomain, fileDomain: MetafileDomain): SignupStateDomain {
-        signup.resumeFile = fileDomain
+    override fun resumeUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
+        signup.resumeFile = metafileDomain
         signup.state!!.resumeUploaded = true
         adapter.update(signup)
-        adapter.resumeUploaded(fileDomain)
+        adapter.resumeUploaded(metafileDomain)
         return signup.state!!
     }
 
-    override fun refUploaded(signup: SignupDomain, fileDomain: MetafileDomain): SignupStateDomain {
-        signup.resumeFile = fileDomain
-        signup.state!!.refUploaded = true
+    override fun resumeLinkedinUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
+        signup.resumeFile = metafileDomain
+        signup.state!!.resumeLinkedinUploaded = true
         adapter.update(signup)
-        adapter.refUploaded(fileDomain)
+        adapter.resumeLinkedinUploaded(metafileDomain)
         return signup.state!!
     }
 

@@ -24,7 +24,7 @@ class MetafileModel(val username: String,
         fun size(size: Long?) = apply { this.size = size }
 
         fun build(): MetafileModel {
-            if (this.filename!!.contains("..")) {
+            if (this.filename.contains("..")) {
                 throw IllegalArgumentException("Sorry! Filename contains invalid path sequence $this.fileName")
             }
             return MetafileModel(username, filename, representation, contentType, size)

@@ -12,7 +12,7 @@ class ProfileModel
 
         var portraitFile: MetafileModel? = null,
         var resumeFile: MetafileModel? = null,
-        var refFile: MetafileModel? = null
+        var resumeLinkedinFile: MetafileModel? = null
     ) {
 
     data class Builder (
@@ -21,20 +21,20 @@ class ProfileModel
 
             var portraitFile: MetafileModel? = null,
             var resumeFile: MetafileModel? = null,
-            var refFile: MetafileModel? = null
+            var resumeLinkedinFile: MetafileModel? = null
     ) {
 
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun portraitFile(portraitFile: MetafileModel?) = apply { this.portraitFile = portraitFile }
         fun resumeFile(resumeFile: MetafileModel?) = apply { this.resumeFile = resumeFile }
-        fun refFile(refFile: MetafileModel?) = apply { this.refFile = refFile }
+        fun resumeLinkedinFile(resumeLinkedinFile: MetafileModel?) = apply { this.resumeLinkedinFile = resumeLinkedinFile }
 
         fun build() = ProfileModel(username,
                 lastDate ?: Instant.now(),
                 portraitFile,
                 resumeFile,
-                refFile
+                resumeLinkedinFile
         )
     }
 }
@@ -44,7 +44,7 @@ fun toModel(domain: ProfileDomain): ProfileModel {
             .lastDate(domain.lastDate)
             .portraitFile(domain.portraitFilename?.let { MetafileModel.Builder(domain.username, it, Representation.PORTRAIT).build() })
             .resumeFile(domain.resumeFilename?.let { MetafileModel.Builder(domain.username, it, Representation.CV).build() })
-            .refFile(domain.refFilename?.let { MetafileModel.Builder(domain.username, it, Representation.REF).build() })
+            .resumeLinkedinFile(domain.resumeLinkedinFilename?.let { MetafileModel.Builder(domain.username, it, Representation.CV_LINKEDIN).build() })
             .build()
 }
 
@@ -53,6 +53,6 @@ fun fromModel(model: ProfileModel): ProfileDomain {
             .lastDate(model.lastDate)
             .portraitFilename(model.portraitFile?.filename)
             .resumeFilename(model.resumeFile?.filename)
-            .refFilename(model.refFile?.filename)
+            .resumeLinkedinFilename(model.resumeLinkedinFile?.filename)
             .build()
 }

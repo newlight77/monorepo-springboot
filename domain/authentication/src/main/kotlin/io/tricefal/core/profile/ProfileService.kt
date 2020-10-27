@@ -49,28 +49,28 @@ class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
                             { save(profile) }
                     )
         } catch (ex: Exception) {
-            logger.error("Failed to update the profile from the portrait uploaded event for user $username")
-            throw ProfileUploadException("Failed to update the profile from the portrait uploaded event for user $username")
+            logger.error("Failed to update the profile from the resume uploaded event for user $username")
+            throw ProfileUploadException("Failed to update the profile from the resume uploaded event for user $username")
         }
         return profile
     }
 
-    override fun updateProfileOnRefUploaded(username: String, filename: String): ProfileDomain {
+    override fun updateProfileOnResumeLinkedinUploaded(username: String, filename: String): ProfileDomain {
         val profile = ProfileDomain.Builder(username)
-                .refFilename(filename)
+                .resumeLinkedinFilename(filename)
                 .build()
         try {
             this.findByUsername(username)
                     .ifPresentOrElse(
                             {
-                                it.refFilename = filename
+                                it.resumeLinkedinFilename = filename
                                 save(profile)
                             },
                             { save(profile) }
                     )
         } catch (ex: Exception) {
-            logger.error("Failed to update the profile from the portrait uploaded event for user $username")
-            throw ProfileUploadException("Failed to update the profile from the portrait uploaded event for user $username")
+            logger.error("Failed to update the profile from the linkedin resume uploaded event for user $username")
+            throw ProfileUploadException("Failed to update the profile from the linkedin resume uploaded event for user $username")
         }
         return profile
     }

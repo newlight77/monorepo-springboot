@@ -1,16 +1,13 @@
 package io.tricefal.core.profile
 
+import io.tricefal.core.metafile.MetafileModel
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
-import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.io.FileInputStream
-import java.nio.file.Files
 import java.nio.file.Paths
 import java.security.Principal
 import javax.annotation.security.RolesAllowed
@@ -45,8 +42,8 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler) {
     @RolesAllowed("ROLE_user-role")
     @PostMapping("ref", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadRef(principal: Principal, @RequestParam file: MultipartFile): ProfileModel {
-        return profileWebHandler.uploadRef(authenticatedUser(principal), file)
+    fun uploadResumeLinkedin(principal: Principal, @RequestParam file: MultipartFile): ProfileModel {
+        return profileWebHandler.uploadResumeLinkedin(authenticatedUser(principal), file)
     }
 
     @RolesAllowed("ROLE_user-role")
@@ -54,41 +51,29 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler) {
     @ResponseStatus(HttpStatus.OK)
     fun downloadPortrait(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
         val metafile = profileWebHandler.portrait(authenticatedUser(principal))
-        response.contentType = metafile.contentType
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
-        val inputStream =  FileInputStream(Paths.get(metafile.filename).toFile())
-        return streamingResponseBody(inputStream)
+        return toStreamingResponse(response, metafile)
     }
 
     @RolesAllowed("ROLE_user-role")
     @GetMapping("cv")
     @ResponseStatus(HttpStatus.OK)
-    fun downloadCv(principal: Principal): ResponseEntity<ByteArrayResource> {
-        val metafile = profileWebHandler.cv(authenticatedUser(principal))
-
-        val header = HttpHeaders()
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
-        header.add("Cache-Control", "no-cache, no-store, must-revalidate")
-        header.add("Pragma", "no-cache")
-        header.add("Expires", "0")
-
-        val path = Paths.get(metafile.filename)
-        val resource = ByteArrayResource(Files.readAllBytes(path))
-
-        return ResponseEntity.ok()
-                .contentLength(metafile.size!!)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
+    fun downloadResume(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = profileWebHandler.resume(authenticatedUser(principal))
+        return toStreamingResponse(response, metafile)
     }
 
     @RolesAllowed("ROLE_user-role")
-    @GetMapping("ref")
+    @GetMapping("cvlinkedin")
     @ResponseStatus(HttpStatus.OK)
-    fun downloadRef(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
-        val metafile = profileWebHandler.ref(authenticatedUser(principal))
+    fun downloadResumeLinkedin(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = profileWebHandler.resumeLinkedIn(authenticatedUser(principal))
+        return toStreamingResponse(response, metafile)
+    }
+
+    private fun toStreamingResponse(response: HttpServletResponse, metafile: MetafileModel): StreamingResponseBody {
         response.contentType = metafile.contentType
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
-        val inputStream =  FileInputStream(Paths.get(metafile.filename).toFile())
+        val inputStream = FileInputStream(Paths.get(metafile.filename).toFile())
         return streamingResponseBody(inputStream)
     }
 

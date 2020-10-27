@@ -24,9 +24,9 @@ class ProfileEventPublisher(private val applicationEventPublisher: ApplicationEv
         logger.info("A PortraitUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
     }
 
-    fun publishRefUploadedEvent(fileDomain: MetafileDomain) {
+    fun publishResumeLinkedinUploadedEvent(fileDomain: MetafileDomain) {
         applicationEventPublisher.publishEvent(
-                RefUploadedEvent(fileDomain)
+                ResumeLinkedinUploadedEvent(fileDomain)
         )
         logger.info("A PortraitUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
     }

@@ -30,8 +30,8 @@ data class ProfileEntity(
         @Column(name = "resume")
         var resume: String? = null,
 
-        @Column(name = "ref")
-        var ref: String? = null
+        @Column(name = "resume_linkedin")
+        var resumeLinkedin: String? = null
 ) {
 }
 
@@ -42,7 +42,7 @@ fun toEntity(domain: ProfileDomain): ProfileEntity {
                 domain.lastDate,
                 domain.portraitFilename,
                 domain.resumeFilename,
-                domain.refFilename
+                domain.resumeLinkedinFilename
         )
 }
 
@@ -52,6 +52,6 @@ fun fromEntity(entity: ProfileEntity): ProfileDomain {
                 entity.lastDate,
                 entity.portrait,
                 entity.resume,
-                entity.ref
+                entity.resumeLinkedin
         )
 }

@@ -1,6 +1,6 @@
 package io.tricefal.core.profile
 
-import org.springframework.core.env.Environment
+import io.tricefal.core.metafile.MetafileModel
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import java.io.FileInputStream
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.security.Principal
 import javax.servlet.http.HttpServletResponse
 
 
@@ -21,69 +22,57 @@ import javax.servlet.http.HttpServletResponse
 @RequestMapping("profile")
 class ProfileApi(val profileWebHandler: ProfileWebHandler) {
 
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    fun profile(principal: Principal): ProfileModel {
+        return profileWebHandler.find(authenticatedUser())
+    }
+
     @PostMapping("portrait", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadPortrai(@RequestParam file: MultipartFile): ProfileModel {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return profileWebHandler.uploadPortrait(authentication.name, file)
+    fun uploadPortrait(@RequestParam file: MultipartFile): ProfileModel {
+        return profileWebHandler.uploadPortrait(authenticatedUser(), file)
     }
 
     @PostMapping("cv", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadCv(@RequestParam file: MultipartFile): ProfileModel {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return profileWebHandler.uploadResume(authentication.name, file)
+    fun uploadResume(@RequestParam file: MultipartFile): ProfileModel {
+        return profileWebHandler.uploadResume(authenticatedUser(), file)
     }
 
     @PostMapping("ref", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)
-    fun uploadRef(@RequestParam file: MultipartFile): ProfileModel {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        return profileWebHandler.uploadRef(authentication.name, file)
+    fun uploadResumeLinkedin(@RequestParam file: MultipartFile): ProfileModel {
+        return profileWebHandler.uploadResumeLinkedin(authenticatedUser(), file)
     }
 
     @GetMapping("portrait")
     @ResponseStatus(HttpStatus.OK)
     fun downloadPortrait(response: HttpServletResponse): StreamingResponseBody {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        profileWebHandler.portrait(authentication.name)
+        val metafile = profileWebHandler.portrait(authenticatedUser())
+        return toStreamingResponse(response, metafile)
 
-        val metafile = profileWebHandler.portrait(authentication.name)
-        response.contentType = metafile.contentType
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
-        val inputStream =  FileInputStream(Paths.get(metafile.filename).toFile())
-        return streamingResponseBody(inputStream)
     }
 
     @GetMapping("cv")
     @ResponseStatus(HttpStatus.OK)
-    fun downloadCv(): ResponseEntity<ByteArrayResource> {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        val metafile = profileWebHandler.cv(authentication.name)
+    fun downloadResume(response: HttpServletResponse): StreamingResponseBody {
+        val metafile = profileWebHandler.resume(authenticatedUser())
+        return toStreamingResponse(response, metafile)
 
-        val header = HttpHeaders()
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
-        header.add("Cache-Control", "no-cache, no-store, must-revalidate")
-        header.add("Pragma", "no-cache")
-        header.add("Expires", "0")
-
-        val path = Paths.get(metafile.filename)
-        val resource = ByteArrayResource(Files.readAllBytes(path))
-
-        return ResponseEntity.ok()
-                .contentLength(metafile.size!!)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
     }
 
-    @GetMapping("ref")
+    @GetMapping("cvlinkedin")
     @ResponseStatus(HttpStatus.OK)
-    fun downloadRef(response: HttpServletResponse): StreamingResponseBody {
-        val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        val metafile = profileWebHandler.ref(authentication.name)
+    fun downloadResumeLinkedin(response: HttpServletResponse): StreamingResponseBody {
+        val metafile = profileWebHandler.resumeLinkedin(authenticatedUser())
+        return toStreamingResponse(response, metafile)
+    }
+
+    private fun toStreamingResponse(response: HttpServletResponse, metafile: MetafileModel): StreamingResponseBody {
         response.contentType = metafile.contentType
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
-        val inputStream =  FileInputStream(Paths.get(metafile.filename).toFile())
+        val inputStream = FileInputStream(Paths.get(metafile.filename).toFile())
         return streamingResponseBody(inputStream)
     }
 
@@ -97,4 +86,8 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler) {
         }
     }
 
+    private fun authenticatedUser(): String {
+        val authentication: Authentication = SecurityContextHolder.getContext().authentication
+        return authentication.name
+    }
 }

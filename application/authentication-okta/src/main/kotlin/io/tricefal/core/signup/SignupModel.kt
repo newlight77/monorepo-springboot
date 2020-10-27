@@ -4,6 +4,7 @@ import io.tricefal.core.metafile.MetafileModel
 import java.time.Instant
 
 class SignupActivateModel( val username: String, val code: Int)
+class SignupCodeModel(val code: Int)
 class SignupStatusModel( val username: String, val status: String)
 
 class SignupModel

@@ -143,8 +143,8 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         this.profileEventPublisher.publishResumeUploadedEvent(fileDomain)
     }
 
-    override fun refUploaded(fileDomain: MetafileDomain) {
-        this.profileEventPublisher.publishRefUploadedEvent(fileDomain)
+    override fun resumeLinkedinUploaded(fileDomain: MetafileDomain) {
+        this.profileEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
     }
 
     val statusToRole = mapOf(

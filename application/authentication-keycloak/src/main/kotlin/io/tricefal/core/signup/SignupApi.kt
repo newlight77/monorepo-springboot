@@ -1,14 +1,11 @@
 package io.tricefal.core.signup
 
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
-import org.keycloak.representations.AccessToken
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.security.Principal
@@ -39,10 +36,10 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     }
 
     @RolesAllowed("ROLE_user-role")
-    @GetMapping("{username}")
+    @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    fun signup(username: String): SignupModel {
-        return signupWebHandler.findByUsername(username)
+    fun signup(principal: Principal): SignupModel {
+        return signupWebHandler.findByUsername(authenticatedUser(principal))
     }
 
     @GetMapping("state")
@@ -94,11 +91,11 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     }
 
     @RolesAllowed("ROLE_user-role")
-    @PostMapping("upload/ref", consumes = [ "multipart/form-data" ])
+    @PostMapping("upload/cvlinkedin", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadRef(principal: Principal, @RequestParam file : MultipartFile): SignupStateModel {
-        logger.info("signup uploading ref requested")
-        return signupWebHandler.uploadRef(authenticatedUser(principal), file)
+        logger.info("signup uploading reesume linkedin requested")
+        return signupWebHandler.uploadResumeLinkedin(authenticatedUser(principal), file)
     }
 
     @RolesAllowed("ROLE_user-role")

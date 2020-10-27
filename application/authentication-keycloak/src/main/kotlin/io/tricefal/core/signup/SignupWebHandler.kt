@@ -1,7 +1,6 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.exception.NotAcceptedException
-import io.tricefal.core.exception.NotFoundException
 import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.Representation
 import io.tricefal.core.metafile.fromModel
@@ -26,6 +25,7 @@ class SignupWebHandler(val signupService: ISignupService,
                        private final val messageSource: MessageSource) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
+
     private val dataFilesPath = env.getProperty("data.files.path")!!
     private var backendBaseUrl = env.getProperty("core.baseUrl")!!
     private var emailFrom = env.getProperty("notification.mail.from")!!
@@ -196,19 +196,19 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(model)
     }
 
-    fun uploadRef(username: String, file: MultipartFile): SignupStateModel {
+    fun uploadResumeLinkedin(username: String, file: MultipartFile): SignupStateModel {
         val domain = signupService.findByUsername(username)
 
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV_LINKEDIN))
         metafileService.save(metaFile, file.inputStream)
 
         val model = try {
-            this.signupService.refUploaded(domain, metaFile)
+            this.signupService.resumeLinkedinUploaded(domain, metaFile)
         } catch (ex: Exception) {
-            logger.error("Failed to upload the ref of username $username")
-            throw SignupUploadException("Failed to upload the ref of username $username\"")
+            logger.error("Failed to upload the resume linkedin of username $username")
+            throw SignupUploadException("Failed to upload the resume linkedin of username $username\"")
         }
-        logger.info("successfully upload the ref for user $username")
+        logger.info("successfully upload the resume linkedin for user $username")
         return toModel(model)
     }
 
