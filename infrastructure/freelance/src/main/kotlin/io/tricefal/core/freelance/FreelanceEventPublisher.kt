@@ -10,11 +10,18 @@ class FreelanceEventPublisher(private val applicationEventPublisher: Application
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     fun publishStatusUpdatedEvent(username: String, status: String) {
-        applicationEventPublisher.publishEvent(
-                FreelanceStatusUpdatedEvent(username, status)
-        )
-        logger.info("A FreelanceStatusUpdatedEvent has been published user $username")
+        try {
+            applicationEventPublisher.publishEvent(
+                    FreelanceStatusUpdatedEvent(username, status)
+            )
+            logger.info("A FreelanceStatusUpdatedEvent has been published user $username")
+        } catch (ex: Exception) {
+            logger.error("Failed to publish a FreelanceStatusUpdatedEvent for user $username")
+            throw FreelanceStatusPublicationException("Failed to publish a FreelanceStatusUpdatedEvent for user $username")
+        }
     }
 
 }
+
+class FreelanceStatusPublicationException(private val msg: String) : Throwable(msg) {}
 

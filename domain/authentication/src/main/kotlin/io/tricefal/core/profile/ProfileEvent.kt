@@ -23,7 +23,7 @@ class ResumeUploadedEvent(var metafile: MetafileDomain) {
 
 class ResumeLinkedinUploadedEvent(var metafile: MetafileDomain) {
     val username = metafile.username
-    fun isRef() : Boolean {
+    fun isResumeLinkedin() : Boolean {
         return this.metafile.username.isNotBlank()
                 && this.metafile.filename.isNotBlank()
                 && this.metafile.representation == Representation.CV_LINKEDIN

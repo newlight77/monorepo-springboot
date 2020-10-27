@@ -34,7 +34,7 @@ class ProfileEventListener(val profileService: IProfileService) {
         return toModel(result)
     }
 
-    @EventListener(condition = "#event.isRef()")
+    @EventListener(condition = "#event.isResumeLinkedin()")
     fun handleResumeLinkedinUploadedEvent(event: ResumeLinkedinUploadedEvent): ProfileModel {
         val result = try {
             this.profileService.updateProfileOnResumeLinkedinUploaded(event.username, event.metafile.filename)
