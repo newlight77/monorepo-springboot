@@ -1,12 +1,10 @@
 package io.tricefal.core.freelance
 
 import io.tricefal.core.exception.NotAcceptedException
-import io.tricefal.core.exception.NotFoundException
 import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.Representation
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
-import io.tricefal.core.signup.SignupWebHandler
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.i18n.LocaleContextHolder

@@ -1,7 +1,6 @@
 package io.tricefal.core.freelance
 
 import io.tricefal.core.metafile.MetafileDomain
-import java.util.*
 
 interface IFreelanceService {
     fun create(freelance: FreelanceDomain) : FreelanceDomain
