@@ -65,9 +65,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
     override fun resendCode(signup: SignupDomain,
                         notification: SignupNotificationDomain): SignupStateDomain {
-        adapter.findByUsername(signup.username).ifPresent {
-            logger.error("a signup with username ${signup.username} is already taken")
-            throw UsernameUniquenessException("a signup with username ${signup.username} is already taken")
+        adapter.findByUsername(signup.username).orElseThrow {
+            logger.error("a signup with username ${signup.username} is does not exist")
+            throw UsernameUniquenessException("a signup with username ${signup.username} does not exist")
         }
 
         tryResendCode(signup, notification)
@@ -88,11 +88,11 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
                     .statusUpdated(signup.state?.statusUpdated)
                     .validated(signup.state?.validated)
                     .emailSent(
-                            if (signup.state?.emailValidated!!) true
+                            if (signup.state?.emailValidated == true) true
                             else adapter.sendEmail(notification)
                     )
                     .activationCodeSent(
-                            if (signup.state?.activatedByCode!!) true
+                            if (signup.state?.activatedByCode == true) true
                             else adapter.sendSms(notification)
                     )
                     .build()
