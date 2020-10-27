@@ -28,7 +28,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun save(signup: SignupDomain): SignupDomain {
-        repository.findByUsername(signup.username).ifPresent {
+        repository.findByUsername(signup.username).stream().findFirst().ifPresent {
             logger.error("a signup with username ${signup.username} is already taken")
             throw DuplicateUsernameException("a signup with username ${signup.username} is already taken")
         }
@@ -37,7 +37,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun delete(username: String) {
-        repository.findByUsername(username).ifPresentOrElse (
+        repository.findByUsername(username).stream().findFirst().ifPresentOrElse (
             {
                 registrationService.delete(username)
                 repository.delete(it)
@@ -56,14 +56,14 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun findByUsername(username: String): Optional<SignupDomain> {
-        return repository.findByUsername(username).map {
+        return repository.findByUsername(username).stream().findFirst().map {
             fromEntity(it)
         }
     }
 
     override fun update(signup: SignupDomain): SignupDomain {
         val mewEntity = toEntity(signup)
-        repository.findByUsername(signup.username).ifPresentOrElse(
+        repository.findByUsername(signup.username).stream().findFirst().ifPresentOrElse(
                 { mewEntity.id = it.id },
                 {
                     logger.error("unable to find a registration with username ${signup.username}")

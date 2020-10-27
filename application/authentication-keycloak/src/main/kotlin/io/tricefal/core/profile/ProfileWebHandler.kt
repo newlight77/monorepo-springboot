@@ -28,64 +28,6 @@ class ProfileWebHandler(val profileService: IProfileService,
          return toModel(findProfile(username))
     }
 
-    fun uploadPortrait(username: String, file: MultipartFile): ProfileModel {
-
-        val profile = findProfile(username)
-
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
-        metafileService.save(metaFile, file.inputStream)
-
-        val result = try {
-            profileService.portraitUploaded(profile, metaFile)
-        } catch (ex: Exception) {
-            logger.error("Failed to upload the portrait for user $username")
-            throw ProfileUploadException("Failed to upload the portrait for user $username")
-        }
-        logger.info("successfully upload the portrait for user ${profile.username}")
-        return toModel(result)
-    }
-
-    fun uploadResume(username: String, file: MultipartFile): ProfileModel {
-
-        val profile = findProfile(username)
-
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV))
-        metafileService.save(metaFile, file.inputStream)
-
-        val result = try {
-            profileService.resumeUploaded(profile, metaFile)
-        } catch (ex: Exception) {
-            logger.error("Failed to upload the resume for user $username")
-            throw ProfileUploadException("Failed to upload the resume for user $username")
-        }
-        logger.info("successfully upload the resume for user ${profile.username}")
-        return toModel(result)
-    }
-
-    fun uploadRef(username: String, file: MultipartFile): ProfileModel {
-
-        val profile = findProfile(username)
-
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
-        metafileService.save(metaFile, file.inputStream)
-
-        val result = try {
-            profileService.refUploaded(profile, metaFile)
-        } catch (ex: Exception) {
-            logger.error("Failed to upload the ref for user $username")
-            throw ProfileUploadException("Failed to upload the ref for user $username")
-        }
-        logger.info("successfully upload the ref for user ${profile.username}")
-        return toModel(result)
-    }
-
-    private fun findProfile(username: String): ProfileDomain {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        val profile = this.profileService.findByUsername(username)
-                .orElseThrow { NotFoundException("username $username not found") }
-        return profile
-    }
-
     fun portrait(username: String): MetafileModel {
         return metafileService.findByUsername(username)
                 .map { toModel(it) }
@@ -104,5 +46,56 @@ class ProfileWebHandler(val profileService: IProfileService,
                 .first { it.representation == Representation.REF }
     }
 
-    class ProfileUploadException(private val msg: String) : Throwable(msg) {}
+    fun uploadPortrait(username: String, file: MultipartFile): ProfileModel {
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
+        metafileService.save(metaFile, file.inputStream)
+
+        val result = try {
+            this.profileService.updateProfileOnPortraitUploaded(username, metaFile.filename)
+        } catch(ex: Exception) {
+            logger.error("Failed to update the profile portrait for username $username")
+            throw ProfileUploadException("Failed to update the profile portrait for username $username")
+        }
+        logger.info("successfully upload the portrait for user $username")
+        return toModel(result)
+    }
+
+    fun uploadResume(username: String, file: MultipartFile): ProfileModel {
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV))
+        metafileService.save(metaFile, file.inputStream)
+
+        val result = try {
+            this.profileService.updateProfileOnResumeUploaded(username, metaFile.filename)
+        } catch(ex: Exception) {
+            logger.error("Failed to update the profile resume for username $username")
+            throw ProfileUploadException("Failed to update the profile resume for username $username")
+        }
+        logger.info("successfully upload the resume for user $username")
+        return toModel(result)
+    }
+
+    fun uploadRef(username: String, file: MultipartFile): ProfileModel {
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.REF))
+        metafileService.save(metaFile, file.inputStream)
+
+        val result = try {
+            this.profileService.updateProfileOnResumeUploaded(username, metaFile.filename)
+        } catch(ex: Exception) {
+            logger.error("Failed to update the profile ref for username $username")
+            throw ProfileUploadException("Failed to update the profile ref for username $username")
+        }
+
+        logger.info("successfully upload the ref for user $username")
+        return toModel(result)
+    }
+
+    private fun findProfile(username: String): ProfileDomain {
+        if (username.isEmpty()) throw NotAcceptedException("username is $username")
+        val profile = this.profileService.findByUsername(username)
+                .orElseThrow { NotFoundException("username $username not found") }
+        return profile
+    }
+
 }
+
+class ProfileUploadException(private val msg: String) : Throwable(msg) {}

@@ -140,7 +140,7 @@ class SignupWebHandlerTest {
                 .build()
 
         val signupEntity = toEntity(fromModel(signup))
-        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(listOf(signupEntity))
 
         // Act
         val result = signupWebHandler.findByUsername(username)
@@ -171,7 +171,7 @@ class SignupWebHandlerTest {
         Mockito.`when`(multipart.originalFilename).thenReturn(filename)
         Mockito.`when`(multipart.contentType).thenReturn("txt")
         Mockito.`when`(multipart.inputStream).thenReturn(ByteArrayInputStream("testing data".toByteArray()))
-        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(listOf(signupEntity))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
         val metafileEntity = toEntity(
                 fromModel(
@@ -209,7 +209,7 @@ class SignupWebHandlerTest {
         val domain = fromModel(signup)
         domain.activationCode = "123456"
         val signupEntity = toEntity(domain)
-        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(listOf(signupEntity))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
 
         // Act
@@ -240,7 +240,7 @@ class SignupWebHandlerTest {
                 Status.EMPLOYEE.toString(), signup.signupDate, signupState=toEntity(fromModel(state)))
 
         val signupEntity = toEntity(fromModel(signup))
-        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(Optional.of(signupEntity))
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(listOf(signupEntity))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(expected)
 
         // Act

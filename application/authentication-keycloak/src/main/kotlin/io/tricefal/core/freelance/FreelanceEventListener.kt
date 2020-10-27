@@ -13,7 +13,8 @@ class FreelanceEventListener(val freelanceService: IFreelanceService) {
     @EventListener(condition = "#event.isFreelance()")
     fun handlePortraitUploadedEvent(event: FreelanceStatusUpdatedEvent) {
         try {
-            val domain = FreelanceDomain.Builder(event.username).build()
+            val domain = FreelanceDomain.Builder(event.username)
+                    .state(FreelanceStateDomain.Builder(event.username).build()).build()
             freelanceService.create(domain)
         } catch (ex: Exception) {
             throw FreelanceWebHandler.FreelanceCreationException("Failed to create a freelance profile with username ${event.username}")

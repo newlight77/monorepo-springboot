@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("profile")
-class ProfileApi(val profileWebHandler: ProfileWebHandler,
-                 private final val env: Environment) {
-
-    private var frontendBaseUrl = env.getProperty("core.frontendUrl")!!
+class ProfileApi(val profileWebHandler: ProfileWebHandler) {
 
     @PostMapping("portrait", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)

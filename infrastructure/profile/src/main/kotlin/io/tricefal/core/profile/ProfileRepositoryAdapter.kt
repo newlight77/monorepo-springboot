@@ -11,7 +11,8 @@ class ProfileRepositoryAdapter(private var repository: ProfileJpaRepository) : I
     }
 
     override fun findByUsername(username: String): Optional<ProfileDomain> {
-        return repository.findByUsername(username).map {
+        return repository.findByUsername(username).stream().findFirst()
+                .map {
             fromEntity(it)
         }
     }

@@ -7,5 +7,5 @@ import java.util.*
 interface ProfileJpaRepository : JpaRepository<ProfileEntity, Long> {
     fun save(entity: ProfileEntity): ProfileEntity
     @Query("SELECT t FROM ProfileEntity t where t.username like %:username%")
-    fun findByUsername(username: String): Optional<ProfileEntity>
+    fun findByUsername(username: String): List<ProfileEntity>
 }

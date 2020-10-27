@@ -11,7 +11,7 @@ class FreelanceAdapter(private var repository: FreelanceJpaRepository) : IFreela
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
-        repository.findByUsername(freelance.username).ifPresent {
+        repository.findByUsername(freelance.username).stream().findFirst().ifPresent {
             logger.error("a freelance with username ${freelance.username} is already taken")
             throw DuplicateKeyException("a freelance with username ${freelance.username} is already taken")
         }
@@ -26,14 +26,14 @@ class FreelanceAdapter(private var repository: FreelanceJpaRepository) : IFreela
     }
 
     override fun findByUsername(username: String): Optional<FreelanceDomain> {
-        return repository.findByUsername(username).map {
+        return repository.findByUsername(username).stream().findFirst().map {
             fromEntity(it)
         }
     }
 
     override fun update(freelance: FreelanceDomain): FreelanceDomain {
         val mewEntity = toEntity(freelance)
-        repository.findByUsername(freelance.username).ifPresentOrElse(
+        repository.findByUsername(freelance.username).stream().findFirst().ifPresentOrElse(
             {
                 mewEntity.id = it.id
             },
