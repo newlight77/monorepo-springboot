@@ -29,12 +29,6 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.signup(signup)
     }
 
-    @DeleteMapping("")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteSignup(principal: Principal) {
-        signupWebHandler.delete(authenticatedUser(principal))
-    }
-
     @RolesAllowed("ROLE_user-role")
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)

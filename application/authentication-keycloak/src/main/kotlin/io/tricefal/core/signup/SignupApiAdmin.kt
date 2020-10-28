@@ -24,7 +24,6 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
 
     private var frontendBaseUrl = env.getProperty("core.frontendUrl")!!
 
-    // admin
     @RolesAllowed("ROLE_ac_tricefal_w")
     @GetMapping("list")
     @ResponseStatus(HttpStatus.OK)
@@ -32,22 +31,26 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.findAll()
     }
 
-    // admin
     @RolesAllowed("ROLE_ac_tricefal_w")
-    @PostMapping("{username}/activate")
+    @PutMapping("{username}/activate")
     @ResponseStatus(HttpStatus.OK)
     fun activate(@PathVariable username: String): SignupStateModel {
         logger.info("signup activation requested")
         return signupWebHandler.activate(username)
     }
 
-    // admin
     @RolesAllowed("ROLE_ac_tricefal_w")
-    @PostMapping("{username}/deactivate")
+    @PutMapping("{username}/deactivate")
     @ResponseStatus(HttpStatus.OK)
     fun deactivate(@PathVariable username: String): SignupStateModel {
         logger.info("signup deactivation requested")
         return signupWebHandler.deactivate(username)
+    }
+
+    @DeleteMapping("{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteSignup(username: String) {
+        signupWebHandler.delete(username)
     }
 
 }
