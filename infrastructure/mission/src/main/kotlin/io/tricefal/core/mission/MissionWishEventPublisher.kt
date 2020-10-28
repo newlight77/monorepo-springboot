@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
 @Component
-class FreelanceEventPublisher(private val applicationEventPublisher: ApplicationEventPublisher) {
+class MissionWishEventPublisher(private val applicationEventPublisher: ApplicationEventPublisher) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
