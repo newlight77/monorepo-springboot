@@ -25,6 +25,10 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
         return adapter.findAll()
     }
 
+    override fun availables(): List<FreelanceDomain> {
+        return adapter.availables()
+    }
+
     override fun kbisUploaded(freelance: FreelanceDomain, kbisFileDomain: MetafileDomain): FreelanceDomain {
         freelance.kbisFile = kbisFileDomain
         freelance.state!!.kbisUploaded = true

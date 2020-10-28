@@ -41,7 +41,7 @@ class ProfileAdminApi(val profileWebHandler: ProfileWebHandler) {
                 .contentLength(metafile.size!!)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource)
-    }core/application/authentication-keycloak/src/main/kotlin/io/tricefal/core/profile/ProfileApi.kt
+    }
 
     private fun toStreamingResponse(response: HttpServletResponse, metafile: MetafileModel): StreamingResponseBody {
         response.contentType = metafile.contentType

@@ -16,6 +16,7 @@ data class FreelanceDomain
             var urssafFile: MetafileDomain?,
             var fiscalFile: MetafileDomain?,
 
+            var status: Status?,
             var state: FreelanceStateDomain?,
             var lastDate: Instant?
     ) {
@@ -32,6 +33,7 @@ data class FreelanceDomain
             var urssafFile: MetafileDomain? = null,
             var fiscalFile: MetafileDomain? = null,
 
+            var status: Status? = null,
             var state: FreelanceStateDomain? = null,
             var lastDate: Instant? = null
 
@@ -46,6 +48,7 @@ data class FreelanceDomain
         fun urssafFile(urssafFile: MetafileDomain?) = apply { this.urssafFile = urssafFile }
         fun fiscalFile(fiscalFile: MetafileDomain?) = apply { this.fiscalFile = fiscalFile }
 
+        fun status(status: Status?) = apply { this.status = status }
         fun state(state: FreelanceStateDomain?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
@@ -59,9 +62,17 @@ data class FreelanceDomain
                 rcFile,
                 urssafFile,
                 fiscalFile,
+                status,
                 state,
                 lastDate
         )
     }
 }
 
+enum class Status {
+    NONE,
+    IN_MISSION,
+    AVAILABLE_SOON,
+    AVAILABLE,
+    LOOKING;
+}

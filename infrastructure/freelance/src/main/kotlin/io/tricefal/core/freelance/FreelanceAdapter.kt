@@ -25,6 +25,12 @@ class FreelanceAdapter(private var repository: FreelanceJpaRepository) : IFreela
         }
     }
 
+    override fun availables(): List<FreelanceDomain> {
+        return repository.findByStatus(Status.AVAILABLE.toString()) // may return AVAILABLE_SOON
+                .filter { Status.AVAILABLE.toString() == it.status?.toUpperCase() }
+                .map { fromEntity(it) }
+    }
+
     override fun findByUsername(username: String): Optional<FreelanceDomain> {
         return repository.findByUsername(username).stream().findFirst().map {
             fromEntity(it)

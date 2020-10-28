@@ -45,6 +45,10 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         return freelanceService.findAll().map { freelanceDomain -> toModel(freelanceDomain) }
     }
 
+    fun availables(): List<FreelanceModel> {
+        return freelanceService.availables().map { freelanceDomain -> toModel(freelanceDomain) }
+    }
+
     fun uploadKbis(username: String, file: MultipartFile): FreelanceModel {
         val domain = freelanceService.findByUsername(username)
 

@@ -8,7 +8,7 @@ import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("freelance")
-class FreelanceCompanyApiAdmin(val freelanceWebHandler: FreelanceWebHandler) {
+class FreelanceAdminApi(val freelanceWebHandler: FreelanceWebHandler) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -17,6 +17,13 @@ class FreelanceCompanyApiAdmin(val freelanceWebHandler: FreelanceWebHandler) {
     @ResponseStatus(HttpStatus.OK)
     fun freelancers(): List<FreelanceModel> {
         return freelanceWebHandler.findAll()
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_r")
+    @GetMapping("availables")
+    @ResponseStatus(HttpStatus.OK)
+    fun availables(): List<FreelanceModel> {
+        return freelanceWebHandler.availables()
     }
 
 }

@@ -33,6 +33,9 @@ data class FreelanceEntity (
         @JoinColumn(name = "privacy_detail_id")
         var privacyDetail: PrivacyDetailEntity? = null,
 
+        @Column(name = "status", length = 50)
+        var status: String?,
+
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")
         var state: FreelanceStateEntity? = null,
@@ -49,6 +52,7 @@ fun toEntity(domain: FreelanceDomain): FreelanceEntity {
                 domain.contact?.let { toEntity(it) },
                 domain.company?.let { toEntity(it) },
                 domain.privacyDetail?.let { toEntity(it) },
+                domain.status?.toString(),
                 domain.state?.let { toEntity(it) }
         )
 }
@@ -58,6 +62,7 @@ fun fromEntity(entity: FreelanceEntity): FreelanceDomain {
                 .contact(entity.contact?.let { fromEntity(it) })
                 .company(entity.company?.let { fromEntity(it) })
                 .privacyDetail(entity.privacyDetail?.let { fromEntity(it) })
+                .status(entity.status?.toUpperCase()?.let { Status.valueOf(it) })
                 .state(entity.state?.let { fromEntity(it) })
                 .lastDate(entity.lastDate)
                 .build()
