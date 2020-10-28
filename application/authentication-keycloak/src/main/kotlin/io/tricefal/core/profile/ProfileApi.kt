@@ -2,12 +2,17 @@ package io.tricefal.core.profile
 
 import io.tricefal.core.metafile.MetafileModel
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
+import org.springframework.core.env.Environment
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.io.FileInputStream
+import java.nio.file.Files
 import java.nio.file.Paths
 import java.security.Principal
 import javax.annotation.security.RolesAllowed
@@ -16,7 +21,10 @@ import javax.servlet.http.HttpServletResponse
 
 @RestController
 @RequestMapping("profile")
-class ProfileApi(val profileWebHandler: ProfileWebHandler) {
+class ProfileApi(val profileWebHandler: ProfileWebHandler,
+                 private final val env: Environment) {
+
+    private var frontendBaseUrl = env.getProperty("core.frontendUrl")!!
 
     @RolesAllowed("ROLE_user-role")
     @GetMapping("")
@@ -70,9 +78,27 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler) {
         return toStreamingResponse(response, metafile)
     }
 
+    fun toResponseEntity(metafile: MetafileModel): ResponseEntity<ByteArrayResource> {
+        val header = HttpHeaders()
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate")
+        header.add("Pragma", "no-cache")
+        header.add("Expires", "0")
+        header.add("filename", metafile.filename )
+
+        val path = Paths.get(metafile.filename)
+        val resource = ByteArrayResource(Files.readAllBytes(path))
+
+        return ResponseEntity.ok()
+                .contentLength(metafile.size!!)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource)
+    }
+
     private fun toStreamingResponse(response: HttpServletResponse, metafile: MetafileModel): StreamingResponseBody {
         response.contentType = metafile.contentType
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
+        response.setHeader("filename", metafile.filename)
         val inputStream = FileInputStream(Paths.get(metafile.filename).toFile())
         return streamingResponseBody(inputStream)
     }
