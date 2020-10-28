@@ -6,6 +6,6 @@ import java.util.*
 
 interface ProfileJpaRepository : JpaRepository<ProfileEntity, Long> {
     fun save(entity: ProfileEntity): ProfileEntity
-    @Query("SELECT t FROM ProfileEntity t where t.username like %:username%")
+    @Query("SELECT t FROM ProfileEntity t where t.username like %:username% ORDER by t.lastDate DESC")
     fun findByUsername(username: String): List<ProfileEntity>
 }

@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
@@ -34,7 +35,11 @@ data class FreelanceEntity (
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")
-        var state: FreelanceStateEntity? = null
+        var state: FreelanceStateEntity? = null,
+
+        @Column(name = "last_date")
+        var lastDate: Instant? = null
+
 )
 
 fun toEntity(domain: FreelanceDomain): FreelanceEntity {
@@ -54,5 +59,6 @@ fun fromEntity(entity: FreelanceEntity): FreelanceDomain {
                 .company(entity.company?.let { fromEntity(it) })
                 .privacyDetail(entity.privacyDetail?.let { fromEntity(it) })
                 .state(entity.state?.let { fromEntity(it) })
+                .lastDate(entity.lastDate)
                 .build()
 }

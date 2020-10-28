@@ -1,5 +1,6 @@
 package io.tricefal.core.mission
 
+import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
@@ -36,7 +37,10 @@ data class MissionWishEntity (
         var dailyFee: String? = null,
 
         @Column(name = "location", length = 50)
-        var location: String? = null
+        var location: String? = null,
+
+        @Column(name = "last_date")
+        var lastDate: Instant? = Instant.now()
 
 )
 
@@ -61,5 +65,6 @@ fun fromEntity(entity: MissionWishEntity): MissionWishDomain {
                 .clients(entity.clients)
                 .dailyFee(entity.dailyFee)
                 .location(entity.location)
+                .lastDate(entity.lastDate)
                 .build()
 }

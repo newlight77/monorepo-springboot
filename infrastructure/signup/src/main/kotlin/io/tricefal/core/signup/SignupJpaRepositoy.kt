@@ -7,6 +7,6 @@ import java.util.*
 
 interface SignupJpaRepository : JpaRepository<SignupEntity, Long> {
     fun save(entity: SignupEntity): SignupEntity
-    @Query("SELECT t FROM SignupEntity t where t.username like %:username%")
+    @Query("SELECT t FROM SignupEntity t where t.username like %:username% ORDER by t.signupDate DESC")
     fun findByUsername(username: String): List<SignupEntity>
 }
