@@ -42,6 +42,12 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.state(authenticatedUser(principal))
     }
 
+    @GetMapping("{username/}state")
+    @ResponseStatus(HttpStatus.OK)
+    fun state(principal: Principal, @PathVariable username: String): SignupStateModel {
+        return signupWebHandler.state(validateUser(principal, username))
+    }
+
     @PostMapping("code/resend")
     @ResponseStatus(HttpStatus.OK)
     fun resendCode(principal: Principal, @RequestBody resendCodeModel : SignupCodeModel): SignupStateModel {
