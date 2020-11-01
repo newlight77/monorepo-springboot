@@ -12,6 +12,7 @@ interface ISignupAdapter {
     fun update(signup: SignupDomain): SignupDomain
 
     fun register(signup: SignupDomain) : Boolean
+    fun unregister(username: String) : Boolean
     fun sendEmail(notification: NotificationDomain) : Boolean
     fun sendSms(notification: NotificationDomain) : Boolean
     fun updateStatus(signup: SignupDomain): SignupDomain

@@ -3,6 +3,7 @@ package io.tricefal.core.signup
 class SignupStateDomain
     private constructor(
             val username: String,
+            var saved: Boolean?,
             val registered: Boolean?,
             val emailSent: Boolean?,
             var emailValidated: Boolean? = null,
@@ -19,6 +20,7 @@ class SignupStateDomain
 
     data class Builder (
             val username: String,
+            var saved: Boolean? = null,
             var registered: Boolean? = null,
             var emailSent: Boolean? = null,
             var emailValidated: Boolean? = null,
@@ -30,6 +32,7 @@ class SignupStateDomain
             var statusUpdated: Boolean? = null,
             var validated: Boolean? = null,
             var completed: Boolean? = null) {
+        fun saved(saved: Boolean?) = apply { this.saved = saved }
         fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
 //        fun emailSent(isEmailSent: () -> Boolean) = apply { this.emailSent = isEmailSent.invoke() }
@@ -45,6 +48,7 @@ class SignupStateDomain
         fun completed(completed: Boolean?) = apply { this.completed = completed }
         fun build() = SignupStateDomain(
                 username,
+                saved,
                 registered,
                 emailSent,
                 emailValidated,

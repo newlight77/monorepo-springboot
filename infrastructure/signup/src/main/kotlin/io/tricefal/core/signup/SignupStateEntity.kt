@@ -18,7 +18,10 @@ class SignupStateEntity(
             @Column(name = "username", length = 50)
             var username: String,
 
-            @Column(name = "okta_registered")
+            @Column(name = "saved")
+            val saved: Boolean?,
+
+            @Column(name = "registered")
             val registered: Boolean?,
 
             @Column(name = "email_sent")
@@ -50,6 +53,7 @@ fun toEntity(domain: SignupStateDomain): SignupStateEntity {
     return SignupStateEntity(
             null,
             domain.username,
+            domain.saved,
             domain.registered,
             domain.emailSent,
             domain.emailValidated,
@@ -64,6 +68,7 @@ fun toEntity(domain: SignupStateDomain): SignupStateEntity {
 
 fun fromEntity(entity: SignupStateEntity): SignupStateDomain {
     return SignupStateDomain.Builder(entity.username)
+            .saved(entity.saved)
             .registered(entity.registered)
             .emailSent(entity.emailSent)
             .emailValidated(entity.emailValidated)

@@ -75,6 +75,15 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return fromEntity(signupEntity)
     }
 
+    override fun unregister(username: String): Boolean {
+        return try {
+            registrationService.delete(username)
+        } catch (ex: Exception) {
+            logger.error("failed to delete user on IAM server for username $username")
+            throw SignupNotFoundException("failed to delete user from IAM server for username $username")
+        }
+    }
+
     override fun register(signup: SignupDomain): Boolean {
         return try {
             registrationService.register(signup)

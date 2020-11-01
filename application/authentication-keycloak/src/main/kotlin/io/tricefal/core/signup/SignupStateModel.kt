@@ -2,6 +2,7 @@ package io.tricefal.core.signup
 
 class SignupStateModel(
         val username: String,
+        var saved: Boolean? = null,
         var registered: Boolean? = null,
         var emailSent: Boolean? = null,
         var emailValidated: Boolean? = null,
@@ -14,6 +15,7 @@ class SignupStateModel(
 
     data class Builder (
             val username: String,
+            var saved: Boolean? = null,
             var registered: Boolean? = null,
             var emailSent: Boolean? = null,
             var emailValidated: Boolean? = null,
@@ -23,6 +25,7 @@ class SignupStateModel(
             var statusUpdated: Boolean? = null,
             var validated: Boolean? = null,
             var completed: Boolean? = null) {
+        fun saved(saved: Boolean?) = apply { this.saved = saved }
         fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
@@ -35,6 +38,7 @@ class SignupStateModel(
 
         fun build() = SignupStateModel(
                 username,
+                saved,
                 registered,
                 emailSent,
                 emailValidated,
@@ -50,6 +54,7 @@ class SignupStateModel(
 
 fun toModel(domain: SignupStateDomain): SignupStateModel {
     return SignupStateModel.Builder(domain.username)
+            .saved(domain.saved)
             .registered(domain.registered)
             .emailSent(domain.emailSent)
             .emailValidated(domain.emailValidated)
@@ -64,6 +69,7 @@ fun toModel(domain: SignupStateDomain): SignupStateModel {
 
 fun fromModel(model: SignupStateModel): SignupStateDomain {
     return SignupStateDomain.Builder(model.username)
+            .saved(model.saved)
             .registered(model.registered)
             .emailSent(model.emailSent)
             .emailValidated(model.emailValidated)

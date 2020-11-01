@@ -16,8 +16,6 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
         trySignup(signup, notification)
 
-        adapter.save(signup)
-
         return signup.state!!
     }
 
@@ -25,6 +23,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         try {
             signup.state = SignupStateDomain.Builder(signup.username)
                     .registered(adapter.register(signup))
+                    .saved(save(signup))
                     .emailSent(adapter.sendEmail(notification))
                     .activationCodeSent(adapter.sendSms(notification))
                     .build()
@@ -36,7 +35,22 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     }
 
     override fun delete(username: String) {
-        return adapter.delete(username)
+        try {
+            adapter.delete(username)
+        } catch (ex: Exception) {
+            logger.error("failed to delete from persistence the signup for username $username")
+            throw SignupPersistenceException("failed to delete from persistence the signup for username $username")
+        }
+    }
+
+    private fun save(signup: SignupDomain) : Boolean {
+        try {
+            adapter.save(signup)
+        } catch (ex: Exception) {
+            logger.error("failed to persist the signup for username ${signup.username}")
+            throw SignupPersistenceException("failed to persist the signup for username ${signup.username}")
+        }
+        return true
     }
 
     override fun findByUsername(username: String): SignupDomain {
@@ -151,6 +165,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
 }
 
+class SignupPersistenceException(val s: String) : Throwable()
 class SignupUserNotFoundException(val s: String) : Throwable()
 class SignupUsernameUniquenessException(val s: String) : Throwable()
 class SignupUserRegistrationException(val s: String) : Throwable()

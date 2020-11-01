@@ -41,7 +41,10 @@ class SignupModel
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
 
         fun resumeFile(resumeFile: MetafileModel?) = apply { this.resumeFile = resumeFile }
-        fun state(state: SignupStateModel?) = apply { this.state = state }
+        fun state(state: SignupStateModel?) = apply {
+            this.state = if (this.state != null) state
+                else SignupStateModel.Builder(username).build()
+        }
 
         fun build() = SignupModel(username,
                 password,
