@@ -23,4 +23,5 @@ interface ISignupAdapter {
     fun portraitUploaded(fileDomain: MetafileDomain)
     fun resumeUploaded(fileDomain: MetafileDomain)
     fun resumeLinkedinUploaded(fileDomain: MetafileDomain)
+    fun signupActivated(signup: SignupDomain)
 }

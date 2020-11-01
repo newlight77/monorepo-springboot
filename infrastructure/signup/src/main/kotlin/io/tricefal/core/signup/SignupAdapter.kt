@@ -133,12 +133,6 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun updateStatus(signup: SignupDomain): SignupDomain {
-        try {
-            statusToRole[signup.status]?.forEach { keycloakRegisterService.addRole(signup.username, it) }
-        } catch (ex: Exception) {
-            logger.error("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
-            throw SignupRoleAssignationException("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
-        }
         logger.info("User status updated to ${signup.status} and role ${statusToRole[signup.status]} has been assigned to user ${signup.username}")
         return update(signup)
     }
@@ -161,6 +155,15 @@ class SignupAdapter(private var repository: SignupJpaRepository,
 
     override fun resumeLinkedinUploaded(fileDomain: MetafileDomain) {
         this.profileEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
+    }
+
+    override fun signupActivated(signup: SignupDomain) {
+        try {
+            statusToRole[signup.status]?.forEach { keycloakRegisterService.addRole(signup.username, it) }
+        } catch (ex: Exception) {
+            logger.error("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
+            throw SignupRoleAssignationException("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
+        }
     }
 
     val statusToRole = mapOf(

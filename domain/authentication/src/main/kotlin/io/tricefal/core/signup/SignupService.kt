@@ -80,6 +80,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     override fun activate(signup: SignupDomain): SignupStateDomain {
         signup.state?.validated = true
         adapter.update(signup)
+        adapter.signupActivated(signup)
         return signup.state!!
     }
 
