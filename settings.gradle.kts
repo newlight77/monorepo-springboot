@@ -13,6 +13,7 @@ include(":domain:mission")
 include(":domain:note")
 
 include(":infrastructure")
+include(":infrastructure:cgu")
 include(":infrastructure:freelance")
 include(":infrastructure:encryption")
 include(":infrastructure:login")

@@ -20,15 +20,6 @@ repositories {
 
 dependencies {
 	implementation(project(":domain:authentication"))
-	implementation(project(":domain:metafile"))
-	implementation(project(":infrastructure:cgu"))
-	implementation(project(":infrastructure:encryption"))
-	implementation(project(":infrastructure:freelance"))
-	implementation(project(":infrastructure:notification"))
-	implementation(project(":infrastructure:profile"))
-	implementation(project(":infrastructure:storage"))
-
-	implementation(project(":infrastructure:iam-client:iam-client-interface"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
@@ -44,5 +35,5 @@ dependencies {
 }
 
 tasks.withType<Jar>() {
-	baseName = "infra-signup"
+	baseName = "infra-cgu"
 }

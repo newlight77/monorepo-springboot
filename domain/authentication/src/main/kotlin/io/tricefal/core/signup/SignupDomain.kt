@@ -13,6 +13,7 @@ data class SignupDomain
             var activationCode: String?,
             var activationToken: String?,
             var status: Status?,
+            var cguAcceptedVersion: String?,
             val signupDate: Instant?,
 
             var portraitFile: MetafileDomain? = null,
@@ -30,6 +31,7 @@ data class SignupDomain
             var activationCode: String? = null,
             var activationToken: String? = null,
             var status: Status? = null,
+            var cguAcceptedVersion: String? = null,
             var signupDate: Instant? = null,
 
             var portraitFile: MetafileDomain? = null,
@@ -45,6 +47,7 @@ data class SignupDomain
         fun activationCode(activationCode: String?) = apply { this.activationCode = activationCode }
         fun activationToken(activationToken: String?) = apply { this.activationToken = activationToken }
         fun status(status: Status) = apply { this.status = status }
+        fun cguAcceptedVersion(cguAcceptedVersion: String?) = apply { this.cguAcceptedVersion = cguAcceptedVersion }
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
         fun portraitFile(portraitFile: MetafileDomain?) = apply { this.portraitFile = portraitFile }
         fun resumeFile(resumeFile: MetafileDomain?) = apply { this.resumeFile = resumeFile }
@@ -63,6 +66,7 @@ data class SignupDomain
                 activationCode,
                 activationToken,
                 status,
+                cguAcceptedVersion,
                 signupDate,
                 portraitFile,
                 resumeFile,

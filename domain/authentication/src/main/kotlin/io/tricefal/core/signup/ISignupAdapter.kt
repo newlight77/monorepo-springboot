@@ -18,6 +18,7 @@ interface ISignupAdapter {
     fun updateStatus(signup: SignupDomain): SignupDomain
 
     // events
+    fun cguAccepted(username: String, cguAcceptedVersion: String)
     fun statusUpdated(signup: SignupDomain)
     fun portraitUploaded(fileDomain: MetafileDomain)
     fun resumeUploaded(fileDomain: MetafileDomain)

@@ -4,10 +4,11 @@ class SignupStateDomain
     private constructor(
             val username: String,
             var saved: Boolean?,
-            val registered: Boolean?,
-            val emailSent: Boolean?,
+            var registered: Boolean?,
+            var cguAccepted: Boolean?,
+            var emailSent: Boolean?,
             var emailValidated: Boolean? = null,
-            val activationCodeSent: Boolean?,
+            var activationCodeSent: Boolean?,
             var activatedByCode: Boolean? = null,
             var portraitUploaded: Boolean? = null,
             var resumeUploaded: Boolean? = null,
@@ -22,6 +23,7 @@ class SignupStateDomain
             val username: String,
             var saved: Boolean? = null,
             var registered: Boolean? = null,
+            var cguAccepted: Boolean? = null,
             var emailSent: Boolean? = null,
             var emailValidated: Boolean? = null,
             var activationCodeSent: Boolean? = null,
@@ -34,6 +36,7 @@ class SignupStateDomain
             var completed: Boolean? = null) {
         fun saved(saved: Boolean?) = apply { this.saved = saved }
         fun registered(registered: Boolean?) = apply { this.registered = registered }
+        fun cguAccepted(cguAccepted: Boolean?) = apply { this.cguAccepted = cguAccepted }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
 //        fun emailSent(isEmailSent: () -> Boolean) = apply { this.emailSent = isEmailSent.invoke() }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
@@ -50,6 +53,7 @@ class SignupStateDomain
                 username,
                 saved,
                 registered,
+                cguAccepted,
                 emailSent,
                 emailValidated,
                 activationCodeSent,

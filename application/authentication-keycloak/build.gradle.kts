@@ -30,6 +30,7 @@ dependencies {
 	implementation(project(":domain:metafile"))
 	implementation(project(":domain:mission"))
 
+	implementation(project(":infrastructure:cgu"))
 	implementation(project(":infrastructure:encryption"))
 	implementation(project(":infrastructure:login"))
 	implementation(project(":infrastructure:notification"))

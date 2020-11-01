@@ -24,6 +24,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
             signup.state = SignupStateDomain.Builder(signup.username)
                     .registered(adapter.register(signup))
                     .saved(save(signup))
+                    .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup.username,it) })
                     .emailSent(adapter.sendEmail(notification))
                     .activationCodeSent(adapter.sendSms(notification))
                     .build()
@@ -49,6 +50,16 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         } catch (ex: Exception) {
             logger.error("failed to persist the signup for username ${signup.username}")
             throw SignupPersistenceException("failed to persist the signup for username ${signup.username}")
+        }
+        return true
+    }
+
+    private fun acceptCgu(username: String, cguAcceptedVersion: String) : Boolean {
+        try {
+            adapter.cguAccepted(username, cguAcceptedVersion)
+        } catch (ex: Exception) {
+            logger.error("failed to accept the cgu for username $username")
+            throw SignupPersistenceException("failed to accept the cgu for username $username")
         }
         return true
     }

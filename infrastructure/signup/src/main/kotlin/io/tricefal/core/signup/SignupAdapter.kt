@@ -1,5 +1,6 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.cgu.CguEventPublisher
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
@@ -23,7 +24,8 @@ class SignupAdapter(private var repository: SignupJpaRepository,
                     val smsService: SmsService,
                     val keycloakRegisterService: IamRegisterService,
                     val profileEventPublisher: ProfileEventPublisher,
-                    val freelanceEventPublisher: FreelanceEventPublisher
+                    val freelanceEventPublisher: FreelanceEventPublisher,
+                    val cguEventPublisher: CguEventPublisher
 ) : ISignupAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -143,6 +145,10 @@ class SignupAdapter(private var repository: SignupJpaRepository,
 
     override fun statusUpdated(signup: SignupDomain) {
         this.freelanceEventPublisher.publishStatusUpdatedEvent(signup.username, signup.status.toString())
+    }
+
+    override fun cguAccepted(username: String, cguAcceptedVersion: String) {
+        this.cguEventPublisher.publishCguAcceptedEvent(username, cguAcceptedVersion)
     }
 
     override fun portraitUploaded(fileDomain: MetafileDomain) {
