@@ -1,34 +1,25 @@
-package io.tricefal.core.exception
+package io.tricefal.core.signup
 
-import org.keycloak.adapters.springsecurity.KeycloakAuthenticationException
+import io.tricefal.core.exception.ExceptionDetail
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
-import org.springframework.http.converter.HttpMessageNotReadableException
-import org.springframework.security.authentication.BadCredentialsException
-import org.springframework.web.bind.MethodArgumentNotValidException
-import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.client.ResourceAccessException
-import java.lang.RuntimeException
 import java.time.Instant
 import javax.servlet.http.HttpServletRequest
 
 
 @ControllerAdvice
-@Order(Ordered.LOWEST_PRECEDENCE)
-class GlobalExceptionHandler {
+@Order(Ordered.HIGHEST_PRECEDENCE)
+class SignupExceptionHandler {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(
-            HttpMessageNotReadableException::class,
-            MethodArgumentNotValidException::class,
-            MissingServletRequestParameterException::class,
-            ForbiddenException::class)
+            SignupUserNotFoundException::class)
     fun handle400Exception(request: HttpServletRequest, ex: Exception): Any {
         return ExceptionDetail.Builder()
                 .classname(ex.javaClass.name)
@@ -40,10 +31,7 @@ class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(
-            KeycloakAuthenticationException::class,
-            BadCredentialsException::class,
-            UnauthorizedException::class)
+    @ExceptionHandler(UserDetailNotDefinedException::class)
     @ResponseBody
     fun handle401Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
         return ExceptionDetail.Builder()
@@ -57,21 +45,10 @@ class GlobalExceptionHandler {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ConflictException::class)
+    @ExceptionHandler(
+            SignupRegistrationException::class,
+            SignupUsernameUniquenessException::class)
     fun handle409Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
-        return ExceptionDetail.Builder()
-                .classname(ex.javaClass.name)
-                .date(Instant.now().toString())
-                .message(ex.localizedMessage)
-                .path(request.requestURI)
-                .params(request.queryString)
-                .build()
-    }
-
-    @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ResourceAccessException::class)
-    fun handle404Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
         return ExceptionDetail.Builder()
                 .classname(ex.javaClass.name)
                 .date(Instant.now().toString())
@@ -84,12 +61,12 @@ class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(
-            Exception::class,
-            java.lang.Exception::class,
-            NullPointerException::class,
-            java.lang.NullPointerException::class,
-            RuntimeException::class,
-            java.lang.RuntimeException::class
+            SignupDeleteException::class,
+            SignupActivationException::class,
+            SignupStatusUpdateException::class,
+            SignupUploadException::class,
+            SignupResendActivationCodeException::class,
+            SignupUserRegistrationException::class
     )
     fun handle500Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
         return ExceptionDetail.Builder()
@@ -100,4 +77,5 @@ class GlobalExceptionHandler {
                 .params(request.queryString)
                 .build()
     }
+
 }

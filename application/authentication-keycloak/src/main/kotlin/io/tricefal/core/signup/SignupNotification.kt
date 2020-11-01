@@ -1,5 +1,7 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.notification.NotificationDomain
+
 class SignupNotificationModel
     private constructor(
         val username: String,
@@ -36,7 +38,7 @@ class SignupNotificationModel
     }
 }
 
-fun toModel(domain: SignupNotificationDomain): SignupNotificationModel {
+fun toModel(domain: NotificationDomain): SignupNotificationModel {
     return SignupNotificationModel.Builder(domain.username)
             .smsFrom(domain.smsFrom)
             .smsTo(domain.smsTo)
@@ -49,8 +51,8 @@ fun toModel(domain: SignupNotificationDomain): SignupNotificationModel {
             .build()
 }
 
-fun fromModel(model: SignupNotificationModel): SignupNotificationDomain {
-    return SignupNotificationDomain.Builder(model.username)
+fun fromModel(model: SignupNotificationModel): NotificationDomain {
+    return NotificationDomain.Builder(model.username)
             .smsFrom(model.smsFrom)
             .smsTo(model.smsTo)
             .smsContent(model.smsContent)

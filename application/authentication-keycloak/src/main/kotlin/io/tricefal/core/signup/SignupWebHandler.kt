@@ -1,10 +1,10 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.exception.NotAcceptedException
 import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.Representation
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
+import io.tricefal.core.notification.NotificationDomain
 import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.PropertySource
@@ -61,7 +61,7 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun findByUsername(username: String): SignupModel {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
+        if (username.isEmpty()) throw SignupUserNotFoundException("username is $username")
         return toModel(signupService.findByUsername(username))
     }
 
@@ -135,7 +135,7 @@ class SignupWebHandler(val signupService: ISignupService,
     fun verifyByEmailFromToken(token: String): SignupStateModel {
         // the received token has 3 parts, the third is intentionally ignored as overfilled
         val values = token.split(".")
-        if (values.size < 3) throw NotAcceptedException("verify email by token : the token is invalid")
+        if (values.size < 3) throw SignupActivationException("verify email by token : the token is invalid")
         val activationCode = decode(values[0])
         val username = decode(values[1])
 
@@ -212,14 +212,14 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(model)
     }
 
-    private fun notification(signup: SignupDomain): SignupNotificationDomain {
+    private fun notification(signup: SignupDomain): NotificationDomain {
         val emailActivationLink = emailValidationLink(signup)
         val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname, signup.activationCode), locale)
         val emailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
         val emailGreeting = messageSource.getMessage("signup.mail.greeting", arrayOf(signup.firstname), locale)
-        val emailContent = messageSource.getMessage("signup.mail.content", arrayOf(emailActivationLink), locale)
+        val emailContent = messageSource.getMessage("signup.mail.content", arrayOf(emailActivationLink, signup.activationCode), locale)
 
-        return SignupNotificationDomain.Builder(signup.username)
+        return NotificationDomain.Builder(signup.username)
                 .smsFrom(smsFrom)
                 .smsTo(signup.phoneNumber)
                 .smsContent(smsContent)
@@ -252,9 +252,11 @@ class SignupWebHandler(val signupService: ISignupService,
             .joinToString("")
     }
 
-    class SignupRegistrationException(private val msg: String) : Throwable(msg) {}
-    class SignupDeleteException(private val msg: String) : Throwable(msg) {}
-    class SignupActivationException(private val msg: String) : Throwable(msg) {}
-    class SignupStatusUpdateException(private val msg: String) : Throwable(msg) {}
-    class SignupUploadException(private val msg: String) : Throwable(msg) {}
 }
+
+class SignupUserNotFoundException(private val msg: String) : Throwable(msg) {}
+class SignupRegistrationException(private val msg: String) : Throwable(msg) {}
+class SignupDeleteException(private val msg: String) : Throwable(msg) {}
+class SignupActivationException(private val msg: String) : Throwable(msg) {}
+class SignupStatusUpdateException(private val msg: String) : Throwable(msg) {}
+class SignupUploadException(private val msg: String) : Throwable(msg) {}

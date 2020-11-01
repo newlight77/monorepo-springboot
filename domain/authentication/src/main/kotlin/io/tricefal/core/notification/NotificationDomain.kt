@@ -1,6 +1,6 @@
-package io.tricefal.core.signup
+package io.tricefal.core.notification
 
-class SignupNotificationDomain
+class NotificationDomain
 private constructor(
         val username: String,
         var smsFrom: String? = null,
@@ -32,6 +32,6 @@ private constructor(
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
         fun emailGreeting(emailGreeting: String?) = apply { this.emailGreeting = emailGreeting }
 
-        fun build() = SignupNotificationDomain(username, smsFrom, smsTo, smsContent, emailFrom, emailTo, emailSubject, emailContent, emailGreeting)
+        fun build() = NotificationDomain(username, smsFrom, smsTo, smsContent, emailFrom, emailTo, emailSubject, emailContent, emailGreeting)
     }
 }

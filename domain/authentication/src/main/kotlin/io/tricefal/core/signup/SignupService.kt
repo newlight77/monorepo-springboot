@@ -1,6 +1,7 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
+import io.tricefal.core.notification.NotificationDomain
 import org.slf4j.LoggerFactory
 
 class SignupService(private var adapter: ISignupAdapter) : ISignupService {
@@ -8,9 +9,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun signup(signup: SignupDomain,
-                        notification: SignupNotificationDomain): SignupStateDomain {
+                        notification: NotificationDomain): SignupStateDomain {
         adapter.findByUsername(signup.username).ifPresent {
-            throw UsernameUniquenessException("a signup with username ${signup.username} is already taken")
+            throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
 
         trySignup(signup, notification)
@@ -20,7 +21,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         return signup.state!!
     }
 
-    private fun trySignup(signup: SignupDomain, notification: SignupNotificationDomain) {
+    private fun trySignup(signup: SignupDomain, notification: NotificationDomain) {
         try {
             signup.state = SignupStateDomain.Builder(signup.username)
                     .registered(adapter.register(signup))
@@ -30,7 +31,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         } catch (ex: Exception) {
             logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
             logger.error("${ex.stackTrace}")
-            throw UserRegistrationException("a signup with username ${signup.username} has failed. ")
+            throw SignupUserRegistrationException("a signup with username ${signup.username} has failed. ")
         }
     }
 
@@ -39,11 +40,11 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     }
 
     override fun findByUsername(username: String): SignupDomain {
-        if (username.isEmpty()) throw UsernameNotFoundException("username is $username")
+        if (username.isEmpty()) throw SignupUserNotFoundException("username is $username")
         return adapter.findByUsername(username)
                 .orElseThrow {
                     logger.error("resource not found for username $username")
-                    NotFoundException("resource not found for username $username")
+                    SignupUserNotFoundException("resource not found for username $username")
                 }
     }
 
@@ -64,10 +65,10 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     }
 
     override fun resendCode(signup: SignupDomain,
-                        notification: SignupNotificationDomain): SignupStateDomain {
+                        notification: NotificationDomain): SignupStateDomain {
         adapter.findByUsername(signup.username).orElseThrow {
             logger.error("a signup with username ${signup.username} is does not exist")
-            throw UsernameUniquenessException("a signup with username ${signup.username} does not exist")
+            throw SignupUsernameUniquenessException("a signup with username ${signup.username} does not exist")
         }
 
         tryResendCode(signup, notification)
@@ -77,7 +78,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         return signup.state!!
     }
 
-    private fun tryResendCode(signup: SignupDomain, notification: SignupNotificationDomain) {
+    private fun tryResendCode(signup: SignupDomain, notification: NotificationDomain) {
         try {
             signup.state = SignupStateDomain.Builder(signup.username)
                     .registered(signup.state?.registered)
@@ -100,7 +101,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         } catch (ex: Exception) {
             logger.error("Resend activation code failed for username ${signup.username}")
             logger.error("${ex.stackTrace}")
-            throw ResendActivationCodeException("Resend activation code failed for username ${signup.username}")
+            throw SignupResendActivationCodeException("Resend activation code failed for username ${signup.username}")
         }
     }
 
@@ -150,8 +151,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
 }
 
-class NotFoundException(val s: String) : Throwable()
-class UsernameNotFoundException(val s: String) : Throwable()
-class UsernameUniquenessException(val s: String) : Throwable()
-class UserRegistrationException(val s: String) : Throwable()
-class ResendActivationCodeException(val s: String) : Throwable()
+class SignupUserNotFoundException(val s: String) : Throwable()
+class SignupUsernameUniquenessException(val s: String) : Throwable()
+class SignupUserRegistrationException(val s: String) : Throwable()
+class SignupResendActivationCodeException(val s: String) : Throwable()

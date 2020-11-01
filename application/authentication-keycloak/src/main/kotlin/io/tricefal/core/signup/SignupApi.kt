@@ -111,11 +111,14 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     private fun validateUser(principal: Principal, username: String): String {
         if (principal is KeycloakAuthenticationToken
                 && principal.account.keycloakSecurityContext.token.email != username)
-            throw IllegalArgumentException("username not expected")
+            throw UserDetailNotDefinedException("username not expected")
 
         if (principal.name != username)
-            throw IllegalArgumentException("username not expected")
+            throw UserDetailNotDefinedException("username not expected")
 
         return username
     }
+
 }
+
+class UserDetailNotDefinedException(private val msg: String) : Throwable(msg) {}

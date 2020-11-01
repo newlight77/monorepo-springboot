@@ -6,6 +6,7 @@ import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.freelance.FreelanceEventPublisher
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
+import io.tricefal.core.notification.NotificationDomain
 import io.tricefal.core.okta.IamRegisterService
 import io.tricefal.core.profile.ProfileEventPublisher
 import io.tricefal.core.right.AccessRight
@@ -30,7 +31,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     override fun save(signup: SignupDomain): SignupDomain {
         repository.findByUsername(signup.username).stream().findFirst().ifPresent {
             logger.error("a signup with username ${signup.username} is already taken")
-            throw DuplicateUsernameException("a signup with username ${signup.username} is already taken")
+            throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
         val signupEntity = repository.save(toEntity(signup))
         return fromEntity(signupEntity)
@@ -79,11 +80,11 @@ class SignupAdapter(private var repository: SignupJpaRepository,
             registrationService.register(signup)
         } catch (ex: Exception) {
             logger.error("Failed to register a user on IAM server for username ${signup.username}")
-            throw RegistrationException("Failed to register a user on IAM server for username ${signup.username}")
+            throw SignupRegistrationException("Failed to register a user on IAM server for username ${signup.username}")
         }
     }
 
-    override fun sendSms(notification: SignupNotificationDomain): Boolean {
+    override fun sendSms(notification: NotificationDomain): Boolean {
         logger.info("Sending ans SMS")
         val result = try {
             val message = SmsMessage.Builder()
@@ -100,7 +101,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return result
     }
 
-    override fun sendEmail(notification: SignupNotificationDomain): Boolean {
+    override fun sendEmail(notification: NotificationDomain): Boolean {
         logger.info("Sending an email")
         try {
             val message = EmailMessage.Builder()
@@ -125,7 +126,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
             statusToRole[signup.status]?.forEach { keycloakRegisterService.addRole(signup.username, it) }
         } catch (ex: Exception) {
             logger.error("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
-            throw RoleAssignationException("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
+            throw SignupRoleAssignationException("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
         }
         logger.info("User status updated to ${signup.status} and role ${statusToRole[signup.status]} has been assigned to user ${signup.username}")
         return update(signup)
@@ -153,12 +154,12 @@ class SignupAdapter(private var repository: SignupJpaRepository,
             Status.CLIENT to listOf(AccessRight.AC_CLIENT_READ, AccessRight.AC_CLIENT_WRTIE)
     )
 
-    class DuplicateUsernameException(private val msg: String) : Throwable(msg) {}
+    class SignupUsernameUniquenessException(private val msg: String) : Throwable(msg) {}
     class SignupNotFoundException(private val msg: String) : Throwable(msg) {}
     class SignupEmailNotificationException(private val msg: String) : Throwable(msg) {}
     class SignupSmsNotificationException(private val msg: String) : Throwable(msg) {}
-    class RegistrationException(private val msg: String) : Throwable(msg) {}
-    class RoleAssignationException(private val msg: String) : Throwable(msg) {}
+    class SignupRegistrationException(private val msg: String) : Throwable(msg) {}
+    class SignupRoleAssignationException(private val msg: String) : Throwable(msg) {}
 }
 
 

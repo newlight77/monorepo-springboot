@@ -5,6 +5,7 @@ import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.Representation
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
+import io.tricefal.core.notification.NotificationDomain
 import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.PropertySource
@@ -211,14 +212,14 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(model)
     }
 
-    private fun notification(signup: SignupDomain): SignupNotificationDomain {
+    private fun notification(signup: SignupDomain): NotificationDomain {
         val emailActivationLink = emailValidationLink(signup)
         val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname, signup.activationCode), locale)
         val emailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
         val emailGreeting = messageSource.getMessage("signup.mail.greeting", arrayOf(signup.firstname), locale)
         val emailContent = messageSource.getMessage("signup.mail.content", arrayOf(emailActivationLink), locale)
 
-        return SignupNotificationDomain.Builder(signup.username)
+        return NotificationDomain.Builder(signup.username)
                 .smsFrom(smsFrom)
                 .smsTo(signup.phoneNumber)
                 .smsContent(smsContent)

@@ -1,5 +1,6 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.notification.NotificationDomain
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,7 +27,7 @@ class SignupServiceTest {
     @Test
     fun `should do a signup`() {
         // Arranges
-        val notification = SignupNotificationDomain.Builder("kong")
+        val notification = NotificationDomain.Builder("kong")
                 .smsFrom("smsFrom")
                 .smsTo("smsTo")
                 .smsContent("smsContent")
@@ -116,5 +117,55 @@ class SignupServiceTest {
         // Arrange
         Mockito.verify(adapter).updateStatus(signup)
         Assertions.assertTrue(result.statusUpdated!!)
+    }
+
+    @Test
+    fun `should delete the signup`() {
+
+    }
+
+    @Test
+    fun `should find all signups`() {
+
+    }
+
+    @Test
+    fun `should activate the signup`() {
+
+    }
+
+    @Test
+    fun `should deactivate the signup`() {
+
+    }
+
+    @Test
+    fun `should resend code for a signup`() {
+
+    }
+
+    @Test
+    fun `should verify by code for a signup`() {
+
+    }
+
+    @Test
+    fun `should verify by email for a signup`() {
+
+    }
+
+    @Test
+    fun `should update a signup upon portrait uploaded`() {
+
+    }
+
+    @Test
+    fun `should update a signup upon resume uploaded`() {
+
+    }
+
+    @Test
+    fun `should update a signup upon resume linkedin uploaded`() {
+
     }
 }
