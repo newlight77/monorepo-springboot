@@ -44,8 +44,8 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
 
     @GetMapping("state/{username}")
     @ResponseStatus(HttpStatus.OK)
-    fun state(principal: Principal, @PathVariable username: String): SignupStateModel {
-        return signupWebHandler.state(validateUser(principal, username))
+    fun state(@PathVariable username: String): SignupStateModel {
+        return signupWebHandler.state(username)
     }
 
     @PostMapping("code/resend")
