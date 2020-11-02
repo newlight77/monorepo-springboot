@@ -2,7 +2,7 @@ rootProject.name = "tricefal-core"
 
 include(":application")
 include(":application:authentication-keycloak")
-include(":application:authentication-okta")
+//include(":application:authentication-okta")
 include(":application:note")
 
 include(":domain")
