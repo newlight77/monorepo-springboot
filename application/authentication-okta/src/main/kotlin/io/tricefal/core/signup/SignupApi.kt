@@ -47,7 +47,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.state(authenticatedUser())
     }
 
-    @GetMapping("{username}/state")
+    @GetMapping("state/{username}")
     @ResponseStatus(HttpStatus.OK)
     fun state(@PathVariable username: String): SignupStateModel {
         return signupWebHandler.state(username)

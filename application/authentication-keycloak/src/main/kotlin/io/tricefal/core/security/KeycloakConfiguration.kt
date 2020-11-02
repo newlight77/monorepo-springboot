@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy
 import org.springframework.security.web.csrf.CsrfFilter
@@ -39,9 +40,6 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
 
     @Value("\${security.csrf.enabled}")
     private val csrfEnabled = false
-
-    @Autowired
-    lateinit var oktaJwtVerifier: OktaJwtVerifier
 
     @Bean
     fun keycloakConfigResolver(): KeycloakConfigResolver {
@@ -94,7 +92,7 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
                 .antMatchers(HttpMethod.POST, "/logins")
                 .antMatchers(HttpMethod.POST, "/signup")
                 .antMatchers(HttpMethod.GET, "/signup/email/verify**")
-                .antMatchers(HttpMethod.GET, "/signup/*/state")
+                .antMatchers(HttpMethod.GET, "/signup/state/*")
     }
 
     @Throws(Exception::class)
@@ -139,7 +137,8 @@ class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
         if (!csrfEnabled)
             http .csrf().disable()
 
-        http.addFilterAfter(CustomFilter(), CsrfFilter::class.java)
+//        http.addFilterAfter(CustomFilter(), CsrfFilter::class.java)
+        http.addFilterAfter(CustomFilter(), UsernamePasswordAuthenticationFilter::class.java)
 
 //        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //        http.addFilterAfter(CsrfHeaderFilter(), UsernamePasswordAuthenticationFilter::class.java)

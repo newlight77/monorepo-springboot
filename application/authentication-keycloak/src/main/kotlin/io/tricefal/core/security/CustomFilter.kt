@@ -14,7 +14,9 @@ import java.io.IOException
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletRequestWrapper
 import javax.servlet.http.HttpServletResponse
+
 
 @Configuration
 class CustomFilter : OncePerRequestFilter() {
@@ -25,6 +27,12 @@ class CustomFilter : OncePerRequestFilter() {
     @Throws(IOException::class, ServletException::class)
     public override fun doFilterInternal(req: HttpServletRequest, res: HttpServletResponse,
                                          chain: FilterChain) {
+
+        val wrapper: HttpServletRequestWrapper = wrapRequest(req)
+//        if (req.getHeader("Authorization") != null && req.getHeader("Authorization").length < 20) {
+//            wrapper.getRequestDispatcher(wrapper.servletPath).forward(wrapper, res)
+//        }
+
         if (!securityEnabled) {
             val roles: Set<String> = hashSetOf()
             val session = RefreshableKeycloakSecurityContext(null, null, null, null, null, null, null)
@@ -35,8 +43,17 @@ class CustomFilter : OncePerRequestFilter() {
             SecurityContextHolder.setContext(context)
 
             // Skip the rest of the filters
-            req.getRequestDispatcher(req.servletPath).forward(req, res)
+            wrapper.getRequestDispatcher(wrapper.servletPath).forward(wrapper, res)
         }
-        chain.doFilter(req, res)
+        chain.doFilter(wrapper, res)
+    }
+
+    private fun wrapRequest(req: HttpServletRequest): HttpServletRequestWrapper {
+        return object : HttpServletRequestWrapper(req) {
+            override fun getHeader(name: String): String? {
+                return if ("Authorization" == name && super.getHeader(name) != null && super.getHeader(name).length < 20) null
+                else super.getHeader(name)
+            }
+        }
     }
 }
