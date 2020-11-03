@@ -23,26 +23,41 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
                 .build()
     }
 
-    private fun register(signup: SignupDomain): Boolean {
-        try {
-            if (adapter.register(signup)) {
-                signup.state?.registered = true
-                adapter.update(signup)
-                return true
-            }
-            return false
-        } catch (ex: Exception) {
-            logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
-            logger.error("${ex.stackTrace}")
-            throw SignupUserRegistrationException("a signup with username ${signup.username} has failed. ")
+    override fun resendCode(signup: SignupDomain,
+                            notification: NotificationDomain): SignupStateDomain {
+        adapter.findByUsername(signup.username).orElseThrow {
+            logger.error("a signup with username ${signup.username} is does not exist")
+            throw SignupUsernameUniquenessException("a signup with username ${signup.username} does not exist")
         }
+
+        return SignupStateDomain.Builder(signup.username)
+                .registered(signup.state?.registered)
+                .emailValidated(signup.state?.emailValidated)
+                .portraitUploaded(signup.state?.portraitUploaded)
+                .resumeUploaded(signup.state?.resumeUploaded)
+                .resumeLinkedinUploaded(signup.state?.resumeLinkedinUploaded)
+                .statusUpdated(signup.state?.statusUpdated)
+                .validated(signup.state?.validated)
+                .emailSent(
+                        if (signup.state?.emailValidated == true) true
+                        else sendEmail(signup, notification)
+                )
+                .activationCodeSent(
+                        if (signup.state?.activatedByCode == true) true
+                        else sendSms(signup, notification)
+                )
+                .build()
     }
 
-    override fun delete(signup: SignupDomain) {
+    override fun delete(signup: SignupDomain, authorizationCode: String?) {
         try {
-            signup.state?.deleted = true
-            adapter.update(signup)
-//            adapter.delete(signup.username)
+            if (authorizationCode?.isNotBlank() == true) {
+                if (signup.activationCode == authorizationCode) adapter.delete(signup.username)
+            } else {
+                // soft deletion
+                signup.state?.deleted = true
+                adapter.update(signup)
+            }
         } catch (ex: Exception) {
             logger.error("failed to delete from persistence the signup for username ${signup.username}")
             throw SignupPersistenceException("failed to delete from persistence the signup for username ${signup.username}")
@@ -74,45 +89,6 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         signup.state?.validated = false
         adapter.update(signup)
         return signup.state!!
-    }
-
-    override fun resendCode(signup: SignupDomain,
-                        notification: NotificationDomain): SignupStateDomain {
-        adapter.findByUsername(signup.username).orElseThrow {
-            logger.error("a signup with username ${signup.username} is does not exist")
-            throw SignupUsernameUniquenessException("a signup with username ${signup.username} does not exist")
-        }
-
-        tryResendCode(signup, notification)
-        adapter.update(signup)
-        return signup.state!!
-    }
-
-    private fun tryResendCode(signup: SignupDomain, notification: NotificationDomain) {
-        try {
-            signup.state = SignupStateDomain.Builder(signup.username)
-                    .registered(signup.state?.registered)
-                    .emailValidated(signup.state?.emailValidated)
-                    .portraitUploaded(signup.state?.portraitUploaded)
-                    .resumeUploaded(signup.state?.resumeUploaded)
-                    .resumeLinkedinUploaded(signup.state?.resumeLinkedinUploaded)
-                    .statusUpdated(signup.state?.statusUpdated)
-                    .validated(signup.state?.validated)
-                    .emailSent(
-                            if (signup.state?.emailValidated == true) true
-                            else adapter.sendEmail(notification)
-                    )
-                    .activationCodeSent(
-                            if (signup.state?.activatedByCode == true) true
-                            else adapter.sendSms(notification)
-                    )
-                    .build()
-
-        } catch (ex: Exception) {
-            logger.error("Resend activation code failed for username ${signup.username}")
-            logger.error("${ex.stackTrace}")
-            throw SignupResendActivationCodeException("Resend activation code failed for username ${signup.username}")
-        }
     }
 
     override fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain {
@@ -177,6 +153,21 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         } catch (ex: Exception) {
             logger.error("failed to update the status of the signup for username ${signup.username}")
             throw SignupStatusUpdateException("failed to update the status of the signup for username ${signup.username}")
+        }
+    }
+
+    private fun register(signup: SignupDomain): Boolean {
+        try {
+            if (adapter.register(signup)) {
+                signup.state?.registered = true
+                adapter.update(signup)
+                return true
+            }
+            return false
+        } catch (ex: Exception) {
+            logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
+            logger.error("${ex.stackTrace}")
+            throw SignupUserRegistrationException("a signup with username ${signup.username} has failed. ")
         }
     }
 

@@ -50,10 +50,10 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(result)
     }
 
-    fun delete(username: String) {
+    fun delete(username: String, authorizationCode: String?) {
         try {
             val domain = signupService.findByUsername(username)
-            this.signupService.delete(domain)
+            this.signupService.delete(domain, authorizationCode)
         } catch (ex: Exception) {
             logger.error("Failed to delete a signup with username $username")
             throw SignupDeleteException("Failed to delete a signup with username $username")

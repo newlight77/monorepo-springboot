@@ -49,8 +49,8 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
 
     @DeleteMapping("{username}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteSignup(username: String) {
-        signupWebHandler.delete(username)
+    fun deleteSignup(@PathVariable username: String, @RequestParam authorizationCode: String?) {
+        signupWebHandler.delete(username, authorizationCode)
     }
 
 }
