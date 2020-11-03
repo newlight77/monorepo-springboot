@@ -38,9 +38,9 @@ data class FreelanceDomain
             var lastDate: Instant? = null
 
     ) {
-        fun contact(contact: ContactDomain?) = apply { this.contact = contact }
-        fun company(company: CompanyDomain?) = apply { this.company = company }
-        fun privacyDetail(privacyDetail: PrivacyDetailDomain?) = apply { this.privacyDetail = privacyDetail }
+        fun contact(contact: ContactDomain?) = apply { this.contact = contact ?: ContactDomain.Builder(username).build() }
+        fun company(company: CompanyDomain?) = apply { this.company = company ?: CompanyDomain.Builder(username).build() }
+        fun privacyDetail(privacyDetail: PrivacyDetailDomain?) = apply { this.privacyDetail = privacyDetail ?: PrivacyDetailDomain.Builder(username).build() }
 
         fun kbisFile(kbisFile: MetafileDomain?) = apply { this.kbisFile = kbisFile }
         fun ribFile(ribFile: MetafileDomain?) = apply { this.ribFile = ribFile }
@@ -49,7 +49,7 @@ data class FreelanceDomain
         fun fiscalFile(fiscalFile: MetafileDomain?) = apply { this.fiscalFile = fiscalFile }
 
         fun status(status: Status?) = apply { this.status = status }
-        fun state(state: FreelanceStateDomain?) = apply { this.state = state }
+        fun state(state: FreelanceStateDomain?) = apply { this.state = state ?: FreelanceStateDomain.Builder(username).build() }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = FreelanceDomain(

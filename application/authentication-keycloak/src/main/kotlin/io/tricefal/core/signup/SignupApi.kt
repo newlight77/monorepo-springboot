@@ -36,18 +36,21 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.findByUsername(authenticatedUser(principal))
     }
 
+    @RolesAllowed("ROLE_user-role")
     @GetMapping("state")
     @ResponseStatus(HttpStatus.OK)
     fun state(principal: Principal): SignupStateModel {
         return signupWebHandler.state(authenticatedUser(principal))
     }
 
+    // not-secure
     @GetMapping("state/{username}")
     @ResponseStatus(HttpStatus.OK)
     fun state(@PathVariable username: String): SignupStateModel {
         return signupWebHandler.state(username)
     }
 
+    @RolesAllowed("ROLE_user-role")
     @PostMapping("code/resend")
     @ResponseStatus(HttpStatus.OK)
     fun resendCode(principal: Principal, @RequestBody resendCodeModel : SignupCodeModel): SignupStateModel {
@@ -55,6 +58,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return signupWebHandler.resendCode(authenticatedUser(principal))
     }
 
+    @RolesAllowed("ROLE_user-role")
     @PostMapping("code/verify")
     @ResponseStatus(HttpStatus.OK)
     fun verifyByCode(principal: Principal, @RequestBody codeModel : SignupCodeModel): SignupStateModel {
@@ -72,7 +76,6 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, url).build()
     }
 
-    // upcoming frontend
     @RolesAllowed("ROLE_user-role")
     @PostMapping("upload/portrait", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)

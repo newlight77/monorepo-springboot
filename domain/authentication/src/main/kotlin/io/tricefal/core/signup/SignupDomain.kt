@@ -54,8 +54,7 @@ data class SignupDomain
         fun resumeLinkedinFile(resumeLinkedinFile: MetafileDomain?) = apply { this.resumeLinkedinFile = resumeLinkedinFile }
 
         fun state(state: SignupStateDomain?) = apply {
-            this.state = if (this.state != null) state
-                else SignupStateDomain.Builder(username).build()
+            this.state = state ?: SignupStateDomain.Builder(username).build()
         }
 
         fun build() = SignupDomain(username,
