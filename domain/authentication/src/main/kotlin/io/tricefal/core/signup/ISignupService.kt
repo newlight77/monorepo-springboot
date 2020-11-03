@@ -7,7 +7,7 @@ interface ISignupService {
     fun signup(signup: SignupDomain, notification: NotificationDomain) : SignupStateDomain
     fun findByUsername(username: String): SignupDomain
     fun findAll(): List<SignupDomain>
-    fun delete(username: String)
+    fun delete(signup: SignupDomain)
     fun activate(signup: SignupDomain): SignupStateDomain
     fun deactivate(signup: SignupDomain): SignupStateDomain
     fun resendCode(signup: SignupDomain, notification: NotificationDomain): SignupStateDomain

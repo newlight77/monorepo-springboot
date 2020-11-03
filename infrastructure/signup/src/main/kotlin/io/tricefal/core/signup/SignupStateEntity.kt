@@ -46,7 +46,11 @@ class SignupStateEntity(
             var validated: Boolean? = null,
 
             @Column(name = "completed")
-            var completed: Boolean? = null)
+            var completed: Boolean? = null,
+
+            @Column(name = "deleted")
+            val deleted: Boolean?
+)
 
 
 fun toEntity(domain: SignupStateDomain): SignupStateEntity {
@@ -54,6 +58,7 @@ fun toEntity(domain: SignupStateDomain): SignupStateEntity {
             null,
             domain.username,
             domain.saved,
+            domain.deleted,
             domain.registered,
             domain.emailSent,
             domain.emailValidated,
@@ -69,6 +74,7 @@ fun toEntity(domain: SignupStateDomain): SignupStateEntity {
 fun fromEntity(entity: SignupStateEntity): SignupStateDomain {
     return SignupStateDomain.Builder(entity.username)
             .saved(entity.saved)
+            .deleted(entity.deleted)
             .registered(entity.registered)
             .emailSent(entity.emailSent)
             .emailValidated(entity.emailValidated)

@@ -8,11 +8,9 @@ class MissionWishService(private var adapter: IMissionWishAdapter) : IMissionWis
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun create(missionWish: MissionWishDomain): MissionWishDomain {
-        adapter.findByUsername(missionWish.username).ifPresent {
-            throw UsernameNotFoundException("a missionWish with username ${missionWish.username} is already taken")
-        }
-
-        return adapter.create(missionWish)
+        val result = adapter.findByUsername(missionWish.username)
+        return if (result.isPresent) adapter.update(missionWish)
+        else adapter.create(missionWish)
     }
 
     override fun findByUsername(username: String): MissionWishDomain {

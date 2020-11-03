@@ -52,7 +52,8 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun delete(username: String) {
         try {
-            this.signupService.delete(username)
+            val domain = signupService.findByUsername(username)
+            this.signupService.delete(domain)
         } catch (ex: Exception) {
             logger.error("Failed to delete a signup with username $username")
             throw SignupDeleteException("Failed to delete a signup with username $username")
@@ -147,7 +148,7 @@ class SignupWebHandler(val signupService: ISignupService,
             logger.error("Failed to verify by email from the token $token for the signup of username $username")
             throw SignupActivationException("Failed to verify by email from the token $token for the signup of username $username")
         }
-        logger.info("successfully verifyed the token by email for user $username")
+        logger.info("successfully verified the token by email for user $username")
         return toModel(model)
     }
 

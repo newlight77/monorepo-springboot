@@ -22,11 +22,11 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     private fun trySignup(signup: SignupDomain, notification: NotificationDomain) {
         try {
             signup.state = SignupStateDomain.Builder(signup.username)
-                    .registered(adapter.register(signup))
+                    .registered(register(signup))
                     .saved(save(signup))
-                    .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup.username,it) })
-                    .emailSent(adapter.sendEmail(notification))
-                    .activationCodeSent(adapter.sendSms(notification))
+                    .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
+                    .emailSent(sendEmail(signup, notification))
+                    .activationCodeSent(sendSms(signup, notification))
                     .build()
         } catch (ex: Exception) {
             logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
@@ -35,38 +35,36 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         }
     }
 
-    override fun delete(username: String) {
+    private fun register(signup: SignupDomain): Boolean {
         try {
-            adapter.delete(username)
+            if (adapter.register(signup)) {
+                signup.state?.registered = true
+                adapter.update(signup)
+                return true
+            }
+            return false
         } catch (ex: Exception) {
-            logger.error("failed to delete from persistence the signup for username $username")
-            throw SignupPersistenceException("failed to delete from persistence the signup for username $username")
+            logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
+            logger.error("${ex.stackTrace}")
+            throw SignupUserRegistrationException("a signup with username ${signup.username} has failed. ")
         }
     }
 
-    private fun save(signup: SignupDomain) : Boolean {
+    override fun delete(signup: SignupDomain) {
         try {
-            adapter.save(signup)
+            signup.state?.deleted = true
+            adapter.update(signup)
+//            adapter.delete(signup.username)
         } catch (ex: Exception) {
-            logger.error("failed to persist the signup for username ${signup.username}")
-            throw SignupPersistenceException("failed to persist the signup for username ${signup.username}")
+            logger.error("failed to delete from persistence the signup for username ${signup.username}")
+            throw SignupPersistenceException("failed to delete from persistence the signup for username ${signup.username}")
         }
-        return true
-    }
-
-    private fun acceptCgu(username: String, cguAcceptedVersion: String) : Boolean {
-        try {
-            adapter.cguAccepted(username, cguAcceptedVersion)
-        } catch (ex: Exception) {
-            logger.error("failed to accept the cgu for username $username")
-            throw SignupPersistenceException("failed to accept the cgu for username $username")
-        }
-        return true
     }
 
     override fun findByUsername(username: String): SignupDomain {
         if (username.isEmpty()) throw SignupUserNotFoundException("username is $username")
         return adapter.findByUsername(username)
+                .filter{ it.state?.deleted == false }
                 .orElseThrow {
                     logger.error("resource not found for username $username")
                     SignupUserNotFoundException("resource not found for username $username")
@@ -98,9 +96,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         }
 
         tryResendCode(signup, notification)
-
         adapter.update(signup)
-
         return signup.state!!
     }
 
@@ -144,35 +140,104 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     }
 
     override fun portraitUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
-        signup.resumeFile = metafileDomain
-        signup.state!!.portraitUploaded = true
-        adapter.update(signup)
-        adapter.portraitUploaded(metafileDomain)
-        return signup.state!!
+        try {
+            signup.resumeFile = metafileDomain
+            signup.state!!.portraitUploaded = true
+            adapter.update(signup)
+            adapter.portraitUploaded(metafileDomain)
+            return signup.state!!
+        } catch (ex: Exception) {
+            logger.error("failed to update the signup with portrait upload of the signup for username ${signup.username}")
+            throw SignupPortraitUploadException("failed to update the signup with portrait upload of the signup for username ${signup.username}")
+        }
     }
 
     override fun resumeUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
-        signup.resumeFile = metafileDomain
-        signup.state!!.resumeUploaded = true
-        adapter.update(signup)
-        adapter.resumeUploaded(metafileDomain)
-        return signup.state!!
+        try {
+            signup.resumeFile = metafileDomain
+            signup.state!!.resumeUploaded = true
+            adapter.update(signup)
+            adapter.resumeUploaded(metafileDomain)
+            return signup.state!!
+        } catch (ex: Exception) {
+            logger.error("failed to update the signup with resume upload of the signup for username ${signup.username}")
+            throw SignupPortraitUploadException("failed to update the signup with resume upload of the signup for username ${signup.username}")
+        }
     }
 
     override fun resumeLinkedinUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
-        signup.resumeFile = metafileDomain
-        signup.state!!.resumeLinkedinUploaded = true
-        adapter.update(signup)
-        adapter.resumeLinkedinUploaded(metafileDomain)
-        return signup.state!!
+        try {
+            signup.resumeFile = metafileDomain
+            signup.state!!.resumeLinkedinUploaded = true
+            adapter.update(signup)
+            adapter.resumeLinkedinUploaded(metafileDomain)
+            return signup.state!!
+        } catch (ex: Exception) {
+            logger.error("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
+            throw SignupPortraitUploadException("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
+        }
     }
 
     override fun updateStatus(signup: SignupDomain, status: Status): SignupStateDomain {
-        signup.status = status
-        signup.state!!.statusUpdated = true
-        adapter.updateStatus(signup)
-        adapter.statusUpdated(signup)
-        return signup.state!!
+        try {
+            signup.status = status
+            signup.state!!.statusUpdated = true
+            adapter.updateStatus(signup)
+            adapter.statusUpdated(signup)
+            adapter.update(signup)
+            return signup.state!!
+        } catch (ex: Exception) {
+            logger.error("failed to update the status of the signup for username ${signup.username}")
+            throw SignupStatusUpdateException("failed to update the status of the signup for username ${signup.username}")
+        }
+    }
+
+    private fun save(signup: SignupDomain) : Boolean {
+        try {
+            signup.state!!.saved = true
+            adapter.save(signup)
+            adapter.update(signup)
+            return true
+        } catch (ex: Exception) {
+            logger.error("failed to persist the signup for username ${signup.username}")
+            throw SignupPersistenceException("failed to persist the signup for username ${signup.username}")
+        }
+    }
+
+    private fun acceptCgu(signup: SignupDomain, cguAcceptedVersion: String) : Boolean {
+        try {
+            signup.state?.cguAccepted = true
+            adapter.cguAccepted(signup.username, cguAcceptedVersion)
+            adapter.update(signup)
+            return true
+        } catch (ex: Exception) {
+            logger.error("failed to accept the cgu for username ${signup.username}")
+            throw SignupCguAcceptException("failed to accept the cgu for username ${signup.username}")
+        }
+    }
+
+    private fun sendEmail(signup: SignupDomain, notification: NotificationDomain): Boolean {
+        try {
+            signup.state?.emailSent = true
+            adapter.sendEmail(notification)
+            adapter.update(signup)
+            return true
+        } catch (ex: Exception) {
+            logger.error("failed to send an email for validation for username ${signup.username}")
+            throw SignupEmailNotificationException("failed to send an email for validation for username ${signup.username}")
+        }
+    }
+
+    private fun sendSms(signup: SignupDomain, notification: NotificationDomain): Boolean {
+        try {
+            signup.state?.emailSent = true
+            adapter.sendSms(notification)
+            adapter.update(signup)
+            return true
+        } catch (ex: Exception) {
+            logger.error("failed to send an sms for activation for username ${signup.username}")
+            throw SignupSmsNotificationException("failed to send an sms for activation for username ${signup.username}")
+        }
     }
 
 }
@@ -182,3 +247,8 @@ class SignupUserNotFoundException(val s: String) : Throwable()
 class SignupUsernameUniquenessException(val s: String) : Throwable()
 class SignupUserRegistrationException(val s: String) : Throwable()
 class SignupResendActivationCodeException(val s: String) : Throwable()
+class SignupEmailNotificationException(val s: String) : Throwable()
+class SignupSmsNotificationException(val s: String) : Throwable()
+class SignupCguAcceptException(val s: String) : Throwable()
+class SignupStatusUpdateException(val s: String) : Throwable()
+class SignupPortraitUploadException(val s: String) : Throwable()

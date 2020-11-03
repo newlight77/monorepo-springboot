@@ -2,17 +2,16 @@ package io.tricefal.core.freelance
 
 import io.tricefal.core.metafile.MetafileDomain
 import org.slf4j.LoggerFactory
+import java.util.function.Consumer
 
 class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
-        adapter.findByUsername(freelance.username).ifPresent {
-            throw UsernameNotFoundException("a freelance with username ${freelance.username} is already taken")
-        }
-
-        return adapter.create(freelance)
+        val result = adapter.findByUsername(freelance.username)
+        return if (result.isPresent) adapter.update(freelance)
+        else adapter.create(freelance)
     }
 
     override fun findByUsername(username: String): FreelanceDomain {

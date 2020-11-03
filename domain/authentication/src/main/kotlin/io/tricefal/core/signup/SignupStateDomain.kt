@@ -6,6 +6,7 @@ class SignupStateDomain
             var saved: Boolean?,
             var registered: Boolean?,
             var cguAccepted: Boolean?,
+            var deleted: Boolean?,
             var emailSent: Boolean?,
             var emailValidated: Boolean? = null,
             var activationCodeSent: Boolean?,
@@ -24,6 +25,7 @@ class SignupStateDomain
             var saved: Boolean? = null,
             var registered: Boolean? = null,
             var cguAccepted: Boolean? = null,
+            var deleted: Boolean? = null,
             var emailSent: Boolean? = null,
             var emailValidated: Boolean? = null,
             var activationCodeSent: Boolean? = null,
@@ -37,6 +39,7 @@ class SignupStateDomain
         fun saved(saved: Boolean?) = apply { this.saved = saved }
         fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun cguAccepted(cguAccepted: Boolean?) = apply { this.cguAccepted = cguAccepted }
+        fun deleted(deleted: Boolean?) = apply { this.deleted = deleted }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
 //        fun emailSent(isEmailSent: () -> Boolean) = apply { this.emailSent = isEmailSent.invoke() }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
@@ -54,6 +57,7 @@ class SignupStateDomain
                 saved,
                 registered,
                 cguAccepted,
+                deleted,
                 emailSent,
                 emailValidated,
                 activationCodeSent,
