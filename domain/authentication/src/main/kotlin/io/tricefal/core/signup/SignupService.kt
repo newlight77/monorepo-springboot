@@ -14,25 +14,13 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
             throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
 
-        trySignup(signup, notification)
-
-        return signup.state!!
-    }
-
-    private fun trySignup(signup: SignupDomain, notification: NotificationDomain) {
-        try {
-            signup.state = SignupStateDomain.Builder(signup.username)
-                    .registered(register(signup))
-                    .saved(save(signup))
-                    .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
-                    .emailSent(sendEmail(signup, notification))
-                    .activationCodeSent(sendSms(signup, notification))
-                    .build()
-        } catch (ex: Exception) {
-            logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
-            logger.error("${ex.stackTrace}")
-            throw SignupUserRegistrationException("a signup with username ${signup.username} has failed. ")
-        }
+        return SignupStateDomain.Builder(signup.username)
+                .registered(register(signup))
+                .saved(save(signup))
+                .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
+                .emailSent(sendEmail(signup, notification))
+                .activationCodeSent(sendSms(signup, notification))
+                .build()
     }
 
     private fun register(signup: SignupDomain): Boolean {
