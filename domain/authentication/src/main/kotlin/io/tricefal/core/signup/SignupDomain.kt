@@ -57,20 +57,21 @@ data class SignupDomain
             this.state = state ?: SignupStateDomain.Builder(username).build()
         }
 
-        fun build() = SignupDomain(username,
-                password,
-                firstname,
-                lastname,
-                phoneNumber,
-                activationCode,
-                activationToken,
-                status,
-                cguAcceptedVersion,
-                signupDate,
-                portraitFile,
-                resumeFile,
-                resumeLinkedinFile,
-                state
+        fun build() = SignupDomain(
+                username = username,
+                password = password,
+                firstname = firstname,
+                lastname = lastname,
+                phoneNumber = phoneNumber,
+                activationCode = activationCode,
+                activationToken = activationToken,
+                status = status,
+                cguAcceptedVersion = cguAcceptedVersion,
+                signupDate = signupDate,
+                portraitFile = portraitFile,
+                resumeFile = resumeFile,
+                resumeLinkedinFile = resumeLinkedinFile,
+                state = state
         )
     }
 }

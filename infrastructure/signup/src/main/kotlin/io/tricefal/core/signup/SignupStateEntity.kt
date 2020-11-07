@@ -55,26 +55,25 @@ class SignupStateEntity(
 
 fun toEntity(domain: SignupStateDomain): SignupStateEntity {
     return SignupStateEntity(
-            null,
-            domain.username,
-            domain.saved,
-            domain.deleted,
-            domain.registered,
-            domain.emailSent,
-            domain.emailValidated,
-            domain.activationCodeSent,
-            domain.activatedByCode,
-            domain.resumeUploaded,
-            domain.statusUpdated,
-            domain.validated,
-            domain.completed
+            id = null,
+            username = domain.username,
+            saved = domain.saved,
+            registered = domain.registered,
+            emailSent = domain.emailSent,
+            emailValidated = domain.emailValidated,
+            activationCodeSent = domain.activationCodeSent,
+            activatedByCode = domain.activatedByCode,
+            resumeUploaded = domain.resumeUploaded,
+            statusUpdated = domain.statusUpdated,
+            validated = domain.validated,
+            completed = domain.completed,
+            deleted = domain.deleted
     )
 }
 
 fun fromEntity(entity: SignupStateEntity): SignupStateDomain {
     return SignupStateDomain.Builder(entity.username)
             .saved(entity.saved)
-            .deleted(entity.deleted)
             .registered(entity.registered)
             .emailSent(entity.emailSent)
             .emailValidated(entity.emailValidated)
@@ -84,6 +83,7 @@ fun fromEntity(entity: SignupStateEntity): SignupStateDomain {
             .statusUpdated(entity.statusUpdated)
             .validated(entity.validated)
             .completed(entity.completed)
+            .deleted(entity.deleted)
             .build()
 
 }

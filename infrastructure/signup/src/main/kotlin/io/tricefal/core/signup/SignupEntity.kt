@@ -49,16 +49,16 @@ data class SignupEntity(
 
 fun toEntity(domain: SignupDomain): SignupEntity {
         return SignupEntity(
-                null,
-                domain.username,
-                domain.firstname,
-                domain.lastname,
-                domain.phoneNumber,
-                domain.activationCode,
-                domain.activationToken,
-                domain.status.toString(),
-                domain.signupDate,
-                domain.state?.let { toEntity(it) })
+                id = null,
+                username = domain.username,
+                firstname = domain.firstname,
+                lastname = domain.lastname,
+                phoneNumber = domain.phoneNumber,
+                activationCode = domain.activationCode,
+                activationToken = domain.activationToken,
+                status = domain.status.toString(),
+                signupDate = domain.signupDate,
+                signupState = domain.state?.let { toEntity(it) })
 }
 
 fun fromEntity(entity: SignupEntity): SignupDomain {

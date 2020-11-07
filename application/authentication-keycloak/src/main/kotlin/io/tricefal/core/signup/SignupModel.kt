@@ -49,16 +49,17 @@ class SignupModel
                 else SignupStateModel.Builder(username).build()
         }
 
-        fun build() = SignupModel(username,
-                password,
-                firstname,
-                lastname,
-                phoneNumber,
-                status,
-                signupDate ?: Instant.now(),
-                cguAcceptedVersion,
-                resumeFile,
-                state
+        fun build() = SignupModel(
+                username = username,
+                password = password,
+                firstname = firstname,
+                lastname = lastname,
+                phoneNumber = phoneNumber,
+                status = status,
+                signupDate = signupDate ?: Instant.now(),
+                cguAcceptedVersion = cguAcceptedVersion,
+                resumeFile = resumeFile,
+                state = state
         )
     }
 }

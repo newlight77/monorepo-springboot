@@ -6,7 +6,6 @@ class SignupStateDomain
             var saved: Boolean?,
             var registered: Boolean?,
             var cguAccepted: Boolean?,
-            var deleted: Boolean?,
             var emailSent: Boolean?,
             var emailValidated: Boolean? = null,
             var activationCodeSent: Boolean?,
@@ -16,7 +15,9 @@ class SignupStateDomain
             var resumeLinkedinUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
             var validated: Boolean? = null,
-            var completed: Boolean? = null) {
+            var completed: Boolean? = null,
+            var deleted: Boolean?
+    ) {
 
 
 
@@ -25,7 +26,6 @@ class SignupStateDomain
             var saved: Boolean? = null,
             var registered: Boolean? = null,
             var cguAccepted: Boolean? = null,
-            var deleted: Boolean? = null,
             var emailSent: Boolean? = null,
             var emailValidated: Boolean? = null,
             var activationCodeSent: Boolean? = null,
@@ -35,11 +35,12 @@ class SignupStateDomain
             var resumeLinkedinUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
             var validated: Boolean? = null,
-            var completed: Boolean? = null) {
+            var completed: Boolean? = null,
+            var deleted: Boolean? = null
+    ) {
         fun saved(saved: Boolean?) = apply { this.saved = saved }
         fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun cguAccepted(cguAccepted: Boolean?) = apply { this.cguAccepted = cguAccepted }
-        fun deleted(deleted: Boolean?) = apply { this.deleted = deleted }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
 //        fun emailSent(isEmailSent: () -> Boolean) = apply { this.emailSent = isEmailSent.invoke() }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
@@ -52,21 +53,23 @@ class SignupStateDomain
         fun statusUpdated(statusUpdated: Boolean?) = apply { this.statusUpdated = statusUpdated }
         fun validated(validated: Boolean?) = apply { this.validated = validated }
         fun completed(completed: Boolean?) = apply { this.completed = completed }
+        fun deleted(deleted: Boolean?) = apply { this.deleted = deleted }
         fun build() = SignupStateDomain(
-                username,
-                saved,
-                registered,
-                cguAccepted,
-                deleted,
-                emailSent,
-                emailValidated,
-                activationCodeSent,
-                activatedByCode,
-                portraitUploaded,
-                resumeUploaded,
-                resumeLinkedinUploaded,
-                statusUpdated,
-                validated,
-                completed)
+                username = username,
+                saved = saved,
+                registered = registered,
+                cguAccepted = cguAccepted,
+                emailSent = emailSent,
+                emailValidated = emailValidated,
+                activationCodeSent = activationCodeSent,
+                activatedByCode = activatedByCode,
+                portraitUploaded = portraitUploaded,
+                resumeUploaded = resumeUploaded,
+                resumeLinkedinUploaded = resumeLinkedinUploaded,
+                statusUpdated = statusUpdated,
+                validated = validated,
+                completed = completed,
+                deleted = deleted
+        )
     }
 }

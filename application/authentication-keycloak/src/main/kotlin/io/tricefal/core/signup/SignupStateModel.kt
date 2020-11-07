@@ -37,17 +37,17 @@ class SignupStateModel(
         fun completed(completed: Boolean?) = apply { this.completed = completed }
 
         fun build() = SignupStateModel(
-                username,
-                saved,
-                registered,
-                emailSent,
-                emailValidated,
-                activationCodeSent,
-                activatedByCode,
-                resumeUploaded,
-                statusUpdated,
-                validated,
-                completed
+                username = username,
+                saved = saved,
+                registered = registered,
+                emailSent = emailSent,
+                emailValidated = emailValidated,
+                activationCodeSent = activationCodeSent,
+                activatedByCode = activatedByCode,
+                resumeUploaded = resumeUploaded,
+                statusUpdated = statusUpdated,
+                validated = validated,
+                completed = completed
         )
     }
 }
