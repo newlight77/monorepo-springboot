@@ -17,7 +17,7 @@ class SignupServiceTest {
     @Mock
     lateinit var adapter: ISignupAdapter
 
-    lateinit var service: ISignupService
+    lateinit var service: SignupService
 
     @BeforeEach
     fun beforeEach() {
@@ -61,7 +61,7 @@ class SignupServiceTest {
         Mockito.verify(adapter).save(signup)
         Assertions.assertTrue(result.registered!!)
         Assertions.assertTrue(result.emailSent!!)
-        Assertions.assertTrue(result.activationCodeSent!!)
+        Assertions.assertTrue(result.smsSent!!)
     }
 
     @Test
@@ -167,5 +167,29 @@ class SignupServiceTest {
     @Test
     fun `should update a signup upon resume linkedin uploaded`() {
 
+    }
+
+    @Test
+    fun `should generate an activation code with 6 digits`() {
+        // Arrange
+
+        // Act
+        val result = service.generateCode()
+
+        // Arrange
+        Assertions.assertEquals(6, result.length)
+    }
+
+    @Test
+    fun `should encode and decode a string`() {
+        // Arrange
+        val code = "123456"
+
+        // Act
+        val encoded = service.encode(code)
+        val decoded = service.decode(encoded)
+
+        // Arrange
+        Assertions.assertEquals("123456", decoded)
     }
 }

@@ -22,7 +22,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
         return freelanceWebHandler.create(freelance)
     }
 
-    @RolesAllowed("ROLE_ac_freelance_w")
+    @RolesAllowed("ROLE_ac_freelance_r")
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     fun get(principal: Principal): FreelanceModel {

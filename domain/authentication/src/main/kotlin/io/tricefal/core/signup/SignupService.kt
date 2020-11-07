@@ -2,7 +2,10 @@ package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.notification.NotificationDomain
+import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
+import java.security.SecureRandom
+import java.util.*
 
 class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
@@ -14,12 +17,16 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
             throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
 
+        val activationCode = generateCode()
+        signup.activationCode = activationCode
+        signup.activationToken = encodeToken(signup.username, activationCode)
+
         return SignupStateDomain.Builder(signup.username)
-                .registered(register(signup))
                 .saved(save(signup))
+                .registered(register(signup))
                 .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
                 .emailSent(sendEmail(signup, notification))
-                .activationCodeSent(sendSms(signup, notification))
+                .smsSent(sendSms(signup, notification))
                 .build()
     }
 
@@ -27,10 +34,15 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
                             notification: NotificationDomain): SignupStateDomain {
         adapter.findByUsername(signup.username).orElseThrow {
             logger.error("a signup with username ${signup.username} is does not exist")
-            throw SignupUsernameUniquenessException("a signup with username ${signup.username} does not exist")
+            throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
         }
 
+        val activationCode = generateCode()
+        signup.activationCode = activationCode
+        signup.activationToken = "${encode(activationCode)}.${encode(signup.username)}"
+
         return SignupStateDomain.Builder(signup.username)
+                .saved(signup.state?.saved)
                 .registered(signup.state?.registered)
                 .emailValidated(signup.state?.emailValidated)
                 .portraitUploaded(signup.state?.portraitUploaded)
@@ -42,8 +54,8 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
                         if (signup.state?.emailValidated == true) true
                         else sendEmail(signup, notification)
                 )
-                .activationCodeSent(
-                        if (signup.state?.activatedByCode == true) true
+                .smsSent(
+                        if (signup.state?.smsValidated == true) true
                         else sendSms(signup, notification)
                 )
                 .build()
@@ -67,7 +79,6 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     override fun findByUsername(username: String): SignupDomain {
         if (username.isEmpty()) throw SignupUserNotFoundException("username is $username")
         return adapter.findByUsername(username)
-                .filter{ it.state?.deleted == false }
                 .orElseThrow {
                     logger.error("resource not found for username $username")
                     SignupUserNotFoundException("resource not found for username $username")
@@ -81,7 +92,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     override fun activate(signup: SignupDomain): SignupStateDomain {
         signup.state?.validated = true
         adapter.update(signup)
-        adapter.signupActivated(signup)
+        assignRoles(signup, statusToReadWriteRole[signup.status])
         return signup.state!!
     }
 
@@ -92,13 +103,29 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     }
 
     override fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain {
-        signup.state?.activatedByCode = signup.activationCode.equals(code)
+        signup.state?.smsValidated = signup.activationCode.equals(code)
         adapter.update(signup)
         return signup.state!!
     }
 
-    override fun verifyByEmail(signup: SignupDomain, code: String): SignupStateDomain {
-        signup.state?.emailValidated = signup.activationCode.equals(code)
+    override fun verifyByCodeFromToken(token: String): SignupStateDomain {
+        // the received token has 3 parts, the third is intentionally ignored as overfilled
+        val values = token.split(".")
+        if (values.size < 3) throw SignupActivationByEmailException("verify email by token : the token is invalid")
+        val activationCode = decode(values[0])
+        val username = decode(values[1])
+
+        val signup = adapter.findByUsername(username).orElseThrow {
+            logger.error("a signup with username $username is does not exist")
+            throw SignupNotFoundException("a signup with username $username does not exist")
+        }
+
+        signup.state?.emailValidated = signup.activationCode.equals(activationCode)
+
+        if (signup.state?.emailValidated == true)
+            logger.info("successfully verified the token by email for user $username")
+        else logger.warn("the token is invalid for activation : token=$token")
+
         adapter.update(signup)
         return signup.state!!
     }
@@ -148,6 +175,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
             signup.state!!.statusUpdated = true
             adapter.updateStatus(signup)
             adapter.statusUpdated(signup)
+            assignRoles(signup, statusToReadRole[status])
             adapter.update(signup)
             return signup.state!!
         } catch (ex: Exception) {
@@ -175,7 +203,6 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         try {
             signup.state!!.saved = true
             adapter.save(signup)
-            adapter.update(signup)
             return true
         } catch (ex: Exception) {
             logger.error("failed to persist the signup for username ${signup.username}")
@@ -209,7 +236,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
     private fun sendSms(signup: SignupDomain, notification: NotificationDomain): Boolean {
         try {
-            signup.state?.emailSent = true
+            signup.state?.smsSent = true
             adapter.sendSms(notification)
             adapter.update(signup)
             return true
@@ -219,15 +246,56 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         }
     }
 
+    private fun assignRoles(signup: SignupDomain, roles: List<AccessRight>?) {
+        try {
+            roles?.forEach { adapter.assignRole(signup.username, it) }
+        } catch (ex: Exception) {
+            logger.error("Failed to assign the role ${statusToReadRole[signup.status]} to user ${signup.username}")
+            throw SignupRoleAssignationException("Failed to assign the role ${statusToReadRole[signup.status]} to user ${signup.username}")
+        }
+    }
+
+    private val statusToReadRole = mapOf(
+            Status.FREELANCE to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_FREELANCE_WRITE),
+            Status.EMPLOYEE to listOf(AccessRight.AC_COLLABORATOR_READ, AccessRight.AC_COLLABORATOR_WRITE),
+            Status.CLIENT to listOf(AccessRight.AC_CLIENT_READ, AccessRight.AC_CLIENT_WRTIE)
+    )
+
+    private val statusToReadWriteRole = mapOf(
+            Status.FREELANCE to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_FREELANCE_WRITE),
+            Status.EMPLOYEE to listOf(AccessRight.AC_COLLABORATOR_READ, AccessRight.AC_COLLABORATOR_WRITE),
+            Status.CLIENT to listOf(AccessRight.AC_CLIENT_READ, AccessRight.AC_CLIENT_WRTIE)
+    )
+
+    fun generateCode(): String {
+        val code = SecureRandom().nextGaussian().toString().takeLast(6)
+        logger.info("an activation code has been generated $code")
+        return code
+    }
+
+    fun encodeToken(username: String, activationCode: String): String {
+        val token = "${encode(activationCode)}.${encode(username)}"
+        logger.info("an activation token has been generated $token")
+        return token
+    }
+
+    fun encode(code: String): String = Base64.getUrlEncoder()
+            .encodeToString(code.toByteArray())
+
+    fun decode(code: String): String = String(Base64.getUrlDecoder().decode(code.toByteArray()))
+
 }
 
+class SignupNotFoundException(val s: String) : Throwable()
 class SignupPersistenceException(val s: String) : Throwable()
 class SignupUserNotFoundException(val s: String) : Throwable()
 class SignupUsernameUniquenessException(val s: String) : Throwable()
 class SignupUserRegistrationException(val s: String) : Throwable()
+class SignupActivationByEmailException(val s: String) : Throwable()
 class SignupResendActivationCodeException(val s: String) : Throwable()
 class SignupEmailNotificationException(val s: String) : Throwable()
 class SignupSmsNotificationException(val s: String) : Throwable()
 class SignupCguAcceptException(val s: String) : Throwable()
 class SignupStatusUpdateException(val s: String) : Throwable()
 class SignupPortraitUploadException(val s: String) : Throwable()
+class SignupRoleAssignationException(val s: String) : Throwable()

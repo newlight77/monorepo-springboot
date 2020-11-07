@@ -253,17 +253,6 @@ class SignupWebHandlerTest {
     }
 
     @Test
-    fun `should generate an activation code with 6 digits`() {
-        // Arrange
-
-        // Act
-        val result = signupWebHandler.generateCode()
-
-        // Arrange
-        Assertions.assertEquals(6, result.length)
-    }
-
-    @Test
     fun `should generate a random string`() {
         // Arrange
 
@@ -272,19 +261,6 @@ class SignupWebHandlerTest {
 
         // Arrange
         Assertions.assertEquals(12, result.length)
-    }
-
-    @Test
-    fun `should encode and decode a string`() {
-        // Arrange
-        val code = "123456"
-
-        // Act
-        val encoded = signupWebHandler.encode(code)
-        val decoded = signupWebHandler.decode(encoded)
-
-        // Arrange
-        Assertions.assertEquals("123456", decoded)
     }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)

@@ -8,8 +8,8 @@ class SignupStateDomain
             var cguAccepted: Boolean?,
             var emailSent: Boolean?,
             var emailValidated: Boolean? = null,
-            var activationCodeSent: Boolean?,
-            var activatedByCode: Boolean? = null,
+            var smsSent: Boolean?,
+            var smsValidated: Boolean? = null,
             var portraitUploaded: Boolean? = null,
             var resumeUploaded: Boolean? = null,
             var resumeLinkedinUploaded: Boolean? = null,
@@ -28,8 +28,8 @@ class SignupStateDomain
             var cguAccepted: Boolean? = null,
             var emailSent: Boolean? = null,
             var emailValidated: Boolean? = null,
-            var activationCodeSent: Boolean? = null,
-            var activatedByCode: Boolean? = null,
+            var smsSent: Boolean? = null,
+            var smsValidated: Boolean? = null,
             var portraitUploaded: Boolean? = null,
             var resumeUploaded: Boolean? = null,
             var resumeLinkedinUploaded: Boolean? = null,
@@ -44,9 +44,9 @@ class SignupStateDomain
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
 //        fun emailSent(isEmailSent: () -> Boolean) = apply { this.emailSent = isEmailSent.invoke() }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
-        fun activationCodeSent(activationCodeSent: Boolean?) = apply { this.activationCodeSent = activationCodeSent }
+        fun smsSent(smsSent: Boolean?) = apply { this.smsSent = smsSent }
 //        fun activationCodeSent(isActivationCodeSent: () -> Boolean) = apply { this.activationCodeSent = isActivationCodeSent.invoke() }
-        fun activatedByCode(activatedByCode: Boolean?) = apply { this.activatedByCode = activatedByCode }
+        fun smsValidated(smsValidated: Boolean?) = apply { this.smsValidated = smsValidated }
         fun portraitUploaded(portraitUploaded: Boolean?) = apply { this.portraitUploaded = portraitUploaded }
         fun resumeUploaded(resumeUploaded: Boolean?) = apply { this.resumeUploaded = resumeUploaded }
         fun resumeLinkedinUploaded(resumeLinkedinUploaded: Boolean?) = apply { this.resumeLinkedinUploaded = resumeLinkedinUploaded }
@@ -61,8 +61,8 @@ class SignupStateDomain
                 cguAccepted = cguAccepted,
                 emailSent = emailSent,
                 emailValidated = emailValidated,
-                activationCodeSent = activationCodeSent,
-                activatedByCode = activatedByCode,
+                smsSent = smsSent,
+                smsValidated = smsValidated,
                 portraitUploaded = portraitUploaded,
                 resumeUploaded = resumeUploaded,
                 resumeLinkedinUploaded = resumeLinkedinUploaded,

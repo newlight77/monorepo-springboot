@@ -45,8 +45,7 @@ class SignupModel
         fun cguAcceptedVersion(cguAcceptedVersion: String?) = apply { this.cguAcceptedVersion = cguAcceptedVersion }
         fun resumeFile(resumeFile: MetafileModel?) = apply { this.resumeFile = resumeFile }
         fun state(state: SignupStateModel?) = apply {
-            this.state = if (this.state != null) state
-                else SignupStateModel.Builder(username).build()
+            this.state = state ?: SignupStateModel.Builder(username).build()
         }
 
         fun build() = SignupModel(

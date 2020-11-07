@@ -13,7 +13,6 @@ import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.lang.Exception
-import java.security.SecureRandom
 import java.util.*
 
 
@@ -34,12 +33,7 @@ class SignupWebHandler(val signupService: ISignupService,
     val locale: Locale = LocaleContextHolder.getLocale()
 
     fun signup(signup: SignupModel): SignupStateModel {
-        val activationCode = generateCode()
-        logger.info("an activation code has been generated $activationCode")
         val domain = fromModel(signup)
-        domain.activationCode = activationCode
-        domain.activationToken = "${encode(activationCode)}.${encode(signup.username)}"
-        logger.info("an activation token has been generated ${domain.activationToken}")
         val result = try {
                 signupService.signup(domain, notification(domain))
             } catch (ex: Exception) {
@@ -97,13 +91,6 @@ class SignupWebHandler(val signupService: ISignupService,
     fun resendCode(username: String): SignupStateModel {
         val domain = signupService.findByUsername(username)
 
-        val activationCode = generateCode()
-        logger.info("an activation code has been generated $activationCode")
-        domain.activationCode = activationCode
-
-        domain.activationToken = "${encode(activationCode)}.${encode(domain.username)}"
-        logger.info("an activation token has been generated ${domain.activationToken}")
-
         val result = try {
             signupService.resendCode(domain, notification(domain))
         } catch (ex: Exception) {
@@ -134,21 +121,13 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun verifyByEmailFromToken(token: String): SignupStateModel {
-        // the received token has 3 parts, the third is intentionally ignored as overfilled
-        val values = token.split(".")
-        if (values.size < 3) throw SignupActivationException("verify email by token : the token is invalid")
-        val activationCode = decode(values[0])
-        val username = decode(values[1])
-
-        val domain = signupService.findByUsername(username)
-
         val model = try {
-            this.signupService.verifyByEmail(domain, activationCode)
+            this.signupService.verifyByCodeFromToken(token)
         } catch (ex: Exception) {
-            logger.error("Failed to verify by email from the token $token for the signup of username $username")
-            throw SignupActivationException("Failed to verify by email from the token $token for the signup of username $username")
+            logger.error("Failed to verify by email from the token $token")
+            throw SignupActivationException("Failed to verify by email from the token $token")
         }
-        logger.info("successfully verified the token by email for user $username")
+        logger.info("successfully verified the token by email")
         return toModel(model)
     }
 
@@ -235,15 +214,6 @@ class SignupWebHandler(val signupService: ISignupService,
     private fun emailValidationLink(signup: SignupDomain): String {
         return backendBaseUrl + "/signup/email/verify?token=" + signup.activationToken + "." + randomString()
     }
-
-    fun generateCode(): String {
-        return SecureRandom().nextGaussian().toString().takeLast(6)
-    }
-
-    fun encode(code: String): String = Base64.getUrlEncoder()
-            .encodeToString(code.toByteArray())
-
-    fun decode(code: String): String = String(Base64.getUrlDecoder().decode(code.toByteArray()))
 
     fun randomString(): String {
         val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')

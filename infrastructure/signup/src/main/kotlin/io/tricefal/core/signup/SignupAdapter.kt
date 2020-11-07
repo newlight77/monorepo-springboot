@@ -82,7 +82,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
             registrationService.delete(username)
         } catch (ex: Exception) {
             logger.error("failed to delete user on IAM server for username $username")
-            throw SignupNotFoundException("failed to delete user from IAM server for username $username")
+            throw SignupIamAccountDeletionException("failed to delete user from IAM server for username $username")
         }
     }
 
@@ -133,7 +133,6 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun updateStatus(signup: SignupDomain): SignupDomain {
-        logger.info("User status updated to ${signup.status} and role ${statusToRole[signup.status]} has been assigned to user ${signup.username}")
         return update(signup)
     }
 
@@ -157,20 +156,14 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         this.profileEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
     }
 
-    override fun signupActivated(signup: SignupDomain) {
+    override fun assignRole(username: String, accessRight: AccessRight) {
         try {
-            statusToRole[signup.status]?.forEach { keycloakRegisterService.addRole(signup.username, it) }
+            keycloakRegisterService.addRole(username, accessRight)
         } catch (ex: Exception) {
-            logger.error("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
-            throw SignupRoleAssignationException("Failed to assign the role ${statusToRole[signup.status]} to user ${signup.username}")
+            logger.error("Failed to assign the role $accessRight to user $username")
+            throw SignupRoleAssignationException("Failed to assign the role $accessRight to user $username")
         }
     }
-
-    val statusToRole = mapOf(
-            Status.FREELANCE to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_FREELANCE_WRITE),
-            Status.EMPLOYEE to listOf(AccessRight.AC_COLLABORATOR_READ, AccessRight.AC_COLLABORATOR_WRITE),
-            Status.CLIENT to listOf(AccessRight.AC_CLIENT_READ, AccessRight.AC_CLIENT_WRTIE)
-    )
 
     class SignupUsernameUniquenessException(private val msg: String) : Throwable(msg) {}
     class SignupNotFoundException(private val msg: String) : Throwable(msg) {}
@@ -178,6 +171,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     class SignupSmsNotificationException(private val msg: String) : Throwable(msg) {}
     class SignupRegistrationException(private val msg: String) : Throwable(msg) {}
     class SignupRoleAssignationException(private val msg: String) : Throwable(msg) {}
+    class SignupIamAccountDeletionException(private val msg: String) : Throwable(msg) {}
 }
 
 

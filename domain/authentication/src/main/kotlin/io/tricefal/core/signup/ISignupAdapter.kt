@@ -2,6 +2,7 @@ package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.notification.NotificationDomain
+import io.tricefal.core.right.AccessRight
 import java.util.*
 
 interface ISignupAdapter {
@@ -23,5 +24,6 @@ interface ISignupAdapter {
     fun portraitUploaded(fileDomain: MetafileDomain)
     fun resumeUploaded(fileDomain: MetafileDomain)
     fun resumeLinkedinUploaded(fileDomain: MetafileDomain)
-    fun signupActivated(signup: SignupDomain)
+
+    fun assignRole(username: String, accessRight: AccessRight)
 }

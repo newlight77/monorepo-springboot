@@ -19,22 +19,22 @@ class SignupStateEntity(
             var username: String,
 
             @Column(name = "saved")
-            val saved: Boolean?,
+            val saved: Boolean? = null,
 
             @Column(name = "registered")
-            val registered: Boolean?,
+            val registered: Boolean? = null,
 
             @Column(name = "email_sent")
-            val emailSent: Boolean?,
+            val emailSent: Boolean? = null,
 
             @Column(name = "email_validated")
             var emailValidated: Boolean? = null,
 
-            @Column(name = "activation_code_Sent")
-            val activationCodeSent: Boolean?,
+            @Column(name = "sms_sent")
+            val smsSent: Boolean? = null,
 
-            @Column(name = "activated_by_Code")
-            var activatedByCode: Boolean? = null,
+            @Column(name = "sms_validated")
+            var smsValidated: Boolean? = null,
 
             @Column(name = "resume_uploaded")
             var resumeUploaded: Boolean? = null,
@@ -49,7 +49,7 @@ class SignupStateEntity(
             var completed: Boolean? = null,
 
             @Column(name = "deleted")
-            val deleted: Boolean?
+            val deleted: Boolean? = null
 )
 
 
@@ -61,8 +61,8 @@ fun toEntity(domain: SignupStateDomain): SignupStateEntity {
             registered = domain.registered,
             emailSent = domain.emailSent,
             emailValidated = domain.emailValidated,
-            activationCodeSent = domain.activationCodeSent,
-            activatedByCode = domain.activatedByCode,
+            smsSent = domain.smsSent,
+            smsValidated = domain.smsValidated,
             resumeUploaded = domain.resumeUploaded,
             statusUpdated = domain.statusUpdated,
             validated = domain.validated,
@@ -77,8 +77,8 @@ fun fromEntity(entity: SignupStateEntity): SignupStateDomain {
             .registered(entity.registered)
             .emailSent(entity.emailSent)
             .emailValidated(entity.emailValidated)
-            .activationCodeSent(entity.activationCodeSent)
-            .activatedByCode(entity.activatedByCode)
+            .smsSent(entity.smsSent)
+            .smsValidated(entity.smsValidated)
             .resumeUploaded(entity.resumeUploaded)
             .statusUpdated(entity.statusUpdated)
             .validated(entity.validated)

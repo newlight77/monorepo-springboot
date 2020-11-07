@@ -22,7 +22,7 @@ class MissionWishApi(val missionWishWebHandler: MissionWishWebHandler) {
         return missionWishWebHandler.create(missionWish)
     }
 
-    @RolesAllowed("ROLE_ac_freelance_w")
+    @RolesAllowed("ROLE_ac_freelance_r")
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     fun get(principal: Principal): MissionWishModel {
