@@ -30,11 +30,12 @@ class ProfileModel
         fun resumeFile(resumeFile: MetafileModel?) = apply { this.resumeFile = resumeFile }
         fun resumeLinkedinFile(resumeLinkedinFile: MetafileModel?) = apply { this.resumeLinkedinFile = resumeLinkedinFile }
 
-        fun build() = ProfileModel(username,
-                lastDate ?: Instant.now(),
-                portraitFile,
-                resumeFile,
-                resumeLinkedinFile
+        fun build() = ProfileModel(
+                username = username,
+                lastDate = lastDate ?: Instant.now(),
+                portraitFile = portraitFile,
+                resumeFile = resumeFile,
+                resumeLinkedinFile = resumeLinkedinFile
         )
     }
 }

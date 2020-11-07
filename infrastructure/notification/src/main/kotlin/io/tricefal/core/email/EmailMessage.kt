@@ -32,7 +32,15 @@ class EmailMessage(var from: String,
         fun emailTemplate(emailTemplate: EmailTemplate) =  apply { this.emailTemplate = emailTemplate }
         fun model(model: Map<String, String>) =  apply { this.model = model }
 
-        fun build(): EmailMessage { return EmailMessage(from, to, subject, content, attachment, emailTemplate, model)}
+        fun build(): EmailMessage { return EmailMessage(
+                from = from,
+                to = to,
+                subject = subject,
+                content = content,
+                attachment = attachment,
+                emailTemplate = emailTemplate,
+                model = model
+        )}
     }
 
 }

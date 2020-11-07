@@ -32,6 +32,16 @@ private constructor(
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
         fun emailGreeting(emailGreeting: String?) = apply { this.emailGreeting = emailGreeting }
 
-        fun build() = NotificationDomain(username, smsFrom, smsTo, smsContent, emailFrom, emailTo, emailSubject, emailContent, emailGreeting)
+        fun build() = NotificationDomain(
+                username = username,
+                smsFrom = smsFrom,
+                smsTo = smsTo,
+                smsContent = smsContent,
+                emailFrom = emailFrom,
+                emailTo = emailTo,
+                emailSubject = emailSubject,
+                emailContent = emailContent,
+                emailGreeting = emailGreeting
+        )
     }
 }

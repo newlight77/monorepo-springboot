@@ -23,11 +23,12 @@ data class ProfileDomain(
         fun resumeFilename(resumeFilename: String?) = apply { this.resumeFilename = resumeFilename }
         fun resumeLinkedinFilename(resumeLinkedinFilename: String?) = apply { this.resumeLinkedinFilename = resumeLinkedinFilename }
 
-        fun build() = ProfileDomain(username,
-                lastDate,
-                portraitFilename,
-                resumeFilename,
-                resumeLinkedinFilename
+        fun build() = ProfileDomain(
+                username = username,
+                lastDate = lastDate,
+                portraitFilename = portraitFilename,
+                resumeFilename = resumeFilename,
+                resumeLinkedinFilename = resumeLinkedinFilename
         )
     }
 }

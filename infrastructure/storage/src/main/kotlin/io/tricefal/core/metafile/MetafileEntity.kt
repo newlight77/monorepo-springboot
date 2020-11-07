@@ -31,23 +31,23 @@ data class MetafileEntity(
 
 fun toEntity(domain: MetafileDomain): MetafileEntity {
         return MetafileEntity(
-                0L,
-                domain.username,
-                domain.filename,
-                domain.representation.toString(),
-                domain.contentType,
-                domain.size,
-                domain.creationDate
+                id = 0L,
+                username = domain.username,
+                filename = domain.filename,
+                representation = domain.representation.toString(),
+                contentType = domain.contentType,
+                size = domain.size,
+                creationDate = domain.creationDate
         )
 }
 
 fun fromEntity(entity: MetafileEntity): MetafileDomain {
         return MetafileDomain(
-                entity.username,
-                entity.filename,
-                Representation.valueOf(entity.representation),
-                entity.contentType,
-                entity.size,
-                entity.creationDate
+                username = entity.username,
+                filename =  entity.filename,
+                representation = Representation.valueOf(entity.representation),
+                contentType = entity.contentType,
+                size = entity.size,
+                creationDate = entity.creationDate
         )
 }

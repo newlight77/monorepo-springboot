@@ -15,9 +15,10 @@ data class CguDomain(
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
         fun acceptedCguVersion(acceptedCguVersion: String?) = apply { this.acceptedCguVersion = acceptedCguVersion }
 
-        fun build() = CguDomain(username,
-                lastDate,
-                acceptedCguVersion
+        fun build() = CguDomain(
+                username =  username,
+                lastDate = lastDate,
+                acceptedCguVersion = acceptedCguVersion
         )
     }
 }

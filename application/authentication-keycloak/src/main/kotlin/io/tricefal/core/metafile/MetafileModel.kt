@@ -34,23 +34,23 @@ class MetafileModel(val username: String,
 
 fun toModel(domain: MetafileDomain): MetafileModel {
     return MetafileModel(
-            domain.username,
-            domain.filename,
-            domain.representation,
-            domain.contentType,
-            domain.size,
-            domain.creationDate
+            username = domain.username,
+            filename = domain.filename,
+            representation = domain.representation,
+            contentType = domain.contentType,
+            size = domain.size,
+            creationDate = domain.creationDate
     )
 }
 
 fun fromModel(model: MetafileModel): MetafileDomain {
     return MetafileDomain(
-            model.username,
-            model.filename,
-            model.representation,
-            model.contentType,
-            model.size,
-            model.creationDate
+            username = model.username,
+            filename = model.filename,
+            representation = model.representation,
+            contentType = model.contentType,
+            size = model.size,
+            creationDate = model.creationDate
     )
 }
 

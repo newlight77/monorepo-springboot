@@ -27,19 +27,19 @@ data class BankInfoEntity(
 
 fun toEntity(domain: BankInfoDomain): BankInfoEntity {
         return BankInfoEntity(
-                null,
-                domain.iban,
-                domain.owner,
-                domain.bic,
-                domain.address?.let { toEntity(it) }
+                id = null,
+                iban = domain.iban,
+                owner = domain.owner,
+                bic = domain.bic,
+                address =  domain.address?.let { toEntity(it) }
         )
 }
 
 fun fromEntity(entity: BankInfoEntity) : BankInfoDomain{
         return BankInfoDomain(
-                entity.iban,
-                entity.owner,
-                entity.bic,
-                entity.address?.let { fromEntity(it) }
+                iban = entity.iban,
+                owner = entity.owner,
+                bic = entity.bic,
+                address = entity.address?.let { fromEntity(it) }
         )
 }

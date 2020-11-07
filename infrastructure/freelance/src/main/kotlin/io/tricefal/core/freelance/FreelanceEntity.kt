@@ -47,13 +47,13 @@ data class FreelanceEntity (
 
 fun toEntity(domain: FreelanceDomain): FreelanceEntity {
         return FreelanceEntity(
-                null,
-                domain.username,
-                domain.contact?.let { toEntity(it) },
-                domain.company?.let { toEntity(it) },
-                domain.privacyDetail?.let { toEntity(it) },
-                domain.status?.toString(),
-                domain.state?.let { toEntity(it) }
+                id = null,
+                username = domain.username,
+                contact = domain.contact?.let { toEntity(it) },
+                company = domain.company?.let { toEntity(it) },
+                privacyDetail = domain.privacyDetail?.let { toEntity(it) },
+                status = domain.status?.toString(),
+                state = domain.state?.let { toEntity(it) }
         )
 }
 

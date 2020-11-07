@@ -17,10 +17,10 @@ data class BankInfoDomain(
         fun address(address: AddressDomain?) = apply { this.address = address }
 
         fun build() = BankInfoDomain(
-                iban,
-                owner,
-                bic,
-                address
+                iban = iban,
+                owner = owner,
+                bic = bic,
+                address = address
         )
     }
 }

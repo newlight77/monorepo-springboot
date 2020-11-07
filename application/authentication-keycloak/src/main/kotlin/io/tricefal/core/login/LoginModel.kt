@@ -12,24 +12,24 @@ data class LoginModel(val username: String,
 
 fun toModel(domain: LoginDomain): LoginModel {
     return LoginModel(
-            domain.username,
-            domain.loginDate,
-            domain.ipAddress,
-            domain.city,
-            domain.region,
-            domain.device,
-            domain.success
+            username = domain.username,
+            loginDate = domain.loginDate,
+            ipAddress = domain.ipAddress,
+            city = domain.city,
+            region = domain.region,
+            device = domain.device,
+            success = domain.success
     )
 }
 
 fun fromModel(model: LoginModel): LoginDomain {
     return LoginDomain(
-            model.username,
-            model.loginDate,
-            model.ipAddress,
-            model.city,
-            model.region,
-            model.device,
-            model.success
+            username = model.username,
+            loginDate = model.loginDate,
+            ipAddress = model.ipAddress,
+            city = model.city,
+            region = model.region,
+            device = model.device,
+            success = model.success
     )
 }

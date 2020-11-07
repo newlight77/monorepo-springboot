@@ -49,20 +49,22 @@ class CompanyDomain(
         fun fiscalAddress(fiscalAddress: AddressDomain?) = apply { this.fiscalAddress = fiscalAddress }
 
         fun build() = CompanyDomain(
-                raisonSocial,
-                nomCommercial,
-                formeJuridique,
-                capital,
-                rcs,
-                siret,
-                numDuns,
-                numTva,
-                codeNaf,
-                appartenanceGroupe,
-                typeEntreprise,
-                adminContact,
-                bankInfo,
-                fiscalAddress
+                raisonSocial = raisonSocial,
+                nomCommercial = nomCommercial,
+                formeJuridique = formeJuridique,
+                capital = capital,
+
+                rcs = rcs,
+                siret = siret,
+                numDuns = numDuns,
+                numTva = numTva,
+                codeNaf = codeNaf,
+                appartenanceGroupe = appartenanceGroupe,
+                typeEntreprise = typeEntreprise,
+
+                adminContact = adminContact,
+                bankInfo = bankInfo,
+                fiscalAddress = fiscalAddress
         )
     }
 }

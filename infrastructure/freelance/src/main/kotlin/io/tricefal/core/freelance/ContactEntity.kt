@@ -44,28 +44,28 @@ data class ContactEntity(
 )
 
 fun toEntity(domain: ContactDomain) = ContactEntity(
-        null,
-        domain.email,
-        domain.lastName,
-        domain.firstName,
-        domain.langKey,
-        domain.phone,
-        domain.landline,
-        domain.fax,
-        domain.email2,
-        domain.address?.let { toEntity(it) }
+        id = null,
+        email = domain.email,
+        lastName = domain.lastName,
+        firstName = domain.firstName,
+        langKey = domain.langKey,
+        phone = domain.phone,
+        landline = domain.landline,
+        fax = domain.fax,
+        email2 = domain.email2,
+        address = domain.address?.let { toEntity(it) }
 )
 
 fun fromEntity(entity: ContactEntity): ContactDomain {
         return ContactDomain(
-                entity.email,
-                entity.lastName,
-                entity.firstName,
-                entity.langKey,
-                entity.phone,
-                entity.landline,
-                entity.fax,
-                entity.email2,
-                entity.address?.let { fromEntity(it) }
+                email = entity.email,
+                lastName = entity.lastName,
+                firstName = entity.firstName,
+                langKey =  entity.langKey,
+                phone = entity.phone,
+                landline = entity.landline,
+                fax = entity.fax,
+                email2 = entity.email2,
+                address = entity.address?.let { fromEntity(it) }
         )
 }

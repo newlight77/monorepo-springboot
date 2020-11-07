@@ -38,20 +38,20 @@ data class ProfileEntity(
 fun toEntity(domain: ProfileDomain): ProfileEntity {
         return ProfileEntity(
                 null,
-                domain.username,
-                domain.lastDate,
-                domain.portraitFilename,
-                domain.resumeFilename,
-                domain.resumeLinkedinFilename
+                username = domain.username,
+                lastDate = domain.lastDate,
+                portrait = domain.portraitFilename,
+                resume = domain.resumeFilename,
+                resumeLinkedin = domain.resumeLinkedinFilename
         )
 }
 
 fun fromEntity(entity: ProfileEntity): ProfileDomain {
         return ProfileDomain(
-                entity.username,
-                entity.lastDate,
-                entity.portrait,
-                entity.resume,
-                entity.resumeLinkedin
+                username = entity.username,
+                lastDate = entity.lastDate,
+                portraitFilename = entity.portrait,
+                resumeFilename = entity.resume,
+                resumeLinkedinFilename = entity.resumeLinkedin
         )
 }

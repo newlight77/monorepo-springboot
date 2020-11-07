@@ -31,40 +31,40 @@ data class PrivacyDetailModel(
         fun information(information: String?) = apply { this.information = information }
 
         fun build() = PrivacyDetailModel(
-                username,
-                birthDate!!,
-                birthCity!!,
-                birthCountry!!,
-                citizenship!!,
-                socialSecurityNumber!!,
-                nationalIdentityNumber!!,
-                information!!
+                username = username,
+                birthDate = birthDate,
+                birthCity = birthCity,
+                birthCountry = birthCountry,
+                citizenship = citizenship,
+                socialSecurityNumber = socialSecurityNumber,
+                nationalIdentityNumber = nationalIdentityNumber,
+                information = information
         )
     }
 }
 
 fun toModel(domain: PrivacyDetailDomain) : PrivacyDetailModel {
     return PrivacyDetailModel(
-            domain.username,
-            domain.birthDate,
-            domain.birthCity,
-            domain.birthCountry,
-            domain.citizenship,
-            domain.socialSecurityNumber,
-            domain.nationalIdentityNumber,
-            domain.information
+            username = domain.username,
+            birthDate = domain.birthDate,
+            birthCity = domain.birthCity,
+            birthCountry = domain.birthCountry,
+            citizenship = domain.citizenship,
+            socialSecurityNumber = domain.socialSecurityNumber,
+            nationalIdentityNumber = domain.nationalIdentityNumber,
+            information = domain.information
     )
 }
 
 fun fromModel(model: PrivacyDetailModel): PrivacyDetailDomain {
     return PrivacyDetailDomain(
-            model.username,
-            model.birthDate,
-            model.birthCity,
-            model.birthCountry,
-            model.citizenship,
-            model.socialSecurityNumber,
-            model.nationalIdentityNumber,
-            model.information
+            username = model.username,
+            birthDate = model.birthDate,
+            birthCity = model.birthCity,
+            birthCountry = model.birthCountry,
+            citizenship = model.citizenship,
+            socialSecurityNumber = model.socialSecurityNumber,
+            nationalIdentityNumber = model.nationalIdentityNumber,
+            information = model.information
     )
 }

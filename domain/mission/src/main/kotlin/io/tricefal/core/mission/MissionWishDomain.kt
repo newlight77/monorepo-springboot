@@ -35,14 +35,14 @@ data class MissionWishDomain
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = MissionWishDomain(
-                username,
-                summary,
-                technologies,
-                domains,
-                clients,
-                dailyFee,
-                location,
-                lastDate
+                username = username,
+                summary = summary,
+                technologies = technologies,
+                domains = domains,
+                clients = clients,
+                dailyFee = dailyFee,
+                location = location,
+                lastDate = lastDate
         )
     }
 }

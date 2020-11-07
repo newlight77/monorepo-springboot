@@ -42,25 +42,25 @@ data class LoginEntity(
 
 fun toEntity(domain: LoginDomain): LoginEntity {
         return LoginEntity(
-                null,
-                domain.username,
-                domain.loginDate,
-                domain.ipAddress,
-                domain.city,
-                domain.region,
-                domain.device,
-                domain.success
+                id = null,
+                username = domain.username,
+                loginDate = domain.loginDate,
+                ipAddress = domain.ipAddress,
+                city = domain.city,
+                region = domain.region,
+                device = domain.device,
+                success = domain.success
         )
 }
 
 fun fromEntity(entity: LoginEntity): LoginDomain {
         return LoginDomain(
-                entity.username,
-                entity.loginDate,
-                entity.ipAddress,
-                entity.city,
-                entity.region,
-                entity.device,
-                entity.success
+                username = entity.username,
+                loginDate = entity.loginDate,
+                ipAddress = entity.ipAddress,
+                city = entity.city,
+                region = entity.region,
+                device = entity.device,
+                success = entity.success
         )
 }

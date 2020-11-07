@@ -20,9 +20,10 @@ class CguModel
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
         fun cguVersion(cguVersion: String?) = apply { this.cguVersion = cguVersion }
 
-        fun build() = CguModel(username,
-                lastDate ?: Instant.now(),
-                cguVersion
+        fun build() = CguModel(
+                username = username,
+                lastDate = lastDate ?: Instant.now(),
+                cguVersion = cguVersion
 
         )
     }

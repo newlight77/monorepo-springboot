@@ -38,26 +38,26 @@ data class PrivacyDetailEntity(
 )
 
 fun toEntity(domain: PrivacyDetailDomain) = PrivacyDetailEntity(
-        null,
-        domain.username,
-        domain.birthDate,
-        domain.birthCity,
-        domain.birthCountry,
-        domain.citizenship,
-        domain.socialSecurityNumber,
-        domain.nationalIdentityNumber,
-        domain.information
+        id = null,
+        username = domain.username,
+        birthDate =  domain.birthDate,
+        birthCity = domain.birthCity,
+        birthCountry =  domain.birthCountry,
+        citizenship = domain.citizenship,
+        socialSecurityNumber = domain.socialSecurityNumber,
+        nationalIdentityNumber = domain.nationalIdentityNumber,
+        information = domain.information
 )
 
 fun fromEntity(entity: PrivacyDetailEntity) : PrivacyDetailDomain {
         return PrivacyDetailDomain(
-                entity.username,
-                entity.birthDate,
-                entity.birthCity,
-                entity.birthCountry,
-                entity.citizenship,
-                entity.socialSecurityNumber,
-                entity.nationalIdentityNumber,
-                entity.information
+                username = entity.username,
+                birthDate = entity.birthDate,
+                birthCity = entity.birthCity,
+                birthCountry =  entity.birthCountry,
+                citizenship = entity.citizenship,
+                socialSecurityNumber = entity.socialSecurityNumber,
+                nationalIdentityNumber = entity.nationalIdentityNumber,
+                information = entity.information
         )
 }

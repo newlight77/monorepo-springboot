@@ -32,15 +32,15 @@ class ContactDomain(
         fun address(address: AddressDomain?) = apply { this.address = address }
 
         fun build() = ContactDomain(
-                email,
-                lastName,
-                firstName,
-                langKey,
-                phone,
-                landline,
-                fax,
-                email2,
-                address
+                email = email,
+                lastName = lastName,
+                firstName = firstName,
+                langKey = langKey,
+                phone = phone,
+                landline = landline,
+                fax = fax,
+                email2 = email2,
+                address = address
         )
     }
 }

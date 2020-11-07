@@ -17,28 +17,28 @@ data class BankInfoModel(
         fun address(address: AddressModel?) = apply { this.address = address }
 
         fun build() = BankInfoModel(
-                iban,
-                owner,
-                bic,
-                address
+                iban = iban,
+                owner = owner,
+                bic = bic,
+                address = address
         )
     }
 }
 
 fun toModel(domain: BankInfoDomain): BankInfoModel {
     return BankInfoModel(
-            domain.iban,
-            domain.owner,
-            domain.bic,
-            domain.address?.let { toModel(it) }
+            iban = domain.iban,
+            owner = domain.owner,
+            bic = domain.bic,
+            address = domain.address?.let { toModel(it) }
     )
 }
 
 fun fromModel(model: BankInfoModel) : BankInfoDomain {
     return BankInfoDomain(
-            model.iban,
-            model.owner,
-            model.bic,
-            model.address?.let { fromModel(it) }
+            iban = model.iban,
+            owner = model.owner,
+            bic = model.bic,
+            address = model.address?.let { fromModel(it) }
     )
 }

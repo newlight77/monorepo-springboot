@@ -21,42 +21,42 @@ data class ContactModel(
     fun address(address: AddressModel?) = apply { this.address = address }
 
     fun build() = ContactModel(
-            email,
-            lastName,
-            firstName,
-            langKey,
-            phone,
-            landline,
-            fax,
-            email2,
-            address
+            email = email,
+            lastName = lastName,
+            firstName = firstName,
+            langKey = langKey,
+            phone = phone,
+            landline = landline,
+            fax = fax,
+            email2 = email2,
+            address = address
     )
 }
 
 fun toModel(domain: ContactDomain): ContactModel {
     return ContactModel(
-            domain.email,
-            domain.lastName,
-            domain.firstName,
-            domain.langKey,
-            domain.phone,
-            domain.landline,
-            domain.fax,
-            domain.email2,
-            domain.address?.let { toModel(it) }
+            email = domain.email,
+            lastName = domain.lastName,
+            firstName = domain.firstName,
+            langKey = domain.langKey,
+            phone = domain.phone,
+            landline = domain.landline,
+            fax = domain.fax,
+            email2 = domain.email2,
+            address = domain.address?.let { toModel(it) }
     )
 }
 
 fun fromModel(model: ContactModel): ContactDomain {
     return ContactDomain(
-            model.email,
-            model.lastName,
-            model.firstName,
-            model.langKey,
-            model.phone,
-            model.landline,
-            model.fax,
-            model.email2,
-            model.address?.let { fromModel(it) }
+            email = model.email,
+            lastName = model.lastName,
+            firstName = model.firstName,
+            langKey = model.langKey,
+            phone = model.phone,
+            landline = model.landline,
+            fax = model.fax,
+            email2 = model.email2,
+            address = model.address?.let { fromModel(it) }
     )
 }

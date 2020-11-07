@@ -58,39 +58,39 @@ data class CompanyEntity(
 
 fun toEntity(domain: CompanyDomain): CompanyEntity {
         return CompanyEntity(
-                null,
-                domain.raisonSocial,
-                domain.nomCommercial,
-                domain.formeJuridique,
-                domain.capital,
-                domain.rcs,
-                domain.siret,
-                domain.numDuns,
-                domain.numTva,
-                domain.codeNaf,
-                domain.appartenanceGroupe,
-                domain.typeEntreprise,
-                domain.adminContact?.let { toEntity(it) },
-                domain.bankInfo?.let { toEntity(it) },
-                domain.fiscalAddress?.let { toEntity(it) }
+                id = null,
+                raisonSocial = domain.raisonSocial,
+                nomCommercial = domain.nomCommercial,
+                formeJuridique = domain.formeJuridique,
+                capital = domain.capital,
+                rcs = domain.rcs,
+                siret = domain.siret,
+                numDuns =  domain.numDuns,
+                numTva = domain.numTva,
+                codeNaf = domain.codeNaf,
+                appartenanceGroupe = domain.appartenanceGroupe,
+                typeEntreprise =  domain.typeEntreprise,
+                adminContact = domain.adminContact?.let { toEntity(it) },
+                bankInfo = domain.bankInfo?.let { toEntity(it) },
+                fiscalAddress = domain.fiscalAddress?.let { toEntity(it) }
         )
 }
 
 fun fromEntity(entity: CompanyEntity): CompanyDomain {
         return CompanyDomain(
-                entity.raisonSocial,
-                entity.nomCommercial,
-                entity.formeJuridique,
-                entity.capital,
-                entity.rcs,
-                entity.siret,
-                entity.numDuns,
-                entity.numTva,
-                entity.codeNaf,
-                entity.appartenanceGroupe,
-                entity.typeEntreprise,
-                entity.adminContact?.let { fromEntity(it) },
-                entity.bankInfo?.let { fromEntity(it) },
-                entity.fiscalAddress?.let { fromEntity(it) }
+                raisonSocial = entity.raisonSocial,
+                nomCommercial = entity.nomCommercial,
+                formeJuridique = entity.formeJuridique,
+                capital = entity.capital,
+                rcs = entity.rcs,
+                siret = entity.siret,
+                numDuns = entity.numDuns,
+                numTva = entity.numTva,
+                codeNaf = entity.codeNaf,
+                appartenanceGroupe = entity.appartenanceGroupe,
+                typeEntreprise = entity.typeEntreprise,
+                adminContact = entity.adminContact?.let { fromEntity(it) },
+                bankInfo = entity.bankInfo?.let { fromEntity(it) },
+                fiscalAddress = entity.fiscalAddress?.let { fromEntity(it) }
         )
 }

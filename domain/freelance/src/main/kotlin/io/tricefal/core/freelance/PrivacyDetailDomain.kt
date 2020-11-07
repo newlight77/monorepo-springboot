@@ -31,14 +31,15 @@ class PrivacyDetailDomain(
         fun information(information: String?) = apply { this.information = information }
 
         fun build() = PrivacyDetailDomain(
-                username,
-                birthDate,
-                birthCity,
-                birthCountry,
-                citizenship,
-                socialSecurityNumber,
-                nationalIdentityNumber,
-                information
+                username = username,
+                birthDate = birthDate,
+                birthCity = birthCity,
+                birthCountry = birthCountry,
+                citizenship = citizenship,
+                socialSecurityNumber = socialSecurityNumber,
+                nationalIdentityNumber = nationalIdentityNumber,
+                information = information
+
         )
     }
 

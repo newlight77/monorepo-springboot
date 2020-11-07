@@ -1,5 +1,7 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.signup.SignupStateModel
+
 
 class FreelanceModel
     private constructor(
@@ -24,15 +26,17 @@ class FreelanceModel
         fun company(company: CompanyModel?) = apply { this.company = company }
         fun privacyDetail(privacyDetail: PrivacyDetailModel?) = apply { this.privacyDetail = privacyDetail }
         fun status(status: Status?) = apply { this.status = status }
-        fun state(state: FreelanceStateModel?) = apply { this.state = state }
+        fun state(state: FreelanceStateModel?) = apply {
+            this.state = state ?: FreelanceStateModel.Builder(username).build()
+        }
 
         fun build() = FreelanceModel(
-                username,
-                contact,
-                company,
-                privacyDetail,
-                status,
-                state
+                username = username,
+                contact = contact,
+                company = company,
+                privacyDetail = privacyDetail,
+                status = status,
+                state = state
         )
     }
 }

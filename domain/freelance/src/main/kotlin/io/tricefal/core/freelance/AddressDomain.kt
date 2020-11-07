@@ -19,11 +19,11 @@ data class AddressDomain(val address: String,
         fun country(country: String?) = apply { this.country = country }
 
         fun build() = AddressDomain(
-                address,
-                addressMention,
-                postalCode,
-                city,
-                country
+                address = address,
+                addressMention = addressMention,
+                postalCode = postalCode,
+                city = city,
+                country = country
         )
     }
 }

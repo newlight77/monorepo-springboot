@@ -19,31 +19,31 @@ data class AddressModel(var address: String,
         fun country(country: String?) = apply { this.country = country }
 
         fun build() = AddressModel(
-                address,
-                addressMention,
-                postalCode,
-                city,
-                country
+                address = address,
+                addressMention = addressMention,
+                postalCode = postalCode,
+                city = city,
+                country = country
         )
     }
 }
 
 fun toModel(domain: AddressDomain): AddressModel {
     return AddressModel(
-            domain.address,
-            domain.addressMention,
-            domain.postalCode,
-            domain.city,
-            domain.country
+            address = domain.address,
+            addressMention = domain.addressMention,
+            postalCode = domain.postalCode,
+            city = domain.city,
+            country = domain.country
     )
 }
 
 fun fromModel(model: AddressModel): AddressDomain {
     return AddressDomain(
-            model.address,
-            model.addressMention,
-            model.postalCode,
-            model.city,
-            model.country
+            address = model.address,
+            addressMention = model.addressMention,
+            postalCode = model.postalCode,
+            city = model.city,
+            country = model.country
     )
 }

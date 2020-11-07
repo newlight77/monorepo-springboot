@@ -28,21 +28,21 @@ class AddressEntity(
 
 fun toEntity(domain: AddressDomain): AddressEntity {
     return AddressEntity(
-            null,
-            domain.address,
-            domain.addressMention!!,
-            domain.postalCode!!,
-            domain.city!!,
-            domain.country!!
-    );
+            id = null,
+            address = domain.address,
+            addressMention = domain.addressMention!!,
+            postalCode = domain.postalCode!!,
+            city = domain.city!!,
+            country = domain.country!!
+    )
 }
 
 fun fromEntity(entity: AddressEntity): AddressDomain {
     return AddressDomain(
-            entity.address,
-            entity.addressMention,
-            entity.postalCode,
-            entity.city,
-            entity.country
-    );
+            address = entity.address,
+            addressMention = entity.addressMention,
+            postalCode = entity.postalCode,
+            city = entity.city,
+            country = entity.country
+    )
 }

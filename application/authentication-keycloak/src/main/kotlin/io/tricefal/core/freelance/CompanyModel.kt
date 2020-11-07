@@ -58,64 +58,64 @@ data class CompanyModel(
         fun fiscalAddress(fiscalAddress: AddressModel?) = apply { this.fiscalAddress = fiscalAddress }
 
         fun build() = CompanyModel(
-                raisonSocial,
-                nomCommercial,
-                formeJuridique,
-                capital,
+                raisonSocial = raisonSocial,
+                nomCommercial = nomCommercial,
+                formeJuridique = formeJuridique,
+                capital = capital,
 
-                rcs,
-                siret,
-                numDuns,
-                numTva,
-                codeNaf,
-                appartenanceGroupe,
-                typeEntreprise,
+                rcs = rcs,
+                siret = siret,
+                numDuns = numDuns,
+                numTva = numTva,
+                codeNaf = codeNaf,
+                appartenanceGroupe = appartenanceGroupe,
+                typeEntreprise = typeEntreprise,
 
-                adminContact,
-                bankInfo,
-                fiscalAddress
+                adminContact = adminContact,
+                bankInfo = bankInfo,
+                fiscalAddress = fiscalAddress
         )
     }
 }
 
 fun toModel(domain: CompanyDomain) : CompanyModel {
     return CompanyModel(
-            domain.raisonSocial,
-            domain.nomCommercial,
-            domain.formeJuridique,
-            domain.capital,
+            raisonSocial = domain.raisonSocial,
+            nomCommercial = domain.nomCommercial,
+            formeJuridique = domain.formeJuridique,
+            capital = domain.capital,
 
-            domain.rcs,
-            domain.siret,
-            domain.numDuns,
-            domain.numTva,
-            domain.codeNaf,
-            domain.appartenanceGroupe,
-            domain.typeEntreprise,
+            rcs = domain.rcs,
+            siret = domain.siret,
+            numDuns = domain.numDuns,
+            numTva = domain.numTva,
+            codeNaf = domain.codeNaf,
+            appartenanceGroupe = domain.appartenanceGroupe,
+            typeEntreprise = domain.typeEntreprise,
 
-            domain.adminContact?.let { toModel(it) },
-            domain.bankInfo?.let { toModel(it) },
-            domain.fiscalAddress?.let { toModel(it) }
+            adminContact = domain.adminContact?.let { toModel(it) },
+            bankInfo = domain.bankInfo?.let { toModel(it) },
+            fiscalAddress = domain.fiscalAddress?.let { toModel(it) }
     )
 }
 
 fun fromModel(model: CompanyModel) : CompanyDomain {
     return CompanyDomain(
-            model.raisonSocial,
-            model.nomCommercial,
-            model.formeJuridique,
-            model.capital,
+            raisonSocial = model.raisonSocial,
+            nomCommercial = model.nomCommercial,
+            formeJuridique = model.formeJuridique,
+            capital = model.capital,
 
-            model.rcs,
-            model.siret,
-            model.numDuns,
-            model.numTva,
-            model.codeNaf,
-            model.appartenanceGroupe,
-            model.typeEntreprise,
+            rcs = model.rcs,
+            siret = model.siret,
+            numDuns = model.numDuns,
+            numTva = model.numTva,
+            codeNaf = model.codeNaf,
+            appartenanceGroupe = model.appartenanceGroupe,
+            typeEntreprise = model.typeEntreprise,
 
-            model.adminContact?.let { fromModel(it) },
-            model.bankInfo?.let { fromModel(it) },
-            model.fiscalAddress?.let { fromModel(it) }
+            adminContact = model.adminContact?.let { fromModel(it) },
+            bankInfo = model.bankInfo?.let { fromModel(it) },
+            fiscalAddress = model.fiscalAddress?.let { fromModel(it) }
     )
 }

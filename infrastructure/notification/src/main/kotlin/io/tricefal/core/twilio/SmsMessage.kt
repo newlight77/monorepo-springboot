@@ -13,7 +13,11 @@ data class SmsMessage(val from: String,
         fun to(to: String) =  apply { this.to = to }
         fun content(content: String) =  apply { this.content = content }
 
-        fun build(): SmsMessage { return SmsMessage(from, to, content)}
+        fun build(): SmsMessage { return SmsMessage(
+                from = from,
+                to = to,
+                content = content
+        )}
     }
 
 }

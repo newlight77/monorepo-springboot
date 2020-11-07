@@ -46,14 +46,14 @@ data class MissionWishEntity (
 
 fun toEntity(domain: MissionWishDomain): MissionWishEntity {
         return MissionWishEntity(
-                null,
-                domain.username,
-                domain.summary,
-                domain.technologies,
-                domain.domains,
-                domain.clients,
-                domain.dailyFee,
-                domain.location
+                id = null,
+                username = domain.username,
+                summary = domain.summary,
+                technologies = domain.technologies,
+                domains = domain.domains,
+                clients = domain.clients,
+                dailyFee = domain.dailyFee,
+                location = domain.location
         )
 }
 
