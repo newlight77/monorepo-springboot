@@ -7,7 +7,8 @@ import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.freelance.FreelanceEventPublisher
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
-import io.tricefal.core.notification.NotificationDomain
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.okta.IamRegisterService
 import io.tricefal.core.profile.ProfileEventPublisher
 import io.tricefal.core.right.AccessRight
@@ -31,10 +32,6 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun save(signup: SignupDomain): SignupDomain {
-        repository.findByUsername(signup.username).stream().findFirst().ifPresent {
-            logger.error("a signup with username ${signup.username} is already taken")
-            throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
-        }
         val signupEntity = repository.save(toEntity(signup))
         return fromEntity(signupEntity)
     }
@@ -95,7 +92,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         }
     }
 
-    override fun sendSms(notification: NotificationDomain): Boolean {
+    override fun sendSms(notification: SmsNotificationDomain): Boolean {
         logger.info("Sending ans SMS")
         val result = try {
             val message = SmsMessage.Builder()
@@ -112,7 +109,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return result
     }
 
-    override fun sendEmail(notification: NotificationDomain): Boolean {
+    override fun sendEmail(notification: EmailNotificationDomain): Boolean {
         logger.info("Sending an email")
         try {
             val message = EmailMessage.Builder()

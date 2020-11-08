@@ -1,7 +1,8 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
-import io.tricefal.core.notification.NotificationDomain
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.right.AccessRight
 import java.util.*
 
@@ -14,8 +15,8 @@ interface ISignupAdapter {
 
     fun register(signup: SignupDomain) : Boolean
     fun unregister(username: String) : Boolean
-    fun sendEmail(notification: NotificationDomain) : Boolean
-    fun sendSms(notification: NotificationDomain) : Boolean
+    fun sendEmail(notification: EmailNotificationDomain) : Boolean
+    fun sendSms(notification: SmsNotificationDomain) : Boolean
     fun updateStatus(signup: SignupDomain): SignupDomain
 
     // events

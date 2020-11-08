@@ -1,6 +1,8 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.notification.NotificationDomain
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.MetaNotificationDomain
+import io.tricefal.core.notification.SmsNotificationDomain
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,15 +29,18 @@ class SignupServiceTest {
     @Test
     fun `should do a signup`() {
         // Arranges
-        val notification = NotificationDomain.Builder("kong")
-                .smsFrom("smsFrom")
-                .smsTo("smsTo")
-                .smsContent("smsContent")
+        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
+        val emailNotification = EmailNotificationDomain.Builder("kong")
                 .emailFrom("emailFrom")
                 .emailTo("emailTo")
                 .emailSubject("emailSubject")
                 .emailGreeting("emailGreeting")
                 .emailContent("emailContent")
+                .build()
+        val smsNotification = SmsNotificationDomain.Builder("kong")
+                .smsFrom("smsFrom")
+                .smsTo("smsTo")
+                .smsContent("smsContent")
                 .build()
         val signup = SignupDomain.Builder("kong@gmail.com")
                 .firstname("kong")
@@ -49,13 +54,13 @@ class SignupServiceTest {
 
         Mockito.`when`(adapter.save(signup)).thenReturn(signup)
         Mockito.`when`(adapter.register(signup)).thenReturn(true)
-        Mockito.`when`(adapter.sendEmail(notification)).thenReturn(true)
-        Mockito.`when`(adapter.sendSms(notification)).thenReturn(true)
+        Mockito.`when`(adapter.sendEmail(emailNotification)).thenReturn(true)
+        Mockito.`when`(adapter.sendSms(smsNotification)).thenReturn(true)
 
         service = SignupService(adapter)
 
         // Act
-        val result = service.signup(signup, notification)
+        val result = service.signup(signup, metaNotification)
 
         // Arrange
         Mockito.verify(adapter).save(signup)
@@ -191,5 +196,17 @@ class SignupServiceTest {
 
         // Arrange
         Assertions.assertEquals("123456", decoded)
+    }
+
+
+    @Test
+    fun `should generate a random string`() {
+        // Arrange
+
+        // Act
+        val result = service.randomString()
+
+        // Arrange
+        Assertions.assertEquals(12, result.length)
     }
 }

@@ -100,6 +100,9 @@ class SignupWebHandlerTest {
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
+        Mockito.`when`(signupJpaRepository.findByUsername("kong@gmail.com")).thenReturn(
+                listOf(),
+                listOf(signupEntity))
         Mockito.`when`(keycloakRegistrationService.register(any(SignupDomain::class.java))).thenReturn(true)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
         Mockito.`when`(smsService.send(any(SmsMessage::class.java))).thenReturn("SM235g4fwee4qf32gqg8g")
@@ -252,16 +255,6 @@ class SignupWebHandlerTest {
 //        Assertions.assertEquals(Status.EMPLOYEE.toString(), signupCaptor.value.status)
     }
 
-    @Test
-    fun `should generate a random string`() {
-        // Arrange
-
-        // Act
-        val result = signupWebHandler.randomString()
-
-        // Arrange
-        Assertions.assertEquals(12, result.length)
-    }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
 

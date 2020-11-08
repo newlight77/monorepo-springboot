@@ -1,18 +1,25 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
-import io.tricefal.core.notification.NotificationDomain
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.MetaNotificationDomain
+import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
 import java.security.SecureRandom
+import java.text.MessageFormat
 import java.util.*
+
 
 class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    private val resourceBundle = ResourceBundle.getBundle("i18n.messages", Locale.getDefault())
+
+
     override fun signup(signup: SignupDomain,
-                        notification: NotificationDomain): SignupStateDomain {
+                        metaNotification: MetaNotificationDomain): SignupStateDomain {
         adapter.findByUsername(signup.username).ifPresent {
             throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
@@ -25,13 +32,13 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
                 .saved(save(signup))
                 .registered(register(signup))
                 .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
-                .emailSent(sendEmail(signup, notification))
-                .smsSent(sendSms(signup, notification))
+                .emailSent(sendEmail(signup, emailNotification(signup, metaNotification)))
+                .smsSent(sendSms(signup, smsNotification(signup, metaNotification)))
                 .build()
     }
 
     override fun resendCode(signup: SignupDomain,
-                            notification: NotificationDomain): SignupStateDomain {
+                            metaNotification: MetaNotificationDomain): SignupStateDomain {
         adapter.findByUsername(signup.username).orElseThrow {
             logger.error("a signup with username ${signup.username} is does not exist")
             throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
@@ -52,11 +59,11 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
                 .validated(signup.state?.validated)
                 .emailSent(
                         if (signup.state?.emailValidated == true) true
-                        else sendEmail(signup, notification)
+                        else sendEmail(signup, emailNotification(signup, metaNotification))
                 )
                 .smsSent(
                         if (signup.state?.smsValidated == true) true
-                        else sendSms(signup, notification)
+                        else sendSms(signup, smsNotification(signup, metaNotification))
                 )
                 .build()
     }
@@ -104,6 +111,10 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
     override fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain {
         signup.state?.smsValidated = signup.activationCode.equals(code)
+        if (signup.state?.smsValidated != true) {
+            logger.error("failed to active by code fur user ${signup.username}")
+            throw SignupActivationByCodeException("failed to active by code fur user ${signup.username}")
+        }
         adapter.update(signup)
         return signup.state!!
     }
@@ -122,9 +133,12 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
         signup.state?.emailValidated = signup.activationCode.equals(activationCode)
 
-        if (signup.state?.emailValidated == true)
+        if (signup.state?.emailValidated != true) {
+            logger.warn("the token is invalid for activation by email : token=$token")
+            throw SignupActivationByCodeException("the token is invalid for activation by email : token=$token")
+        } else {
             logger.info("successfully verified the token by email for user $username")
-        else logger.warn("the token is invalid for activation : token=$token")
+        }
 
         adapter.update(signup)
         return signup.state!!
@@ -222,7 +236,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         }
     }
 
-    private fun sendEmail(signup: SignupDomain, notification: NotificationDomain): Boolean {
+    private fun sendEmail(signup: SignupDomain, notification: EmailNotificationDomain): Boolean {
         try {
             signup.state?.emailSent = true
             adapter.sendEmail(notification)
@@ -234,7 +248,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
         }
     }
 
-    private fun sendSms(signup: SignupDomain, notification: NotificationDomain): Boolean {
+    private fun sendSms(signup: SignupDomain, notification: SmsNotificationDomain): Boolean {
         try {
             signup.state?.smsSent = true
             adapter.sendSms(notification)
@@ -284,6 +298,50 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
     fun decode(code: String): String = String(Base64.getUrlDecoder().decode(code.toByteArray()))
 
+    private fun smsNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): SmsNotificationDomain {
+        val smsContent = getString("signup.sms.content", signup.firstname, signup.activationCode)
+
+        return SmsNotificationDomain.Builder(signup.username)
+                .smsFrom(metaNotification.smsFrom)
+                .smsTo(signup.phoneNumber)
+                .smsContent(smsContent)
+                .build()
+    }
+
+    private fun emailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+        val emailActivationLink = emailValidationLink(signup, metaNotification)
+        val emailSubject = getString("signup.mail.subject")
+        val emailGreeting = getString("signup.mail.greeting", signup.firstname)
+        val emailContent = getString("signup.mail.content", emailActivationLink, signup.activationCode)
+
+        return EmailNotificationDomain.Builder(signup.username)
+                .emailFrom(metaNotification.emailFrom)
+                .emailTo(signup.username)
+                .emailSubject(emailSubject)
+                .emailGreeting(emailGreeting)
+                .emailContent(emailContent)
+                .build()
+    }
+
+    private fun emailValidationLink(signup: SignupDomain, metaNotification: MetaNotificationDomain): String {
+        return metaNotification.baseUrl + "/signup/email/verify?token=" + signup.activationToken + "." + randomString()
+    }
+
+    fun randomString(): String {
+        val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return (1..12)
+                .map { kotlin.random.Random.nextInt(0, charPool.size) }
+                .map(charPool::get)
+                .joinToString("")
+    }
+
+    fun getString(key: String, vararg params: String?): String? {
+        return try {
+            MessageFormat.format(resourceBundle.getString(key), *params)
+        } catch (e: MissingResourceException) {
+            throw SignupResourceBundleMissingKeyException("Failed to retrieve the value for key=$key in resource bundle i18n")
+        }
+    }
 }
 
 class SignupNotFoundException(val s: String) : Throwable()
@@ -291,6 +349,7 @@ class SignupPersistenceException(val s: String) : Throwable()
 class SignupUserNotFoundException(val s: String) : Throwable()
 class SignupUsernameUniquenessException(val s: String) : Throwable()
 class SignupUserRegistrationException(val s: String) : Throwable()
+class SignupActivationByCodeException(val s: String) : Throwable()
 class SignupActivationByEmailException(val s: String) : Throwable()
 class SignupResendActivationCodeException(val s: String) : Throwable()
 class SignupEmailNotificationException(val s: String) : Throwable()
@@ -299,3 +358,4 @@ class SignupCguAcceptException(val s: String) : Throwable()
 class SignupStatusUpdateException(val s: String) : Throwable()
 class SignupPortraitUploadException(val s: String) : Throwable()
 class SignupRoleAssignationException(val s: String) : Throwable()
+class SignupResourceBundleMissingKeyException(val s: String) : Throwable()

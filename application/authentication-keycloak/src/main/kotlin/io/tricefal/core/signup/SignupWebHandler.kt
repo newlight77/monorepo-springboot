@@ -4,24 +4,19 @@ import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.Representation
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
-import io.tricefal.core.notification.NotificationDomain
+import io.tricefal.core.notification.MetaNotificationDomain
 import org.slf4j.LoggerFactory
-import org.springframework.context.MessageSource
 import org.springframework.context.annotation.PropertySource
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.lang.Exception
-import java.util.*
 
 
 @Service
 @PropertySource("classpath:application.yml", "classpath:twilio.yml", "classpath:keycloak.yml")
 class SignupWebHandler(val signupService: ISignupService,
                        val metafileService: IMetafileService,
-                       private final val env: Environment,
-                       private final val messageSource: MessageSource) {
+                       private final val env: Environment) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -30,12 +25,10 @@ class SignupWebHandler(val signupService: ISignupService,
     private var emailFrom = env.getProperty("notification.mail.from")!!
     private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
 
-    val locale: Locale = LocaleContextHolder.getLocale()
-
     fun signup(signup: SignupModel): SignupStateModel {
         val domain = fromModel(signup)
         val result = try {
-                signupService.signup(domain, notification(domain))
+                signupService.signup(domain, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
             } catch (ex: Exception) {
                 logger.error("Failed to signup a new user ${signup.username}")
                 throw SignupRegistrationException("Failed to signup a new user ${signup.username}")
@@ -92,7 +85,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val domain = signupService.findByUsername(username)
 
         val result = try {
-            signupService.resendCode(domain, notification(domain))
+            signupService.resendCode(domain, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
         } catch (ex: Exception) {
             logger.error("Failed to signup a new user $username")
             throw SignupRegistrationException("Failed to signup a new user $username")
@@ -190,37 +183,6 @@ class SignupWebHandler(val signupService: ISignupService,
         }
         logger.info("successfully upload the resume linkedin for user $username")
         return toModel(model)
-    }
-
-    private fun notification(signup: SignupDomain): NotificationDomain {
-        val emailActivationLink = emailValidationLink(signup)
-        val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname, signup.activationCode), locale)
-        val emailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
-        val emailGreeting = messageSource.getMessage("signup.mail.greeting", arrayOf(signup.firstname), locale)
-        val emailContent = messageSource.getMessage("signup.mail.content", arrayOf(emailActivationLink, signup.activationCode), locale)
-
-        return NotificationDomain.Builder(signup.username)
-                .smsFrom(smsFrom)
-                .smsTo(signup.phoneNumber)
-                .smsContent(smsContent)
-                .emailFrom(emailFrom)
-                .emailTo(signup.username)
-                .emailSubject(emailSubject)
-                .emailGreeting(emailGreeting)
-                .emailContent(emailContent)
-                .build()
-    }
-
-    private fun emailValidationLink(signup: SignupDomain): String {
-        return backendBaseUrl + "/signup/email/verify?token=" + signup.activationToken + "." + randomString()
-    }
-
-    fun randomString(): String {
-        val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-        return (1..12)
-            .map { kotlin.random.Random.nextInt(0, charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
     }
 
 }

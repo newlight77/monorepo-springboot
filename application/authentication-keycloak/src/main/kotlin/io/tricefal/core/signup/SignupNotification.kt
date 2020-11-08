@@ -1,13 +1,12 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.notification.NotificationDomain
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.SmsNotificationDomain
 
-class SignupNotificationModel
+
+class EmailNotificationModel
     private constructor(
         val username: String,
-        var smsFrom: String? = null,
-        var smsTo: String? = null,
-        var smsContent: String? = null,
         var emailFrom: String? = null,
         var emailTo: String? = null,
         var emailSubject: String? = null,
@@ -16,33 +15,47 @@ class SignupNotificationModel
 
     data class Builder (
             val username: String,
-            var smsFrom: String? = null,
-            var smsTo: String? = null,
-            var smsContent: String? = null,
             var emailFrom: String? = null,
             var emailTo: String? = null,
             var emailSubject: String? = null,
             var emailContent: String? = null,
             var emailGreeting: String? = null) {
 
-        fun smsFrom(smsFrom: String?) = apply { this.smsFrom = smsFrom }
-        fun smsTo(smsTo: String?) = apply { this.smsTo = smsTo }
-        fun smsContent(smsContent: String?) = apply { this.smsContent = smsContent }
         fun emailFrom(emailFrom: String?) = apply { this.emailFrom = emailFrom }
         fun emailTo(emailTo: String?) = apply { this.emailTo = emailTo }
         fun emailSubject(emailSubject: String?) = apply { this.emailSubject = emailSubject }
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
         fun emailGreeting(emailGreeting: String?) = apply { this.emailGreeting = emailGreeting }
 
-        fun build() = SignupNotificationModel(username, smsFrom, smsTo, smsContent, emailFrom, emailTo, emailSubject, emailContent, emailGreeting)
+        fun build() = EmailNotificationModel(username, emailFrom, emailTo, emailSubject, emailContent, emailGreeting)
     }
 }
 
-fun toModel(domain: NotificationDomain): SignupNotificationModel {
-    return SignupNotificationModel.Builder(domain.username)
-            .smsFrom(domain.smsFrom)
-            .smsTo(domain.smsTo)
-            .smsContent(domain.smsContent)
+class SmsNotificationModel
+private constructor(
+        val username: String,
+        var smsFrom: String? = null,
+        var smsTo: String? = null,
+        var smsContent: String? = null
+) {
+
+    data class Builder (
+            val username: String,
+            var smsFrom: String? = null,
+            var smsTo: String? = null,
+            var smsContent: String? = null
+    ) {
+
+        fun smsFrom(smsFrom: String?) = apply { this.smsFrom = smsFrom }
+        fun smsTo(smsTo: String?) = apply { this.smsTo = smsTo }
+        fun smsContent(smsContent: String?) = apply { this.smsContent = smsContent }
+
+        fun build() = SmsNotificationModel(username, smsFrom, smsTo, smsContent)
+    }
+}
+
+fun toModel(domain: EmailNotificationDomain): EmailNotificationModel {
+    return EmailNotificationModel.Builder(domain.username)
             .emailFrom(domain.emailFrom)
             .emailTo(domain.emailTo)
             .emailSubject(domain.emailSubject)
@@ -51,15 +64,28 @@ fun toModel(domain: NotificationDomain): SignupNotificationModel {
             .build()
 }
 
-fun fromModel(model: SignupNotificationModel): NotificationDomain {
-    return NotificationDomain.Builder(model.username)
-            .smsFrom(model.smsFrom)
-            .smsTo(model.smsTo)
-            .smsContent(model.smsContent)
+fun fromModel(model: EmailNotificationModel): EmailNotificationDomain {
+    return EmailNotificationDomain.Builder(model.username)
             .emailFrom(model.emailFrom)
             .emailTo(model.emailTo)
             .emailSubject(model.emailSubject)
             .emailContent(model.emailContent)
             .emailGreeting(model.emailGreeting)
+            .build()
+}
+
+fun toModel(domain: SmsNotificationDomain): SmsNotificationModel {
+    return SmsNotificationModel.Builder(domain.username)
+            .smsFrom(domain.smsFrom)
+            .smsTo(domain.smsTo)
+            .smsContent(domain.smsContent)
+            .build()
+}
+
+fun fromModel(model: SmsNotificationModel): SmsNotificationDomain {
+    return SmsNotificationDomain.Builder(model.username)
+            .smsFrom(model.smsFrom)
+            .smsTo(model.smsTo)
+            .smsContent(model.smsContent)
             .build()
 }
