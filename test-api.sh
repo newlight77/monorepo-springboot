@@ -15,12 +15,12 @@ if [ -x /usr/bin/tput ]; then
 fi
 
 
-API_URL=http://localhost:8080/api/keycloak
+API_URL=http://localhost:8080/api
 CLIENT_ID=local.frontend.https
 USERNAME=newlight77+test1@gmail.com
 PASSWORD=Tricefal1
 TOKEN_URL=http://localhost:1080/auth/realms/local.app/protocol/openid-connect/token
-
+TOKEN=
 
 #############################################
 ## Functions
@@ -53,6 +53,47 @@ usage() {
   exit 1
 }
 
+signup() {
+  curl --insecure --location --request POST "${API_URL}/signup" \
+    --header "Content-Type: application/json" \
+    --data '{' \
+    '"firstname":"Kong",'\
+    '"lastname":"To",'\
+    '"username":"'${USERNAME}'",'\
+    '"password":"'${PASSWORD}'",'\
+    '"phoneNumber":"0659401130"'\
+    '}'
+}
+
+getToken() {
+  token=$(curl --insecure --location --request POST "${TOKEN_URL}" \
+    --header "Content-Type: application/x-www-form-urlencoded" \
+    --data-urlencode "client_id=${CLIENT_ID}" \
+    --data-urlencode "username=${USERNAME}" \
+    --data-urlencode "password=${PASSWORD}" \
+    --data-urlencode "grant_type=password" | jq -r .access_token)
+
+  echo "$token"
+}
+
+helloApi() {
+  RESULT=$(curl ${API_URL}/hello)
+  echo "${RESULT}"
+}
+
+secureUserApi() {
+  token=$1
+  RESULT=$(curl -H "Authorization: bearer ${token}" "${API_URL}/user")
+  echo "${RESULT}"
+}
+
+uploadCv() {
+  token=$1
+  curl --location --request POST "${API_URL}/signup/upload/cv" \
+    -H "Authorization: bearer ${TOKEN}" \
+    --form 'file=@/Users/kong/Downloads/contabo-11.pdf'
+}
+
 #############################################
 ## Check arguments
 #############################################
@@ -73,29 +114,9 @@ done
 ## Run
 #############################################
 
-#TOKEN=$(curl --location --request POST 'https://localhost/auth/realms/local.app/protocol/openid-connect/token' \
-#--header 'Content-Type: application/x-www-form-urlencoded' \
-#--data-urlencode 'client_id=local.frontend.https' \
-#--data-urlencode 'username=newlight77+test1@gmail.com' \
-#--data-urlencode 'password=Tricefal1' \
-#--data-urlencode 'grant_type=password')
-
-#curl -H "Authorization: bearer $TOKEN" http://localhost:9002/admin/hello
-
-TOKEN=$(curl --insecure --location --request POST "${TOKEN_URL}" \
---header "Content-Type: application/x-www-form-urlencoded" \
---data-urlencode "client_id=${CLIENT_ID}" \
---data-urlencode "username=${USERNAME}" \
---data-urlencode "password=${PASSWORD}" \
---data-urlencode "grant_type=password" | jq -r .access_token)
-
-echo "${TOKEN}"
-
-RESULT=$(curl -H "Authorization: bearer ${TOKEN}" ${API_URL})
-
-echo "${RESULT}"
-
-# curl --location --request POST 'http://localhost:8080/api/signup/upload/cv' \
-# -H "Authorization: bearer ${TOKEN}" \
-# --form 'file=@/Users/kong/Downloads/contabo-11.pdf'
+helloApi
+signup
+TOKEN=getToken
+secureUserApi ${TOKEN}
+uploadCv ${TOKEN}
 
