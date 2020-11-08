@@ -40,14 +40,17 @@ git-sub:
 core-clean: ## Run tests
 	@./gradlew clean
 
-core-clean-assemble:
+core-clean-compile:
 	@./gradlew -g .gradle/caches clean assemble
 
-core-package:
+core-compile:
 	@./gradlew -g .gradle/caches assemble
 
 core-test: ## Run tests
 	@./gradlew -g .gradle/caches check
+
+core-code-analysis: ## Run sonarqube
+	@./gradlew -g .gradle/caches sonarqube
 
 core-boot: ## Run tests
 	@./.run -b
