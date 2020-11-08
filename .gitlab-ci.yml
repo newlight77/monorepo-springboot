@@ -16,27 +16,27 @@ stages:
   - quality
   - publish
 
-compile:
-  stage: compile
-  only:
-    - master
-    - develop
-  script:
-    - make core-compile
-  artifacts:
-    paths:
-      - build/
-      - application/build/
-      - application/authentication-keycloak/build/
-  allow_failure: false
+#compile:
+#  stage: compile
+#  only:
+#    - master
+#    - develop
+#  script:
+#    - make core-compile
+#  artifacts:
+#    paths:
+#      - build/
+#      - application/build/
+#      - application/authentication-keycloak/build/
+#  allow_failure: false
 
 unit-test:
   stage: unit test
   only:
     - master
     - develop
-  dependencies:
-    - compile
+#  dependencies:
+#    - compile
   script:
     - make core-test
   artifacts:
@@ -46,16 +46,16 @@ unit-test:
       - application/authentication-keycloak/build/
   allow_failure: false
 
-code-analysis:
-  stage: quality
-  only:
-    - master
-    - develop
-  script:
-    - make core-code-analysis
-  dependencies:
-    - unit-test
-  when: on_success
+#code-analysis:
+#  stage: quality
+#  only:
+#    - master
+#    - develop
+#  script:
+#    - make core-code-analysis
+#  dependencies:
+#    - unit-test
+#  when: on_success
 
 after_script:
   - echo "End CI"
