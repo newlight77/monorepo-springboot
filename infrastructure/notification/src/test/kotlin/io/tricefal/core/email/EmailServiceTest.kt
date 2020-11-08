@@ -17,7 +17,7 @@ import java.io.FileInputStream
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EmailServiceTest {
 
-    private val config = Configuration()
+    private val config = Configuration(Configuration.VERSION_2_3_30)
     private val sender = Mockito.spy(JavaMailSenderImpl::class.java)
 
     @TempDir

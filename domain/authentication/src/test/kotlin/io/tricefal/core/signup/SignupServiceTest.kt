@@ -30,18 +30,6 @@ class SignupServiceTest {
     fun `should do a signup`() {
         // Arranges
         val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
-        val emailNotification = EmailNotificationDomain.Builder("kong")
-                .emailFrom("emailFrom")
-                .emailTo("emailTo")
-                .emailSubject("emailSubject")
-                .emailGreeting("emailGreeting")
-                .emailContent("emailContent")
-                .build()
-        val smsNotification = SmsNotificationDomain.Builder("kong")
-                .smsFrom("smsFrom")
-                .smsTo("smsTo")
-                .smsContent("smsContent")
-                .build()
         val signup = SignupDomain.Builder("kong@gmail.com")
                 .firstname("kong")
                 .lastname("to")
