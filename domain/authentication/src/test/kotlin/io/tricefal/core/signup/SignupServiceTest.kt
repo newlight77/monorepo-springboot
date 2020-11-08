@@ -49,13 +49,17 @@ class SignupServiceTest {
                 .signupDate(Instant.now())
                 .activationCode("123456")
                 .status(Status.FREELANCE)
-//                .notification(notification)
+                .state(SignupStateDomain.Builder("kong@gmail.com").build())
                 .build()
 
+        Mockito.`when`(adapter.findByUsername("kong@gmail.com")).thenReturn(
+                Optional.empty(),
+                Optional.of(signup)
+        )
         Mockito.`when`(adapter.save(signup)).thenReturn(signup)
         Mockito.`when`(adapter.register(signup)).thenReturn(true)
-        Mockito.`when`(adapter.sendEmail(emailNotification)).thenReturn(true)
-        Mockito.`when`(adapter.sendSms(smsNotification)).thenReturn(true)
+        Mockito.`when`(adapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(adapter.sendSms(any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         service = SignupService(adapter)
 
@@ -64,6 +68,7 @@ class SignupServiceTest {
 
         // Arrange
         Mockito.verify(adapter).save(signup)
+        Assertions.assertTrue(result.saved!!)
         Assertions.assertTrue(result.registered!!)
         Assertions.assertTrue(result.emailSent!!)
         Assertions.assertTrue(result.smsSent!!)
@@ -177,6 +182,7 @@ class SignupServiceTest {
     @Test
     fun `should generate an activation code with 6 digits`() {
         // Arrange
+        service = SignupService(adapter)
 
         // Act
         val result = service.generateCode()
@@ -189,6 +195,7 @@ class SignupServiceTest {
     fun `should encode and decode a string`() {
         // Arrange
         val code = "123456"
+        service = SignupService(adapter)
 
         // Act
         val encoded = service.encode(code)
@@ -202,6 +209,7 @@ class SignupServiceTest {
     @Test
     fun `should generate a random string`() {
         // Arrange
+        service = SignupService(adapter)
 
         // Act
         val result = service.randomString()
@@ -209,4 +217,6 @@ class SignupServiceTest {
         // Arrange
         Assertions.assertEquals(12, result.length)
     }
+
+    private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
 }

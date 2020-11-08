@@ -22,7 +22,7 @@ class ProfileServiceTest {
     fun `should create a profile successfully`() {
         // Arrange
         val profile = ProfileDomain("kong@gmail.com", Instant.now(), "portrait", "resume", "resume linkedin")
-        Mockito.doNothing().`when`(repository).save(profile)
+        Mockito.`when`(repository.save(profile)).thenReturn(profile)
         service = ProfileService(repository)
 
         // Act
