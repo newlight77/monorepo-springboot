@@ -48,7 +48,7 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler,
     }
 
     @RolesAllowed("ROLE_user-role")
-    @PostMapping("ref", consumes = ["multipart/form-data"])
+    @PostMapping("cvlinkedin", consumes = ["multipart/form-data"])
     @ResponseStatus(HttpStatus.OK)
     fun uploadResumeLinkedin(principal: Principal, @RequestParam file: MultipartFile): ProfileModel {
         return profileWebHandler.uploadResumeLinkedin(authenticatedUser(principal), file)

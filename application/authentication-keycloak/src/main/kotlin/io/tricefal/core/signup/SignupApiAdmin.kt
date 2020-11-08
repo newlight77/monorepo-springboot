@@ -24,7 +24,7 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
 
     private var frontendBaseUrl = env.getProperty("core.frontendUrl")!!
 
-    @RolesAllowed("ROLE_ac_tricefal_w")
+    @RolesAllowed("ROLE_ac_tricefal_r")
     @GetMapping("list")
     @ResponseStatus(HttpStatus.OK)
     fun signups(): List<SignupModel> {

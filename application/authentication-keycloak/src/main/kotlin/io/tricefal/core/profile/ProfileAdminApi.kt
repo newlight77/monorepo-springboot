@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse
 @RequestMapping("profile")
 class ProfileAdminApi(val profileWebHandler: ProfileWebHandler) {
 
-    @RolesAllowed("ROLE_user-role")
+    @RolesAllowed("ROLE_ac_tricefal_r")
     @GetMapping("{username}/cv")
     @ResponseStatus(HttpStatus.OK)
     fun downloadCv(@PathVariable username: String): ResponseEntity<ByteArrayResource> {
