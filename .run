@@ -84,7 +84,7 @@ kill -9 ${PID}
 ps -ef | grep java
 
 
-sed 's/\(.*=\)/export &/g' < ./config/core/localhost/app.localhost.env > .env
+sed 's/\(.*=\)/export &/g' < ./config/app.env > .env
 . .env > /dev/null
 #env
 rm .env

@@ -1,39 +1,80 @@
 version: "3.6"
-networks:
-  internal-subnet:
-    name: internal_subnet
+
 services:
   core:
     image: openjdk:12-alpine
     container_name: core
-    hostname: core
+    hostname: docker_core
     networks:
       - internal-subnet
+    env_file:
+      - ./config/core.docker.env
     volumes:
       - ./application/authentication-keycloak/build/libs:/app/
-      - data/files:/data/files:rw
-      - data/logs:/data/logs:rw
-    env_file:
-      - ../../config/core.env
+      - core_files:/data/files:rw
+      - core_logs:/data/logs:rw
     ports:
       - "8080:8080"
       - "5080:5080"
     depends_on:
-      - postgres-core
-    command: java ${DEBUG_ARG} -jar /app/auth-keycloak-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=localhost
+      - dbcore
+    command: java ${DEBUG_ARG} -jar /app/app-auth-keycloak-0.0.1-SNAPSHOT.jar --spring.profiles.active=localhost
 
-  postgres-core:
+  dbcore:
     image: postgres:10.5
-    container_name: postgres-core
-    hostname: docker_postgres-core
+    container_name: dbcore
+    hostname: docker_dbcore
+    networks:
+      - internal-subnet
+    env_file:
+      - config/dbcore.env
     volumes:
       - ./application/authentication-keycloak/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
       - ./application/authentication-keycloak/src/main/resources/ref-data.sql:/docker-entrypoint-initdb.d/data.sql:ro
-      - data/postgres-core:/var/lib/postgresql/data:rw
-    env_file:
-      - config/postgres-core.env
-    # ports:
-    #   - "5432:5432"
+      - dbcore_data:/var/lib/postgresql/data:rw
+    ports:
+      - "5432:5432"
     restart: unless-stopped
+
+  dbkeycloak:
+    image: postgres:10.5
+    container_name: dbkeycloak
+    hostname: docker_dbkeycloak
     networks:
       - internal-subnet
+    restart: always
+    env_file:
+      - ./config/dbkeycloak.env
+    volumes:
+      - dbkeycloak_data:/var/lib/postgresql/data:rw
+
+  keycloak:
+    image: jboss/keycloak:11.0.2
+    container_name: keycloak
+    hostname: docker_keycloak
+    networks:
+      - internal-subnet
+    ports:
+      - "1080:8080"
+      - "1443:8443"
+    depends_on:
+      - dbkeycloak
+    env_file:
+      - ./config/keycloak.env
+    volumes:
+      - ./config/keycloak/:/opt/jboss/keycloak/imports/
+    command:
+      - "-Dkeycloak.profile.feature.docker=enabled"
+      - "-Dkeycloak.migration.action=import"
+      - "-Dkeycloak.migration.dir=/opt/jboss/keycloak/imports/"
+    restart: unless-stopped
+
+networks:
+  internal-subnet:
+    name: internal_subnet
+
+volumes:  
+  core_files:
+  core_logs:
+  dbcore_data:
+  dbkeycloak_data:

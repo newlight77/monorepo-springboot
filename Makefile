@@ -43,8 +43,8 @@ core-clean: ## Run tests
 core-clean-compile:
 	@./gradlew -g .gradle/caches clean assemble
 
-core-compile:
-	@./gradlew -g .gradle/caches assemble
+core-package:
+	@./gradlew -g .gradle/caches build -x test
 
 core-test: ## Run tests
 	@./gradlew -g .gradle/caches check
@@ -63,6 +63,22 @@ core-test-api:
 	@./test-api.sh -u=newlight77+test1@gmail.com --api-url=http://localhost:8080/api/keycloak
 
 
+dc-up: ## Run all containers
+	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak dbcore core
+
+dc-up-keycloak: ## Run all containers
+	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak
+
+dc-down: ## Stop all containers
+	@docker-compose -f docker-compose.yml down
+
+dc-clean:
+	@docker system prune
+	@docker volume prune
+
+dc-restart: down up ## Restart all containers
+
+
 db-psql: ## Launch PostgreSQL Shell
 	@docker-compose -f docker-compose.yml exec postgres psql -U $(POSTGRES_USER) $(POSTGRES_DB)
 
@@ -72,6 +88,4 @@ db-pgsh: ## Launch a shell inside PostgreSQL container
 db-pgdump: ## Dump the database
 	@docker-compose -f docker-compose.yml exec postgres pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB)
 
-db-clean:
-	@$(shell rm -fr data/postgres-core ./application/authentication-keycloak/data/files)
 
