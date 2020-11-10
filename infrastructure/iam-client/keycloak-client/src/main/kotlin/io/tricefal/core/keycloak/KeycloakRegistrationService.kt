@@ -3,6 +3,8 @@ package io.tricefal.core.keycloak
 import io.tricefal.core.okta.IamRegisterService
 import io.tricefal.core.right.AccessRight
 import io.tricefal.core.signup.SignupDomain
+import org.jboss.resteasy.client.jaxrs.ResteasyClient
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder
 import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
@@ -31,8 +33,10 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
     private val adminUser = env.getProperty("keycloak.admin.user")
     private val adminPassword = env.getProperty("keycloak.admin.password")
 
+
     final var keycloak: Keycloak = KeycloakBuilder.builder() //
             .serverUrl("${baseUrl}/auth") //
+            .resteasyClient(resteasyClient())
             .realm(adminRealm) //
             .grantType(OAuth2Constants.PASSWORD) //
             .clientId(adminClientId) //
@@ -45,6 +49,12 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
     val realmUsersResource: UsersResource = realmResource.users()
     var realmRolesResource: RolesResource = realmResource.roles()
 
+    private fun resteasyClient(): ResteasyClient? {
+        val clientBuilder = ResteasyClientBuilder().disableTrustManager()
+        clientBuilder.setIsTrustSelfSignedCertificates(true)
+        return clientBuilder.build()
+    }
+    
     override fun register(signup: SignupDomain): Boolean {
         val user = toKeycloakUser(signup)
 
