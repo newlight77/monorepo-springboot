@@ -30,7 +30,7 @@ class FreelanceMissionApi(val freelanceWebHandler: FreelanceWebHandler) {
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")
-    @PostMapping("upload/kbis", consumes = [ "multipart/form-data" ])
+    @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
     @ResponseStatus(HttpStatus.OK)
     fun uploadKbis(principal: Principal, @RequestParam file : MultipartFile): FreelanceModel {
         logger.info("signup uploading cv requested")
