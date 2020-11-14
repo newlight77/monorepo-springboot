@@ -1,16 +1,13 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.cgu.CguEventPublisher
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
-import io.tricefal.core.freelance.FreelanceEventPublisher
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.okta.IamRegisterService
-import io.tricefal.core.profile.ProfileEventPublisher
 import io.tricefal.core.right.AccessRight
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
@@ -24,9 +21,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
                     val mailService: EmailService,
                     val smsService: SmsService,
                     val keycloakRegisterService: IamRegisterService,
-                    val profileEventPublisher: ProfileEventPublisher,
-                    val freelanceEventPublisher: FreelanceEventPublisher,
-                    val cguEventPublisher: CguEventPublisher
+                    val signupEventPublisher: SignupEventPublisher
 ) : ISignupAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -134,23 +129,23 @@ class SignupAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun statusUpdated(signup: SignupDomain) {
-        this.freelanceEventPublisher.publishStatusUpdatedEvent(signup.username, signup.status.toString())
+        this.signupEventPublisher.publishStatusUpdatedEvent(signup.username, signup.status.toString())
     }
 
     override fun cguAccepted(username: String, cguAcceptedVersion: String) {
-        this.cguEventPublisher.publishCguAcceptedEvent(username, cguAcceptedVersion)
+        this.signupEventPublisher.publishCguAcceptedEvent(username, cguAcceptedVersion)
     }
 
     override fun portraitUploaded(fileDomain: MetafileDomain) {
-        this.profileEventPublisher.publishPortraitUploadedEvent(fileDomain)
+        this.signupEventPublisher.publishPortraitUploadedEvent(fileDomain)
     }
 
     override fun resumeUploaded(fileDomain: MetafileDomain) {
-        this.profileEventPublisher.publishResumeUploadedEvent(fileDomain)
+        this.signupEventPublisher.publishResumeUploadedEvent(fileDomain)
     }
 
     override fun resumeLinkedinUploaded(fileDomain: MetafileDomain) {
-        this.profileEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
+        this.signupEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
     }
 
     override fun assignRole(username: String, accessRight: AccessRight) {

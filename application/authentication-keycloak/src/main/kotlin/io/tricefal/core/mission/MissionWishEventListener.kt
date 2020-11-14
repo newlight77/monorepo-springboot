@@ -1,5 +1,7 @@
 package io.tricefal.core.mission
 
+import io.tricefal.core.profile.ProfileUploadException
+import io.tricefal.core.signup.ResumeUploadedEvent
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -10,16 +12,16 @@ class MissionWishEventListener(val missionWishService: IMissionWishService) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @EventListener(condition = "#event.isFreelance()")
-    fun handleMissionWishUpdatedEvent(event: MissionWishUpdatedEvent) {
-        try {
-            val domain = MissionWishDomain.Builder(event.username).build()
-            missionWishService.create(domain)
-        } catch (ex: Exception) {
-            logger.error("Failed to create a missionWish with username ${event.username}")
-            throw MissionWishCreationException("Failed to create a missionWish with username ${event.username}")
+    @EventListener(condition = "#event.isResume()")
+    fun handleResumeUploadedEvent(event: ResumeUploadedEvent): MissionWishModel {
+        val result = try {
+            this.missionWishService.updateOnResumeUploaded(event.username, event.metafile.filename)
+        } catch(ex: Exception) {
+            logger.error("Failed to update the mission wish on resume uploaded for username ${event.username}")
+            throw ProfileUploadException("Failed to update the mission wish on resume uploaded for username ${event.username}")
         }
-        logger.info("MissionWishEventListener picked up a MissionWishUpdatedEvent for ${event.username}")
+        logger.info("EventHandler picked up a resume uploaded event with ${event.metafile}")
+        return toModel(result)
     }
 
     class MissionWishCreationException(private val msg: String) : Throwable(msg) {}

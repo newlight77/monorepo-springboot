@@ -7,6 +7,7 @@ class FreelanceStateDomain(
         var rcUploaded: Boolean? = null,
         var urssafUploaded: Boolean? = null,
         var fiscalUploaded: Boolean? = null,
+        var missionResumedUploaded: Boolean? = null,
         var completed: Boolean? = null
 ) {
 
@@ -17,6 +18,7 @@ class FreelanceStateDomain(
             var rcUploaded: Boolean? = null,
             var urssafUploaded: Boolean? = null,
             var fiscalUploaded: Boolean? = null,
+            var missionResumedUploaded: Boolean? = null,
             var completed: Boolean? = null
     ) {
         fun kbisUploaded(kbisUploaded: Boolean?) = apply { this.kbisUploaded = kbisUploaded }
@@ -24,6 +26,7 @@ class FreelanceStateDomain(
         fun rcUploaded(rcUploaded: Boolean?) = apply { this.rcUploaded = rcUploaded }
         fun urssafUploaded(urssafUploaded: Boolean?) = apply { this.urssafUploaded = urssafUploaded }
         fun fiscalUploaded(fiscalUploaded: Boolean?) = apply { this.fiscalUploaded = fiscalUploaded }
+        fun missionResumedUploaded(missionResumedUploaded: Boolean?) = apply { this.missionResumedUploaded = missionResumedUploaded }
         fun completed(completed: Boolean?) = apply { this.completed = completed }
 
         fun build() = FreelanceStateDomain(
@@ -33,6 +36,7 @@ class FreelanceStateDomain(
                 rcUploaded,
                 urssafUploaded,
                 fiscalUploaded,
+                missionResumedUploaded,
                 completed
         )
     }

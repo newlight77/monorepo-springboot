@@ -8,5 +8,4 @@ interface IFreelanceAdapter {
     fun findAll(): List<FreelanceDomain>
     fun availables(): List<FreelanceDomain>
     fun update(freelance: FreelanceDomain): FreelanceDomain
-
 }

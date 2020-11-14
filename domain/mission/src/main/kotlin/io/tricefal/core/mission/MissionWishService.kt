@@ -2,6 +2,7 @@ package io.tricefal.core.mission
 
 import org.slf4j.LoggerFactory
 import java.time.Instant
+import java.util.*
 
 class MissionWishService(private var adapter: IMissionWishAdapter) : IMissionWishService {
 
@@ -13,10 +14,8 @@ class MissionWishService(private var adapter: IMissionWishAdapter) : IMissionWis
         else adapter.create(missionWish)
     }
 
-    override fun findByUsername(username: String): MissionWishDomain {
-        if (username.isEmpty()) throw UsernameNotFoundException("username is $username")
+    override fun findByUsername(username: String): Optional<MissionWishDomain> {
         return adapter.findByUsername(username)
-                .orElseThrow { NotFoundException("resource not found for username $username") }
     }
 
     override fun findAll(): List<MissionWishDomain> {
@@ -29,7 +28,28 @@ class MissionWishService(private var adapter: IMissionWishAdapter) : IMissionWis
         return missionWish
     }
 
+    override fun updateOnResumeUploaded(username: String, filename: String): MissionWishDomain {
+        val missionWish = MissionWishDomain.Builder(username)
+                .resumeFilename(filename)
+                .build()
+        try {
+            this.findByUsername(username)
+                    .ifPresentOrElse(
+                            {
+                                it.resumeFilename = filename
+                                create(missionWish)
+                            },
+                            { create(missionWish) }
+                    )
+        } catch (ex: Exception) {
+            logger.error("Failed to update the mission wish from the resume uploaded event for user $username")
+            throw MissionResumeUploadException("Failed to mission wish the profile from the resume uploaded event for user $username")
+        }
+        return missionWish
+    }
+
 }
 
 class NotFoundException(val s: String) : Throwable()
 class UsernameNotFoundException(val s: String) : Throwable()
+class MissionResumeUploadException(val s: String) : Throwable()

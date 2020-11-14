@@ -11,6 +11,7 @@ data class MissionWishDomain
             var clients: String?,
             var dailyFee: String?,
             var location: String?,
+            var resumeFilename: String?,
             var lastDate: Instant?
 
     ) {
@@ -23,6 +24,7 @@ data class MissionWishDomain
             var clients: String? = null,
             var dailyFee: String? = null,
             var location: String? = null,
+            var resumeFilename: String? = null,
             var lastDate: Instant? = null
     ) {
         fun summary(summary: String?) = apply { this.summary = summary }
@@ -32,6 +34,7 @@ data class MissionWishDomain
         fun clients(clients: String?) = apply { this.clients = clients }
         fun dailyFee(dailyFee: String?) = apply { this.dailyFee = dailyFee }
         fun location(location: String?) = apply { this.location = location }
+        fun resumeFilename(resumeFilename: String?) = apply { this.resumeFilename = resumeFilename }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = MissionWishDomain(
@@ -42,6 +45,7 @@ data class MissionWishDomain
                 clients = clients,
                 dailyFee = dailyFee,
                 location = location,
+                resumeFilename = resumeFilename,
                 lastDate = lastDate
         )
     }

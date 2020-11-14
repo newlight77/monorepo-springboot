@@ -28,6 +28,8 @@ class FreelanceStateEntity(
         var urssafUploaded: Boolean? = null,
         @Column(name = "fiscal_uploaded")
         var fiscalUploaded: Boolean? = null,
+        @Column(name = "cvmission_uploaded")
+        var cvMissionUploaded: Boolean? = null,
         @Column(name = "completed")
         var completed: Boolean? = null
 )
@@ -41,6 +43,7 @@ fun toEntity(domain: FreelanceStateDomain): FreelanceStateEntity {
             domain.rcUploaded,
             domain.urssafUploaded,
             domain.fiscalUploaded,
+            domain.missionResumedUploaded,
             domain.completed)
 }
 
@@ -51,6 +54,7 @@ fun fromEntity(entity: FreelanceStateEntity): FreelanceStateDomain {
             .rcUploaded(entity.rcUploaded)
             .urssafUploaded(entity.urssafUploaded)
             .fiscalUploaded(entity.fiscalUploaded)
+            .missionResumedUploaded(entity.cvMissionUploaded)
             .completed(entity.completed)
             .build()
 }

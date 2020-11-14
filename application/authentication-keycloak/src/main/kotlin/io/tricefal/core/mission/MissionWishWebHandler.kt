@@ -1,25 +1,27 @@
 package io.tricefal.core.mission
 
 import io.tricefal.core.exception.NotAcceptedException
+import io.tricefal.core.exception.NotFoundException
 import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.Representation
 import io.tricefal.core.metafile.fromModel
 import io.tricefal.core.metafile.toMetafile
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.lang.Exception
-import java.util.*
 
 
 @Service
 @PropertySource("classpath:application.yml")
-class MissionWishWebHandler(val missionWishService: IMissionWishService) {
+class MissionWishWebHandler(val missionWishService: IMissionWishService,
+                            val metafileService: IMetafileService,
+                            private final val env: Environment) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
+    private val dataFilesPath = env.getProperty("data.files.path")!!
 
     fun create(missionWishModel: MissionWishModel): MissionWishModel {
         val domain = fromModel(missionWishModel)
@@ -33,7 +35,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService) {
 
     fun findByUsername(username: String): MissionWishModel {
         if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        return toModel(missionWishService.findByUsername(username))
+        return toModel(find(username))
     }
 
     fun findAll(): List<MissionWishModel> {
@@ -50,6 +52,28 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService) {
         return toModel(domain)
     }
 
+    fun updateResume(username: String, file: MultipartFile): MissionWishModel {
+        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.CV_MISSION))
+        metafileService.save(metaFile, file.inputStream)
+
+        val result = try {
+            missionWishService.updateOnResumeUploaded(username, metaFile.filename)
+        } catch (ex: Exception) {
+            logger.error("Failed to upload the mission specific resume for user $username")
+            throw MissionWishUploadException("Failed to upload the mission specific resume for user $username")
+        }
+        logger.info("successfully upload the mission specific resume for user $username")
+        return toModel(result)
+    }
+
+    private fun find(username: String): MissionWishDomain {
+        if (username.isEmpty()) throw NotAcceptedException("username is $username")
+        val missionWish = this.missionWishService.findByUsername(username)
+                .orElseThrow { NotFoundException("username $username not found") }
+        return missionWish
+    }
+
     class MissionWishCreationException(private val msg: String) : Throwable(msg) {}
     class MissionWishUpdateException(private val msg: String) : Throwable(msg) {}
+    class MissionWishUploadException(private val msg: String) : Throwable(msg) {}
 }

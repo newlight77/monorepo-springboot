@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.signup.SignupStatusUpdatedEvent
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -11,7 +12,7 @@ class FreelanceEventListener(val freelanceService: IFreelanceService) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @EventListener(condition = "#event.isFreelance()")
-    fun handlePortraitUploadedEvent(event: FreelanceStatusUpdatedEvent) {
+    fun handleStatusUpdatedEvent(event: SignupStatusUpdatedEvent) {
         try {
             val domain = FreelanceDomain.Builder(event.username)
                     .state(FreelanceStateDomain.Builder(event.username).build()).build()

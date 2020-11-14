@@ -1,7 +1,13 @@
-package io.tricefal.core.profile
+package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.metafile.Representation
+
+class SignupStatusUpdatedEvent(val username: String, val status: String) {
+    fun isFreelance() = "FREELANCE" === status
+    fun isEmployee() = "EMPLOYEE" === status
+    fun isClient() = "CLIENT" === status
+}
 
 class PortraitUploadedEvent(val metafile: MetafileDomain) {
     val username = metafile.username
@@ -27,5 +33,14 @@ class ResumeLinkedinUploadedEvent(var metafile: MetafileDomain) {
         return this.metafile.username.isNotBlank()
                 && this.metafile.filename.isNotBlank()
                 && this.metafile.representation == Representation.CV_LINKEDIN
+    }
+}
+
+class MissionResumeUploadedEvent(var metafile: MetafileDomain) {
+    val username = metafile.username
+    fun isMissionResume() : Boolean {
+        return this.metafile.username.isNotBlank()
+                && this.metafile.filename.isNotBlank()
+                && this.metafile.representation == Representation.CV_MISSION
     }
 }

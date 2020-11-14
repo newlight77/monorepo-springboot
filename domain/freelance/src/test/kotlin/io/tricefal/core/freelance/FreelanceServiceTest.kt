@@ -55,7 +55,7 @@ class FreelanceServiceTest {
         val result = service.findByUsername(username)
 
         // Arrange
-        Assertions.assertEquals(freelance.username, result.username)
+        Assertions.assertEquals(freelance.username, result.get().username)
     }
 
 }

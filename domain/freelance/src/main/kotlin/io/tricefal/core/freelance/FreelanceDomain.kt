@@ -1,6 +1,5 @@
 package io.tricefal.core.freelance
 
-import io.tricefal.core.metafile.MetafileDomain
 import java.time.Instant
 
 data class FreelanceDomain
@@ -10,11 +9,11 @@ data class FreelanceDomain
             val company: CompanyDomain?,
             val privacyDetail: PrivacyDetailDomain?,
 
-            var kbisFile: MetafileDomain?,
-            var ribFile: MetafileDomain?,
-            var rcFile: MetafileDomain?,
-            var urssafFile: MetafileDomain?,
-            var fiscalFile: MetafileDomain?,
+            var kbisFilename: String?,
+            var ribFilename: String?,
+            var rcFilename: String?,
+            var urssafFilename: String?,
+            var fiscalFilename: String?,
 
             var status: Status?,
             var state: FreelanceStateDomain?,
@@ -27,11 +26,11 @@ data class FreelanceDomain
             var company: CompanyDomain? = null,
             var privacyDetail: PrivacyDetailDomain? = null,
 
-            var kbisFile: MetafileDomain? = null,
-            var ribFile: MetafileDomain? = null,
-            var rcFile: MetafileDomain? = null,
-            var urssafFile: MetafileDomain? = null,
-            var fiscalFile: MetafileDomain? = null,
+            var kbisFilename: String? = null,
+            var ribFilename: String? = null,
+            var rcFilename: String? = null,
+            var urssafFilename: String? = null,
+            var fiscalFilename: String? = null,
 
             var status: Status? = null,
             var state: FreelanceStateDomain? = null,
@@ -42,11 +41,11 @@ data class FreelanceDomain
         fun company(company: CompanyDomain?) = apply { this.company = company ?: CompanyDomain.Builder(username).build() }
         fun privacyDetail(privacyDetail: PrivacyDetailDomain?) = apply { this.privacyDetail = privacyDetail ?: PrivacyDetailDomain.Builder(username).build() }
 
-        fun kbisFile(kbisFile: MetafileDomain?) = apply { this.kbisFile = kbisFile }
-        fun ribFile(ribFile: MetafileDomain?) = apply { this.ribFile = ribFile }
-        fun rcFile(rcFile: MetafileDomain?) = apply { this.rcFile = rcFile }
-        fun urssafFile(urssafFile: MetafileDomain?) = apply { this.urssafFile = urssafFile }
-        fun fiscalFile(fiscalFile: MetafileDomain?) = apply { this.fiscalFile = fiscalFile }
+        fun kbisFilename(kbisFilename: String?) = apply { this.kbisFilename = kbisFilename }
+        fun ribFilename(ribFilename: String?) = apply { this.ribFilename = ribFilename }
+        fun rcFilename(rcFilename: String?) = apply { this.rcFilename = rcFilename }
+        fun urssafFilename(urssafFilename: String?) = apply { this.urssafFilename = urssafFilename }
+        fun fiscalFilename(fiscalFilename: String?) = apply { this.fiscalFilename = fiscalFilename }
 
         fun status(status: Status?) = apply { this.status = status }
         fun state(state: FreelanceStateDomain?) = apply { this.state = state ?: FreelanceStateDomain.Builder(username).build() }
@@ -57,11 +56,11 @@ data class FreelanceDomain
                 contact,
                 company,
                 privacyDetail,
-                kbisFile,
-                ribFile,
-                rcFile,
-                urssafFile,
-                fiscalFile,
+                kbisFilename,
+                ribFilename,
+                rcFilename,
+                urssafFilename,
+                fiscalFilename,
                 status,
                 state,
                 lastDate

@@ -7,6 +7,7 @@ class FreelanceStateModel(
         var rcUploaded: Boolean? = null,
         var urssafUploaded: Boolean? = null,
         var fiscalUploaded: Boolean? = null,
+        var missionResumedUploaded: Boolean? = null,
         var completed: Boolean? = null
 ) {
 
@@ -17,6 +18,7 @@ class FreelanceStateModel(
             var rcUploaded: Boolean? = null,
             var urssafUploaded: Boolean? = null,
             var fiscalUploaded: Boolean? = null,
+            var missionResumedUploaded: Boolean? = null,
             var completed: Boolean? = null
     ) {
         fun kbisUploaded(kbisUploaded: Boolean?) = apply { this.kbisUploaded = kbisUploaded }
@@ -24,6 +26,7 @@ class FreelanceStateModel(
         fun rcUploaded(rcUploaded: Boolean?) = apply { this.rcUploaded = rcUploaded }
         fun urssafUploaded(urssafUploaded: Boolean?) = apply { this.urssafUploaded = urssafUploaded }
         fun fiscalUploaded(fiscalUploaded: Boolean?) = apply { this.fiscalUploaded = fiscalUploaded }
+        fun missionResumedUploaded(missionResumedUploaded: Boolean?) = apply { this.missionResumedUploaded = missionResumedUploaded }
         fun completed(completed: Boolean?) = apply { this.completed = completed }
 
         fun build() = FreelanceStateModel(
@@ -33,6 +36,7 @@ class FreelanceStateModel(
                 rcUploaded,
                 urssafUploaded,
                 fiscalUploaded,
+                missionResumedUploaded,
                 completed
         )
     }
@@ -45,6 +49,7 @@ fun toModel(domain: FreelanceStateDomain): FreelanceStateModel {
             .rcUploaded(domain.rcUploaded)
             .urssafUploaded(domain.urssafUploaded)
             .fiscalUploaded(domain.fiscalUploaded)
+            .missionResumedUploaded(domain.missionResumedUploaded)
             .completed(domain.completed)
             .build()
 }
@@ -56,6 +61,7 @@ fun fromModel(model: FreelanceStateModel): FreelanceStateDomain {
             .rcUploaded(model.rcUploaded)
             .urssafUploaded(model.urssafUploaded)
             .fiscalUploaded(model.fiscalUploaded)
+            .missionResumedUploaded(model.missionResumedUploaded)
             .completed(model.completed)
             .build()
 }

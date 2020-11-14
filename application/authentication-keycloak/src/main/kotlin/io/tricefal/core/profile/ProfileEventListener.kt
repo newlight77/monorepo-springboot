@@ -1,5 +1,8 @@
 package io.tricefal.core.profile
 
+import io.tricefal.core.signup.PortraitUploadedEvent
+import io.tricefal.core.signup.ResumeLinkedinUploadedEvent
+import io.tricefal.core.signup.ResumeUploadedEvent
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component

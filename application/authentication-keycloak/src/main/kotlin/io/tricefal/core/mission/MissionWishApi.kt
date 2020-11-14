@@ -36,6 +36,14 @@ class MissionWishApi(val missionWishWebHandler: MissionWishWebHandler) {
         return missionWishWebHandler.update(missionWish)
     }
 
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])
+    @ResponseStatus(HttpStatus.OK)
+    fun uploadCv(principal: Principal, @RequestParam file : MultipartFile): MissionWishModel {
+        logger.info("signup uploading cv requested")
+        return missionWishWebHandler.updateResume(authenticatedUser(principal), file)
+    }
+
     private fun authenticatedUser(principal: Principal): String {
         if (principal is KeycloakAuthenticationToken) {
             return principal.account.keycloakSecurityContext.token.email

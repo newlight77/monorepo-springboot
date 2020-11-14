@@ -6,6 +6,7 @@ enum class Representation {
     PORTRAIT,
     CV,
     CV_LINKEDIN,
+    CV_MISSION,
     KBIS,
     RIB,
     RC,
