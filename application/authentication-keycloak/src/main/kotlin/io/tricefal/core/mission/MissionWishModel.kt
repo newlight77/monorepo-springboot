@@ -11,6 +11,7 @@ data class MissionWishModel
             var clients: String?,
             var dailyFee: String?,
             var location: String?,
+            var missionAbroad: String?,
             var lastDate: Instant?
 
     ) {
@@ -23,6 +24,7 @@ data class MissionWishModel
             var clients: String? = null,
             var dailyFee: String? = null,
             var location: String? = null,
+            var missionAbroad: String? = null,
             var lastDate: Instant? = null
     ) {
         fun summary(summary: String?) = apply { this.summary = summary }
@@ -32,6 +34,7 @@ data class MissionWishModel
         fun clients(clients: String?) = apply { this.clients = clients }
         fun dailyFee(dailyFee: String?) = apply { this.dailyFee = dailyFee }
         fun location(location: String?) = apply { this.location = location }
+        fun missionAbroad(missionAbroad: String?) = apply { this.missionAbroad = missionAbroad }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = MissionWishModel(
@@ -42,6 +45,7 @@ data class MissionWishModel
                 clients = clients,
                 dailyFee = dailyFee,
                 location = location,
+                missionAbroad = missionAbroad,
                 lastDate = lastDate
         )
     }
@@ -55,6 +59,7 @@ fun toModel(domain: MissionWishDomain): MissionWishModel {
             .clients(domain.clients)
             .dailyFee(domain.dailyFee)
             .location(domain.location)
+            .missionAbroad(domain.missionAbroad)
             .lastDate(domain.lastDate)
             .build()
 }
@@ -67,6 +72,7 @@ fun fromModel(model: MissionWishModel): MissionWishDomain {
             .clients(model.clients)
             .dailyFee(model.dailyFee)
             .location(model.location)
+            .missionAbroad(model.missionAbroad)
             .lastDate(model.lastDate)
             .build()
 }

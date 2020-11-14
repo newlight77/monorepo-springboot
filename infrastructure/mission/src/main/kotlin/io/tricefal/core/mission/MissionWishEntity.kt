@@ -39,6 +39,9 @@ data class MissionWishEntity (
         @Column(name = "location", length = 50)
         var location: String? = null,
 
+        @Column(name = "mission_abroad", length = 150)
+        var missionAbroad: String? = null,
+
         @Column(name = "last_date")
         var lastDate: Instant? = Instant.now()
 
@@ -53,7 +56,8 @@ fun toEntity(domain: MissionWishDomain): MissionWishEntity {
                 domains = domain.domains,
                 clients = domain.clients,
                 dailyFee = domain.dailyFee,
-                location = domain.location
+                location = domain.location,
+                missionAbroad = domain.missionAbroad
         )
 }
 
@@ -65,6 +69,7 @@ fun fromEntity(entity: MissionWishEntity): MissionWishDomain {
                 .clients(entity.clients)
                 .dailyFee(entity.dailyFee)
                 .location(entity.location)
+                .missionAbroad(entity.missionAbroad)
                 .lastDate(entity.lastDate)
                 .build()
 }
