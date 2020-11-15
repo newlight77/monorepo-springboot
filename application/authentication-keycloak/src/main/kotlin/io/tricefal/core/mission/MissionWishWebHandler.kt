@@ -2,10 +2,7 @@ package io.tricefal.core.mission
 
 import io.tricefal.core.exception.NotAcceptedException
 import io.tricefal.core.exception.NotFoundException
-import io.tricefal.core.metafile.IMetafileService
-import io.tricefal.core.metafile.Representation
-import io.tricefal.core.metafile.fromModel
-import io.tricefal.core.metafile.toMetafile
+import io.tricefal.core.metafile.*
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
@@ -64,6 +61,12 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
         }
         logger.info("successfully upload the mission specific resume for user $username")
         return toModel(result)
+    }
+
+    fun resume(username: String): MetafileModel {
+        return metafileService.findByUsername(username)
+                .map { toModel(it) }
+                .first { it.representation == Representation.CV_MISSION }
     }
 
     private fun find(username: String): MissionWishDomain {

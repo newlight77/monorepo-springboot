@@ -2,10 +2,7 @@ package io.tricefal.core.freelance
 
 import io.tricefal.core.exception.NotAcceptedException
 import io.tricefal.core.exception.NotFoundException
-import io.tricefal.core.metafile.IMetafileService
-import io.tricefal.core.metafile.Representation
-import io.tricefal.core.metafile.fromModel
-import io.tricefal.core.metafile.toMetafile
+import io.tricefal.core.metafile.*
 import io.tricefal.core.profile.ProfileDomain
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
@@ -117,6 +114,36 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         }
         logger.info("successfully upload the fiscal document for user $username")
         return toModel(result)
+    }
+
+    fun kbis(username: String): MetafileModel {
+        return metafileService.findByUsername(username)
+                .map { toModel(it) }
+                .first { it.representation == Representation.KBIS }
+    }
+
+    fun rib(username: String): MetafileModel {
+        return metafileService.findByUsername(username)
+                .map { toModel(it) }
+                .first { it.representation == Representation.RIB }
+    }
+
+    fun rc(username: String): MetafileModel {
+        return metafileService.findByUsername(username)
+                .map { toModel(it) }
+                .first { it.representation == Representation.RC }
+    }
+
+    fun urssaf(username: String): MetafileModel {
+        return metafileService.findByUsername(username)
+                .map { toModel(it) }
+                .first { it.representation == Representation.URSSAF }
+    }
+
+    fun fiscal(username: String): MetafileModel {
+        return metafileService.findByUsername(username)
+                .map { toModel(it) }
+                .first { it.representation == Representation.FISCAL }
     }
 
     private fun find(username: String): FreelanceDomain {

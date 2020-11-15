@@ -1,12 +1,18 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.metafile.MetafileModel
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
+import java.io.FileInputStream
+import java.nio.file.Paths
 import java.security.Principal
 import javax.annotation.security.RolesAllowed
+import javax.servlet.http.HttpServletResponse
 
 
 @RestController
@@ -69,11 +75,69 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
         return freelanceWebHandler.uploadFiscal(authenticatedUser(principal), file)
     }
 
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @GetMapping("kbis")
+    @ResponseStatus(HttpStatus.OK)
+    fun downloadKbis(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = freelanceWebHandler.kbis(authenticatedUser(principal))
+        return toStreamingResponse(response, metafile)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @GetMapping("rib")
+    @ResponseStatus(HttpStatus.OK)
+    fun downloadRib(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = freelanceWebHandler.rib(authenticatedUser(principal))
+        return toStreamingResponse(response, metafile)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @GetMapping("rc")
+    @ResponseStatus(HttpStatus.OK)
+    fun downloadRc(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = freelanceWebHandler.rc(authenticatedUser(principal))
+        return toStreamingResponse(response, metafile)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @GetMapping("urssaf")
+    @ResponseStatus(HttpStatus.OK)
+    fun downloadUrssaf(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = freelanceWebHandler.urssaf(authenticatedUser(principal))
+        return toStreamingResponse(response, metafile)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @GetMapping("fiscal")
+    @ResponseStatus(HttpStatus.OK)
+    fun downloadfiscal(principal: Principal, response: HttpServletResponse): StreamingResponseBody {
+        val metafile = freelanceWebHandler.fiscal(authenticatedUser(principal))
+        return toStreamingResponse(response, metafile)
+    }
+
     private fun authenticatedUser(principal: Principal): String {
         if (principal is KeycloakAuthenticationToken) {
             return principal.account.keycloakSecurityContext.token.email
         }
         return principal.name
+    }
+
+    private fun toStreamingResponse(response: HttpServletResponse, metafile: MetafileModel): StreamingResponseBody {
+        response.contentType = metafile.contentType
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
+        response.setHeader("filename", metafile.filename)
+        val inputStream = FileInputStream(Paths.get(metafile.filename).toFile())
+        return streamingResponseBody(inputStream)
+    }
+
+    private fun streamingResponseBody(inputStream: FileInputStream): StreamingResponseBody {
+        return StreamingResponseBody { outputStream ->
+            var bytesRead: Int
+            val buffer = ByteArray(2048)
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                outputStream.write(buffer, 0, bytesRead)
+            }
+        }
     }
 
 }

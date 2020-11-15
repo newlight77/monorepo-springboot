@@ -1,7 +1,5 @@
 package io.tricefal.core.freelance
 
-import io.tricefal.core.signup.SignupStateModel
-
 
 class FreelanceModel
     private constructor(

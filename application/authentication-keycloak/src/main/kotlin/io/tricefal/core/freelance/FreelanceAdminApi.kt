@@ -20,6 +20,13 @@ class FreelanceAdminApi(val freelanceWebHandler: FreelanceWebHandler) {
     }
 
     @RolesAllowed("ROLE_ac_freelance_r")
+    @GetMapping("{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun get(@PathVariable username: String): FreelanceModel {
+        return freelanceWebHandler.findByUsername(username)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_r")
     @GetMapping("availables")
     @ResponseStatus(HttpStatus.OK)
     fun availables(): List<FreelanceModel> {
