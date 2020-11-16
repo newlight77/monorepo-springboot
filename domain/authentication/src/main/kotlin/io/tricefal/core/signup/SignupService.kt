@@ -21,7 +21,10 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     override fun signup(signup: SignupDomain,
                         metaNotification: MetaNotificationDomain): SignupStateDomain {
         adapter.findByUsername(signup.username).ifPresent {
-            throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
+            if (it.state?.registered == true
+                    || it.state?.smsValidated == true
+                    || it.state?.validated == true)
+                throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
 
         val activationCode = generateCode()
