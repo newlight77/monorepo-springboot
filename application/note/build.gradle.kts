@@ -1,7 +1,6 @@
 
 plugins {
 	application
-	idea
 	`java-library`
 	id("org.springframework.boot") version "2.3.0.RELEASE"
 	id("io.spring.dependency-management") version "1.0.9.RELEASE"
