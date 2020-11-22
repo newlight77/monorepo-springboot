@@ -1,6 +1,7 @@
 package io.tricefal.core.freelance
 
 import io.tricefal.core.metafile.MetafileModel
+import io.tricefal.shared.util.PatchOperation
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
@@ -33,6 +34,20 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @ResponseStatus(HttpStatus.OK)
     fun get(principal: Principal): FreelanceModel {
         return freelanceWebHandler.findByUsername(authenticatedUser(principal))
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_r")
+    @PutMapping("{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun update(@PathVariable username: String, @RequestBody freelance: FreelanceModel): FreelanceModel {
+        return freelanceWebHandler.update(username, freelance)
+    }
+
+    @RolesAllowed("ROLE_ac_freelance_r")
+    @PatchMapping("{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun patch(@PathVariable username: String, @RequestBody patchOperations: List<PatchOperation>): FreelanceModel {
+        return freelanceWebHandler.patch(username, patchOperations)
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")

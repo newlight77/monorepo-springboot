@@ -28,3 +28,6 @@ include(":infrastructure:iam-client")
 include(":infrastructure:iam-client:iam-client-interface")
 include(":infrastructure:iam-client:okta-client")
 include(":infrastructure:iam-client:keycloak-client")
+
+include(":shared")
+include(":shared:util")

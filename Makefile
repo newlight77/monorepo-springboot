@@ -52,10 +52,10 @@ core-test: ## Run tests
 core-code-analysis: ## Run sonarqube
 	@./gradlew -g .gradle/caches sonarqube
 
-core-boot: ## Run tests
+core-boot: dc-up-infra
 	@./.run -b
 
-core-run: #core-build dc-infra
+core-run: dc-up-infra
 	@./.run
 #	@java $(DEBUG_ARG) -jar core/application/build/libs/core-application-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
 
@@ -68,6 +68,9 @@ dc-up: ## Run all containers
 
 dc-up-keycloak: ## Run all containers
 	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak
+
+dc-up-infra: ## Run all containers
+	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak dbcore
 
 dc-down: ## Stop all containers
 	@docker-compose -f docker-compose.yml down

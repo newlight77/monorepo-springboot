@@ -108,7 +108,7 @@ fi
 logInfo "launching the application"
 
 if [ "${SPRING_BOOT}" = 'true' ]; then
-  cd core && ./gradlew :application:authentication-keycloak:bootRun
+  ./gradlew :application:authentication-keycloak:bootRun
 else
   echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/core/application/authentication-keycloak/build/libs/app-uth-keycloak-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
   java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/authentication-keycloak/build/libs/app-auth-keycloak-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}

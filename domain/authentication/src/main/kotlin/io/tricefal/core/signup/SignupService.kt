@@ -15,8 +15,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    private val resourceBundle = ResourceBundle.getBundle("i18n.messages", Locale.getDefault())
-
+    private val resourceBundle = ResourceBundle.getBundle("i18n.messages", Locale.FRANCE)
 
     override fun signup(signup: SignupDomain,
                         metaNotification: MetaNotificationDomain): SignupStateDomain {

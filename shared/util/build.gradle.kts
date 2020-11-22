@@ -4,7 +4,7 @@ plugins {
 	kotlin("jvm")
 }
 
-group = "io.tricefal.domain"
+group = "io.tricefal.shared"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
@@ -13,9 +13,11 @@ repositories {
 
 dependencies {
 
-	implementation(project(":shared:util"))
+	api("com.github.java-json-tools:json-patch:1.13")
+	implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
+	implementation("com.squareup.moshi:moshi-adapters:1.11.0")
 
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.3")
+//	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.3")
 	implementation("org.slf4j:slf4j-api:1.7.30")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -28,5 +30,5 @@ dependencies {
 }
 
 tasks.withType<Jar>() {
-	baseName = "domain-freelance"
+	baseName = "shared-util"
 }

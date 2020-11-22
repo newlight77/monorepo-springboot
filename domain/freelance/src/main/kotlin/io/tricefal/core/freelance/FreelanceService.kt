@@ -1,5 +1,7 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.shared.util.JsonPatchOperator
+import io.tricefal.shared.util.PatchOperation
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -11,6 +13,40 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
         val result = adapter.findByUsername(freelance.username)
         return if (result.isPresent) adapter.update(freelance)
         else adapter.create(freelance)
+    }
+
+    override fun update(username: String, freelance: FreelanceDomain): FreelanceDomain {
+        val result = adapter.findByUsername(freelance.username)
+        return if (result.isPresent) adapter.update(freelance)
+        else throw NotFoundException("Failed to update an non existing freelance for user ${freelance.username}")
+    }
+
+    override fun patch(username: String, operations: List<PatchOperation>): FreelanceDomain {
+        var freelance = FreelanceDomain.Builder(username)
+                .build()
+        try {
+            adapter.findByUsername(username)
+                    .ifPresent {
+                        operations.filter { op ->
+                            acceptOperation(op)
+                        }.also{
+                            ops ->
+                            freelance = JsonPatchOperator().apply(it, ops)
+                            freelance = adapter.update(freelance)
+                        }
+                    }
+        } catch (ex: Exception) {
+            logger.error("Failed to update the freelance from the kbis uploaded event for user $username")
+            throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username")
+        }
+        return freelance
+    }
+
+    private fun acceptOperation(operation: PatchOperation): Boolean {
+        if (operation.op == "replace" && operation.path == "/contact") return true
+        if (operation.op == "replace" && operation.path == "/company") return true
+        if (operation.op == "replace" && operation.path == "/PrivacyDetailDomain") return true
+        return false
     }
 
     override fun findByUsername(username: String): Optional<FreelanceDomain> {
@@ -26,7 +62,7 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
     }
 
     override fun updateOnKbisUploaded(username: String, filename: String): FreelanceDomain {
-        val freelance = FreelanceDomain.Builder(username)
+        var freelance = FreelanceDomain.Builder(username)
                 .kbisFilename(filename)
                 .build()
         try {
@@ -34,20 +70,22 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                     .ifPresentOrElse(
                             {
                                 it.kbisFilename = filename
-                                create(freelance)
+                                freelance = adapter.update(it)
                             },
-                            { create(freelance) }
+                            {
+                                freelance = adapter.create(freelance)
+                            }
                     )
             freelance.state?.kbisUploaded = true
         } catch (ex: Exception) {
-            logger.error("Failed to update the freelancee from the kbis uploaded event for user $username")
-            throw KbisFileUploadException("Failed to update the freelancee from the kbis uploaded event for user $username")
+            logger.error("Failed to update the freelance from the kbis uploaded event for user $username")
+            throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username")
         }
         return freelance
     }
 
     override fun updateOnRibUploaded(username: String, filename: String): FreelanceDomain {
-        val freelance = FreelanceDomain.Builder(username)
+        var freelance = FreelanceDomain.Builder(username)
                 .ribFilename(filename)
                 .build()
         try {
@@ -55,9 +93,11 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                     .ifPresentOrElse(
                             {
                                 it.ribFilename = filename
-                                create(freelance)
+                                freelance = adapter.update(it)
                             },
-                            { create(freelance) }
+                            {
+                                freelance = adapter.create(freelance)
+                            }
                     )
             freelance.state?.ribUploaded = true
         } catch (ex: Exception) {
@@ -68,7 +108,7 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
     }
 
     override fun updateOnRcUploaded(username: String, filename: String): FreelanceDomain {
-        val freelance = FreelanceDomain.Builder(username)
+        var freelance = FreelanceDomain.Builder(username)
                 .rcFilename(filename)
                 .build()
         try {
@@ -76,9 +116,11 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                     .ifPresentOrElse(
                             {
                                 it.rcFilename = filename
-                                create(freelance)
+                                freelance = adapter.update(it)
                             },
-                            { create(freelance) }
+                            {
+                                freelance = adapter.create(freelance)
+                            }
                     )
             freelance.state?.rcUploaded = true
         } catch (ex: Exception) {
@@ -89,7 +131,7 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
     }
 
     override fun updateOnUrssafUploaded(username: String, filename: String): FreelanceDomain {
-        val freelance = FreelanceDomain.Builder(username)
+        var freelance = FreelanceDomain.Builder(username)
                 .urssafFilename(filename)
                 .build()
         try {
@@ -97,9 +139,11 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                     .ifPresentOrElse(
                             {
                                 it.urssafFilename = filename
-                                create(freelance)
+                                freelance = adapter.update(it)
                             },
-                            { create(freelance) }
+                            {
+                                freelance = adapter.create(freelance)
+                            }
                     )
             freelance.state?.urssafUploaded = true
         } catch (ex: Exception) {
@@ -110,7 +154,7 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
     }
 
     override fun updateOnFiscalUploaded(username: String, filename: String): FreelanceDomain {
-        val freelance = FreelanceDomain.Builder(username)
+        var freelance = FreelanceDomain.Builder(username)
                 .fiscalFilename(filename)
                 .build()
         try {
@@ -118,9 +162,11 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                     .ifPresentOrElse(
                             {
                                 it.fiscalFilename = filename
-                                create(freelance)
+                                freelance = adapter.update(it)
                             },
-                            { create(freelance) }
+                            {
+                                freelance = adapter.create(freelance)
+                            }
                     )
             freelance.state?.kbisUploaded = true
         } catch (ex: Exception) {

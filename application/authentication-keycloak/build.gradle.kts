@@ -25,6 +25,8 @@ repositories {
 
 dependencies {
 
+	implementation(project(":shared:util"))
+
 	implementation(project(":domain:authentication"))
 	implementation(project(":domain:freelance"))
 	implementation(project(":domain:metafile"))

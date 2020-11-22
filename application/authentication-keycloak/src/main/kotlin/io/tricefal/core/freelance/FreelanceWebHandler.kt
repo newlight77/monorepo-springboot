@@ -4,6 +4,7 @@ import io.tricefal.core.exception.NotAcceptedException
 import io.tricefal.core.exception.NotFoundException
 import io.tricefal.core.metafile.*
 import io.tricefal.core.profile.ProfileDomain
+import io.tricefal.shared.util.PatchOperation
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.i18n.LocaleContextHolder
@@ -29,6 +30,25 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
             freelanceService.create(domain)
         } catch (ex: Exception) {
             throw FreelanceCreationException("Failed to create a freelance profile with username ${freelanceModel.username}")
+        }
+        return toModel(result)
+    }
+
+    fun update(username: String, freelanceModel: FreelanceModel): FreelanceModel {
+        val result = try {
+            val domain = fromModel(freelanceModel)
+            freelanceService.update(username, domain)
+        } catch (ex: Exception) {
+            throw FreelanceCreationException("Failed to update a freelance with username $username with $freelanceModel")
+        }
+        return toModel(result)
+    }
+
+    fun patch(username: String, operations: List<PatchOperation>): FreelanceModel {
+        val result = try {
+            freelanceService.patch(username, operations)
+        } catch (ex: Exception) {
+            throw FreelanceCreationException("Failed to create a freelance profile with username $username with operations ${operations.joinToString()}")
         }
         return toModel(result)
     }
