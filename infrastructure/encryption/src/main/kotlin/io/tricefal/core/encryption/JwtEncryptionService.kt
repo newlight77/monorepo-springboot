@@ -40,10 +40,10 @@ class  JwtEncryptionService(private final val env: Environment) {
 
     fun decode(token: String): String {
         //This line will throw an exception if it is not a signed JWS (as expected)
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
-                .parseClaimsJws(token)
-                .body.subject
+                .build()
+                .parseClaimsJws(token).body.subject
     }
 
 }

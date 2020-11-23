@@ -19,12 +19,13 @@ class FileStorage {
             val tempFile = Paths.get("$target.tmp")
             Files.deleteIfExists(tempFile)
 
-            val byteCount = Files.newOutputStream(tempFile, CREATE_NEW, WRITE).use { outputStream ->
+            var byteCount: Long = 0
+            Files.newOutputStream(tempFile, CREATE_NEW, WRITE).use { outputStream ->
                 try {
-                    IOUtils.copyLarge(inputStream, outputStream)
+                    byteCount = IOUtils.copyLarge(inputStream, outputStream)
                 } catch (e: IOException) {
                     Files.deleteIfExists(tempFile)
-                } as Long
+                }
             }
 
             Files.move(tempFile, target)

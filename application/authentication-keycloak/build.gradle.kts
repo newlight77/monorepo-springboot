@@ -65,8 +65,6 @@ dependencies {
 
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
 	implementation("com.github.ben-manes.caffeine:caffeine:2.8.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

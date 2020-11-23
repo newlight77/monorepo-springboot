@@ -38,6 +38,7 @@ subprojects {
 		testImplementation("io.rest-assured:spring-mock-mvc:4.3.0") {
 			exclude("com.sun.xml.bind:jaxb-osgi")
 		}
+		testImplementation("io.rest-assured:xml-path:4.2.0")
 
 		testImplementation("io.cucumber:cucumber-java:5.6.0")
 		testImplementation("io.cucumber:cucumber-java8:5.6.0")
