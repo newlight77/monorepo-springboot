@@ -78,6 +78,7 @@ dc-down: ## Stop all containers
 dc-clean:
 	@docker system prune
 	@docker volume prune
+	@docker network prune
 
 dc-restart: down up ## Restart all containers
 
