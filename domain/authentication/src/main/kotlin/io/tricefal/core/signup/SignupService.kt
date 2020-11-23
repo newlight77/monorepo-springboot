@@ -112,7 +112,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService {
     }
 
     override fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain {
-        signup.state?.smsValidated = signup.activationCode.equals(code)
+        signup.state?.smsValidated = signup.activationCode?.toInt() == code.toInt()
         if (signup.state?.smsValidated != true) {
             logger.error("failed to active by code fur user ${signup.username}")
             throw SignupActivationByCodeException("failed to active by code fur user ${signup.username}")

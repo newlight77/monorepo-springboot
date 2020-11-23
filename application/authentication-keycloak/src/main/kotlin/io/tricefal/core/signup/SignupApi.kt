@@ -63,7 +63,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @ResponseStatus(HttpStatus.OK)
     fun verifyByCode(principal: Principal, @RequestBody codeModel : SignupCodeModel): SignupStateModel {
         logger.info("signup activation by code requested")
-        return signupWebHandler.verifyByCode(authenticatedUser(principal), codeModel.code.toString())
+        return signupWebHandler.verifyByCode(authenticatedUser(principal), codeModel.code)
     }
 
     // not-secure
