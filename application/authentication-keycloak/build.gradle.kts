@@ -57,8 +57,8 @@ dependencies {
 	implementation("org.springframework.security:spring-security-oauth2-client")
 	implementation("org.springframework.security:spring-security-oauth2-jose")
 
-	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.0")
-	implementation("org.keycloak:keycloak-spring-boot-starter:11.0.0")
+	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.3")
+	implementation("org.keycloak:keycloak-spring-boot-starter:11.0.3")
 
 	implementation("com.okta.jwt:okta-jwt-verifier:0.4.0")
 	implementation("com.okta.jwt:okta-jwt-verifier-impl:0.4.0")

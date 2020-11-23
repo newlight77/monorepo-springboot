@@ -46,6 +46,9 @@ core-clean-compile:
 core-package:
 	@./gradlew -g .gradle/caches build -x test
 
+core-clean-package:
+	@./gradlew -g .gradle/caches clean build -x test
+
 core-test: ## Run tests
 	@./gradlew -g .gradle/caches check
 

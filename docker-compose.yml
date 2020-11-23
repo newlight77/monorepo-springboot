@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   core:
-    image: openjdk:14-slim
+    image: openjdk:13-slim
     container_name: core
     hostname: docker_core
     networks:
