@@ -10,7 +10,7 @@ import java.util.*
 open class SignupNotificationFactory() {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
-    private val resourceBundle = ResourceBundle.getBundle("i18n.messages", Locale.FRANCE)
+    private val resourceBundle = ResourceBundle.getBundle("i18n.signup", Locale.FRANCE)
 
     fun smsNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): SmsNotificationDomain {
         val smsContent = getString("signup.sms.content", signup.firstname, signup.activationCode)
