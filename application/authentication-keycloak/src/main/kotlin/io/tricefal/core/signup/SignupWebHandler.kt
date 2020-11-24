@@ -29,7 +29,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val domain = fromModel(signup)
         val result = try {
                 signupService.signup(domain, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
-            } catch (ex: Exception) {
+            } catch (ex: Throwable) {
                 logger.error("Failed to signup a new user ${signup.username}")
                 throw SignupRegistrationException("Failed to signup a new user ${signup.username}")
             }
@@ -41,7 +41,7 @@ class SignupWebHandler(val signupService: ISignupService,
         try {
             val domain = signupService.findByUsername(username)
             this.signupService.delete(domain, authorizationCode)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to delete a signup with username $username")
             throw SignupDeleteException("Failed to delete a signup with username $username")
         }
@@ -61,7 +61,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val domain = signupService.findByUsername(username)
         val model = try {
             this.signupService.activate(domain)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to activate the signup for username $username")
             throw SignupActivationException("Failed to activate the signup for username $username")
         }
@@ -73,7 +73,7 @@ class SignupWebHandler(val signupService: ISignupService,
         val domain = signupService.findByUsername(username)
         val model = try {
             this.signupService.deactivate(domain)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to deactivate the signup for username $username")
             throw SignupActivationException("Failed to deactivate the signup for username $username")
         }
@@ -86,7 +86,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val result = try {
             signupService.resendCode(domain, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to signup a new user $username")
             throw SignupRegistrationException("Failed to signup a new user $username")
         }
@@ -99,7 +99,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val model = try {
             this.signupService.verifyByCode(domain, code)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to verify by code for the signup of username $username")
             throw SignupActivationException("Failed to verify by code for the signup of username $username")
         }
@@ -116,7 +116,7 @@ class SignupWebHandler(val signupService: ISignupService,
     fun verifyByEmailFromToken(token: String): SignupStateModel {
         val model = try {
             this.signupService.verifyByCodeFromToken(token)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to verify by email from the token $token")
             throw SignupActivationException("Failed to verify by email from the token $token")
         }
@@ -129,7 +129,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val model = try {
             this.signupService.updateStatus(domain, status)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the status of signup for username $username")
             throw SignupStatusUpdateException("Failed to update the status of signup for username $username")
         }
@@ -145,7 +145,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val model = try {
             this.signupService.portraitUploaded(domain, metaFile)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to upload the portrait of username $username")
             throw SignupUploadException("Failed to upload the portrait of username $username\"")
         }
@@ -161,7 +161,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val model = try {
             this.signupService.resumeUploaded(domain, metaFile)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to upload the resume of username $username")
             throw SignupUploadException("Failed to upload the resume of username $username\"")
         }
@@ -177,7 +177,7 @@ class SignupWebHandler(val signupService: ISignupService,
 
         val model = try {
             this.signupService.resumeLinkedinUploaded(domain, metaFile)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to upload the resume linkedin of username $username")
             throw SignupUploadException("Failed to upload the resume linkedin of username $username\"")
         }

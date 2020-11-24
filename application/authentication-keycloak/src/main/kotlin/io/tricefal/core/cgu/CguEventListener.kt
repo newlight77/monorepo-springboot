@@ -19,7 +19,7 @@ class CguEventListener(val cguService: ICguService) {
                     .acceptedCguVersion(event.cguAcceptedVersion)
                     .build()
             cguService.save(domain)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             throw CguAcceptedSavingException("Failed to save a cgu accepted event for user ${event.username} with version ${event.cguAcceptedVersion}")
         }
         logger.info("CguEventListener picked up a CguStatusUpdatedEvent for user ${event.username} with version \${event.cguAcceptedVersion")

@@ -16,7 +16,7 @@ class MissionWishEventListener(val missionWishService: IMissionWishService) {
     fun handleResumeUploadedEvent(event: ResumeUploadedEvent): MissionWishModel {
         val result = try {
             this.missionWishService.updateOnResumeUploaded(event.username, event.metafile.filename)
-        } catch(ex: Exception) {
+        } catch(ex: Throwable) {
             logger.error("Failed to update the mission wish on resume uploaded for username ${event.username}")
             throw ProfileUploadException("Failed to update the mission wish on resume uploaded for username ${event.username}")
         }

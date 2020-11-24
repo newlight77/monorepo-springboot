@@ -28,7 +28,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val domain = fromModel(freelanceModel)
         val result = try {
             freelanceService.create(domain)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             throw FreelanceCreationException("Failed to create a freelance profile with username ${freelanceModel.username}")
         }
         return toModel(result)
@@ -38,7 +38,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val result = try {
             val domain = fromModel(freelanceModel)
             freelanceService.update(username, domain)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             throw FreelanceCreationException("Failed to update a freelance with username $username with $freelanceModel")
         }
         return toModel(result)
@@ -47,7 +47,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
     fun patch(username: String, operations: List<PatchOperation>): FreelanceModel {
         val result = try {
             freelanceService.patch(username, operations)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             throw FreelanceCreationException("Failed to create a freelance profile with username $username with operations ${operations.joinToString()}")
         }
         return toModel(result)
@@ -72,7 +72,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnKbisUploaded(username, metaFile.filename)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to upload the kbis document for user $username")
             throw FreelanceUploadException("Failed to upload the kbis document for user $username")
         }
@@ -86,7 +86,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnRibUploaded(username, metaFile.filename)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to upload the rib document for user $username")
             throw FreelanceUploadException("Failed to upload the rib document for user $username")
         }
@@ -100,7 +100,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnRcUploaded(username, metaFile.filename)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to upload the rc document for user $username")
             throw FreelanceUploadException("Failed to upload the rc document for user $username")
         }
@@ -114,7 +114,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnUrssafUploaded(username, metaFile.filename)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to upload the urssaaf document for user $username")
             throw FreelanceUploadException("Failed to upload the urssaaf document for user $username")
         }
@@ -128,7 +128,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnFiscalUploaded(username, metaFile.filename)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to upload the fiscal document for user $username")
             throw FreelanceUploadException("Failed to upload the fiscal document for user $username")
         }
@@ -168,9 +168,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     private fun find(username: String): FreelanceDomain {
         if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        val freelance = this.freelanceService.findByUsername(username)
+        return this.freelanceService.findByUsername(username)
                 .orElseThrow { NotFoundException("username $username not found") }
-        return freelance
     }
 
     class FreelanceCreationException(private val msg: String) : Throwable(msg) {}

@@ -17,7 +17,7 @@ class FreelanceEventListener(val freelanceService: IFreelanceService) {
             val domain = FreelanceDomain.Builder(event.username)
                     .state(FreelanceStateDomain.Builder(event.username).build()).build()
             freelanceService.create(domain)
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             throw FreelanceWebHandler.FreelanceCreationException("Failed to create a freelance profile with username ${event.username}")
         }
         logger.info("FreelanceEventListener picked up a FreelanceStatusUpdatedEvent with ${event.username}")
