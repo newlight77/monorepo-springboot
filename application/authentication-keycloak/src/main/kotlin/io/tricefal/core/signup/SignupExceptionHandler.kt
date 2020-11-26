@@ -20,12 +20,19 @@ class SignupExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(
             SignupUserNotFoundException::class,
-            SignupDeleteException::class,
-            SignupActivationException::class,
+            SignupPortraitUploadException::class,
+            SignupResumeUploadException::class,
+            SignupLinkedinResumeUploadException::class,
+            SignupActivationByCodeException::class,
             SignupStatusUpdateException::class,
-            SignupUploadException::class
-
+            SignupPersistenceException::class,
+            SignupUserRegistrationException::class,
+            SignupRoleAssignationException::class,
+            SignupCguAcceptException::class,
+            SignupEmailNotificationException::class,
+            SignupSmsNotificationException::class
     )
+
     fun handle400Exception(request: HttpServletRequest, ex: Exception): Any {
         return ExceptionDetail.Builder()
                 .classname(ex.javaClass.name)
@@ -40,6 +47,19 @@ class SignupExceptionHandler {
     @ExceptionHandler(UserDetailNotDefinedException::class)
     @ResponseBody
     fun handle401Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
+        return ExceptionDetail.Builder()
+                .classname(ex.javaClass.name)
+                .date(Instant.now().toString())
+                .message(ex.localizedMessage)
+                .path(request.requestURI)
+                .params(request.queryString)
+                .build()
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(SignupNotFoundException::class)
+    @ResponseBody
+    fun handle404Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
         return ExceptionDetail.Builder()
                 .classname(ex.javaClass.name)
                 .date(Instant.now().toString())

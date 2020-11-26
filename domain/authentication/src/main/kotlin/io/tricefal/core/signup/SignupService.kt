@@ -166,7 +166,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             return signup.state!!
         } catch (ex: Exception) {
             logger.error("failed to update the signup with resume upload of the signup for username ${signup.username}")
-            throw SignupPortraitUploadException("failed to update the signup with resume upload of the signup for username ${signup.username}")
+            throw SignupResumeUploadException("failed to update the signup with resume upload of the signup for username ${signup.username}")
         }
     }
 
@@ -179,7 +179,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             return signup.state!!
         } catch (ex: Exception) {
             logger.error("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
-            throw SignupPortraitUploadException("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
+            throw SignupLinkedinResumeUploadException("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
         }
     }
 
@@ -311,6 +311,8 @@ class SignupEmailNotificationException(val s: String) : Throwable()
 class SignupSmsNotificationException(val s: String) : Throwable()
 class SignupCguAcceptException(val s: String) : Throwable()
 class SignupStatusUpdateException(val s: String) : Throwable()
+class SignupResumeUploadException(val s: String) : Throwable()
+class SignupLinkedinResumeUploadException(val s: String) : Throwable()
 class SignupPortraitUploadException(val s: String) : Throwable()
 class SignupRoleAssignationException(val s: String) : Throwable()
 class SignupResourceBundleMissingKeyException(val s: String) : Throwable()
