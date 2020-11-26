@@ -30,6 +30,7 @@ dependencies {
 	implementation(project(":domain:freelance"))
 	implementation(project(":domain:metafile"))
 	implementation(project(":domain:mission"))
+	implementation(project(":domain:pricer"))
 
 	implementation(project(":infrastructure:cgu"))
 	implementation(project(":infrastructure:encryption"))
@@ -37,6 +38,7 @@ dependencies {
 	implementation(project(":infrastructure:notification"))
 	implementation(project(":infrastructure:freelance"))
 	implementation(project(":infrastructure:mission"))
+	implementation(project(":infrastructure:pricer-reference"))
 	implementation(project(":infrastructure:profile"))
 	implementation(project(":infrastructure:signup"))
 	implementation(project(":infrastructure:storage"))
