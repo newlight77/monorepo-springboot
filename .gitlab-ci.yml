@@ -29,6 +29,8 @@ stages:
 #      - application/build/
 #      - application/authentication-keycloak/build/
 #  allow_failure: false
+#  tags:
+#    - java
 
 unit-test:
   stage: unit test
@@ -45,6 +47,8 @@ unit-test:
       - application/build/
       - application/authentication-keycloak/build/
   allow_failure: false
+  tags:
+    - java
 
 #code-analysis:
 #  stage: quality
