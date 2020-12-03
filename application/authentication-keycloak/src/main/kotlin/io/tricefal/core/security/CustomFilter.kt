@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse
 @Configuration
 class CustomFilter : OncePerRequestFilter() {
 
-    @Value("\${security.enabled}")
+    @Value("\${security.enabled:true}")
     val securityEnabled: Boolean = true
 
     @Throws(IOException::class, ServletException::class)

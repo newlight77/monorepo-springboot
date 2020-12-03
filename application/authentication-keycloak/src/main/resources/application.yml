@@ -16,21 +16,13 @@ security:
     enabled: ${SECURITY_ENABLED}
     csrf:
         enabled: ${SECURITY_ENABLED_CSRF}
-    oauth:
-        issuer: ${OKTA_OAUTH2_ISSUER}
-        audience: ${OKTA_OAUTH2_AUDIENCE}
-        client-id: ${OKTA_OAUTH2_CLIENT_ID}
-        client-secret: ${OKTA_OAUTH2_CLIENT_SECRET}
+#    ignored: /**
 
-#    jwt:
-#        key-store: classpath:keystore.jks
-#        key-store-password: letmein
-#        key-pair-alias: mytestkey
-#        key-pair-password: changeme
 
 spring:
     main:
         allow-bean-definition-overriding: true
+
 
     datasource:
         url: ${POSTGRES_URL}
@@ -43,6 +35,9 @@ spring:
         generate-ddl: ${JPA_GENERATE_DDL}
         hibernate:
             ddl-auto: ${HIBERNATE_DDL_AUTO}
+        properties:
+            hibernate:
+                show_sql: false
 #    liquibase:
 #        change-log=classpath: db/changelog/db.changelog-master.xml
     mail:
@@ -70,10 +65,18 @@ spring:
 #                create-target: schema.sql
 
 logging:
+    level:
+        org.springframework: ERROR
+        liquibase: ERROR
+        org.hibernate: ERROR
+        io.tricefal.core: DEBUG
+        com.zaxxer: ERROR
+    org.apache.catalina: INFO
+    pattern:
+        console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
 #    config: classpath:logback-spring.xml
     file: core.log
     path: ${DATA_LOGS_PATH}
-    org.apache.catalina: DEBUG
 
 
 #### Custom
@@ -91,10 +94,6 @@ notification:
             phoneNumber: ${TWILIO_PHONE_NUMBER}
             accountSid: ${TWILIO_ACCOUNT_SID}
             authToken: ${TWILIO_AUTH_TOKEN}
-
-okta:
-    baseUrl: ${OKTA_OAUTH2_BASE_URL}
-    apiToken: ${OKTA_API_TOKEN}
 
 encryption:
     secretKey: ${ENCRYPTION_SECRET_KEY}

@@ -4,17 +4,17 @@ server:
         context-path: /api
 
 security:
+    enabled: false
+    csrf:
+        enabled: false
     basic:
         enabled: false
 #    ignored: /**
 
-#    jwt:
-#        key-store: classpath:keystore.jks
-#        key-store-password: letmein
-#        key-pair-alias: mytestkey
-#        key-pair-password: changeme
 
 spring:
+    main:
+        allow-bean-definition-overriding: true
     # it seems the exclusion is not working
     autoconfigure:
         exclude:
@@ -30,19 +30,37 @@ spring:
         generate-ddl: true
         hibernate:
             ddl-auto: create-drop
-
         properties:
             hibernate:
                 show_sql: false
+
+    liquibase:
+        enabled: false
+    #        change-log=classpath: db/changelog/db.changelog-master.xml
 
     mail:
         host: localhost
         port: 2525
         username: kong@tricefal.com
         password: tricefal
+#        properties:
+#            mail:
+#                smtp:
+#                    auth: true
+#                    starttls:
+#                        enable: true
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 5MB
+            max-request-size: 5MB
 
-    liquibase:
-        enabled: false
+#javax:
+#    persistence:
+#        schema-generation:
+#            scripts:
+#                create-target: schema.sql
 
 logging:
     level:
@@ -57,6 +75,8 @@ logging:
     path: /tmp/data/logs
 
 
+#### Custom
+
 data:
     files:
         path: /tmp/data/files
@@ -69,9 +89,6 @@ notification:
             phoneNumber: 33644601054
             accountSid: AC497ba2b4c6a9ecf212ea611537e0be92
             authToken: 56dfdab0b2c07ed9d861b4a182d10e00
-okta:
-    baseUrl: https://dev-769725.okta.com
-    apiToken: 00m6e7g8VBqhtFOu2HdVSkeGgcm3eH5VFScBHD00sI
 
 encryption:
     secretKey: oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGh
@@ -79,3 +96,47 @@ encryption:
 core:
     baseUrl: http://localhost/api
     frontendUrl: http://localhost
+
+## Can be set to false to disable security during local development
+#management:
+#    endpoints:
+#        web:
+#            cors:
+#                allowed-origins: *
+#                allowed-headers: *
+#                allowed-methods: GET,POST,PUT,PATCH,DELETE,OPTIONS
+#                max-age: 3600
+
+keycloak:
+    #    configurationFile: ${KEYCLOAK_CONFIGFILE}
+    enabled: true
+    cors: true
+    enable-basic-auth: true
+    realm: local.app
+    auth-server-url: http://localhost:1080/auth
+    ssl-required: false
+    resource: local.backend.bearer
+    use-resource-role-mappings: false
+    bearer-only: true
+    credentials:
+        secret: 3ce3d1c5-ab8f-412d-9880-217cfa2f2e7a
+    public-client: false
+    verify-token-audience: false
+    principal-attribute: preferred_username
+
+    securityConstraints[0]:
+        authRoles[0]: ROLE_user-role
+        authRoles[1]: ROLE_ac_billing_r
+        authRoles[2]: ROLE_ac_billing_w
+        authRoles[3]: ROLE_ac_client_r
+        authRoles[4]: ROLE_ac_client_w
+        authRoles[5]: ROLE_ac_collaborator_r
+        authRoles[6]: ROLE_ac_collaborator_w
+        authRoles[7]: ROLE_ac_contract_r
+        authRoles[8]: ROLE_ac_contract_w
+        authRoles[9]: ROLE_ac_freelance_r
+        authRoles[10]: ROLE_ac_freelance_w
+        authRoles[11]: ROLE_ac_steering_r
+        authRoles[12]: ROLE_ac_steering_w
+        authRoles[13]: ROLE_ac_tricefal_r
+        authRoles[14]: ROLE_ac_tricefal_w
