@@ -11,5 +11,3 @@ create table ref_pricer (
     navigo_yr_employer int,
     primary key (id)
 );
-
-insert into ref_pricer (1, NOW(), 217, 10, 45, 50, 10, 50, 827, 50)
