@@ -118,7 +118,64 @@ class SignupServiceTest {
     }
 
     @Test
-    fun `should delete the signup`() {
+    fun `should do a hard delete the signup when the code matches the activation code`() {
+        // Arrange
+        val username = "kong@gmail.com"
+
+        val state = SignupStateDomain.Builder("kong")
+            .build()
+
+        val signup = SignupDomain.Builder(username)
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(state)
+            .build()
+
+        Mockito.doNothing().`when`(adapter).delete(signup.username)
+
+        service = SignupService(adapter)
+
+        val code = "123456"
+
+        // Act
+        service.delete(signup, code)
+
+        // Arrange
+        Mockito.verify(adapter).delete("kong@gmail.com")
+
+    }
+
+    @Test
+    fun `should do a soft delete the signup when the code does not match the activation code`() {
+        // Arrange
+        val username = "kong@gmail.com"
+
+        val state = SignupStateDomain.Builder("kong")
+            .build()
+
+        val signup = SignupDomain.Builder(username)
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(state)
+            .build()
+
+        service = SignupService(adapter)
+
+        val code = ""
+
+        // Act
+        service.delete(signup, code)
+
+        // Arrange
+        Assertions.assertTrue(state.deleted!!)
 
     }
 
