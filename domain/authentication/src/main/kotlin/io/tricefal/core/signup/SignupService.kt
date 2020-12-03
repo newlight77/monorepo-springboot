@@ -33,7 +33,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
                 .registered(register(signup))
                 .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
                 .emailSent(sendEmail(signup, emailNotification(signup, metaNotification)))
-//                .smsSent(sendSms(signup, smsNotification(signup, metaNotification)))
+                .smsSent(sendSms(signup, smsNotification(signup, metaNotification)))
                 .build()
     }
 

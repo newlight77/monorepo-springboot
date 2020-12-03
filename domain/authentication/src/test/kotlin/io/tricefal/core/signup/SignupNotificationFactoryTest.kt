@@ -65,7 +65,7 @@ class SignupNotificationFactoryTest {
         Assertions.assertEquals("kong@gmail.com", result.emailTo)
         Assertions.assertEquals("Tricefal souscription", result.emailSubject)
         Assertions.assertEquals("Bonjour kong,\n\n", result.emailGreeting)
-        Assertions.assertEquals("Merci d\'avoir fait la souscription. Un compte a été créé. \n\nNous vous invitons à valider votre adresse email via ce lien :\n baseUrl/signup/email/verify?token=token.random=123456", result.emailContent)
+        Assertions.assertEquals("Merci d\'avoir fait la souscription. Un compte a été créé. \n\nNous vous invitons à valider votre adresse email via ce lien :\n baseUrl/signup/email/verify?token=token.random.123456", result.emailContent)
     }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)

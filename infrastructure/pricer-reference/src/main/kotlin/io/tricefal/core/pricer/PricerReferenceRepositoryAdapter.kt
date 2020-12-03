@@ -11,10 +11,7 @@ class PricerReferenceRepositoryAdapter(private var repository: PricerReferenceJp
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun save(pricerRef: PricerReferenceDomain): PricerReferenceDomain {
-        repository.all().stream().findFirst().orElse {
-//            logger.error("There is no data in the priceer reference table, insert default")
-            defaultRef()
-        }
+        repository.all().stream().findFirst().orElse(defaultRef())
         val entity = repository.save(toEntity(pricerRef))
         return fromEntity(entity)
     }
