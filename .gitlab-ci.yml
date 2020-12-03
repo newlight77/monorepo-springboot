@@ -1,7 +1,7 @@
 image: openjdk:13-slim
 
 before_script:
-  - apk add --no-cache make git
+#  - apk add --no-cache make git
   - chmod +x gradlew
 
 cache:
