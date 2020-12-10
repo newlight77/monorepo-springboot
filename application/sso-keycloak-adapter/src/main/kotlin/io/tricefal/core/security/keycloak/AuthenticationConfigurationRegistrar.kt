@@ -12,7 +12,7 @@ import org.springframework.core.type.AnnotationMetadata
 class AuthenticationConfigurationRegistrar: ImportBeanDefinitionRegistrar {
 
     private fun annotation(): Class<out Annotation?>? {
-        return KeycloakAdapterConfiguration::class.java
+        return SsoKeycloakAdapterConfiguration::class.java
     }
 
     override fun registerBeanDefinitions(

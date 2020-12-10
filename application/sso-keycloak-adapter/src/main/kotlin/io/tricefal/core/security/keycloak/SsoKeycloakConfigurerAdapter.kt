@@ -1,5 +1,6 @@
 package io.tricefal.core.security.keycloak
 
+import io.tricefal.core.security.ip.IpAddressEventHandler
 import org.keycloak.adapters.KeycloakConfigResolver
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration
@@ -30,17 +31,20 @@ import org.springframework.web.cors.CorsConfiguration
 
 @KeycloakConfiguration
 @Profile(value = ["prod", "dev", "local", "localhost"])
-@PropertySource("classpath:spring-security-keycloak.yml")
+@PropertySource("classpath:/spring-security-keycloak.yml")
 @EnableGlobalMethodSecurity(
 //        securedEnabled = true, // @Secured
         jsr250Enabled = true // @RolesAllowed
 //        prePostEnabled = true // @PreAuthorize and @PostAuthorize
 )
 @Order(1)
-open class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
+open class SsoKeycloakConfigurerAdapter: KeycloakWebSecurityConfigurerAdapter() {
 
     @Value("\${security.csrf.enabled}")
     private val csrfEnabled = false
+
+    @Autowired
+    private lateinit var ipAddressEventHandler: IpAddressEventHandler
 
     @Bean
     open fun keycloakConfigResolver(): KeycloakConfigResolver {
@@ -134,7 +138,7 @@ open class KeycloakConfiguration: KeycloakWebSecurityConfigurerAdapter() {
             http .csrf().disable()
 
         http.addFilterAfter(CustomFilter(), UsernamePasswordAuthenticationFilter::class.java)
-        http.addFilterAfter(IpAddressFilter(), UsernamePasswordAuthenticationFilter::class.java)
+        http.addFilterAfter(IpAddressFilter(ipAddressEventHandler), UsernamePasswordAuthenticationFilter::class.java)
 
         //@formatter:on
     }

@@ -10,10 +10,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-class IpAddressFilter() : OncePerRequestFilter() {
-
-    @Autowired
-    lateinit var ipAddressEventHandler: IpAddressEventHandler
+class IpAddressFilter(private val ipAddressEventHandler: IpAddressEventHandler) : OncePerRequestFilter() {
 
     @Throws(IOException::class, ServletException::class)
     public override fun doFilterInternal(req: HttpServletRequest, res: HttpServletResponse,

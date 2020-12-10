@@ -20,24 +20,7 @@ import javax.servlet.http.HttpServletRequest
 
 @ControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE)
-class GlobalExceptionHandler {
-
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(
-            HttpMessageNotReadableException::class,
-            MethodArgumentNotValidException::class,
-            MissingServletRequestParameterException::class,
-            ForbiddenException::class)
-    fun handle400Exception(request: HttpServletRequest, ex: Exception): Any {
-        return ExceptionDetail.Builder()
-                .classname(ex.javaClass.name)
-                .date(Instant.now().toString())
-                .message(ex.localizedMessage)
-                .path(request.requestURI)
-                .params(request.queryString)
-                .build()
-    }
+class SecurityExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(
@@ -56,8 +39,8 @@ class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ConflictException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException::class)
     fun handle409Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
         return ExceptionDetail.Builder()
                 .classname(ex.javaClass.name)
@@ -68,36 +51,4 @@ class GlobalExceptionHandler {
                 .build()
     }
 
-    @ResponseBody
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ResourceAccessException::class)
-    fun handle404Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
-        return ExceptionDetail.Builder()
-                .classname(ex.javaClass.name)
-                .date(Instant.now().toString())
-                .message(ex.localizedMessage)
-                .path(request.requestURI)
-                .params(request.queryString)
-                .build()
-    }
-
-    @ResponseBody
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(
-            Exception::class,
-            java.lang.Exception::class,
-            NullPointerException::class,
-            java.lang.NullPointerException::class,
-            RuntimeException::class,
-            java.lang.RuntimeException::class
-    )
-    fun handle500Exception(request: HttpServletRequest, ex: java.lang.Exception): Any {
-        return ExceptionDetail.Builder()
-                .classname(ex.javaClass.name)
-                .date(Instant.now().toString())
-                .message(ex.localizedMessage)
-                .path(request.requestURI)
-                .params(request.queryString)
-                .build()
-    }
 }
