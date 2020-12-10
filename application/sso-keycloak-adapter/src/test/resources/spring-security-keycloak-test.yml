@@ -1,0 +1,42 @@
+
+security:
+    enabled: false
+    csrf:
+        enabled: false
+    basic:
+        enabled: false
+#    ignored: /**
+
+keycloak:
+    #    configurationFile: ${KEYCLOAK_CONFIGFILE}
+    enabled: true
+    cors: true
+    enable-basic-auth: true
+    realm: local.app
+    auth-server-url: http://localhost:1080/auth
+    ssl-required: false
+    resource: local.backend.bearer
+    use-resource-role-mappings: false
+    bearer-only: true
+    credentials:
+        secret: 3ce3d1c5-ab8f-412d-9880-217cfa2f2e7a
+    public-client: false
+    verify-token-audience: false
+    principal-attribute: preferred_username
+
+    securityConstraints[0]:
+        authRoles[0]: ROLE_user-role
+        authRoles[1]: ROLE_ac_billing_r
+        authRoles[2]: ROLE_ac_billing_w
+        authRoles[3]: ROLE_ac_client_r
+        authRoles[4]: ROLE_ac_client_w
+        authRoles[5]: ROLE_ac_collaborator_r
+        authRoles[6]: ROLE_ac_collaborator_w
+        authRoles[7]: ROLE_ac_contract_r
+        authRoles[8]: ROLE_ac_contract_w
+        authRoles[9]: ROLE_ac_freelance_r
+        authRoles[10]: ROLE_ac_freelance_w
+        authRoles[11]: ROLE_ac_steering_r
+        authRoles[12]: ROLE_ac_steering_w
+        authRoles[13]: ROLE_ac_tricefal_r
+        authRoles[14]: ROLE_ac_tricefal_w

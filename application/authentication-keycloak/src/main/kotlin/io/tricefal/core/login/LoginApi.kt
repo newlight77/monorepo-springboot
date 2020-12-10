@@ -1,8 +1,8 @@
 package io.tricefal.core.login
 
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
+//import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.springframework.http.HttpStatus
-import org.springframework.security.core.context.SecurityContextHolder
+//import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
 import javax.annotation.security.RolesAllowed
@@ -26,9 +26,9 @@ class LoginApi(val loginHandler: LoginWebHandler) {
     }
 
     private fun authenticatedUser(principal: Principal): String {
-        if (principal is KeycloakAuthenticationToken) {
-            return principal.account.keycloakSecurityContext.token.email
-        }
+//        if (principal is KeycloakAuthenticationToken) {
+//            return principal.account.keycloakSecurityContext.token.email
+//        }
         return principal.name
     }
 }

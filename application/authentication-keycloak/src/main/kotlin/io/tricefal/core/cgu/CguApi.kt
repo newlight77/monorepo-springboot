@@ -1,6 +1,6 @@
 package io.tricefal.core.cgu
 
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
+//import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -28,9 +28,9 @@ class CguApi(val cguWebHandler: CguWebHandler,
     }
 
     private fun authenticatedUser(principal: Principal): String {
-        if (principal is KeycloakAuthenticationToken) {
-            return principal.account.keycloakSecurityContext.token.email
-        }
+//        if (principal is KeycloakAuthenticationToken) {
+//            return principal.account.keycloakSecurityContext.token.email
+//        }
         return principal.name
     }
 

@@ -1,6 +1,6 @@
 package io.tricefal.core.signup
 
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
+//import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
@@ -111,21 +111,10 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     }
 
     private fun authenticatedUser(principal: Principal): String {
-        if (principal is KeycloakAuthenticationToken) {
-            return principal.account.keycloakSecurityContext.token.email
-        }
+//        if (principal is KeycloakAuthenticationToken) {
+//            return principal.account.keycloakSecurityContext.token.email
+//        }
         return principal.name
-    }
-
-    private fun validateUser(principal: Principal, username: String): String {
-        if (principal is KeycloakAuthenticationToken
-                && principal.account.keycloakSecurityContext.token.email != username)
-            throw UserDetailNotDefinedException("username not expected")
-
-        if (principal.name != username)
-            throw UserDetailNotDefinedException("username not expected")
-
-        return username
     }
 
 }

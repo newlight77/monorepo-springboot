@@ -2,6 +2,7 @@ rootProject.name = "tricefal-core"
 
 include(":application")
 include(":application:authentication-keycloak")
+include(":application:sso-keycloak-adapter")
 //include(":application:authentication-okta")
 include(":application:note")
 
@@ -17,6 +18,7 @@ include(":infrastructure")
 include(":infrastructure:cgu")
 include(":infrastructure:freelance")
 include(":infrastructure:encryption")
+include(":infrastructure:ip-address")
 include(":infrastructure:login")
 include(":infrastructure:mission")
 include(":infrastructure:notification")

@@ -2,7 +2,7 @@ package io.tricefal.core.freelance
 
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.shared.util.PatchOperation
-import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
+//import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -131,9 +131,9 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     }
 
     private fun authenticatedUser(principal: Principal): String {
-        if (principal is KeycloakAuthenticationToken) {
-            return principal.account.keycloakSecurityContext.token.email
-        }
+//        if (principal is KeycloakAuthenticationToken) {
+//            return principal.account.keycloakSecurityContext.token.email
+//        }
         return principal.name
     }
 

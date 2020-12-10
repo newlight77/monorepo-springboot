@@ -7,5 +7,12 @@ import org.springframework.boot.runApplication
 class KeycloakAuthApplication
 
 fun main(args: Array<String>) {
-	runApplication<KeycloakAuthApplication>(*args)
+	val context = runApplication<KeycloakAuthApplication>(*args)
+
+	context.beanDefinitionNames
+		.map { context.getBean(it).javaClass.toString() }
+		.filter { it.startsWith("class io.tricefal.core") }
+		.sorted()
+		.map { println(it) }
+
 }

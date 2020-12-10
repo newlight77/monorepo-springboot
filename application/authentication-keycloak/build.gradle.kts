@@ -26,6 +26,8 @@ dependencies {
 
 	implementation(project(":shared:util"))
 
+	implementation(project(":application:sso-keycloak-adapter"))
+
 	implementation(project(":domain:authentication"))
 	implementation(project(":domain:freelance"))
 	implementation(project(":domain:metafile"))
@@ -34,6 +36,7 @@ dependencies {
 
 	implementation(project(":infrastructure:cgu"))
 	implementation(project(":infrastructure:encryption"))
+	implementation(project(":infrastructure:ip-address"))
 	implementation(project(":infrastructure:login"))
 	implementation(project(":infrastructure:notification"))
 	implementation(project(":infrastructure:freelance"))
@@ -56,16 +59,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 
-	implementation("org.springframework.security:spring-security-oauth2-client")
-	implementation("org.springframework.security:spring-security-oauth2-jose")
+//	implementation("org.springframework.security:spring-security-oauth2-client")
+//	implementation("org.springframework.security:spring-security-oauth2-jose")
 
-	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.3")
-	implementation("org.keycloak:keycloak-spring-boot-starter:11.0.3")
+//	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.3")
+//	implementation("org.keycloak:keycloak-spring-boot-starter:11.0.3")
 
-	implementation("com.okta.jwt:okta-jwt-verifier:0.4.0")
-	implementation("com.okta.jwt:okta-jwt-verifier-impl:0.4.0")
+//	implementation("com.okta.jwt:okta-jwt-verifier:0.4.0")
+//	implementation("com.okta.jwt:okta-jwt-verifier-impl:0.4.0")
 
-	implementation("io.jsonwebtoken:jjwt:0.9.1")
+//	implementation("io.jsonwebtoken:jjwt:0.9.1")
 
 	implementation("com.github.ben-manes.caffeine:caffeine:2.8.1")
 

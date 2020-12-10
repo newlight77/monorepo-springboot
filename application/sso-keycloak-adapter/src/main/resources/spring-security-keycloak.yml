@@ -1,0 +1,54 @@
+
+security:
+    enabled: ${SECURITY_ENABLED}
+    csrf:
+        enabled: ${SECURITY_ENABLED_CSRF}
+#    ignored: /**
+    oauth:
+        issuer: ${OKTA_OAUTH2_ISSUER}
+        audience: ${OKTA_OAUTH2_AUDIENCE}
+        client-id: ${OKTA_OAUTH2_CLIENT_ID}
+        client-secret: ${OKTA_OAUTH2_CLIENT_SECRET}
+
+keycloak:
+#    configurationFile: ${KEYCLOAK_CONFIGFILE}
+    enabled: ${KEYCLOAK_ENABLED}
+    cors: true
+    enable-basic-auth: ${KEYCLOAK_ENABLE_BASIC_AUTH}
+    realm: ${KEYCLOAK_ADAPTER_REALM}
+    auth-server-url: ${KEYCLOAK_ADAPTER_AUTH_SERVER_URL}
+    ssl-required: ${KEYCLOAK_ADAPTER_SSL_REQUIRED}
+    resource: ${KEYCLOAK_ADAPTER_RESOURCE}
+    use-resource-role-mappings: ${KEYCLOAK_ADAPTER_USER_RESOURCE_ROLE_MAPPINGS}
+    bearer-only: ${KEYCLOAK_ADAPTER_BEARER_ONLY}
+    credentials:
+        secret: ${KEYCLOAK_ADAPTER_CREDENTIALS_SECRET}
+    public-client: ${KEYCLOAK_ADAPTER_PUBLIC_CLIENT}
+    verify-token-audience: ${KEYCLOAK_ADAPTER_VERIFY_TOKEN_AUDIENCE}
+    principal-attribute: preferred_username
+
+#    proxy-url: ${KEYCLOAL_ADAPTER_PROXY_URL}
+#    disable-trust-manager: ${KEYCLOAL_ADAPTER_DISABLE_TRUST_MANAGER}
+#    allow-any-hostname : ${KEYCLOAL_ADAPTER_ALLOW_ANY_HOSTNAME}
+#    truststore: ${KEYCLOAL_ADAPTER_TRUSTSTORE},
+#    truststore-password: ${KEYCLOAL_ADAPTER_TRUSTSTORE_PASSWORD},
+#    client-keystore: ${KEYCLOAL_ADAPTER_KEYSTORE},
+#    client-keystore-password: ${KEYCLOAL_ADAPTER_KEYSTORE_PASSWORD},
+#    client-key-password: ${KEYCLOAL_ADAPTER_KEYS_PASSWORD},
+
+    securityConstraints[0]:
+        authRoles[0]: ROLE_user-role
+        authRoles[1]: ROLE_ac_billing_r
+        authRoles[2]: ROLE_ac_billing_w
+        authRoles[3]: ROLE_ac_client_r
+        authRoles[4]: ROLE_ac_client_w
+        authRoles[5]: ROLE_ac_collaborator_r
+        authRoles[6]: ROLE_ac_collaborator_w
+        authRoles[7]: ROLE_ac_contract_r
+        authRoles[8]: ROLE_ac_contract_w
+        authRoles[9]: ROLE_ac_freelance_r
+        authRoles[10]: ROLE_ac_freelance_w
+        authRoles[11]: ROLE_ac_steering_r
+        authRoles[12]: ROLE_ac_steering_w
+        authRoles[13]: ROLE_ac_tricefal_r
+        authRoles[14]: ROLE_ac_tricefal_w
