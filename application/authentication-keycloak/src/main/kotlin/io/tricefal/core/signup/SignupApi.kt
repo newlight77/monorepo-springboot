@@ -1,6 +1,5 @@
 package io.tricefal.core.signup
 
-//import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpHeaders
@@ -53,7 +52,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @RolesAllowed("ROLE_user-role")
     @PostMapping("code/resend")
     @ResponseStatus(HttpStatus.OK)
-    fun resendCode(principal: Principal, @RequestBody resendCodeModel : SignupCodeModel): SignupStateModel {
+    fun resendCode(principal: Principal, @RequestBody resendCodeModel : SignupResendModel): SignupStateModel {
         logger.info("signup resend code requested")
         return signupWebHandler.resendCode(authenticatedUser(principal))
     }
@@ -111,9 +110,6 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     }
 
     private fun authenticatedUser(principal: Principal): String {
-//        if (principal is KeycloakAuthenticationToken) {
-//            return principal.account.keycloakSecurityContext.token.email
-//        }
         return principal.name
     }
 
