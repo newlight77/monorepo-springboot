@@ -15,9 +15,9 @@ class PricerApi(val cguWebHandler: PricerWebHandler) {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    fun toSalary(@RequestParam fee: Int): Int {
-        logger.info("requested a calculation with fee=$fee")
-        return cguWebHandler.toSalary(fee).roundToInt()
+    fun toSalary(@RequestParam myDailyFee: Int): Int {
+        logger.info("requested a calculation with fee=$myDailyFee")
+        return cguWebHandler.toSalary(myDailyFee).roundToInt()
     }
 
 }
