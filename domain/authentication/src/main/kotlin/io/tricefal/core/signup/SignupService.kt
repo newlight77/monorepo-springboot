@@ -7,7 +7,6 @@ import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
 import java.security.SecureRandom
-import java.text.MessageFormat
 import java.util.*
 
 
@@ -79,7 +78,7 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             }
         } catch (ex: Exception) {
             logger.error("failed to delete from persistence the signup for username ${signup.username}")
-            throw SignupPersistenceException("failed to delete from persistence the signup for username ${signup.username}")
+            throw SignupPersistenceException("failed to delete from persistence the signup for username ${signup.username}", ex)
         }
     }
 
@@ -151,9 +150,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             adapter.update(signup)
             adapter.portraitUploaded(metafileDomain)
             return signup.state!!
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("failed to update the signup with portrait upload of the signup for username ${signup.username}")
-            throw SignupPortraitUploadException("failed to update the signup with portrait upload of the signup for username ${signup.username}")
+            throw SignupPortraitUploadException("failed to update the signup with portrait upload of the signup for username ${signup.username}", ex)
         }
     }
 
@@ -164,9 +163,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             adapter.update(signup)
             adapter.resumeUploaded(metafileDomain)
             return signup.state!!
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("failed to update the signup with resume upload of the signup for username ${signup.username}")
-            throw SignupResumeUploadException("failed to update the signup with resume upload of the signup for username ${signup.username}")
+            throw SignupResumeUploadException("failed to update the signup with resume upload of the signup for username ${signup.username}", ex)
         }
     }
 
@@ -177,9 +176,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             adapter.update(signup)
             adapter.resumeLinkedinUploaded(metafileDomain)
             return signup.state!!
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
-            throw SignupLinkedinResumeUploadException("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
+            throw SignupLinkedinResumeUploadException("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}", ex)
         }
     }
 
@@ -192,9 +191,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             assignRoles(signup, statusToReadRole[status])
             adapter.update(signup)
             return signup.state!!
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("failed to update the status of the signup for username ${signup.username}")
-            throw SignupStatusUpdateException("failed to update the status of the signup for username ${signup.username}")
+            throw SignupStatusUpdateException("failed to update the status of the signup for username ${signup.username}", ex)
         }
     }
 
@@ -206,10 +205,10 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
                 return true
             }
             return false
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
             logger.error("${ex.stackTrace}")
-            throw SignupUserRegistrationException("a signup with username ${signup.username} has failed. ")
+            throw SignupUserRegistrationException("a signup with username ${signup.username} has failed. ", ex)
         }
     }
 
@@ -218,9 +217,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             signup.state!!.saved = true
             adapter.save(signup)
             return true
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("failed to persist the signup for username ${signup.username}")
-            throw SignupPersistenceException("failed to persist the signup for username ${signup.username}")
+            throw SignupPersistenceException("failed to persist the signup for username ${signup.username}", ex)
         }
     }
 
@@ -230,9 +229,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             adapter.cguAccepted(signup.username, cguAcceptedVersion)
             adapter.update(signup)
             return true
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("failed to accept the cgu for username ${signup.username}")
-            throw SignupCguAcceptException("failed to accept the cgu for username ${signup.username}")
+            throw SignupCguAcceptException("failed to accept the cgu for username ${signup.username}", ex)
         }
     }
 
@@ -242,9 +241,9 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             adapter.sendEmail(notification)
             adapter.update(signup)
             return true
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("failed to send an email for validation for username ${signup.username}")
-            throw SignupEmailNotificationException("failed to send an email for validation for username ${signup.username}")
+            throw SignupEmailNotificationException("failed to send an email for validation for username ${signup.username}", ex)
         }
     }
 
@@ -254,18 +253,18 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
             adapter.sendSms(notification)
             adapter.update(signup)
             return true
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("failed to send an sms for activation for username ${signup.username}")
-            throw SignupSmsNotificationException("failed to send an sms for activation for username ${signup.username}")
+            throw SignupSmsNotificationException("failed to send an sms for activation for username ${signup.username}", ex)
         }
     }
 
     private fun assignRoles(signup: SignupDomain, roles: List<AccessRight>?) {
         try {
             roles?.forEach { adapter.assignRole(signup.username, it) }
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to assign the role ${statusToReadRole[signup.status]} to user ${signup.username}")
-            throw SignupRoleAssignationException("Failed to assign the role ${statusToReadRole[signup.status]} to user ${signup.username}")
+            throw SignupRoleAssignationException("Failed to assign the role ${statusToReadRole[signup.status]} to user ${signup.username}", ex)
         }
     }
 
@@ -301,18 +300,18 @@ class SignupService(private var adapter: ISignupAdapter) : ISignupService, Signu
 }
 
 class SignupNotFoundException(val s: String) : Throwable()
-class SignupPersistenceException(val s: String) : Throwable()
+class SignupPersistenceException(val s: String, ex: Throwable) : Throwable(ex)
 class SignupUserNotFoundException(val s: String) : Throwable()
 class SignupUsernameUniquenessException(val s: String) : Throwable()
-class SignupUserRegistrationException(val s: String) : Throwable()
+class SignupUserRegistrationException(val s: String, ex: Throwable) : Throwable(ex)
 class SignupActivationByCodeException(val s: String) : Throwable()
 class SignupActivationByEmailException(val s: String) : Throwable()
-class SignupEmailNotificationException(val s: String) : Throwable()
-class SignupSmsNotificationException(val s: String) : Throwable()
-class SignupCguAcceptException(val s: String) : Throwable()
-class SignupStatusUpdateException(val s: String) : Throwable()
-class SignupResumeUploadException(val s: String) : Throwable()
-class SignupLinkedinResumeUploadException(val s: String) : Throwable()
-class SignupPortraitUploadException(val s: String) : Throwable()
-class SignupRoleAssignationException(val s: String) : Throwable()
+class SignupEmailNotificationException(val s: String, ex: Throwable) : Throwable(ex)
+class SignupSmsNotificationException(val s: String, ex: Throwable) : Throwable(ex)
+class SignupCguAcceptException(val s: String, ex: Throwable) : Throwable(ex)
+class SignupStatusUpdateException(val s: String, ex: Throwable) : Throwable(ex)
+class SignupResumeUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class SignupLinkedinResumeUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class SignupPortraitUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class SignupRoleAssignationException(val s: String, ex: Throwable) : Throwable(ex)
 class SignupResourceBundleMissingKeyException(val s: String) : Throwable()

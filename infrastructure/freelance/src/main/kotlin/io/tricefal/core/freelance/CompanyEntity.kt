@@ -43,15 +43,15 @@ data class CompanyEntity(
         @Column(name = "type_entreprise", length = 50)
         val typeEntreprise: @Size(max = 50) String?,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "admin_contact_id")
         var adminContact: ContactEntity? = null,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "bank_info_id")
         var bankInfo: BankInfoEntity? = null,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "fiscal_address_id")
         var fiscalAddress: AddressEntity? = null
 )

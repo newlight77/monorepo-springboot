@@ -39,9 +39,12 @@ class FreelanceAdapter(private var repository: FreelanceJpaRepository) : IFreela
 
     override fun update(freelance: FreelanceDomain): FreelanceDomain {
         val mewEntity = toEntity(freelance)
-        repository.findByUsername(freelance.username).stream().findFirst().ifPresentOrElse(
+        val freelanceEntity = repository.findByUsername(freelance.username).stream().findFirst()
+
+        freelanceEntity.ifPresentOrElse(
             {
                 mewEntity.id = it.id
+                repository.flush()
             },
             {
                 logger.error("unable to find a freelance with username ${freelance.username}")
@@ -49,8 +52,7 @@ class FreelanceAdapter(private var repository: FreelanceJpaRepository) : IFreela
             }
         )
 
-        val freelanceEntity = repository.save(mewEntity)
-        return fromEntity(freelanceEntity)
+        return fromEntity(freelanceEntity.get())
     }
 
     class SignupNotFoundException(private val msg: String) : Throwable(msg) {}

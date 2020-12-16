@@ -19,7 +19,7 @@ data class BankInfoEntity(
         @Column(name = "bic", length = 50)
         val bic: @Size(max = 50) String? =  null,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "address")
         val address: AddressEntity? = null
 

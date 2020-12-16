@@ -28,9 +28,9 @@ class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
                             },
                             { save(profile) }
                     )
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the portrait uploaded event for user $username")
-            throw ProfileUploadException("Failed to update the profile from the portrait uploaded event for user $username")
+            throw ProfileUploadException("Failed to update the profile from the portrait uploaded event for user $username", ex)
         }
         return profile
     }
@@ -48,9 +48,9 @@ class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
                             },
                             { save(profile) }
                     )
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the resume uploaded event for user $username")
-            throw ProfileUploadException("Failed to update the profile from the resume uploaded event for user $username")
+            throw ProfileUploadException("Failed to update the profile from the resume uploaded event for user $username", ex)
         }
         return profile
     }
@@ -68,12 +68,12 @@ class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
                             },
                             { save(profile) }
                     )
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the linkedin resume uploaded event for user $username")
-            throw ProfileUploadException("Failed to update the profile from the linkedin resume uploaded event for user $username")
+            throw ProfileUploadException("Failed to update the profile from the linkedin resume uploaded event for user $username", ex)
         }
         return profile
     }
 
-    class ProfileUploadException(private val msg: String) : Throwable(msg) {}
+    class ProfileUploadException(private val msg: String, ex: Throwable) : Throwable(ex) {}
 }

@@ -58,15 +58,20 @@ class SignupAdapter(private var repository: SignupJpaRepository,
 
     override fun update(signup: SignupDomain): SignupDomain {
         val mewEntity = toEntity(signup)
-        repository.findByUsername(signup.username).stream().findFirst().ifPresentOrElse(
-                { mewEntity.id = it.id },
+        val signupEntity = repository.findByUsername(signup.username).stream().findFirst()
+
+        signupEntity.ifPresentOrElse(
+                {
+                    mewEntity.id = it.id
+                    repository.flush()
+                },
                 {
                     logger.error("unable to find a registration with username ${signup.username}")
                     throw SignupNotFoundException("unable to find a registration with username ${signup.username}")
                 }
         )
-        val signupEntity = repository.save(mewEntity)
-        return fromEntity(signupEntity)
+
+        return fromEntity(signupEntity.get())
     }
 
     override fun unregister(username: String): Boolean {

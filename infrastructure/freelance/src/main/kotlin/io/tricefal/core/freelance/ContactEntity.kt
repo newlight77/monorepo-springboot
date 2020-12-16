@@ -38,7 +38,7 @@ data class ContactEntity(
         @Column(length = 100)
         val email2: @Size(min = 5, max = 100) String ? = null,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "address")
         val address: AddressEntity? = null
 )

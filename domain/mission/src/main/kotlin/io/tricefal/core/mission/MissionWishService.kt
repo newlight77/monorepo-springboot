@@ -41,15 +41,13 @@ class MissionWishService(private var adapter: IMissionWishAdapter) : IMissionWis
                             },
                             { create(missionWish) }
                     )
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the mission wish from the resume uploaded event for user $username")
-            throw MissionResumeUploadException("Failed to mission wish the profile from the resume uploaded event for user $username")
+            throw MissionResumeUploadException("Failed to mission wish the profile from the resume uploaded event for user $username", ex)
         }
         return missionWish
     }
 
 }
 
-class NotFoundException(val s: String) : Throwable()
-class UsernameNotFoundException(val s: String) : Throwable()
-class MissionResumeUploadException(val s: String) : Throwable()
+class MissionResumeUploadException(val s: String, ex: Throwable) : Throwable(ex)

@@ -21,15 +21,15 @@ data class FreelanceEntity (
         @Column(name = "username", length = 50)
         var username: String,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "contact_id")
         var contact: ContactEntity? = null,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "company_id")
         var company: CompanyEntity? = null,
 
-        @OneToOne
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "privacy_detail_id")
         var privacyDetail: PrivacyDetailEntity? = null,
 

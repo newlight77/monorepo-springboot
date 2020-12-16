@@ -37,7 +37,7 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                     }
         } catch (ex: Exception) {
             logger.error("Failed to update the freelance from the kbis uploaded event for user $username")
-            throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username")
+            throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username", ex)
         }
         return freelance
     }
@@ -77,9 +77,9 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                             }
                     )
             freelance.state?.kbisUploaded = true
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the freelance from the kbis uploaded event for user $username")
-            throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username")
+            throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username", ex)
         }
         return freelance
     }
@@ -100,9 +100,9 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                             }
                     )
             freelance.state?.ribUploaded = true
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the freelance from the rib uploaded event for user $username")
-            throw RibFileUploadException("Failed to update the freelance from the rib uploaded event for user $username")
+            throw RibFileUploadException("Failed to update the freelance from the rib uploaded event for user $username", ex)
         }
         return freelance
     }
@@ -123,9 +123,9 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                             }
                     )
             freelance.state?.rcUploaded = true
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the freelance from the rc uploaded event for user $username")
-            throw RcFileUploadException("Failed to update the freelance from the rc uploaded event for user $username")
+            throw RcFileUploadException("Failed to update the freelance from the rc uploaded event for user $username", ex)
         }
         return freelance
     }
@@ -148,7 +148,7 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
             freelance.state?.urssafUploaded = true
         } catch (ex: Exception) {
             logger.error("Failed to update the freelance from the urssaf uploaded event for user $username")
-            throw UrssafFileUploadException("Failed to update the freelance from the urssaf uploaded event for user $username")
+            throw UrssafFileUploadException("Failed to update the freelance from the urssaf uploaded event for user $username", ex)
         }
         return freelance
     }
@@ -169,9 +169,9 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                             }
                     )
             freelance.state?.kbisUploaded = true
-        } catch (ex: Exception) {
+        } catch (ex: Throwable) {
             logger.error("Failed to update the freelance from the fiscal uploaded event for user $username")
-            throw FiscalFileUploadException("Failed to update the freelance from the fiscal uploaded event for user $username")
+            throw FiscalFileUploadException("Failed to update the freelance from the fiscal uploaded event for user $username", ex)
         }
         return freelance
     }
@@ -179,9 +179,8 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
 }
 
 class NotFoundException(val s: String) : Throwable()
-class UsernameNotFoundException(val s: String) : Throwable()
-class KbisFileUploadException(val s: String) : Throwable()
-class RibFileUploadException(val s: String) : Throwable()
-class RcFileUploadException(val s: String) : Throwable()
-class UrssafFileUploadException(val s: String) : Throwable()
-class FiscalFileUploadException(val s: String) : Throwable()
+class KbisFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class RibFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class RcFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class UrssafFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class FiscalFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
