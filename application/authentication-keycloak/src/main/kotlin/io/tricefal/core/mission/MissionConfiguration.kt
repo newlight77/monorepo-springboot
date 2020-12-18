@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration
 class MissionConfiguration {
 
     @Bean
-    fun missionWishService(missionWishAdapter: IMissionWishAdapter): IMissionWishService {
-        return MissionWishService(missionWishAdapter)
+    fun missionWishService(missionWishDataAdapter: MissionWishDataAdapter): IMissionWishService {
+        return MissionWishService(missionWishDataAdapter)
     }
 
 }

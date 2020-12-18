@@ -19,6 +19,7 @@ repositories {
 dependencies {
 	implementation(project(":domain:freelance"))
 	implementation(project(":infrastructure:storage"))
+	implementation(project(":shared:util"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")

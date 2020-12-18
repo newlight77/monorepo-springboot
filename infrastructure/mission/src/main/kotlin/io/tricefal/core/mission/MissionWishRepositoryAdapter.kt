@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MissionWishAdapter(private var repository: MissionWishJpaRepository) : IMissionWishAdapter {
+class MissionWishRepositoryAdapter(private var repository: MissionWishJpaRepository) : MissionWishDataAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -43,8 +43,8 @@ class MissionWishAdapter(private var repository: MissionWishJpaRepository) : IMi
             }
         )
 
-        val entity = repository.save(mewEntity)
-        return fromEntity(entity)
+        repository.save(mewEntity)
+        return fromEntity(mewEntity)
     }
 
     class MissionWishNotFoundException(private val msg: String) : Throwable(msg) {}

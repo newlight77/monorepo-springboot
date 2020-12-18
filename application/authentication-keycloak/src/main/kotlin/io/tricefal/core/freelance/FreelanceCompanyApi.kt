@@ -1,7 +1,7 @@
 package io.tricefal.core.freelance
 
 import io.tricefal.core.metafile.MetafileModel
-import io.tricefal.shared.util.PatchOperation
+import io.tricefal.shared.util.json.PatchOperation
 //import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders

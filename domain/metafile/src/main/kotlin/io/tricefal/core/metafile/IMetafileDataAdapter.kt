@@ -3,7 +3,7 @@ package io.tricefal.core.metafile
 import java.io.InputStream
 import java.util.*
 
-interface IMetafileAdapter {
+interface IMetafileDataAdapter {
     fun save(metafile: MetafileDomain, inpputStream: InputStream)
     fun findById(id: Long): Optional<MetafileDomain>
     fun findByFilename(filename: String): List<MetafileDomain>

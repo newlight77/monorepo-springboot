@@ -102,6 +102,7 @@ class SignupWebHandlerTest {
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
         Mockito.`when`(signupJpaRepository.findByUsername("kong@gmail.com")).thenReturn(
                 listOf(),
+                listOf(),
                 listOf(signupEntity))
         Mockito.`when`(keycloakRegistrationService.register(any(SignupDomain::class.java))).thenReturn(true)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)

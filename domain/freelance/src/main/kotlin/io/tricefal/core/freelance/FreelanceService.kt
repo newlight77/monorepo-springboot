@@ -1,82 +1,75 @@
 package io.tricefal.core.freelance
 
-import io.tricefal.shared.util.JsonPatchOperator
-import io.tricefal.shared.util.PatchOperation
+import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
 import java.util.*
 
-class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceService {
+class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelanceService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
-        val result = adapter.findByUsername(freelance.username)
-        return if (result.isPresent) adapter.update(freelance)
-        else adapter.create(freelance)
+        val result = dataAdapter.findByUsername(freelance.username)
+        return if (result.isPresent)
+            dataAdapter.update(freelance)
+                .orElseThrow { NotFoundException("freelance already existed, and failed to update for user ${freelance.username}") }
+        else dataAdapter.create(freelance)
     }
 
     override fun update(username: String, freelance: FreelanceDomain): FreelanceDomain {
-        val result = adapter.findByUsername(freelance.username)
-        return if (result.isPresent) adapter.update(freelance)
-        else throw NotFoundException("Failed to update an non existing freelance for user ${freelance.username}")
+        val result = dataAdapter.findByUsername(freelance.username)
+        return if (result.isPresent)
+                dataAdapter.update(freelance)
+                    .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${freelance.username}") }
+            else throw NotFoundException("Failed to update an non existing freelance for user ${freelance.username}")
     }
 
     override fun patch(username: String, operations: List<PatchOperation>): FreelanceDomain {
-        var freelance = FreelanceDomain.Builder(username)
-                .build()
-        try {
-            adapter.findByUsername(username)
-                    .ifPresent {
-                        operations.filter { op ->
-                            acceptOperation(op)
-                        }.also{
-                            ops ->
-                            freelance = JsonPatchOperator().apply(it, ops)
-                            freelance = adapter.update(freelance)
-                        }
-                    }
-        } catch (ex: Exception) {
-            logger.error("Failed to update the freelance from the kbis uploaded event for user $username")
-            throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username", ex)
-        }
-        return freelance
+        val freelance = dataAdapter.findByUsername(username)
+//        val ops = operations.filter { acceptOperation(it) }
+        return if (freelance.isPresent)
+                dataAdapter.patch(freelance.get(), operations)
+                    .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${username}") }
+            else throw NotFoundException("Failed to update an non existing freelance for user ${username}")
     }
 
-    private fun acceptOperation(operation: PatchOperation): Boolean {
-        if (operation.op == "replace" && operation.path == "/contact") return true
-        if (operation.op == "replace" && operation.path == "/company") return true
-        if (operation.op == "replace" && operation.path == "/PrivacyDetailDomain") return true
-        return false
-    }
+//    private fun acceptOperation(operation: PatchOperation): Boolean {
+//        if (operation.op == "replace" && operation.path == "/contact") return true
+//        if (operation.op == "replace" && operation.path == "/company") return true
+//        if (operation.op == "replace" && operation.path == "/PrivacyDetailDomain") return true
+//        return false
+//    }
 
     override fun findByUsername(username: String): Optional<FreelanceDomain> {
-        return adapter.findByUsername(username)
+        return dataAdapter.findByUsername(username)
     }
 
     override fun findAll(): List<FreelanceDomain> {
-        return adapter.findAll()
+        return dataAdapter.findAll()
     }
 
     override fun availables(): List<FreelanceDomain> {
-        return adapter.availables()
+        return dataAdapter.availables()
     }
 
     override fun updateOnKbisUploaded(username: String, filename: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-                .kbisFilename(filename)
-                .build()
+            .kbisFilename(filename)
+            .build()
         try {
             this.findByUsername(username)
-                    .ifPresentOrElse(
-                            {
-                                it.kbisFilename = filename
-                                freelance = adapter.update(it)
-                            },
-                            {
-                                freelance = adapter.create(freelance)
-                            }
-                    )
-            freelance.state?.kbisUploaded = true
+                .ifPresentOrElse(
+                    {
+                        it.kbisFilename = filename
+                        it.state?.kbisUploaded = true
+                        freelance = dataAdapter.update(it)
+                            .orElseThrow { NotFoundException("Failed to update the freelance from the kbis uploaded event for user $username") }
+                    },
+                    {
+                        freelance.state?.kbisUploaded = true
+                        freelance = dataAdapter.create(freelance)
+                    }
+                )
         } catch (ex: Throwable) {
             logger.error("Failed to update the freelance from the kbis uploaded event for user $username")
             throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username", ex)
@@ -90,16 +83,18 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                 .build()
         try {
             this.findByUsername(username)
-                    .ifPresentOrElse(
-                            {
-                                it.ribFilename = filename
-                                freelance = adapter.update(it)
-                            },
-                            {
-                                freelance = adapter.create(freelance)
-                            }
-                    )
-            freelance.state?.ribUploaded = true
+                .ifPresentOrElse(
+                    {
+                        it.ribFilename = filename
+                        it.state?.ribUploaded = true
+                        freelance = dataAdapter.update(it)
+                            .orElseThrow { NotFoundException("Failed to update the freelance from the Rib uploaded event for user $username") }
+                    },
+                    {
+                        freelance.state?.ribUploaded = true
+                        freelance = dataAdapter.create(freelance)
+                    }
+                )
         } catch (ex: Throwable) {
             logger.error("Failed to update the freelance from the rib uploaded event for user $username")
             throw RibFileUploadException("Failed to update the freelance from the rib uploaded event for user $username", ex)
@@ -113,16 +108,18 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                 .build()
         try {
             this.findByUsername(username)
-                    .ifPresentOrElse(
-                            {
-                                it.rcFilename = filename
-                                freelance = adapter.update(it)
-                            },
-                            {
-                                freelance = adapter.create(freelance)
-                            }
-                    )
-            freelance.state?.rcUploaded = true
+                .ifPresentOrElse(
+                    {
+                        it.rcFilename = filename
+                        it.state?.rcUploaded = true
+                        freelance = dataAdapter.update(it)
+                            .orElseThrow { NotFoundException("Failed to update the freelance from the Rc uploaded event for user $username") }
+                    },
+                    {
+                        freelance.state?.rcUploaded = true
+                        freelance = dataAdapter.create(freelance)
+                    }
+                )
         } catch (ex: Throwable) {
             logger.error("Failed to update the freelance from the rc uploaded event for user $username")
             throw RcFileUploadException("Failed to update the freelance from the rc uploaded event for user $username", ex)
@@ -136,16 +133,18 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                 .build()
         try {
             this.findByUsername(username)
-                    .ifPresentOrElse(
-                            {
-                                it.urssafFilename = filename
-                                freelance = adapter.update(it)
-                            },
-                            {
-                                freelance = adapter.create(freelance)
-                            }
-                    )
-            freelance.state?.urssafUploaded = true
+                .ifPresentOrElse(
+                    {
+                        it.urssafFilename = filename
+                        it.state?.urssafUploaded = true
+                        freelance = dataAdapter.update(it)
+                            .orElseThrow { NotFoundException("Failed to update the freelance from the urssaf uploaded event for user $username") }
+                    },
+                    {
+                        freelance.state?.urssafUploaded = true
+                        freelance = dataAdapter.create(freelance)
+                    }
+                )
         } catch (ex: Exception) {
             logger.error("Failed to update the freelance from the urssaf uploaded event for user $username")
             throw UrssafFileUploadException("Failed to update the freelance from the urssaf uploaded event for user $username", ex)
@@ -159,16 +158,18 @@ class FreelanceService(private var adapter: IFreelanceAdapter) : IFreelanceServi
                 .build()
         try {
             this.findByUsername(username)
-                    .ifPresentOrElse(
-                            {
-                                it.fiscalFilename = filename
-                                freelance = adapter.update(it)
-                            },
-                            {
-                                freelance = adapter.create(freelance)
-                            }
-                    )
-            freelance.state?.kbisUploaded = true
+                .ifPresentOrElse(
+                    {
+                        it.fiscalFilename = filename
+                        it.state?.kbisUploaded = true
+                        freelance = dataAdapter.update(it)
+                            .orElseThrow { NotFoundException("Failed to update the freelance from the fiscal uploaded event for user $username") }
+                    },
+                    {
+                        freelance.state?.kbisUploaded = true
+                        freelance = dataAdapter.create(freelance)
+                    }
+                )
         } catch (ex: Throwable) {
             logger.error("Failed to update the freelance from the fiscal uploaded event for user $username")
             throw FiscalFileUploadException("Failed to update the freelance from the fiscal uploaded event for user $username", ex)

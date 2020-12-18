@@ -1,23 +1,28 @@
-package io.tricefal.shared.util
+package io.tricefal.shared.util.json
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fge.jsonpatch.JsonPatch
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import com.squareup.moshi.*
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.lang.reflect.Type
+import java.time.*
 import java.util.*
 
 
 class JsonPatchOperator {
 
     private val moshi: Moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
-            .build()
+        .add(KotlinJsonAdapterFactory())
+        .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
+        .add(Instant::class.java, InstantJsonAdapter().nullSafe())
+        .add(LocalDate::class.java, LocalDateJsonAdapter().nullSafe())
+        .add(LocalTime::class.java, LocalTimeJsonAdapter().nullSafe())
+        .add(LocalDateTime::class.java, LocalDateTimeJsonAdapter().nullSafe())
+        .add(CustomDateTimeAdapter())
+        .add(EpochMillisAdapter())
+        .build()
 
     private val mapper = ObjectMapper()
 
@@ -44,14 +49,14 @@ class JsonPatchOperator {
 class JsonPatchException(private val msg: String) : Throwable(msg) {}
 
 class PatchOperation(
-        val op: String,
-        val path: String,
-        val value: Any
+    val op: String,
+    val path: String,
+    val value: Any,
 ) {
     data class Builder(
-            var op: String,
-            var path: String? = null,
-            var value: Any? = null
+        var op: String,
+        var path: String? = null,
+        var value: Any? = null,
     ) {
         fun path(path: String?) = apply { this.path = path }
         fun value(value: Any?) = apply { this.value = value }

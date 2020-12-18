@@ -14,34 +14,34 @@ data class CompanyEntity(
         val raisonSocial: @Size(max = 50) String,
 
         @Column(name = "nom_commercial", length = 50)
-        val nomCommercial: String?,
+        val nomCommercial: String? = null,
 
         @Column(name = "forme_juridique", length = 50)
-        val formeJuridique: @Size(max = 50) String?,
+        val formeJuridique: @Size(max = 50) String? = null,
 
         @Column(name = "capital", length = 50)
-        val capital: String?,
+        val capital: String? = null,
 
         @Column(name = "rcs", length = 50)
-        val rcs: String?,
+        val rcs: String? = null,
 
         @Column(name = "siret", length = 50)
-        val siret: String?,
+        val siret: String? = null,
 
         @Column(name = "num_duns", length = 50)
-        val numDuns: String?,
+        val numDuns: String? = null,
 
         @Column(name = "num_tva", length = 50)
-        val numTva: String?,
+        val numTva: String? = null,
 
         @Column(name = "code_naf", length = 50)
-        val codeNaf: String?,
+        val codeNaf: String? = null,
 
         @Column(name = "appartenance_groupe", length = 50)
-        val appartenanceGroupe: String?,
+        val appartenanceGroupe: String? = null,
 
         @Column(name = "type_entreprise", length = 50)
-        val typeEntreprise: @Size(max = 50) String?,
+        val typeEntreprise: @Size(max = 50) String? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "admin_contact_id")

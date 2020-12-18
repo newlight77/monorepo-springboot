@@ -4,27 +4,27 @@ import org.slf4j.LoggerFactory
 import java.time.Instant
 import java.util.*
 
-class MissionWishService(private var adapter: IMissionWishAdapter) : IMissionWishService {
+class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMissionWishService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun create(missionWish: MissionWishDomain): MissionWishDomain {
-        val result = adapter.findByUsername(missionWish.username)
-        return if (result.isPresent) adapter.update(missionWish)
-        else adapter.create(missionWish)
+        val result = dataAdapter.findByUsername(missionWish.username)
+        return if (result.isPresent) dataAdapter.update(missionWish)
+        else dataAdapter.create(missionWish)
     }
 
     override fun findByUsername(username: String): Optional<MissionWishDomain> {
-        return adapter.findByUsername(username)
+        return dataAdapter.findByUsername(username)
     }
 
     override fun findAll(): List<MissionWishDomain> {
-        return adapter.findAll()
+        return dataAdapter.findAll()
     }
 
     override fun updated(missionWish: MissionWishDomain): MissionWishDomain {
         missionWish.lastDate = Instant.now()
-        adapter.update(missionWish)
+        dataAdapter.update(missionWish)
         return missionWish
     }
 

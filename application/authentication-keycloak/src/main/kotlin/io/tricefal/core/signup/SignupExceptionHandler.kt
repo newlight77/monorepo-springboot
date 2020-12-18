@@ -23,7 +23,7 @@ class SignupExceptionHandler {
             SignupPortraitUploadException::class,
             SignupResumeUploadException::class,
             SignupLinkedinResumeUploadException::class,
-            SignupActivationByCodeException::class,
+            SignupVerificationByCodeException::class,
             SignupStatusUpdateException::class,
             SignupPersistenceException::class,
             SignupUserRegistrationException::class,

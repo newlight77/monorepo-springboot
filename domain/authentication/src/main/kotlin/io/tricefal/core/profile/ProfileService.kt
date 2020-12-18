@@ -3,16 +3,16 @@ package io.tricefal.core.profile
 import org.slf4j.LoggerFactory
 import java.util.*
 
-class ProfileService(private var adapter: IProfileAdapter) : IProfileService {
+class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun findByUsername(username: String): Optional<ProfileDomain> {
-        return adapter.findByUsername(username)
+        return dataAdapter.findByUsername(username)
     }
 
     override fun save(profile: ProfileDomain): ProfileDomain {
-        return adapter.save(profile)
+        return dataAdapter.save(profile)
     }
 
     override fun updateProfileOnPortraitUploaded(username: String, filename: String): ProfileDomain {

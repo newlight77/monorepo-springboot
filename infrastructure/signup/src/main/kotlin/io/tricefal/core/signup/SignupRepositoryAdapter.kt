@@ -16,17 +16,21 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class SignupAdapter(private var repository: SignupJpaRepository,
-                    val registrationService: IamRegisterService,
-                    val mailService: EmailService,
-                    val smsService: SmsService,
-                    val keycloakRegisterService: IamRegisterService,
-                    val signupEventPublisher: SignupEventPublisher
-) : ISignupAdapter {
+class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
+                              val registrationService: IamRegisterService,
+                              val mailService: EmailService,
+                              val smsService: SmsService,
+                              val keycloakRegisterService: IamRegisterService,
+                              val signupEventPublisher: SignupEventPublisher
+) : SignupDataAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun save(signup: SignupDomain): SignupDomain {
+        repository.findByUsername(signup.username).stream().findFirst().ifPresent {
+            logger.error("a signup with username ${signup.username} is already taken")
+            throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
+        }
         val signupEntity = repository.save(toEntity(signup))
         return fromEntity(signupEntity)
     }
@@ -56,22 +60,22 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         }
     }
 
-    override fun update(signup: SignupDomain): SignupDomain {
-        val mewEntity = toEntity(signup)
+    override fun update(signup: SignupDomain): Optional<SignupDomain> {
         val signupEntity = repository.findByUsername(signup.username).stream().findFirst()
-
+        var updated = Optional.empty<SignupDomain>()
         signupEntity.ifPresentOrElse(
                 {
+                    val mewEntity = toEntity(signup)
                     mewEntity.id = it.id
-                    repository.flush()
+                    repository.save(mewEntity)
+                    updated =  Optional.of(fromEntity(mewEntity))
                 },
                 {
                     logger.error("unable to find a registration with username ${signup.username}")
                     throw SignupNotFoundException("unable to find a registration with username ${signup.username}")
                 }
         )
-
-        return fromEntity(signupEntity.get())
+        return updated
     }
 
     override fun unregister(username: String): Boolean {
@@ -129,7 +133,7 @@ class SignupAdapter(private var repository: SignupJpaRepository,
         return true
     }
 
-    override fun updateStatus(signup: SignupDomain): SignupDomain {
+    override fun updateStatus(signup: SignupDomain): Optional<SignupDomain>  {
         return update(signup)
     }
 

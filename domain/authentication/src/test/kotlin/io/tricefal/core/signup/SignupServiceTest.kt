@@ -17,13 +17,14 @@ import java.util.*
 class SignupServiceTest {
 
     @Mock
-    lateinit var adapter: ISignupAdapter
+    lateinit var dataAdapter: SignupDataAdapter
 
     lateinit var service: SignupService
 
     @BeforeEach
     fun beforeEach() {
-        Mockito.reset(adapter)
+        Mockito.reset(dataAdapter)
+        service = SignupService(dataAdapter)
     }
 
     @Test
@@ -40,22 +41,21 @@ class SignupServiceTest {
                 .state(SignupStateDomain.Builder("kong@gmail.com").build())
                 .build()
 
-        Mockito.`when`(adapter.findByUsername("kong@gmail.com")).thenReturn(
+        Mockito.`when`(dataAdapter.findByUsername("kong@gmail.com")).thenReturn(
                 Optional.empty(),
                 Optional.of(signup)
         )
-        Mockito.`when`(adapter.save(signup)).thenReturn(signup)
-        Mockito.`when`(adapter.register(signup)).thenReturn(true)
-        Mockito.`when`(adapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
-        Mockito.`when`(adapter.sendSms(any(SmsNotificationDomain::class.java))).thenReturn(true)
-
-        service = SignupService(adapter)
+        Mockito.`when`(dataAdapter.save(signup)).thenReturn(signup)
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.`when`(dataAdapter.register(signup)).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendSms(any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         // Act
         val result = service.signup(signup, metaNotification)
 
         // Arrange
-        Mockito.verify(adapter).save(signup)
+        Mockito.verify(dataAdapter).save(signup)
         Assertions.assertTrue(result.saved!!)
         Assertions.assertTrue(result.registered!!)
         Assertions.assertTrue(result.emailSent!!)
@@ -75,9 +75,7 @@ class SignupServiceTest {
                 .status(Status.FREELANCE)
                 .build()
 
-        Mockito.`when`(adapter.findByUsername(username)).thenReturn(Optional.of(signup))
-
-        service = SignupService(adapter)
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(signup))
 
         // Act
         val result = service.findByUsername(username)
@@ -105,15 +103,13 @@ class SignupServiceTest {
                 .state(state)
                 .build()
 
-        Mockito.`when`(adapter.updateStatus(signup)).thenReturn(signup)
-
-        service = SignupService(adapter)
+        Mockito.`when`(dataAdapter.updateStatus(signup)).thenReturn(Optional.of(signup))
 
         // Act
         val result = service.updateStatus(signup, Status.EMPLOYEE)
 
         // Arrange
-        Mockito.verify(adapter).updateStatus(signup)
+        Mockito.verify(dataAdapter).updateStatus(signup)
         Assertions.assertTrue(result.statusUpdated!!)
     }
 
@@ -135,9 +131,7 @@ class SignupServiceTest {
             .state(state)
             .build()
 
-        Mockito.doNothing().`when`(adapter).delete(signup.username)
-
-        service = SignupService(adapter)
+        Mockito.doNothing().`when`(dataAdapter).delete(signup.username)
 
         val code = "123456"
 
@@ -145,7 +139,7 @@ class SignupServiceTest {
         service.delete(signup, code)
 
         // Arrange
-        Mockito.verify(adapter).delete("kong@gmail.com")
+        Mockito.verify(dataAdapter).delete("kong@gmail.com")
 
     }
 
@@ -167,7 +161,7 @@ class SignupServiceTest {
             .state(state)
             .build()
 
-        service = SignupService(adapter)
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
 
         val code = ""
 
@@ -181,12 +175,54 @@ class SignupServiceTest {
 
     @Test
     fun `should find all signups`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val state = SignupStateDomain.Builder("kong")
+            .build()
+        val signup = SignupDomain.Builder(username)
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(state)
+            .build()
 
+        Mockito.`when`(dataAdapter.findAll()).thenReturn(listOf(signup))
+
+        // Act
+        val result = service.findAll()
+
+        // Assert
+        Assertions.assertEquals(1, result.size)
     }
 
     @Test
     fun `should activate the signup`() {
+        // Arrange
+        val username = "kong@gmail.com"
 
+        val state = SignupStateDomain.Builder("kong")
+            .build()
+
+        val signup = SignupDomain.Builder(username)
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(state)
+            .build()
+
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+
+        // Act
+        val result = service.activate(signup)
+
+        // Arrange
+        Assertions.assertTrue(result.validated!!)
     }
 
     @Test
@@ -227,7 +263,6 @@ class SignupServiceTest {
     @Test
     fun `should generate an activation code with 6 digits`() {
         // Arrange
-        service = SignupService(adapter)
 
         // Act
         val result = service.generateCode()
@@ -240,7 +275,6 @@ class SignupServiceTest {
     fun `should encode and decode a string`() {
         // Arrange
         val code = "123456"
-        service = SignupService(adapter)
 
         // Act
         val encoded = service.encode(code)
@@ -254,7 +288,6 @@ class SignupServiceTest {
     @Test
     fun `should generate a random string`() {
         // Arrange
-        service = SignupService(adapter)
 
         // Act
         val result = service.randomString()

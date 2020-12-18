@@ -34,7 +34,7 @@ data class FreelanceEntity (
         var privacyDetail: PrivacyDetailEntity? = null,
 
         @Column(name = "status", length = 50)
-        var status: String?,
+        var status: String? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")

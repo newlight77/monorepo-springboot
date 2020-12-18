@@ -14,7 +14,7 @@ import java.util.*
 class ProfileServiceTest {
 
     @Mock
-    lateinit var repository: IProfileAdapter
+    lateinit var repository: ProfileDataAdapter
 
     lateinit var service: IProfileService
 

@@ -13,13 +13,13 @@ import java.util.*
 class MissionWishServiceTest {
 
     @Mock
-    lateinit var adapter: IMissionWishAdapter
+    lateinit var dataAdapter: MissionWishDataAdapter
 
     lateinit var service: IMissionWishService
 
     @BeforeEach
     fun beforeEach() {
-        Mockito.reset(adapter)
+        Mockito.reset(dataAdapter)
     }
 
     @Test
@@ -28,15 +28,15 @@ class MissionWishServiceTest {
         val missionWish = MissionWishDomain.Builder("kong@gmail.com")
                 .build()
 
-        Mockito.`when`(adapter.create(missionWish)).thenReturn(missionWish)
+        Mockito.`when`(dataAdapter.create(missionWish)).thenReturn(missionWish)
 
-        service = MissionWishService(adapter)
+        service = MissionWishService(dataAdapter)
 
         // Act
         val result = service.create(missionWish)
 
         // Arrange
-        Mockito.verify(adapter).create(missionWish)
+        Mockito.verify(dataAdapter).create(missionWish)
         Assertions.assertEquals(missionWish.username, result.username)
     }
 
@@ -47,9 +47,9 @@ class MissionWishServiceTest {
         val missionWish = MissionWishDomain.Builder(username)
                 .build()
 
-        Mockito.`when`(adapter.findByUsername(username)).thenReturn(Optional.of(missionWish))
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(missionWish))
 
-        service = MissionWishService(adapter)
+        service = MissionWishService(dataAdapter)
 
         // Act
         val result = service.findByUsername(username)

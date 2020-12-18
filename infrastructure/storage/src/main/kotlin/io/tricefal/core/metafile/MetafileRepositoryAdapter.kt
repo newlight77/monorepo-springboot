@@ -1,15 +1,13 @@
 package io.tricefal.core.metafile
 
 import io.tricefal.core.storage.FileStorage
-import org.springframework.context.annotation.PropertySource
-import org.springframework.core.env.Environment
 import org.springframework.stereotype.Repository
 import java.io.InputStream
 import java.nio.file.Paths
 import java.util.*
 
 @Repository
-class MetafileRepository(val repository: MetafileJpaRepository): IMetafileAdapter {
+class MetafileRepositoryAdapter(val repository: MetafileJpaRepository): IMetafileDataAdapter {
 
     override fun save(metafile: MetafileDomain, inpputStream: InputStream) {
         val metafileEntity = repository.save(toEntity(metafile))

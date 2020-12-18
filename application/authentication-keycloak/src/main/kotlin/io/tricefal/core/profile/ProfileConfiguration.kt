@@ -1,6 +1,6 @@
 package io.tricefal.core.profile
 
-import io.tricefal.core.metafile.IMetafileAdapter
+import io.tricefal.core.metafile.IMetafileDataAdapter
 import io.tricefal.core.metafile.IMetafileService
 import io.tricefal.core.metafile.MetafileService
 import org.springframework.context.annotation.Bean
@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration
 class ProfileConfiguration {
 
     @Bean
-    fun profileService(profileAdapter: IProfileAdapter): IProfileService {
-        return ProfileService(profileAdapter)
+    fun profileService(profileDataAdapter: ProfileDataAdapter): IProfileService {
+        return ProfileService(profileDataAdapter)
     }
 
     @Bean
-    fun metafileService(metafileAdapter: IMetafileAdapter): IMetafileService {
-        return MetafileService(metafileAdapter)
+    fun metafileService(metafileDataAdapter: IMetafileDataAdapter): IMetafileService {
+        return MetafileService(metafileDataAdapter)
     }
 
 }

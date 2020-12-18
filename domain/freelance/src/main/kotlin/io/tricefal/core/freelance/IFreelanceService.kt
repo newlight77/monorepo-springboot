@@ -1,6 +1,6 @@
 package io.tricefal.core.freelance
 
-import io.tricefal.shared.util.PatchOperation
+import io.tricefal.shared.util.json.PatchOperation
 import java.util.*
 
 interface IFreelanceService {

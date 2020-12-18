@@ -3,16 +3,12 @@ package io.tricefal.core.freelance
 import io.tricefal.core.exception.NotAcceptedException
 import io.tricefal.core.exception.NotFoundException
 import io.tricefal.core.metafile.*
-import io.tricefal.core.profile.ProfileDomain
-import io.tricefal.shared.util.PatchOperation
+import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.lang.Exception
-import java.util.*
 
 
 @Service

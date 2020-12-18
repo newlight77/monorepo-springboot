@@ -11,16 +11,28 @@ data class ContactModel(
         var email2: String? = null,
         var address: AddressModel? = null
 ) {
-    fun lastName(lastName: String?) = apply { this.lastName = lastName }
-    fun firstName(firstName: String?) = apply { this.firstName = firstName }
-    fun langKey(langKey: String?) = apply { this.langKey = langKey }
-    fun phone(phone: String?) = apply { this.phone = phone }
-    fun landline(landline: String?) = apply { this.landline = landline }
-    fun fax(fax: String?) = apply { this.fax = fax }
-    fun email2(email2: String?) = apply { this.email2 = email2 }
-    fun address(address: AddressModel?) = apply { this.address = address }
+    data class Builder(
+        val email: String,
+        var lastName: String? = null,
+        var firstName: String? = null,
+        var langKey: String? = null,
+        var phone: String? = null,
+        var landline: String? = null,
+        var fax: String? = null,
+        var email2: String? = null,
+        var address: AddressModel? = null
+    ) {
 
-    fun build() = ContactModel(
+        fun lastName(lastName: String?) = apply { this.lastName = lastName }
+        fun firstName(firstName: String?) = apply { this.firstName = firstName }
+        fun langKey(langKey: String?) = apply { this.langKey = langKey }
+        fun phone(phone: String?) = apply { this.phone = phone }
+        fun landline(landline: String?) = apply { this.landline = landline }
+        fun fax(fax: String?) = apply { this.fax = fax }
+        fun email2(email2: String?) = apply { this.email2 = email2 }
+        fun address(address: AddressModel?) = apply { this.address = address }
+
+        fun build() = ContactModel(
             email = email,
             lastName = lastName,
             firstName = firstName,
@@ -30,7 +42,8 @@ data class ContactModel(
             fax = fax,
             email2 = email2,
             address = address
-    )
+        )
+    }
 }
 
 fun toModel(domain: ContactDomain): ContactModel {

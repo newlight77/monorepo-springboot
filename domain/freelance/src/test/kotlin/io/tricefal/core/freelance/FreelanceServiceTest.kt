@@ -13,13 +13,13 @@ import java.util.*
 class FreelanceServiceTest {
 
     @Mock
-    lateinit var adapter: IFreelanceAdapter
+    lateinit var dataAdapter: FreelanceDataAdapter
 
     lateinit var service: IFreelanceService
 
     @BeforeEach
     fun beforeEach() {
-        Mockito.reset(adapter)
+        Mockito.reset(dataAdapter)
     }
 
     @Test
@@ -28,15 +28,15 @@ class FreelanceServiceTest {
         val freelance = FreelanceDomain.Builder("kong@gmail.com")
                 .build()
 
-        Mockito.`when`(adapter.create(freelance)).thenReturn(freelance)
+        Mockito.`when`(dataAdapter.create(freelance)).thenReturn(freelance)
 
-        service = FreelanceService(adapter)
+        service = FreelanceService(dataAdapter)
 
         // Act
         val result = service.create(freelance)
 
         // Arrange
-        Mockito.verify(adapter).create(freelance)
+        Mockito.verify(dataAdapter).create(freelance)
         Assertions.assertEquals(freelance.username, result.username)
     }
 
@@ -47,9 +47,9 @@ class FreelanceServiceTest {
         val freelance = FreelanceDomain.Builder(username)
                 .build()
 
-        Mockito.`when`(adapter.findByUsername(username)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
 
-        service = FreelanceService(adapter)
+        service = FreelanceService(dataAdapter)
 
         // Act
         val result = service.findByUsername(username)
