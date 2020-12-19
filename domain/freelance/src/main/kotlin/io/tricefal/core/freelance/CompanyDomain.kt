@@ -1,7 +1,7 @@
 package io.tricefal.core.freelance
 
 class CompanyDomain(
-        val raisonSocial: String,
+        val raisonSocial: String?,
         val nomCommercial: String?,
         val formeJuridique: String?,
         val capital: String?,
@@ -18,7 +18,7 @@ class CompanyDomain(
         val fiscalAddress: AddressDomain?
 ) {
     data class Builder(
-            val raisonSocial: String,
+            var raisonSocial: String? = null,
             var nomCommercial: String? = null,
             var formeJuridique: String? = null,
             var capital: String? = null,
@@ -34,6 +34,7 @@ class CompanyDomain(
             var bankInfo: BankInfoDomain? = null,
             var fiscalAddress: AddressDomain? = null
     ) {
+        fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
         fun nomCommercial(nomCommercial: String?) = apply { this.nomCommercial = nomCommercial }
         fun formeJuridique(formeJuridique: String?) = apply { this.formeJuridique = formeJuridique }
         fun capital(capital: String?) = apply { this.capital = capital }

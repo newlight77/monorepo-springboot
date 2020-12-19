@@ -11,7 +11,7 @@ data class CompanyEntity(
         var id: Long?,
 
         @Column(name = "raison_social", length = 50)
-        val raisonSocial: @Size(max = 50) String,
+        val raisonSocial: @Size(max = 50) String? = null,
 
         @Column(name = "nom_commercial", length = 50)
         val nomCommercial: String? = null,

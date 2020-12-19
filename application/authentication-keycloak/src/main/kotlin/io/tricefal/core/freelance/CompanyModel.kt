@@ -2,7 +2,7 @@ package io.tricefal.core.freelance
 
 
 data class CompanyModel(
-        val raisonSocial: String,
+        val raisonSocial: String?,
         val nomCommercial: String?,
         val formeJuridique: String?,
         val capital: String?,
@@ -25,7 +25,7 @@ data class CompanyModel(
 //        var fiscalFile: MetafileModel? = null
 ) {
     data class Builder(
-            val raisonSocial: String,
+            var raisonSocial: String? = null,
             var nomCommercial: String? = null,
             var formeJuridique: String? = null,
             var capital: String? = null,
@@ -42,6 +42,7 @@ data class CompanyModel(
             var bankInfo: BankInfoModel? = null,
             var fiscalAddress: AddressModel? = null
     ) {
+        fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
         fun nomCommercial(nomCommercial: String?) = apply { this.nomCommercial = nomCommercial }
         fun formeJuridique(formeJuridique: String?) = apply { this.formeJuridique = formeJuridique }
         fun capital(capital: String?) = apply { this.capital = capital }
