@@ -114,7 +114,7 @@ class SignupWebHandlerTest {
         // Arrange
         Assertions.assertTrue(result.registered!!)
         Assertions.assertTrue(result.emailSent!!)
-        Assertions.assertTrue(result.activationCodeSent!!)
+        Assertions.assertTrue(result.smsSent!!)
     }
 
     @Test
@@ -220,7 +220,7 @@ class SignupWebHandlerTest {
         val result = signupWebHandler.verifyByCode(username, code)
 
         // Arrange
-        Assertions.assertTrue(result.activatedByCode!!)
+        Assertions.assertTrue(result.smsValidated!!)
     }
 
     @Test

@@ -68,7 +68,7 @@ class SignupStepDefs : En {
         }
 
         And("^an activation code is send via SMS to the phone number$") {
-            this.response.body("activationCodeSent", Is.`is`(true))
+            this.response.body("smsSent", Is.`is`(true))
         }
     }
 
