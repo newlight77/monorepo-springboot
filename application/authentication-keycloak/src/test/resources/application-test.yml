@@ -84,7 +84,9 @@ data:
 notification:
     mail:
         from: from@mail.com
+        admin: admin@mail.com
     sms:
+        admin: 0659401130
         twilio:
             phoneNumber: 33644601054
             accountSid: AC497ba2b4c6a9ecf212ea611537e0be92

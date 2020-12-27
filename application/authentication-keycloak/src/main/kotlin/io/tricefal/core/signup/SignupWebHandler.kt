@@ -23,11 +23,14 @@ class SignupWebHandler(val signupService: ISignupService,
     private val dataFilesPath = env.getProperty("data.files.path")!!
     private var backendBaseUrl = env.getProperty("core.baseUrl")!!
     private var emailFrom = env.getProperty("notification.mail.from")!!
+    private var emailAdmin = env.getProperty("notification.mail.admin")!!
     private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
+    private var smsAdmin = env.getProperty("notification.sms.admin")!!
 
     fun signup(signup: SignupModel): SignupStateModel {
         val domain = fromModel(signup)
-        val result = signupService.signup(domain, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
+        val metaNotif = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
+        val result = signupService.signup(domain, metaNotif)
         logger.info("successfully signed up a new user ${signup.username}")
         return toModel(result)
     }

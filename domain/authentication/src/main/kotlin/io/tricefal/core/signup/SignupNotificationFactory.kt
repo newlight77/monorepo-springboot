@@ -1,6 +1,5 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import org.slf4j.LoggerFactory
@@ -22,13 +21,13 @@ open class SignupNotificationFactory() {
                 .build()
     }
 
-    fun emailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+    fun emailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): SignupEmailNotificationDomain {
         val emailActivationLink = emailValidationLink(signup, metaNotification)
         val emailSubject = getString("signup.mail.subject")
         val emailGreeting = getString("signup.mail.greeting", signup.firstname)
         val emailContent = getString("signup.mail.content", emailActivationLink, signup.activationCode)
 
-        return EmailNotificationDomain.Builder(signup.username)
+        return SignupEmailNotificationDomain.Builder(signup.username)
                 .emailFrom(metaNotification.emailFrom)
                 .emailTo(signup.username)
                 .emailSubject(emailSubject)

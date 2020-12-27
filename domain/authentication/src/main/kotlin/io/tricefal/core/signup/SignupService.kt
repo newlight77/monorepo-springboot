@@ -1,7 +1,6 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
-import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.right.AccessRight
@@ -245,10 +244,10 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    private fun sendEmail(signup: SignupDomain, notification: EmailNotificationDomain): Boolean {
+    private fun sendEmail(signup: SignupDomain, signupNotification: SignupEmailNotificationDomain): Boolean {
         try {
             signup.state?.emailSent = true
-            dataAdapter.sendEmail(notification)
+            dataAdapter.sendEmail(signupNotification)
             dataAdapter.update(signup)
                 .orElseThrow { SignupEmailNotificationException("failed to update the signup after sending email for username ${signup.username}")}
             return true

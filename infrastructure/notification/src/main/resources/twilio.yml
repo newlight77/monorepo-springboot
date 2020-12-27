@@ -1,5 +1,6 @@
 notification:
   sms:
+    admin: ${SMS_ADMIN_NUMBER}
     twilio:
       phoneNumber: ${TWILIO_PHONE_NUMBER}
       accountSid: ${TWILIO_ACCOUNT_SID}

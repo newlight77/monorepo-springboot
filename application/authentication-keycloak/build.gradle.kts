@@ -32,6 +32,7 @@ dependencies {
 	implementation(project(":domain:freelance"))
 	implementation(project(":domain:metafile"))
 	implementation(project(":domain:mission"))
+	implementation(project(":domain:notification"))
 	implementation(project(":domain:pricer"))
 
 	implementation(project(":infrastructure:cgu"))

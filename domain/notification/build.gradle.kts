@@ -7,18 +7,14 @@ plugins {
 group = "io.tricefal.domain"
 version = "0.0.1-SNAPSHOT"
 
-
 repositories {
 	mavenCentral()
 }
 
 dependencies {
 
-	implementation(project(":domain:metafile"))
-	implementation(project(":domain:notification"))
-
 }
 
 tasks.withType<Jar>() {
-	baseName = "domain-authentication"
+	baseName = "domain-notification"
 }

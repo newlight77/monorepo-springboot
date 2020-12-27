@@ -1,6 +1,5 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import org.junit.jupiter.api.Assertions
@@ -48,7 +47,7 @@ class SignupServiceTest {
         Mockito.`when`(dataAdapter.save(signup)).thenReturn(signup)
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
         Mockito.`when`(dataAdapter.register(signup)).thenReturn(true)
-        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(any(SignupEmailNotificationDomain::class.java))).thenReturn(true)
         Mockito.`when`(dataAdapter.sendSms(any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         // Act

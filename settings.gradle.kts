@@ -12,6 +12,7 @@ include(":domain:freelance")
 include(":domain:metafile")
 include(":domain:mission")
 include(":domain:note")
+include(":domain:notification")
 include(":domain:pricer")
 
 include(":infrastructure")

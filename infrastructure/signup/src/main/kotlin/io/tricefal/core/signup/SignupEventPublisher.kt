@@ -16,7 +16,7 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             applicationEventPublisher.publishEvent(
                     SignupStatusUpdatedEvent(username, status)
             )
-            logger.info("A FreelanceStatusUpdatedEvent has been published user $username")
+            logger.info("A SignupStatusUpdatedEvent has been published user $username")
         } catch (ex: Exception) {
             logger.error("Failed to publish a SignupStatusUpdatedEvent for user $username")
             throw FreelanceStatusPublicationException("Failed to publish a SignupStatusUpdatedEvent for user $username")

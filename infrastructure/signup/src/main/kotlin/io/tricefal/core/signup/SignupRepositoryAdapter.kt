@@ -1,16 +1,12 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.email.EmailMessage
-import io.tricefal.core.email.EmailService
-import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.NotificationAdapter
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.okta.IamRegisterService
 import io.tricefal.core.right.AccessRight
-import io.tricefal.core.twilio.SmsMessage
-import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.util.*
@@ -18,8 +14,7 @@ import java.util.*
 @Repository
 class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
                               val registrationService: IamRegisterService,
-                              val mailService: EmailService,
-                              val smsService: SmsService,
+                              val notificationAdapter: NotificationAdapter,
                               val keycloakRegisterService: IamRegisterService,
                               val signupEventPublisher: SignupEventPublisher
 ) : SignupDataAdapter {
@@ -97,40 +92,21 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun sendSms(notification: SmsNotificationDomain): Boolean {
-        logger.info("Sending ans SMS")
-        val result = try {
-            val message = SmsMessage.Builder()
-                    .from(notification.smsFrom!!)
-                    .to(notification.smsTo!!)
-                    .content(notification.smsContent!!)
-                    .build()
-            smsService.send(message).matches(Regex("^SM[a-z0-9]*"))
-        } catch (ex: Exception) {
-            logger.error("Failed to send a sms notification for user ${notification.smsTo}")
-            throw SignupSmsNotificationException("Failed to send a sms notification for number ${notification.smsTo}")
-        }
-        logger.info("An SMS has been sent")
-        return result
+        return notificationAdapter.sendSms(notification)
     }
 
-    override fun sendEmail(notification: EmailNotificationDomain): Boolean {
-        logger.info("Sending an email")
-        try {
-            val message = EmailMessage.Builder()
-                    .from(notification.emailFrom!!)
-                    .to(notification.emailTo!!)
-                    .subject(notification.emailSubject!!)
-                    .content(notification.emailContent!!)
-                    .emailTemplate(EmailTemplate.SIGNUP)
-                    .model(hashMapOf("greeting" to notification.emailGreeting!!, "content" to notification.emailContent!!))
-                    .build()
-            mailService.send(message)
-        } catch (ex: Exception) {
-            logger.error("Failed to send an email notification for user ${notification.emailTo}")
-            throw SignupEmailNotificationException("Failed to send an email notification for user ${notification.emailTo}")
-        }
-        logger.info("An Email has been sent")
-        return true
+    override fun sendEmail(signupNotification: SignupEmailNotificationDomain): Boolean {
+        val notification: EmailNotificationDomain = toEmaail(signupNotification)
+        return notificationAdapter.sendEmail(notification)
+    }
+
+    private fun toEmaail(signupNotification: SignupEmailNotificationDomain): EmailNotificationDomain {
+        return EmailNotificationDomain.Builder(signupNotification.username)
+            .emailFrom(signupNotification.emailFrom)
+            .emailTo(signupNotification.emailTo)
+            .emailSubject(signupNotification.emailSubject)
+            .emailContent(signupNotification.emailContent)
+            .emailGreeting(signupNotification.emailGreeting).build()
     }
 
     override fun updateStatus(signup: SignupDomain): Optional<SignupDomain>  {
@@ -168,8 +144,6 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 
     class SignupUsernameUniquenessException(private val msg: String) : Throwable(msg) {}
     class SignupNotFoundException(private val msg: String) : Throwable(msg) {}
-    class SignupEmailNotificationException(private val msg: String) : Throwable(msg) {}
-    class SignupSmsNotificationException(private val msg: String) : Throwable(msg) {}
     class SignupRegistrationException(private val msg: String) : Throwable(msg) {}
     class SignupRoleAssignationException(private val msg: String) : Throwable(msg) {}
     class SignupIamAccountDeletionException(private val msg: String) : Throwable(msg) {}
