@@ -135,7 +135,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         signup.state?.emailValidated = signup.activationCode.equals(activationCode)
 
         if (signup.state?.emailValidated != true) {
-            logger.warn("the token is invalid for activation by email : token=$token")
+            logger.warn("the token is invalid for verification by email : token=$token")
             throw SignupVerificationByCodeFromTokenException("the token is invalid for verification by email : token=$token")
         } else {
             logger.info("successfully verified the token by email for user $username")

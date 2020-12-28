@@ -1,5 +1,7 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.metafile.MetafileDomain
+import io.tricefal.core.metafile.Representation
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import org.junit.jupiter.api.Assertions
@@ -226,37 +228,181 @@ class SignupServiceTest {
 
     @Test
     fun `should deactivate the signup`() {
+// Arrange
+        val username = "kong@gmail.com"
 
+        val state = SignupStateDomain.Builder("kong")
+            .build()
+
+        val signup = SignupDomain.Builder(username)
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(state)
+            .build()
+
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+
+        // Act
+        val result = service.deactivate(signup)
+
+        // Arrange
+        Assertions.assertFalse(result.validated!!)
     }
 
     @Test
     fun `should resend code for a signup`() {
+        // Arranges
+        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
 
+        Mockito.`when`(dataAdapter.findByUsername("kong@gmail.com")).thenReturn(
+            Optional.of(signup)
+        )
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.`when`(dataAdapter.sendEmail(any(SignupEmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendSms(any(SmsNotificationDomain::class.java))).thenReturn(true)
+
+        // Act
+        val result = service.resendCode(signup, metaNotification)
+
+        // Arrange
+        Mockito.verify(dataAdapter).sendEmail(any(SignupEmailNotificationDomain::class.java))
+        Mockito.verify(dataAdapter).sendSms(any(SmsNotificationDomain::class.java))
+        Assertions.assertTrue(result.emailSent!!)
+        Assertions.assertTrue(result.smsSent!!)
     }
 
     @Test
     fun `should verify by code for a signup`() {
+        // Arranges
+        val code = "123456"
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
 
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+
+        // Act
+        val result = service.verifyByCode(signup, code)
+
+        // Arrange
+        Assertions.assertTrue(result.smsValidated!!)
     }
 
     @Test
     fun `should verify by email for a signup`() {
+        // Arranges
+        val token = "MTIwODE1.a29uZ0BnbWFpbC5jb20=.61EVWjtwW0L1"
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("120815")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
 
+        Mockito.`when`(dataAdapter.findByUsername("kong@gmail.com")).thenReturn(
+            Optional.of(signup)
+        )
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+
+        // Act
+        val result = service.verifyByCodeFromToken(token)
+
+        // Arrange
+        Assertions.assertTrue(result.emailValidated!!)
     }
 
     @Test
     fun `should update a signup upon portrait uploaded`() {
+        // Arranges
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("120815")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
+        val metafileDomain = MetafileDomain("kong@gmail.com", "filename", Representation.PORTRAIT, "pdf", 1024, Instant.now())
 
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.doNothing().`when`(dataAdapter).portraitUploaded(metafileDomain)
+
+        // Act
+        val result = service.portraitUploaded(signup, metafileDomain)
+
+        // Arrange
+        Assertions.assertTrue(result.portraitUploaded!!)
     }
 
     @Test
     fun `should update a signup upon resume uploaded`() {
+        // Arranges
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("120815")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
+        val metafileDomain = MetafileDomain("kong@gmail.com", "filename", Representation.PORTRAIT, "pdf", 1024, Instant.now())
 
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.doNothing().`when`(dataAdapter).resumeUploaded(metafileDomain)
+
+        // Act
+        val result = service.resumeUploaded(signup, metafileDomain)
+
+        // Arrange
+        Assertions.assertTrue(result.resumeUploaded!!)
     }
 
     @Test
     fun `should update a signup upon resume linkedin uploaded`() {
+        // Arranges
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("120815")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
+        val metafileDomain = MetafileDomain("kong@gmail.com", "filename", Representation.PORTRAIT, "pdf", 1024, Instant.now())
 
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.doNothing().`when`(dataAdapter).resumeLinkedinUploaded(metafileDomain)
+
+        // Act
+        val result = service.resumeLinkedinUploaded(signup, metafileDomain)
+
+        // Arrange
+        Assertions.assertTrue(result.resumeLinkedinUploaded!!)
     }
 
     @Test
