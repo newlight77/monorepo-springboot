@@ -1,5 +1,7 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.notification.EmailNotificationDomain
+
 
 class SignupEmailNotificationDomain
 private constructor(
@@ -33,4 +35,14 @@ private constructor(
                 emailGreeting = emailGreeting
         )
     }
+}
+
+
+fun toEmail(signupNotification: SignupEmailNotificationDomain): EmailNotificationDomain {
+    return EmailNotificationDomain.Builder(signupNotification.username)
+        .emailFrom(signupNotification.emailFrom)
+        .emailTo(signupNotification.emailTo)
+        .emailSubject(signupNotification.emailSubject)
+        .emailContent(signupNotification.emailContent)
+        .emailGreeting(signupNotification.emailGreeting).build()
 }

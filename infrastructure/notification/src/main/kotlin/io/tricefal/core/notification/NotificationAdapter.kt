@@ -16,7 +16,7 @@ class NotificationAdapter(val mailService: EmailService,
 
     override fun sendSms(notification: SmsNotificationDomain): Boolean {
         logger.info("Sending ans SMS")
-        val result = try {
+        try {
             val message = SmsMessage.Builder()
                 .from(notification.smsFrom!!)
                 .to(notification.smsTo!!)
@@ -28,7 +28,7 @@ class NotificationAdapter(val mailService: EmailService,
             throw SmsNotificationException("Failed to send a sms notification for number ${notification.smsTo}")
         }
         logger.info("An SMS has been sent")
-        return result
+        return true
     }
 
     override fun sendEmail(signupNotification: EmailNotificationDomain): Boolean {

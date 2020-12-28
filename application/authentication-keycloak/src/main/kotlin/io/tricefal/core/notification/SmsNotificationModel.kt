@@ -2,14 +2,12 @@ package io.tricefal.core.notification
 
 class SmsNotificationModel
 private constructor(
-        val username: String,
         var smsFrom: String? = null,
         var smsTo: String? = null,
         var smsContent: String? = null
 ) {
 
     data class Builder (
-            val username: String,
             var smsFrom: String? = null,
             var smsTo: String? = null,
             var smsContent: String? = null
@@ -20,7 +18,6 @@ private constructor(
         fun smsContent(smsContent: String?) = apply { this.smsContent = smsContent }
 
         fun build() = SmsNotificationModel(
-                username = username,
                 smsFrom = smsFrom,
                 smsTo = smsTo,
                 smsContent = smsContent
@@ -29,7 +26,7 @@ private constructor(
 }
 
 fun toModel(domain: SmsNotificationDomain): SmsNotificationModel {
-    return SmsNotificationModel.Builder(domain.username)
+    return SmsNotificationModel.Builder()
         .smsFrom(domain.smsFrom)
         .smsTo(domain.smsTo)
         .smsContent(domain.smsContent)
@@ -37,7 +34,7 @@ fun toModel(domain: SmsNotificationDomain): SmsNotificationModel {
 }
 
 fun fromModel(model: SmsNotificationModel): SmsNotificationDomain {
-    return SmsNotificationDomain.Builder(model.username)
+    return SmsNotificationDomain.Builder()
         .smsFrom(model.smsFrom)
         .smsTo(model.smsTo)
         .smsContent(model.smsContent)

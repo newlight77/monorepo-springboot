@@ -96,17 +96,8 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun sendEmail(signupNotification: SignupEmailNotificationDomain): Boolean {
-        val notification: EmailNotificationDomain = toEmaail(signupNotification)
+        val notification: EmailNotificationDomain = toEmail(signupNotification)
         return notificationAdapter.sendEmail(notification)
-    }
-
-    private fun toEmaail(signupNotification: SignupEmailNotificationDomain): EmailNotificationDomain {
-        return EmailNotificationDomain.Builder(signupNotification.username)
-            .emailFrom(signupNotification.emailFrom)
-            .emailTo(signupNotification.emailTo)
-            .emailSubject(signupNotification.emailSubject)
-            .emailContent(signupNotification.emailContent)
-            .emailGreeting(signupNotification.emailGreeting).build()
     }
 
     override fun updateStatus(signup: SignupDomain): Optional<SignupDomain>  {

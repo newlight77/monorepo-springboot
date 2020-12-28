@@ -1,8 +1,8 @@
 package io.tricefal.core.notification
 
 
-class EmailNotificationDomain
-private constructor(
+data class EmailNotificationDomain
+    constructor(
         val username: String,
         var emailFrom: String? = null,
         var emailTo: String? = null,

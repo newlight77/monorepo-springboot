@@ -17,33 +17,14 @@ class NotificationService(private var adapter: INotificationAdapter) : INotifica
         }
     }
 
-    private fun toEmail(notification: EmailContactNotificationDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
-        return EmailNotificationDomain.Builder("")
-            .emailContent(notification.emailContent)
-            .emailFrom(notification.emailFrom)
-            .emailTo(metaNotification.emailAdmin)
-            .emailSubject("contact from ${notification.firstname} ${notification.lastname}")
-            .build()
-    }
-
     override fun sendEmailFeedback(notification: EmailFeedbackNotificationDomain, metaNotification: MetaNotificationDomain): Boolean {
         try {
             val emailSignupNotification: EmailNotificationDomain = toEmail(notification, metaNotification)
-            adapter.sendEmail(emailSignupNotification)
-            return true
+            return adapter.sendEmail(emailSignupNotification)
         } catch (ex: Throwable) {
-            logger.error("failed to send an email for feedback for username ${notification}")
-            throw SignupEmailNotificationException("failed to send an email for feedback ${notification}", ex)
+            logger.error("failed to send an email for feedback for username ${notification.emailTo}")
+            throw SignupEmailNotificationException("failed to send an email for feedback ${notification.emailTo}", ex)
         }
-    }
-
-    private fun toEmail(notification: EmailFeedbackNotificationDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
-        return EmailNotificationDomain.Builder("")
-            .emailContent(notification.emailContent)
-            .emailFrom(notification.emailFrom)
-            .emailTo(metaNotification.emailAdmin)
-            .emailSubject("feeedback from ${notification.firstname} ${notification.lastname}")
-            .build()
     }
 
     override fun sendSms(notification: SmsNotificationDomain, metaNotification: MetaNotificationDomain): Boolean {
@@ -51,8 +32,8 @@ class NotificationService(private var adapter: INotificationAdapter) : INotifica
             notification.smsTo = metaNotification.smsAdminNumber
             return adapter.sendSms(notification)
         } catch (ex: Throwable) {
-            logger.error("failed to send an sms for activation for username ${notification.username}")
-            throw SignupSmsNotificationException("failed to send an sms for activation for username ${notification.username}", ex)
+            logger.error("failed to send an sms for activation for username ${notification.smsTo}")
+            throw SignupSmsNotificationException("failed to send an sms for activation for username ${notification.smsTo}", ex)
         }
     }
 }

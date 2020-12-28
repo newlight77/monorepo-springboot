@@ -1,8 +1,8 @@
 package io.tricefal.core.notification
 
 
-class EmailFeedbackNotificationDomain
-private constructor(
+data class EmailFeedbackNotificationDomain
+    constructor(
         var emailFrom: String? = null,
         var emailTo: String? = null,
         var lastname: String? = null,
@@ -30,4 +30,13 @@ private constructor(
             emailContent = emailContent
         )
     }
+}
+
+fun toEmail(notification: EmailFeedbackNotificationDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+    return EmailNotificationDomain.Builder("")
+        .emailContent(notification.emailContent)
+        .emailFrom(notification.emailFrom)
+        .emailTo(metaNotification.emailAdmin)
+        .emailSubject("feeedback from ${notification.firstname} ${notification.lastname}")
+        .build()
 }
