@@ -58,4 +58,41 @@ class MissionWishServiceTest {
         Assertions.assertEquals(missionWish.username, result.get().username)
     }
 
+    @Test
+    fun `should update upon mission specific resume uploaded`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val filename = "new-resume.pdf"
+        val missionWish = MissionWishDomain.Builder(username)
+            .build()
+
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(missionWish))
+
+        service = MissionWishService(dataAdapter)
+
+        // Act
+        val result = service.updateOnResumeUploaded(username, filename)
+
+        // Arrange
+        Assertions.assertEquals(result.resumeFilename, filename)
+    }
+
+    @Test
+    fun `should create a new mission upon mission specific resume uploaded`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val filename = "new-resume.pdf"
+
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.empty())
+
+        service = MissionWishService(dataAdapter)
+
+        // Act
+        val result = service.updateOnResumeUploaded(username, filename)
+
+        // Arrange
+        Assertions.assertEquals(result.username, username)
+        Assertions.assertEquals(result.resumeFilename, filename)
+    }
+
 }
