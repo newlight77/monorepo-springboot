@@ -8,7 +8,6 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.lang.Exception
 
 
 @Service
@@ -41,7 +40,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
 
     fun update(missionWish: MissionWishModel): MissionWishModel {
         val domain = try {
-            missionWishService.updated(fromModel(missionWish))
+            missionWishService.update(fromModel(missionWish))
         } catch (ex : Throwable) {
             logger.error("Failed to update the missionWish for user ${missionWish.username}")
             throw MissionWishUpdateException("Failed to update the missionWish for user ${missionWish.username}")

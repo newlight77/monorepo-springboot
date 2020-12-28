@@ -57,7 +57,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .kbisFilename(filename)
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.kbisFilename = filename

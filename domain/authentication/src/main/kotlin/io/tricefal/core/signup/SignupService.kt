@@ -38,7 +38,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
     override fun resendCode(signup: SignupDomain,
                             metaNotification: MetaNotificationDomain): SignupStateDomain {
         dataAdapter.findByUsername(signup.username).orElseThrow {
-            logger.error("a signup with username ${signup.username} is does not exist")
+            logger.error("a signup with username ${signup.username} does not exist")
             throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
         }
 
@@ -128,7 +128,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         val username = decode(values[1])
 
         val signup = dataAdapter.findByUsername(username).orElseThrow {
-            logger.error("a signup with username $username is does not exist")
+            logger.error("a signup with username $username does not exist")
             throw SignupNotFoundException("a signup with username $username does not exist")
         }
 

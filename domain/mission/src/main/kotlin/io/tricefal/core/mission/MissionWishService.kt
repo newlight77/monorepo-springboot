@@ -22,7 +22,7 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
         return dataAdapter.findAll()
     }
 
-    override fun updated(missionWish: MissionWishDomain): MissionWishDomain {
+    override fun update(missionWish: MissionWishDomain): MissionWishDomain {
         missionWish.lastDate = Instant.now()
         dataAdapter.update(missionWish)
         return missionWish
@@ -37,7 +37,7 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
                     .ifPresentOrElse(
                             {
                                 it.resumeFilename = filename
-                                create(missionWish)
+                                update(missionWish)
                             },
                             { create(missionWish) }
                     )
