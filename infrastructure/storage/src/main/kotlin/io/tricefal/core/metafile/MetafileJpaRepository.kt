@@ -11,7 +11,7 @@ interface MetafileJpaRepository : JpaRepository<MetafileEntity, Long> {
     fun findById(username: String): List<MetafileEntity>
     @Query("SELECT t FROM MetafileEntity t where t.username like %:username%")
     fun findByUsername(username: String): List<MetafileEntity>
-    @Query("SELECT t FROM MetafileEntity t where t.filename like %:filename%")
+    @Query("SELECT t FROM MetafileEntity t where t.filename like %:filename%  ORDER by t.creationDate DESC")
     fun findByFilename(filename: String): List<MetafileEntity>
 
 }
