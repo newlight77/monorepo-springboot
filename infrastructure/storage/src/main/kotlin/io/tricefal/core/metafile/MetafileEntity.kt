@@ -26,7 +26,7 @@ data class MetafileEntity(
         var size: Long? = null,
 
         @Column(name = "creation_date")
-        var creationDate: Instant? = null)
+        var creationDate: Instant? = Instant.now())
 
 
 fun toEntity(domain: MetafileDomain): MetafileEntity {

@@ -11,7 +11,7 @@ data class IpAddressEntity(
         val id: Long?,
 
         @Column(name = "last_date")
-        var lastDate: Instant,
+        var lastDate: Instant = Instant.now(),
 
         @Column(name = "ip", length = 30)
         var ipAddress: String,

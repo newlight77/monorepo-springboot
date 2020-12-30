@@ -40,7 +40,7 @@ data class SignupEntity(
         var status: String,
 
         @Column(name = "signup_date")
-        var signupDate: Instant? = null,
+        var signupDate: Instant? = Instant.now(),
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")

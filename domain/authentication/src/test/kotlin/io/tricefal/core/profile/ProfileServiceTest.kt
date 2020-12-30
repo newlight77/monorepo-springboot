@@ -23,14 +23,14 @@ class ProfileServiceTest {
     fun `should create a profile successfully`() {
         // Arrange
         val profile = ProfileDomain("kong@gmail.com", Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
-        Mockito.`when`(repository.save(profile)).thenReturn(profile)
+        Mockito.`when`(repository.create(profile)).thenReturn(profile)
         service = ProfileService(repository)
 
         // Act
         service.save(profile)
 
         // Arrange
-        Mockito.verify(repository).save(profile)
+        Mockito.verify(repository).create(profile)
     }
 
     @Test

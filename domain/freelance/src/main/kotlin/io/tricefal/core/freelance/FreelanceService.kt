@@ -2,6 +2,7 @@ package io.tricefal.core.freelance
 
 import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
+import java.time.Instant
 import java.util.*
 
 class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelanceService {
@@ -55,6 +56,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     override fun updateOnKbisUploaded(username: String, filename: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
             .kbisFilename(filename)
+            .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByUsername(username)
@@ -79,8 +81,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     override fun updateOnRibUploaded(username: String, filename: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-                .ribFilename(filename)
-                .build()
+            .ribFilename(filename)
+            .lastDate(Instant.now())
+            .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
@@ -104,8 +107,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     override fun updateOnRcUploaded(username: String, filename: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-                .rcFilename(filename)
-                .build()
+            .rcFilename(filename)
+            .lastDate(Instant.now())
+            .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
@@ -129,8 +133,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     override fun updateOnUrssafUploaded(username: String, filename: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-                .urssafFilename(filename)
-                .build()
+            .urssafFilename(filename)
+            .lastDate(Instant.now())
+            .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
@@ -154,8 +159,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     override fun updateOnFiscalUploaded(username: String, filename: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-                .fiscalFilename(filename)
-                .build()
+            .fiscalFilename(filename)
+            .lastDate(Instant.now())
+            .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(

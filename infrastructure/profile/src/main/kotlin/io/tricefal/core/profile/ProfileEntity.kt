@@ -14,7 +14,7 @@ const val EMAIL_REGEX = " ^[\\\\w!#\$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#\$%&’*
 data class ProfileEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        val id: Long?,
+        var id: Long?,
 
         @NotNull
         @Pattern(regexp = EMAIL_REGEX)
@@ -29,7 +29,7 @@ data class ProfileEntity(
         var signupState: String,
 
         @Column(name = "last_date")
-        var lastDate: Instant? = null,
+        var lastDate: Instant? = Instant.now(),
 
         @Column(name = "portrait")
         var portrait: String? = null,

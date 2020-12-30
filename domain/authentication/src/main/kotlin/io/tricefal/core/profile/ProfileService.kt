@@ -2,6 +2,7 @@ package io.tricefal.core.profile
 
 import io.tricefal.core.signup.toStatus
 import org.slf4j.LoggerFactory
+import java.time.Instant
 import java.util.*
 
 class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileService {
@@ -13,21 +14,22 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     }
 
     override fun save(profile: ProfileDomain): ProfileDomain {
-        return dataAdapter.save(profile)
+        return dataAdapter.create(profile)
     }
 
     override fun updateStatus(username: String, status: String): ProfileDomain {
-        val profile = ProfileDomain.Builder(username)
+        var profile = ProfileDomain.Builder(username)
             .status(toStatus(status))
+            .lastDate(Instant.now())
             .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.status = toStatus(status)
-                        save(profile)
+                        profile = dataAdapter.update(profile)
                     },
-                    { save(profile) }
+                    { profile = dataAdapter.create(profile) }
                 )
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the status update event for user $username")
@@ -37,17 +39,18 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     }
 
     override fun updateState(username: String, state: String): ProfileDomain {
-        val profile = ProfileDomain.Builder(username)
+        var profile = ProfileDomain.Builder(username)
             .signupState(toState(state))
+            .lastDate(Instant.now())
             .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.signupState = toState(state)
-                        save(profile)
+                        profile = dataAdapter.update(profile)
                     },
-                    { save(profile) }
+                    { profile = dataAdapter.create(profile) }
                 )
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the signup state update event for user $username")
@@ -57,18 +60,19 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     }
 
     override fun updateProfileOnPortraitUploaded(username: String, filename: String): ProfileDomain {
-        val profile = ProfileDomain.Builder(username)
-                .portraitFilename(filename)
-                .build()
+        var profile = ProfileDomain.Builder(username)
+            .portraitFilename(filename)
+            .lastDate(Instant.now())
+            .build()
         try {
             this.findByUsername(username)
-                    .ifPresentOrElse(
-                            {
-                                it.portraitFilename = filename
-                                save(profile)
-                            },
-                            { save(profile) }
-                    )
+                .ifPresentOrElse(
+                    {
+                        it.portraitFilename = filename
+                        profile = dataAdapter.update(profile)
+                    },
+                    { profile = dataAdapter.create(profile) }
+                )
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the portrait uploaded event for user $username")
             throw ProfileUploadException("Failed to update the profile from the portrait uploaded event for user $username", ex)
@@ -77,18 +81,19 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     }
 
     override fun updateProfileOnResumeUploaded(username: String, filename: String): ProfileDomain {
-        val profile = ProfileDomain.Builder(username)
-                .resumeFilename(filename)
-                .build()
+        var profile = ProfileDomain.Builder(username)
+            .resumeFilename(filename)
+            .lastDate(Instant.now())
+            .build()
         try {
             this.findByUsername(username)
-                    .ifPresentOrElse(
-                            {
-                                it.resumeFilename = filename
-                                save(profile)
-                            },
-                            { save(profile) }
-                    )
+                .ifPresentOrElse(
+                    {
+                        it.resumeFilename = filename
+                        profile = dataAdapter.update(profile)
+                    },
+                    { profile = dataAdapter.create(profile) }
+                )
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the resume uploaded event for user $username")
             throw ProfileUploadException("Failed to update the profile from the resume uploaded event for user $username", ex)
@@ -97,18 +102,19 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     }
 
     override fun updateProfileOnResumeLinkedinUploaded(username: String, filename: String): ProfileDomain {
-        val profile = ProfileDomain.Builder(username)
-                .resumeLinkedinFilename(filename)
-                .build()
+        var profile = ProfileDomain.Builder(username)
+            .resumeLinkedinFilename(filename)
+            .lastDate(Instant.now())
+            .build()
         try {
             this.findByUsername(username)
-                    .ifPresentOrElse(
-                            {
-                                it.resumeLinkedinFilename = filename
-                                save(profile)
-                            },
-                            { save(profile) }
-                    )
+                .ifPresentOrElse(
+                    {
+                        it.resumeLinkedinFilename = filename
+                        profile = dataAdapter.update(profile)
+                    },
+                    { profile = dataAdapter.create(profile) }
+                )
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the linkedin resume uploaded event for user $username")
             throw ProfileUploadException("Failed to update the profile from the linkedin resume uploaded event for user $username", ex)

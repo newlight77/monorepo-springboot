@@ -11,7 +11,7 @@ data class PricerReferenceEntity (
         var id: Long? = null,
 
         @Column(name = "last_date")
-        var lastDate: Instant,
+        var lastDate: Instant = Instant.now(),
 
         @Column(name = "nb_days_year")
         var workDaysPerYear: Int,

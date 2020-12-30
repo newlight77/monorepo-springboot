@@ -41,7 +41,7 @@ data class FreelanceEntity (
         var state: FreelanceStateEntity? = null,
 
         @Column(name = "last_date")
-        var lastDate: Instant? = null
+        var lastDate: Instant? = Instant.now()
 
 )
 
