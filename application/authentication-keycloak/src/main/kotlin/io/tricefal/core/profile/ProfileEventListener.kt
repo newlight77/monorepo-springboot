@@ -15,7 +15,7 @@ class ProfileEventListener(val profileService: IProfileService) {
         try {
             this.profileService.updateStatus(event.username, event.status)
         } catch (ex: Throwable) {
-            throw StatusUpdateException("Failed to update the status of the profile with username ${event.username}")
+            throw ProfileStatusUpdateException("Failed to update the status of the profile with username ${event.username}", ex)
         }
         logger.info("ProfileEventListener picked up a SignupStatusUpdatedEvent with ${event.username}")
     }
@@ -25,7 +25,7 @@ class ProfileEventListener(val profileService: IProfileService) {
         try {
             this.profileService.updateState(event.username, event.state)
         } catch (ex: Throwable) {
-            throw StatusUpdateException("Failed to update the signup state of the profile with username ${event.username}")
+            throw ProfileStateUpdateException("Failed to update the signup state of the profile with username ${event.username}", ex)
         }
         logger.info("ProfileEventListener picked up a SignupStateUpdatedEvent with ${event.username}")
     }
@@ -36,9 +36,9 @@ class ProfileEventListener(val profileService: IProfileService) {
             this.profileService.updateProfileOnPortraitUploaded(event.username, event.metafile.filename)
         } catch(ex: Exception) {
             logger.error("Failed to update the profile portrait for username ${event.username}")
-            throw ProfileUploadException("Failed to update the profile portrait for username ${event.username}")
+            throw ProfileUploadException("Failed to update the profile portrait for username ${event.username}", ex)
         }
-        logger.info("EventHandler picked up portraint upload event with ${event.metafile}")
+        logger.info("EventHandler picked up portrait upload event with ${event.metafile}")
         return toModel(result)
     }
 
@@ -48,7 +48,7 @@ class ProfileEventListener(val profileService: IProfileService) {
             this.profileService.updateProfileOnResumeUploaded(event.username, event.metafile.filename)
         } catch(ex: Exception) {
             logger.error("Failed to update the profile resume for username ${event.username}")
-            throw ProfileUploadException("Failed to update the profile resume for username ${event.username}")
+            throw ProfileUploadException("Failed to update the profile resume for username ${event.username}", ex)
         }
         logger.info("EventHandler picked up a resume uploaded event with ${event.metafile}")
         return toModel(result)
@@ -59,13 +59,19 @@ class ProfileEventListener(val profileService: IProfileService) {
         val result = try {
             this.profileService.updateProfileOnResumeLinkedinUploaded(event.username, event.metafile.filename)
         } catch(ex: Exception) {
-            logger.error("Failed to update the profile ref for username ${event.username}")
-            throw ProfileUploadException("Failed to update the profile ref for username ${event.username}")
+            logger.error("Failed to update the profile resume linkedin for username ${event.username}")
+            throw ProfileUploadException("Failed to update the profile resume linkedin for username ${event.username}", ex)
         }
-        logger.info("EventHandler picked up ref uploaded event ${event.metafile}")
+        logger.info("EventHandler picked up resume linkedin uploaded event ${event.metafile}")
         return toModel(result)
     }
 
 }
 
-class StatusUpdateException(private val msg: String) : Throwable(msg) {}
+class ProfileStatusUpdateException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+
+class ProfileStateUpdateException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}

@@ -50,7 +50,7 @@ class ProfileWebHandler(val profileService: IProfileService,
             this.profileService.updateProfileOnPortraitUploaded(username, metaFile.filename)
         } catch(ex: Throwable) {
             logger.error("Failed to update the profile portrait for username $username")
-            throw ProfileUploadException("Failed to update the profile portrait for username $username")
+            throw ProfileUploadException("Failed to update the profile portrait for username $username", ex)
         }
         logger.info("successfully upload the portrait for user $username")
         return toModel(result)
@@ -64,7 +64,7 @@ class ProfileWebHandler(val profileService: IProfileService,
             this.profileService.updateProfileOnResumeUploaded(username, metaFile.filename)
         } catch(ex: Throwable) {
             logger.error("Failed to update the profile resume for username $username")
-            throw ProfileUploadException("Failed to update the profile resume for username $username")
+            throw ProfileUploadException("Failed to update the profile resume for username $username", ex)
         }
         logger.info("successfully upload the resume for user $username")
         return toModel(result)
@@ -78,7 +78,7 @@ class ProfileWebHandler(val profileService: IProfileService,
             this.profileService.updateProfileOnResumeLinkedinUploaded(username, metaFile.filename)
         } catch(ex: Throwable) {
             logger.error("Failed to update the profile linkedin resume for username $username")
-            throw ProfileUploadException("Failed to update the profile cv linkedin resume for username $username")
+            throw ProfileUploadException("Failed to update the profile cv linkedin resume for username $username", ex)
         }
 
         logger.info("successfully upload the linkedin resume for user $username")
@@ -94,4 +94,6 @@ class ProfileWebHandler(val profileService: IProfileService,
 
 }
 
-class ProfileUploadException(private val msg: String) : Throwable(msg) {}
+class ProfileUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}

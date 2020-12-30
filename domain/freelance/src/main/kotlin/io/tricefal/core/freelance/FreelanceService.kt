@@ -179,9 +179,21 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
 }
 
-class NotFoundException(val s: String) : Throwable()
-class KbisFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
-class RibFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
-class RcFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
-class UrssafFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
-class FiscalFileUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class NotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class KbisFileUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class RibFileUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class RcFileUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class UrssafFileUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class FiscalFileUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}

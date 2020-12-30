@@ -25,7 +25,7 @@ class NotificationAdapter(val mailService: EmailService,
             smsService.send(message).matches(Regex("^SM[a-z0-9]*"))
         } catch (ex: Exception) {
             logger.error("Failed to send a sms notification for user ${notification.smsTo}")
-            throw SmsNotificationException("Failed to send a sms notification for number ${notification.smsTo}")
+            throw SmsNotificationException("Failed to send a sms notification for number ${notification.smsTo}", ex)
         }
         logger.info("An SMS has been sent")
         return true
@@ -45,7 +45,7 @@ class NotificationAdapter(val mailService: EmailService,
             mailService.send(message)
         } catch (ex: Exception) {
             logger.error("Failed to send an email notification for user ${signupNotification.emailTo}")
-            throw EmailNotificationException("Failed to send an email notification for user ${signupNotification.emailTo}")
+            throw EmailNotificationException("Failed to send an email notification for user ${signupNotification.emailTo}", ex)
         }
         logger.info("An Email has been sent")
         return true
@@ -53,9 +53,12 @@ class NotificationAdapter(val mailService: EmailService,
 
 }
 
-class EmailNotificationException(private val msg: String) : Throwable(msg) {}
-class SmsNotificationException(private val msg: String) : Throwable(msg) {}
-
+class EmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SmsNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 
 
 

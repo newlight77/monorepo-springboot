@@ -5,8 +5,8 @@ import java.time.Instant
 
 data class ProfileDomain(
     var username: String,
-    var status: Status?,
-    var signupState: SignupState?,
+    var status: Status? = Status.NONE,
+    var signupState: SignupState? = SignupState.NONE,
     var lastDate: Instant? = Instant.now(),
     var portraitFilename: String? = null,
     var resumeFilename: String? = null,
@@ -15,8 +15,8 @@ data class ProfileDomain(
 
     data class Builder(
             val username: String,
-            var status: Status? = null,
-            var signupState: SignupState? = null,
+            var status: Status? = Status.NONE,
+            var signupState: SignupState? = SignupState.NONE,
             var lastDate: Instant? = null,
 
             var portraitFilename: String? = null,

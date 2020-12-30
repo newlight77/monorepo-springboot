@@ -25,7 +25,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val result = try {
             freelanceService.create(domain)
         } catch (ex: Throwable) {
-            throw FreelanceCreationException("Failed to create a freelance profile with username ${freelanceModel.username}")
+            throw FreelanceCreationException("Failed to create a freelance profile with username ${freelanceModel.username}", ex)
         }
         return toModel(result)
     }
@@ -35,7 +35,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
             val domain = fromModel(freelanceModel)
             freelanceService.update(username, domain)
         } catch (ex: Throwable) {
-            throw FreelanceCreationException("Failed to update a freelance with username $username with $freelanceModel")
+            throw FreelanceCreationException("Failed to update a freelance with username $username with $freelanceModel", ex)
         }
         return toModel(result)
     }
@@ -44,7 +44,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val result = try {
             freelanceService.patch(username, operations)
         } catch (ex: Throwable) {
-            throw FreelanceCreationException("Failed to create a freelance profile with username $username with operations ${operations.joinToString()}")
+            throw FreelanceCreationException("Failed to create a freelance profile with username $username with operations ${operations.joinToString()}", ex)
         }
         return toModel(result)
     }
@@ -70,7 +70,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
             freelanceService.updateOnKbisUploaded(username, metaFile.filename)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the kbis document for user $username")
-            throw FreelanceUploadException("Failed to upload the kbis document for user $username")
+            throw FreelanceUploadException("Failed to upload the kbis document for user $username", ex)
         }
         logger.info("successfully upload the kbis document for user $username")
         return toModel(result)
@@ -84,7 +84,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
             freelanceService.updateOnRibUploaded(username, metaFile.filename)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the rib document for user $username")
-            throw FreelanceUploadException("Failed to upload the rib document for user $username")
+            throw FreelanceUploadException("Failed to upload the rib document for user $username", ex)
         }
         logger.info("successfully upload the rib document for user $username")
         return toModel(result)
@@ -98,7 +98,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
             freelanceService.updateOnRcUploaded(username, metaFile.filename)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the rc document for user $username")
-            throw FreelanceUploadException("Failed to upload the rc document for user $username")
+            throw FreelanceUploadException("Failed to upload the rc document for user $username", ex)
         }
         logger.info("successfully upload the rc document for user $username")
         return toModel(result)
@@ -112,7 +112,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
             freelanceService.updateOnUrssafUploaded(username, metaFile.filename)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the urssaaf document for user $username")
-            throw FreelanceUploadException("Failed to upload the urssaaf document for user $username")
+            throw FreelanceUploadException("Failed to upload the urssaaf document for user $username", ex)
         }
         logger.info("successfully upload the urssaaf document for user $username")
         return toModel(result)
@@ -126,7 +126,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
             freelanceService.updateOnFiscalUploaded(username, metaFile.filename)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the fiscal document for user $username")
-            throw FreelanceUploadException("Failed to upload the fiscal document for user $username")
+            throw FreelanceUploadException("Failed to upload the fiscal document for user $username", ex)
         }
         logger.info("successfully upload the fiscal document for user $username")
         return toModel(result)
@@ -168,6 +168,10 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
                 .orElseThrow { NotFoundException("username $username not found") }
     }
 
-    class FreelanceCreationException(private val msg: String) : Throwable(msg) {}
-    class FreelanceUploadException(private val msg: String) : Throwable(msg) {}
+    class FreelanceCreationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class FreelanceUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
 }

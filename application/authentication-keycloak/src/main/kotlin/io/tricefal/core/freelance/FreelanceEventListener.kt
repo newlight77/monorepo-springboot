@@ -18,8 +18,12 @@ class FreelanceEventListener(val freelanceService: IFreelanceService) {
                     .state(FreelanceStateDomain.Builder(event.username).build()).build()
             freelanceService.create(domain)
         } catch (ex: Throwable) {
-            throw FreelanceWebHandler.FreelanceCreationException("Failed to create a freelance profile with username ${event.username}")
+            throw SignupStatusUpdatedException("Failed to create a freelance profile upon status updated for username ${event.username}")
         }
         logger.info("FreelanceEventListener picked up a FreelanceStatusUpdatedEvent with ${event.username}")
     }
+}
+
+class SignupStatusUpdatedException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
 }

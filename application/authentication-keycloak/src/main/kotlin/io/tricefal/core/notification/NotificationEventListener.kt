@@ -21,7 +21,7 @@ class NotificationEventListener(val notificationService: INotificationService,
         try {
             notificationService.sendEmailContact(event.emailContactNotification!!, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
         } catch (ex: Throwable) {
-            throw CguAcceptedSavingException("Failed to send an email for contact from the notification event ${event.emailContactNotification}")
+            throw CguAcceptedSavingException("Failed to send an email for contact from the notification event ${event.emailContactNotification}", ex)
         }
         logger.info("Failed to send an email for feedback from the notification event ${event.emailContactNotification}")
     }
@@ -36,6 +36,7 @@ class NotificationEventListener(val notificationService: INotificationService,
         logger.info("Failed to send an email for feedback from the notification event ${event.emailContactNotification}")
     }
 
-    class CguAcceptedSavingException(private val msg: String) : Throwable() {}
-
+    class CguAcceptedSavingException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
 }

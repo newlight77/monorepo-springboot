@@ -89,7 +89,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
             registrationService.delete(username)
         } catch (ex: Exception) {
             logger.error("failed to delete user on IAM server for username $username")
-            throw SignupIamAccountDeletionException("failed to delete user from IAM server for username $username")
+            throw SignupIamAccountDeletionException("failed to delete user from IAM server for username $username", ex)
         }
     }
 
@@ -100,7 +100,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
             result
         } catch (ex: Exception) {
             logger.error("Failed to register a user on IAM server for username ${signup.username}")
-            throw SignupRegistrationException("Failed to register a user on IAM server for username ${signup.username}")
+            throw SignupRegistrationException("Failed to register a user on IAM server for username ${signup.username}", ex)
         }
     }
 
@@ -149,15 +149,25 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
             keycloakRegisterService.addRole(username, accessRight)
         } catch (ex: Exception) {
             logger.error("Failed to assign the role $accessRight to user $username")
-            throw SignupRoleAssignationException("Failed to assign the role $accessRight to user $username")
+            throw SignupRoleAssignationException("Failed to assign the role $accessRight to user $username", ex)
         }
     }
 
-    class SignupUsernameUniquenessException(private val msg: String) : Throwable(msg) {}
-    class SignupNotFoundException(private val msg: String) : Throwable(msg) {}
-    class SignupRegistrationException(private val msg: String) : Throwable(msg) {}
-    class SignupRoleAssignationException(private val msg: String) : Throwable(msg) {}
-    class SignupIamAccountDeletionException(private val msg: String) : Throwable(msg) {}
+    class SignupUsernameUniquenessException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class SignupNotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class SignupRegistrationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class SignupRoleAssignationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class SignupIamAccountDeletionException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
 }
 
 

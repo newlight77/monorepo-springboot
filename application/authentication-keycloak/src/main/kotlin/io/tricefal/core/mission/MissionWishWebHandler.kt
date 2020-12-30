@@ -24,7 +24,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
         val result = try {
             missionWishService.create(domain)
         } catch (ex: Throwable) {
-            throw MissionWishCreationException("Failed to create a missionWish with username ${missionWishModel.username}")
+            throw MissionWishCreationException("Failed to create a missionWish with username ${missionWishModel.username}", ex)
         }
         return toModel(result)
     }
@@ -43,7 +43,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
             missionWishService.update(fromModel(missionWish))
         } catch (ex : Throwable) {
             logger.error("Failed to update the missionWish for user ${missionWish.username}")
-            throw MissionWishUpdateException("Failed to update the missionWish for user ${missionWish.username}")
+            throw MissionWishUpdateException("Failed to update the missionWish for user ${missionWish.username}", ex)
         }
         return toModel(domain)
     }
@@ -56,7 +56,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
             missionWishService.updateOnResumeUploaded(username, metaFile)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the mission specific resume for user $username")
-            throw MissionWishUploadException("Failed to upload the mission specific resume for user $username")
+            throw MissionWishUploadException("Failed to upload the mission specific resume for user $username", ex)
         }
         logger.info("successfully upload the mission specific resume for user $username")
         return toModel(result)
@@ -75,7 +75,13 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
         return missionWish
     }
 
-    class MissionWishCreationException(private val msg: String) : Throwable(msg) {}
-    class MissionWishUpdateException(private val msg: String) : Throwable(msg) {}
-    class MissionWishUploadException(private val msg: String) : Throwable(msg) {}
+    class MissionWishCreationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class MissionWishUpdateException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class MissionWishUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
 }

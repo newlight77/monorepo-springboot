@@ -16,4 +16,6 @@ class PricerService(private var adapter: IPricerReferenceAdapter) : IPricerServi
 
 }
 
-class PricerToSalaryException(val s: String) : Throwable()
+class PricerToSalaryException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}

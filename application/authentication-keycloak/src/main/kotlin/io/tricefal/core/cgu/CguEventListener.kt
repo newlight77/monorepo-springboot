@@ -25,6 +25,8 @@ class CguEventListener(val cguService: ICguService) {
         logger.info("CguEventListener picked up a CguStatusUpdatedEvent for user ${event.username} with version \${event.cguAcceptedVersion")
     }
 
-    class CguAcceptedSavingException(private val msg: String) : Throwable() {}
+    class CguAcceptedSavingException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
 
 }

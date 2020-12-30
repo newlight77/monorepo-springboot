@@ -52,4 +52,6 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
 
 }
 
-class MissionResumeUploadException(val s: String, ex: Throwable) : Throwable(ex)
+class MissionResumeUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
