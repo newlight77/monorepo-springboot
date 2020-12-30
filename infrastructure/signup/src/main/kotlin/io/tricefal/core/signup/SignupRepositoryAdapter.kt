@@ -5,6 +5,7 @@ import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.NotificationAdapter
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.okta.IamRegisterService
+import io.tricefal.core.profile.SignupState
 import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
@@ -42,6 +43,17 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         )
     }
 
+    override fun softDelete(username: String) {
+        repository.findByUsername(username).stream().findFirst().ifPresentOrElse (
+            {
+                this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.DELETED.toString())
+            },
+            {
+                logger.error("unable to delete a registration with username $username")
+                throw SignupNotFoundException("unable to delete a registration with username $username")
+            }
+        )
+    }
     override fun findAll(): List<SignupDomain> {
         return repository.findAll().map {
             fromEntity(it)
@@ -83,20 +95,25 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 
     override fun register(signup: SignupDomain): Boolean {
         return try {
-            registrationService.register(signup)
+            val result = registrationService.register(signup)
+            this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.REGISTERED.toString())
+            result
         } catch (ex: Exception) {
             logger.error("Failed to register a user on IAM server for username ${signup.username}")
             throw SignupRegistrationException("Failed to register a user on IAM server for username ${signup.username}")
         }
     }
 
-    override fun sendSms(notification: SmsNotificationDomain): Boolean {
-        return notificationAdapter.sendSms(notification)
+    override fun sendSms(username: String, notification: SmsNotificationDomain): Boolean {
+        val result = notificationAdapter.sendSms(notification)
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.EMAIL_SENT.toString())
+        return result
     }
 
-    override fun sendEmail(signupNotification: SignupEmailNotificationDomain): Boolean {
-        val notification: EmailNotificationDomain = toEmail(signupNotification)
-        return notificationAdapter.sendEmail(notification)
+    override fun sendEmail(username: String, notification: EmailNotificationDomain): Boolean {
+        val result = notificationAdapter.sendEmail(notification)
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.EMAIL_SENT.toString())
+        return result
     }
 
     override fun updateStatus(signup: SignupDomain): Optional<SignupDomain>  {
@@ -109,18 +126,22 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 
     override fun cguAccepted(username: String, cguAcceptedVersion: String) {
         this.signupEventPublisher.publishCguAcceptedEvent(username, cguAcceptedVersion)
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.CGU_ACCEPTED.toString())
     }
 
     override fun portraitUploaded(fileDomain: MetafileDomain) {
         this.signupEventPublisher.publishPortraitUploadedEvent(fileDomain)
+        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.PORTRAIT_UPLOADED.toString())
     }
 
     override fun resumeUploaded(fileDomain: MetafileDomain) {
         this.signupEventPublisher.publishResumeUploadedEvent(fileDomain)
+        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_UPLOADED.toString())
     }
 
     override fun resumeLinkedinUploaded(fileDomain: MetafileDomain) {
         this.signupEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
+        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_LINKEDIN_UPLOADED.toString())
     }
 
     override fun assignRole(username: String, accessRight: AccessRight) {

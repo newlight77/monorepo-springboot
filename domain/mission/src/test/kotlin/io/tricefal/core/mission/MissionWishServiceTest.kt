@@ -1,5 +1,7 @@
 package io.tricefal.core.mission
 
+import io.tricefal.core.metafile.MetafileDomain
+import io.tricefal.core.metafile.Representation
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -65,13 +67,14 @@ class MissionWishServiceTest {
         val filename = "new-resume.pdf"
         val missionWish = MissionWishDomain.Builder(username)
             .build()
+        val metafile = MetafileDomain(username, filename, Representation.CV)
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(missionWish))
 
         service = MissionWishService(dataAdapter)
 
         // Act
-        val result = service.updateOnResumeUploaded(username, filename)
+        val result = service.updateOnResumeUploaded(username, metafile)
 
         // Arrange
         Assertions.assertEquals(result.resumeFilename, filename)
@@ -82,13 +85,14 @@ class MissionWishServiceTest {
         // Arrange
         val username = "kong@gmail.com"
         val filename = "new-resume.pdf"
+        val metafile = MetafileDomain(username, filename, Representation.CV)
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.empty())
 
         service = MissionWishService(dataAdapter)
 
         // Act
-        val result = service.updateOnResumeUploaded(username, filename)
+        val result = service.updateOnResumeUploaded(username, metafile)
 
         // Arrange
         Assertions.assertEquals(result.username, username)

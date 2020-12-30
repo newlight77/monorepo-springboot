@@ -2,11 +2,11 @@ package io.tricefal.core.signup
 
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
+import com.nhaarman.mockitokotlin2.eq
 import io.tricefal.core.InfrastructureMockBeans
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.keycloak.KeycloakRegistrationService
-import io.tricefal.core.login.SignupJpaRepository
 import io.tricefal.core.metafile.*
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
@@ -59,6 +59,9 @@ class SignupWebHandlerTest {
     @MockBean
     lateinit var metaFileRepository: MetafileJpaRepository
 
+    @MockBean
+    lateinit var eventPublisher: SignupEventPublisher
+
     @TempDir
     lateinit var tempDir: File
 
@@ -107,6 +110,7 @@ class SignupWebHandlerTest {
         Mockito.`when`(keycloakRegistrationService.register(any(SignupDomain::class.java))).thenReturn(true)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
         Mockito.`when`(smsService.send(any(SmsMessage::class.java))).thenReturn("SM235g4fwee4qf32gqg8g")
+        Mockito.doNothing().`when`(eventPublisher).publishStateUpdatedEvent(eq(username), any(String::class.java))
 
         // Act
         val result = signupWebHandler.signup(signup)

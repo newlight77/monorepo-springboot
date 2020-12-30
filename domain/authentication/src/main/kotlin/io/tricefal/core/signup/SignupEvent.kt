@@ -9,6 +9,8 @@ class SignupStatusUpdatedEvent(val username: String, val status: String) {
     fun isClient() = "CLIENT" === status
 }
 
+class SignupStateUpdatedEvent(val username: String, val state: String)
+
 class PortraitUploadedEvent(val metafile: MetafileDomain) {
     val username = metafile.username
     fun isPortrait() : Boolean {

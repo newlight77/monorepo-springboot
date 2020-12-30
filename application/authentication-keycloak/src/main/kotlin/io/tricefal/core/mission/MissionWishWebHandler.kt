@@ -53,7 +53,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            missionWishService.updateOnResumeUploaded(username, metaFile.filename)
+            missionWishService.updateOnResumeUploaded(username, metaFile)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the mission specific resume for user $username")
             throw MissionWishUploadException("Failed to upload the mission specific resume for user $username")

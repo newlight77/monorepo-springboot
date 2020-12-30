@@ -1,6 +1,7 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
+import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.right.AccessRight
@@ -72,6 +73,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 if (signup.activationCode == authorizationCode) dataAdapter.delete(signup.username)
             } else {
                 // soft deletion
+                dataAdapter.softDelete(signup.username)
                 signup.state?.deleted = true
                 dataAdapter.update(signup)
                     .orElseThrow { SignupDeletionException("Failed to update the signup state after soft deletion") }
@@ -244,10 +246,10 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    private fun sendEmail(signup: SignupDomain, signupNotification: SignupEmailNotificationDomain): Boolean {
+    private fun sendEmail(signup: SignupDomain, signupNotification: EmailNotificationDomain): Boolean {
         try {
             signup.state?.emailSent = true
-            dataAdapter.sendEmail(signupNotification)
+            dataAdapter.sendEmail(signup.username, signupNotification)
             dataAdapter.update(signup)
                 .orElseThrow { SignupEmailNotificationException("failed to update the signup after sending email for username ${signup.username}")}
             return true
@@ -260,7 +262,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
     private fun sendSms(signup: SignupDomain, notification: SmsNotificationDomain): Boolean {
         try {
             signup.state?.smsSent = true
-            dataAdapter.sendSms(notification)
+            dataAdapter.sendSms(signup.username, notification)
             dataAdapter.update(signup)
                 .orElseThrow { SignupSmsNotificationException("failed to update the signup after sending sms for username ${signup.username}")}
             return true

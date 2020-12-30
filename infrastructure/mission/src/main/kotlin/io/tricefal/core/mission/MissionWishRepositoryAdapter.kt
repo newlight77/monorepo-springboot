@@ -1,12 +1,14 @@
 package io.tricefal.core.mission
 
+import io.tricefal.core.metafile.MetafileDomain
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-class MissionWishRepositoryAdapter(private var repository: MissionWishJpaRepository) : MissionWishDataAdapter {
+class MissionWishRepositoryAdapter(private var repository: MissionWishJpaRepository,
+                                   private var publisher: MissionWishEventPublisher) : MissionWishDataAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -45,6 +47,10 @@ class MissionWishRepositoryAdapter(private var repository: MissionWishJpaReposit
 
         repository.save(mewEntity)
         return fromEntity(mewEntity)
+    }
+
+    override fun updateOnResumeUploaded(username: String, metafile: MetafileDomain) {
+        publisher.publishMissionResumeUploadedEvent(metafile)
     }
 
     class MissionWishNotFoundException(private val msg: String) : Throwable(msg) {}

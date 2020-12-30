@@ -1,5 +1,6 @@
 package io.tricefal.core.profile
 
+import io.tricefal.core.signup.toStatus
 import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -21,6 +22,12 @@ data class ProfileEntity(
         @Column(name = "username", length = 50)
         var username: String,
 
+        @Column(name = "status", length = 50)
+        var status: String,
+
+        @Column(name = "signup_state", length = 50)
+        var signupState: String,
+
         @Column(name = "last_date")
         var lastDate: Instant? = null,
 
@@ -39,6 +46,8 @@ fun toEntity(domain: ProfileDomain): ProfileEntity {
         return ProfileEntity(
                 null,
                 username = domain.username,
+                status = domain.status.toString(),
+                signupState = domain.signupState.toString(),
                 lastDate = domain.lastDate,
                 portrait = domain.portraitFilename,
                 resume = domain.resumeFilename,
@@ -49,6 +58,8 @@ fun toEntity(domain: ProfileDomain): ProfileEntity {
 fun fromEntity(entity: ProfileEntity): ProfileDomain {
         return ProfileDomain(
                 username = entity.username,
+                status = toStatus(entity.status),
+                signupState = toState(entity.signupState),
                 lastDate = entity.lastDate,
                 portraitFilename = entity.portrait,
                 resumeFilename = entity.resume,

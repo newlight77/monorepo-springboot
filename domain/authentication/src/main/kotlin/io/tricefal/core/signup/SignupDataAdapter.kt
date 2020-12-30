@@ -1,6 +1,7 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
+import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.right.AccessRight
 import java.util.*
@@ -8,14 +9,15 @@ import java.util.*
 interface SignupDataAdapter {
     fun save(signup: SignupDomain): SignupDomain
     fun delete(username: String)
+    fun softDelete(username: String)
     fun findByUsername(username: String): Optional<SignupDomain>
     fun findAll(): List<SignupDomain>
     fun update(signup: SignupDomain): Optional<SignupDomain>
 
     fun register(signup: SignupDomain) : Boolean
     fun unregister(username: String) : Boolean
-    fun sendEmail(signupNotification: SignupEmailNotificationDomain) : Boolean
-    fun sendSms(notification: SmsNotificationDomain) : Boolean
+    fun sendEmail(username: String, notification: EmailNotificationDomain) : Boolean
+    fun sendSms(username: String, notification: SmsNotificationDomain) : Boolean
     fun updateStatus(signup: SignupDomain): Optional<SignupDomain>
 
     // events

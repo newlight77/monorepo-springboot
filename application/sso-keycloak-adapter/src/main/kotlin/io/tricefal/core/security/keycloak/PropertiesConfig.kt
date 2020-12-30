@@ -36,7 +36,7 @@ open class PropertiesConfig {
             ClassPathResource(filename),
             PathResource("config/$filename"),
             PathResource(filename),
-            PathResource(getCustomPath(filename)!!)
+            PathResource(getCustomPath(filename))
         )
 
         val resource: Resource = possiblePropertiesResources

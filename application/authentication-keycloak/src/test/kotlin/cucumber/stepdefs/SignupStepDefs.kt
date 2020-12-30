@@ -5,15 +5,12 @@ import io.cucumber.java8.En
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import io.restassured.response.ValidatableResponse
-import io.tricefal.core.login.SignupJpaRepository
+import io.tricefal.core.signup.SignupJpaRepository
 import io.tricefal.core.signup.SignupModel
-import org.junit.jupiter.api.Assertions.*
-import org.springframework.beans.factory.annotation.Autowired
+import org.hamcrest.core.Is
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.web.server.LocalServerPort
 import java.time.Instant
-import io.restassured.module.mockmvc.RestAssuredMockMvc.*
-import org.hamcrest.core.Is
 
 class SignupStepDefs : En {
 

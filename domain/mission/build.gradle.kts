@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-
+	implementation(project(":domain:metafile"))
 }
 
 tasks.withType<Jar>() {

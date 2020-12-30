@@ -1,17 +1,34 @@
 package io.tricefal.core.profile
 
-import io.tricefal.core.signup.PortraitUploadedEvent
-import io.tricefal.core.signup.ResumeLinkedinUploadedEvent
-import io.tricefal.core.signup.ResumeUploadedEvent
+import io.tricefal.core.signup.*
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
-import java.lang.Exception
 
 @Component
 class ProfileEventListener(val profileService: IProfileService) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
+
+    @EventListener
+    fun handleStatusUpdatedEvent(event: SignupStatusUpdatedEvent) {
+        try {
+            this.profileService.updateStatus(event.username, event.status)
+        } catch (ex: Throwable) {
+            throw StatusUpdateException("Failed to update the status of the profile with username ${event.username}")
+        }
+        logger.info("ProfileEventListener picked up a SignupStatusUpdatedEvent with ${event.username}")
+    }
+
+    @EventListener
+    fun handleSignupStateUpdatedEvent(event: SignupStateUpdatedEvent) {
+        try {
+            this.profileService.updateState(event.username, event.state)
+        } catch (ex: Throwable) {
+            throw StatusUpdateException("Failed to update the signup state of the profile with username ${event.username}")
+        }
+        logger.info("ProfileEventListener picked up a SignupStateUpdatedEvent with ${event.username}")
+    }
 
     @EventListener(condition = "#event.isPortrait()")
     fun handlePortraitUploadedEvent(event: PortraitUploadedEvent): ProfileModel {
@@ -50,3 +67,5 @@ class ProfileEventListener(val profileService: IProfileService) {
     }
 
 }
+
+class StatusUpdateException(private val msg: String) : Throwable(msg) {}

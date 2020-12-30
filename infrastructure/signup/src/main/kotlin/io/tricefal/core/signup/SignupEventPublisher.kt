@@ -19,7 +19,19 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             logger.info("A SignupStatusUpdatedEvent has been published user $username")
         } catch (ex: Exception) {
             logger.error("Failed to publish a SignupStatusUpdatedEvent for user $username")
-            throw FreelanceStatusPublicationException("Failed to publish a SignupStatusUpdatedEvent for user $username")
+            throw SignupStatusPublicationException("Failed to publish a SignupStatusUpdatedEvent for user $username")
+        }
+    }
+
+    fun publishStateUpdatedEvent(username: String, state: String) {
+        try {
+            applicationEventPublisher.publishEvent(
+                SignupStateUpdatedEvent(username, state)
+            )
+            logger.info("A SignupStateUpdatedEvent has been published user $username")
+        } catch (ex: Exception) {
+            logger.error("Failed to publish a SignupStateUpdatedEvent for user $username")
+            throw SignupStatePublicationException("Failed to publish a SignupStateUpdatedEvent for user $username")
         }
     }
 
@@ -71,25 +83,14 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
         }
     }
 
-    fun publishMissionResumeUploadedEvent(fileDomain: MetafileDomain) {
-        try {
-            applicationEventPublisher.publishEvent(
-                    MissionResumeUploadedEvent(fileDomain)
-            )
-            logger.info("A MissionResumeUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
-        } catch (ex: Exception) {
-            logger.error("Failed to publish a MissionResumeUploadedEvent for user ${fileDomain.username}")
-            throw MissionResumeUpdatedPublicationException("Failed to publish a MissionResumeUploadedEvent for user ${fileDomain.username}")
-        }
-    }
 }
 
-class FreelanceStatusPublicationException(private val msg: String) : Throwable(msg) {}
+class SignupStatusPublicationException(private val msg: String) : Throwable(msg) {}
+class SignupStatePublicationException(private val msg: String) : Throwable(msg) {}
 class ProfilePortraitUploadedPublicationException(private val msg: String) : Throwable(msg) {}
 class ProfileResumeUploadedPublicationException(private val msg: String) : Throwable(msg) {}
 class ProfileResumeLinkedinUploadedPublicationException(private val msg: String) : Throwable(msg) {}
 class CguAcceptedPublicationException(private val msg: String) : Throwable(msg) {}
-class MissionResumeUpdatedPublicationException(private val msg: String) : Throwable(msg) {}
 
 
 

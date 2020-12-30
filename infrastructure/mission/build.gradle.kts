@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
 	implementation(project(":domain:mission"))
+	implementation(project(":domain:metafile"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")

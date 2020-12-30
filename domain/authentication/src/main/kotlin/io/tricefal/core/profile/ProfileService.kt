@@ -1,5 +1,6 @@
 package io.tricefal.core.profile
 
+import io.tricefal.core.signup.toStatus
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -13,6 +14,46 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
 
     override fun save(profile: ProfileDomain): ProfileDomain {
         return dataAdapter.save(profile)
+    }
+
+    override fun updateStatus(username: String, status: String): ProfileDomain {
+        val profile = ProfileDomain.Builder(username)
+            .status(toStatus(status))
+            .build()
+        try {
+            this.findByUsername(username)
+                .ifPresentOrElse(
+                    {
+                        it.status = toStatus(status)
+                        save(profile)
+                    },
+                    { save(profile) }
+                )
+        } catch (ex: Throwable) {
+            logger.error("Failed to update the profile from the status update event for user $username")
+            throw ProfileUploadException("Failed to update the profile from the status update event for user $username", ex)
+        }
+        return profile
+    }
+
+    override fun updateState(username: String, state: String): ProfileDomain {
+        val profile = ProfileDomain.Builder(username)
+            .signupState(toState(state))
+            .build()
+        try {
+            this.findByUsername(username)
+                .ifPresentOrElse(
+                    {
+                        it.signupState = toState(state)
+                        save(profile)
+                    },
+                    { save(profile) }
+                )
+        } catch (ex: Throwable) {
+            logger.error("Failed to update the profile from the signup state update event for user $username")
+            throw ProfileUploadException("Failed to update the profile from the signup state update event for user $username", ex)
+        }
+        return profile
     }
 
     override fun updateProfileOnPortraitUploaded(username: String, filename: String): ProfileDomain {

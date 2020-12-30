@@ -1,7 +1,9 @@
 package io.tricefal.core.signup
 
+import com.nhaarman.mockitokotlin2.eq
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.metafile.Representation
+import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import org.junit.jupiter.api.Assertions
@@ -49,8 +51,8 @@ class SignupServiceTest {
         Mockito.`when`(dataAdapter.save(signup)).thenReturn(signup)
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
         Mockito.`when`(dataAdapter.register(signup)).thenReturn(true)
-        Mockito.`when`(dataAdapter.sendEmail(any(SignupEmailNotificationDomain::class.java))).thenReturn(true)
-        Mockito.`when`(dataAdapter.sendSms(any(SmsNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         // Act
         val result = service.signup(signup, metaNotification)
@@ -271,15 +273,15 @@ class SignupServiceTest {
             Optional.of(signup)
         )
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
-        Mockito.`when`(dataAdapter.sendEmail(any(SignupEmailNotificationDomain::class.java))).thenReturn(true)
-        Mockito.`when`(dataAdapter.sendSms(any(SmsNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         // Act
         val result = service.resendCode(signup, metaNotification)
 
         // Arrange
-        Mockito.verify(dataAdapter).sendEmail(any(SignupEmailNotificationDomain::class.java))
-        Mockito.verify(dataAdapter).sendSms(any(SmsNotificationDomain::class.java))
+        Mockito.verify(dataAdapter).sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))
+        Mockito.verify(dataAdapter).sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))
         Assertions.assertTrue(result.emailSent!!)
         Assertions.assertTrue(result.smsSent!!)
     }

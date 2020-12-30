@@ -1,5 +1,6 @@
 package io.tricefal.core.profile
 
+import io.tricefal.core.signup.Status
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,7 +22,7 @@ class ProfileServiceTest {
     @Test
     fun `should create a profile successfully`() {
         // Arrange
-        val profile = ProfileDomain("kong@gmail.com", Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile = ProfileDomain("kong@gmail.com", Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
         Mockito.`when`(repository.save(profile)).thenReturn(profile)
         service = ProfileService(repository)
 
@@ -36,7 +37,7 @@ class ProfileServiceTest {
     fun `should retrieve last profiles by username`() {
         // Arrange
         val username = "kong@gmail.com"
-        val profile1 = ProfileDomain(username, Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
 
         val profile = Optional.of(profile1)
 
@@ -51,11 +52,47 @@ class ProfileServiceTest {
     }
 
     @Test
+    fun `should update the profile on status updated`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
+
+        val profile = Optional.of(profile1)
+
+        Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        service = ProfileService(repository)
+
+        // Act
+        val result = service.updateStatus(username, Status.EMPLOYEE.toString())
+
+        // Arrange
+        Assertions.assertEquals(Status.EMPLOYEE, result.status)
+    }
+
+    @Test
+    fun `should update the profile on signup state updated`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.REGISTERED, Instant.now(), "portrait", "resume", "resume linkedin")
+
+        val profile = Optional.of(profile1)
+
+        Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        service = ProfileService(repository)
+
+        // Act
+        val result = service.updateState(username, SignupState.EMAIL_VALIDATED.toString())
+
+        // Arrange
+        Assertions.assertEquals(SignupState.EMAIL_VALIDATED, result.signupState)
+    }
+
+    @Test
     fun `should update the profile on portrait uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
         val filename = "new filename"
-        val profile1 = ProfileDomain(username, Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
 
         val profile = Optional.of(profile1)
 
@@ -74,7 +111,7 @@ class ProfileServiceTest {
         // Arrange
         val username = "kong@gmail.com"
         val filename = "new filename"
-        val profile1 = ProfileDomain(username, Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
 
         val profile = Optional.of(profile1)
 
@@ -93,7 +130,7 @@ class ProfileServiceTest {
         // Arrange
         val username = "kong@gmail.com"
         val filename = "new filename"
-        val profile1 = ProfileDomain(username, Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
 
         val profile = Optional.of(profile1)
 
