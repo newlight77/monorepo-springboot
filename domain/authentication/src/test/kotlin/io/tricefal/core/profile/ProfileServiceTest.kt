@@ -60,6 +60,7 @@ class ProfileServiceTest {
         val profile = Optional.of(profile1)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
         service = ProfileService(repository)
 
         // Act
@@ -78,6 +79,7 @@ class ProfileServiceTest {
         val profile = Optional.of(profile1)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
         service = ProfileService(repository)
 
         // Act
@@ -97,6 +99,7 @@ class ProfileServiceTest {
         val profile = Optional.of(profile1)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
         service = ProfileService(repository)
 
         // Act
@@ -116,6 +119,7 @@ class ProfileServiceTest {
         val profile = Optional.of(profile1)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
         service = ProfileService(repository)
 
         // Act
@@ -135,6 +139,7 @@ class ProfileServiceTest {
         val profile = Optional.of(profile1)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
         service = ProfileService(repository)
 
         // Act

@@ -177,11 +177,11 @@ class FreelanceWebHandlerTest {
             .build()
         val freelanceEntity = toEntity(fromModel(freelance))
 
-        val companyEntity = CompanyEntity(0, raisonSocial = "raison social")
+        val companyEntity = CompanyEntity(0, raisonSocial = "new name")
         val contactEntity = ContactEntity(0, email = username)
         val privacyDetailEntity = PrivacyDetailEntity(0, username)
         val expected = FreelanceEntity( null, username, contactEntity, companyEntity,
-                privacyDetailEntity, state=toEntity(fromModel(state)))
+                privacyDetailEntity, state=toEntity(fromModel(state)), status=Status.IN_MISSION.toString())
 
         Mockito.`when`(jpaRepository.findByUsername(username)).thenReturn(listOf(freelanceEntity))
         Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(expected)
@@ -195,8 +195,8 @@ class FreelanceWebHandlerTest {
         val result = webHandler.patch(username, ops)
 
         // Arrange
-        Assertions.assertEquals(result.status.toString(), "IN_MISSION")
-        Assertions.assertEquals(result.company?.raisonSocial, "new name")
+        Assertions.assertEquals("IN_MISSION", result.status.toString())
+        Assertions.assertEquals("new name", result.company?.raisonSocial)
     }
 
 

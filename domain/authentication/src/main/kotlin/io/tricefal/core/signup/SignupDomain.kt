@@ -19,7 +19,8 @@ data class SignupDomain
             var portraitFile: MetafileDomain? = null,
             var resumeFile: MetafileDomain? = null,
             var resumeLinkedinFile: MetafileDomain? = null,
-            var state: SignupStateDomain? = null
+            var state: SignupStateDomain? = null,
+            var lastDate: Instant? = null
     ) {
 
     data class Builder(
@@ -38,7 +39,8 @@ data class SignupDomain
             var resumeFile: MetafileDomain? = null,
             var resumeLinkedinFile: MetafileDomain? = null,
 
-            var state: SignupStateDomain? = null
+            var state: SignupStateDomain? = null,
+            var lastDate: Instant? = null
     ) {
         fun password(password: String?) = apply { this.password = password }
         fun firstname(firstname: String?) = apply { this.firstname = firstname }
@@ -56,6 +58,7 @@ data class SignupDomain
         fun state(state: SignupStateDomain?) = apply {
             this.state = state ?: SignupStateDomain.Builder(username).build()
         }
+        fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = SignupDomain(
                 username = username,
@@ -71,7 +74,8 @@ data class SignupDomain
                 portraitFile = portraitFile,
                 resumeFile = resumeFile,
                 resumeLinkedinFile = resumeLinkedinFile,
-                state = state
+                state = state,
+                lastDate = lastDate
         )
     }
 }

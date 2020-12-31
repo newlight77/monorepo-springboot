@@ -53,7 +53,8 @@ fun toEntity(domain: FreelanceDomain): FreelanceEntity {
                 company = domain.company?.let { toEntity(it) },
                 privacyDetail = domain.privacyDetail?.let { toEntity(it) },
                 status = domain.status?.toString(),
-                state = domain.state?.let { toEntity(it) }
+                state = domain.state?.let { toEntity(it) },
+                lastDate = domain.lastDate
         )
 }
 

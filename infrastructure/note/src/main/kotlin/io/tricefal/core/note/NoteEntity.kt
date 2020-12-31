@@ -1,6 +1,7 @@
 package io.tricefal.core.note
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import java.time.Instant
 import javax.persistence.*
 
 @Entity
@@ -13,14 +14,16 @@ data class NoteEntity(
                       var id: Long? = null,
                       var title: String? = null,
                       var text: String? = null,
-                      @JsonIgnore var author: String? = null)
+                      @JsonIgnore var author: String? = null,
+                      var lastDate: Instant? = null)
 
 fun toEntity(domain: NoteDomain): NoteEntity {
     return NoteEntity().copy(
             domain.id,
             domain.title,
             domain.text,
-            domain.author
+            domain.author,
+            domain.lastDate
     )
 }
 
@@ -29,6 +32,7 @@ fun fromEntity(entity: NoteEntity): NoteDomain {
             entity.id,
             entity.title,
             entity.text,
-            entity.author
+            entity.author,
+            entity.lastDate
     )
 }

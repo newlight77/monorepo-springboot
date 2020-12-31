@@ -19,4 +19,4 @@ class MetafileDomain(val username: String,
                  val representation: Representation,
                  var contentType: String? = null,
                  var size: Long? = null,
-                 var creationDate: Instant? = Instant.now())
+                 var creationDate: Instant? = null)

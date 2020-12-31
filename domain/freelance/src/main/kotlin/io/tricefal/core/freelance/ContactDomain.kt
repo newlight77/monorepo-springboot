@@ -1,5 +1,7 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
+
 class ContactDomain(
         val email: String,
         val lastName: String?,
@@ -9,7 +11,8 @@ class ContactDomain(
         val landline: String? = null,
         val fax: String? = null,
         val email2: String? = null,
-        val address: AddressDomain? = null
+        val address: AddressDomain? = null,
+        val lastDate: Instant? = null
 ) {
     data class Builder(
             val email: String,
@@ -20,7 +23,8 @@ class ContactDomain(
             var landline: String? = null,
             var fax: String? = null,
             var email2: String? = null,
-            var address: AddressDomain? = null
+            var address: AddressDomain? = null,
+            var lastDate: Instant? = null
     ) {
         fun lastName(lastName: String?) = apply { this.lastName = lastName }
         fun firstName(firstName: String?) = apply { this.firstName = firstName }
@@ -30,6 +34,7 @@ class ContactDomain(
         fun fax(fax: String?) = apply { this.fax = fax }
         fun email2(email2: String?) = apply { this.email2 = email2 }
         fun address(address: AddressDomain?) = apply { this.address = address }
+        fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = ContactDomain(
                 email = email,
@@ -40,7 +45,8 @@ class ContactDomain(
                 landline = landline,
                 fax = fax,
                 email2 = email2,
-                address = address
+                address = address,
+                lastDate = lastDate
         )
     }
 }

@@ -20,16 +20,17 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     override fun updateStatus(username: String, status: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
             .status(toStatus(status))
-            .lastDate(Instant.now())
             .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.status = toStatus(status)
-                        profile = dataAdapter.update(profile)
+                        profile = dataAdapter.update(it)
                     },
-                    { profile = dataAdapter.create(profile) }
+                    {
+                        profile = dataAdapter.create(profile)
+                    }
                 )
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the status update event for user $username")
@@ -41,14 +42,13 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     override fun updateState(username: String, state: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
             .signupState(toState(state))
-            .lastDate(Instant.now())
             .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.signupState = toState(state)
-                        profile = dataAdapter.update(profile)
+                        profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }
                 )
@@ -62,14 +62,13 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     override fun updateProfileOnPortraitUploaded(username: String, filename: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
             .portraitFilename(filename)
-            .lastDate(Instant.now())
             .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.portraitFilename = filename
-                        profile = dataAdapter.update(profile)
+                        profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }
                 )
@@ -83,14 +82,13 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     override fun updateProfileOnResumeUploaded(username: String, filename: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
             .resumeFilename(filename)
-            .lastDate(Instant.now())
             .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.resumeFilename = filename
-                        profile = dataAdapter.update(profile)
+                        profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }
                 )
@@ -104,14 +102,13 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     override fun updateProfileOnResumeLinkedinUploaded(username: String, filename: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
             .resumeLinkedinFilename(filename)
-            .lastDate(Instant.now())
             .build()
         try {
             this.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.resumeLinkedinFilename = filename
-                        profile = dataAdapter.update(profile)
+                        profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }
                 )

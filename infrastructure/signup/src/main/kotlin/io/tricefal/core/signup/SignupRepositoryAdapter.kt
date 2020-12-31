@@ -9,6 +9,7 @@ import io.tricefal.core.profile.SignupState
 import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import java.util.*
 
 @Repository
@@ -26,8 +27,10 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
             logger.error("a signup with username ${signup.username} is already taken")
             throw SignupUsernameUniquenessException("a signup with username ${signup.username} is already taken")
         }
-        val signupEntity = repository.save(toEntity(signup))
-        return fromEntity(signupEntity)
+        var entity = toEntity(signup)
+        entity.lastDate = signup.lastDate ?: Instant.now()
+        entity = repository.save(toEntity(signup))
+        return fromEntity(entity)
     }
 
     override fun delete(username: String) {
@@ -71,10 +74,11 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         var updated = Optional.empty<SignupDomain>()
         signupEntity.ifPresentOrElse(
                 {
-                    val mewEntity = toEntity(signup)
-                    mewEntity.id = it.id
-                    repository.save(mewEntity)
-                    updated =  Optional.of(fromEntity(mewEntity))
+                    val newEntity = toEntity(signup)
+                    newEntity.id = it.id
+                    newEntity.lastDate = it.lastDate ?: Instant.now()
+                    repository.save(newEntity)
+                    updated =  Optional.of(fromEntity(newEntity))
                 },
                 {
                     logger.error("unable to find a registration with username ${signup.username}")

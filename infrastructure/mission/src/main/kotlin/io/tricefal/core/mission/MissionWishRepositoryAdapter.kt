@@ -4,6 +4,7 @@ import io.tricefal.core.metafile.MetafileDomain
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import java.util.*
 
 @Repository
@@ -18,6 +19,7 @@ class MissionWishRepositoryAdapter(private var repository: MissionWishJpaReposit
             throw DuplicateKeyException("a missionWish with username ${missionWish.username} is already taken")
         }
         val entity = repository.save(toEntity(missionWish))
+        entity.lastDate = missionWish.lastDate ?: Instant.now()
         return fromEntity(entity)
     }
 
@@ -34,10 +36,12 @@ class MissionWishRepositoryAdapter(private var repository: MissionWishJpaReposit
     }
 
     override fun update(missionWish: MissionWishDomain): MissionWishDomain {
-        val mewEntity = toEntity(missionWish)
+        var newEntity = toEntity(missionWish)
         repository.findByUsername(missionWish.username).stream().findFirst().ifPresentOrElse(
             {
-                mewEntity.id = it.id
+                newEntity.id = it.id
+                newEntity.lastDate = Instant.now()
+                newEntity = repository.save(newEntity)
             },
             {
                 logger.error("unable to find a missionWish with username ${missionWish.username}")
@@ -45,8 +49,7 @@ class MissionWishRepositoryAdapter(private var repository: MissionWishJpaReposit
             }
         )
 
-        repository.save(mewEntity)
-        return fromEntity(mewEntity)
+        return fromEntity(newEntity)
     }
 
     override fun updateOnResumeUploaded(username: String, metafile: MetafileDomain) {

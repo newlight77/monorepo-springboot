@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
 import java.time.LocalDate
 import javax.persistence.*
 import javax.validation.constraints.Size
@@ -33,7 +34,10 @@ data class PrivacyDetailEntity(
         val nationalIdentityNumber: @Size(max = 50) String? = null,
 
         @Column(name = "information")
-        val information: String? = null
+        val information: String? = null,
+
+        @Column(name = "last_date")
+        var lastDate: Instant? = Instant.now()
 
 )
 
@@ -46,7 +50,8 @@ fun toEntity(domain: PrivacyDetailDomain) = PrivacyDetailEntity(
         citizenship = domain.citizenship,
         socialSecurityNumber = domain.socialSecurityNumber,
         nationalIdentityNumber = domain.nationalIdentityNumber,
-        information = domain.information
+        information = domain.information,
+        lastDate = domain.lastDate
 )
 
 fun fromEntity(entity: PrivacyDetailEntity) : PrivacyDetailDomain {
@@ -58,6 +63,7 @@ fun fromEntity(entity: PrivacyDetailEntity) : PrivacyDetailDomain {
                 citizenship = entity.citizenship,
                 socialSecurityNumber = entity.socialSecurityNumber,
                 nationalIdentityNumber = entity.nationalIdentityNumber,
-                information = entity.information
+                information = entity.information,
+                lastDate = entity.lastDate
         )
 }

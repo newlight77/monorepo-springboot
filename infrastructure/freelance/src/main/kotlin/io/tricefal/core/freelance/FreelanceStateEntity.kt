@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
@@ -31,7 +32,11 @@ class FreelanceStateEntity(
         @Column(name = "cvmission_uploaded")
         var cvMissionUploaded: Boolean? = null,
         @Column(name = "completed")
-        var completed: Boolean? = null
+        var completed: Boolean? = null,
+
+        @Column(name = "last_date")
+        var lastDate: Instant? = Instant.now()
+
 )
 
 fun toEntity(domain: FreelanceStateDomain): FreelanceStateEntity {
@@ -44,7 +49,8 @@ fun toEntity(domain: FreelanceStateDomain): FreelanceStateEntity {
             domain.urssafUploaded,
             domain.fiscalUploaded,
             domain.missionResumedUploaded,
-            domain.completed)
+            domain.completed,
+            domain.lastDate)
 }
 
 fun fromEntity(entity: FreelanceStateEntity): FreelanceStateDomain {
@@ -56,5 +62,6 @@ fun fromEntity(entity: FreelanceStateEntity): FreelanceStateDomain {
             .fiscalUploaded(entity.fiscalUploaded)
             .missionResumedUploaded(entity.cvMissionUploaded)
             .completed(entity.completed)
+            .lastDate(entity.lastDate)
             .build()
 }

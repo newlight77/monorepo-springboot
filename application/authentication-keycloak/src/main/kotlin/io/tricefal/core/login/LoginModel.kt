@@ -3,12 +3,12 @@ package io.tricefal.core.login
 import java.time.Instant
 
 data class LoginModel(val username: String,
-                      val loginDate: Instant,
-                      val ipAddress: String,
-                      val city: String,
-                      val region: String,
-                      val device: String,
-                      val success: Boolean)
+                      val loginDate: Instant?,
+                      val ipAddress: String?,
+                      val city: String?,
+                      val region: String?,
+                      val device: String?,
+                      val success: Boolean?)
 
 fun toModel(domain: LoginDomain): LoginModel {
     return LoginModel(

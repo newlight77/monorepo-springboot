@@ -19,7 +19,9 @@ class SignupModel
 
         var cguAcceptedVersion: String? = null,
         var resumeFile: MetafileModel? = null,
-        var state: SignupStateModel? = null
+        var state: SignupStateModel? = null,
+
+        var lastDate: Instant? = null
     ) {
 
     data class Builder (
@@ -33,7 +35,9 @@ class SignupModel
 
             var cguAcceptedVersion: String? = null,
             var resumeFile: MetafileModel? = null, // not used
-            var state: SignupStateModel? = null
+            var state: SignupStateModel? = null,
+
+            var lastDate: Instant? = null
     ) {
 
         fun password(password: String?) = apply { this.password = password }
@@ -48,6 +52,7 @@ class SignupModel
         fun state(state: SignupStateModel?) = apply {
             this.state = state ?: SignupStateModel.Builder(username).build()
         }
+        fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = SignupModel(
                 username = username,
@@ -59,7 +64,8 @@ class SignupModel
                 signupDate = signupDate ?: Instant.now(),
                 cguAcceptedVersion = cguAcceptedVersion,
                 resumeFile = resumeFile,
-                state = state
+                state = state,
+                lastDate = lastDate
         )
     }
 }
@@ -75,6 +81,7 @@ fun toModel(domain: SignupDomain): SignupModel {
             .resumeFile(domain.resumeFile?.let { io.tricefal.core.metafile.toModel(it) })
             .cguAcceptedVersion(domain.cguAcceptedVersion)
             .state(domain.state?.let { toModel(it) })
+        .lastDate(domain.lastDate)
             .build()
 }
 
@@ -89,5 +96,6 @@ fun fromModel(model: SignupModel): SignupDomain {
             .resumeFile(model.resumeFile?.let { io.tricefal.core.metafile.fromModel(it) })
             .cguAcceptedVersion(model.cguAcceptedVersion)
             .state(model.state?.let { fromModel(it) })
+            .lastDate(model.lastDate)
             .build()
 }

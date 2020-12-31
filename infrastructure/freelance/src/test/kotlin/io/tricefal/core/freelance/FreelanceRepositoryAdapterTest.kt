@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.Instant
 
 @ExtendWith(MockitoExtension::class)
 internal class FreelanceRepositoryAdapterTest {
@@ -36,14 +37,15 @@ internal class FreelanceRepositoryAdapterTest {
     fun `should patch a freelance domain in persistence unit`() {
         // Arrange
         val username = "kong@gmail.com"
+        val date = Instant.now()
 
-        val domain = FreelanceDomain.Builder(username).status(Status.NONE).build()
+        val domain = FreelanceDomain.Builder(username).status(Status.NONE).lastDate(date).build()
         val entity = toEntity(domain)
         Mockito.`when`(jpaRepository.findByUsername(username)).thenReturn(
             listOf(entity)
         )
 
-        val transientDomain = FreelanceDomain.Builder(username).status(Status.AVAILABLE).build()
+        val transientDomain = FreelanceDomain.Builder(username).status(Status.AVAILABLE).lastDate(date).build()
         val transientEntity = toEntity(transientDomain)
 
         Mockito.`when`(jpaRepository.save(transientEntity)).thenReturn(transientEntity)

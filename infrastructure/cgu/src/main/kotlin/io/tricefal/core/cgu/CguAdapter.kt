@@ -3,6 +3,7 @@ package io.tricefal.core.cgu
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import java.util.*
 
 @Repository
@@ -16,6 +17,7 @@ class CguAdapter(private var repository: CguJpaRepository) : ICguAdapter {
             throw DuplicateKeyException("a cgu with username ${cgu.username} is already taken")
         }
         val entity = repository.save(toEntity(cgu))
+        entity.lastDate = cgu.lastDate ?: Instant.now()
         return fromEntity(entity)
     }
 
@@ -26,10 +28,12 @@ class CguAdapter(private var repository: CguJpaRepository) : ICguAdapter {
     }
 
     override fun acceptCgu(cgu: CguDomain): CguDomain {
-        val mewEntity = toEntity(cgu)
+        var newEntity = toEntity(cgu)
         repository.findByUsername(cgu.username).stream().findFirst().ifPresentOrElse(
             {
-                mewEntity.id = it.id
+                newEntity.id = it.id
+                newEntity.lastDate = it.lastDate ?: Instant.now()
+                newEntity = repository.save(newEntity)
             },
             {
                 logger.error("unable to find a cgu with username ${cgu.username}")
@@ -37,8 +41,7 @@ class CguAdapter(private var repository: CguJpaRepository) : ICguAdapter {
             }
         )
 
-        val entity = repository.save(mewEntity)
-        return fromEntity(entity)
+        return fromEntity(newEntity)
     }
 
     class CguNotFoundException(private val msg: String) : Throwable(msg) {}

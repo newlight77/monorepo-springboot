@@ -1,5 +1,7 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
+
 
 data class CompanyModel(
         val raisonSocial: String?,
@@ -16,7 +18,9 @@ data class CompanyModel(
 
         var adminContact: ContactModel? = null,
         var bankInfo: BankInfoModel? = null,
-        var fiscalAddress: AddressModel? = null
+        var fiscalAddress: AddressModel? = null,
+
+        var lastDate: Instant? = null
 
 //        var kbisFile: MetafileModel? = null,
 //        var ribFile: MetafileModel? = null,
@@ -40,7 +44,9 @@ data class CompanyModel(
 
             var adminContact: ContactModel? = null,
             var bankInfo: BankInfoModel? = null,
-            var fiscalAddress: AddressModel? = null
+            var fiscalAddress: AddressModel? = null,
+
+            var lastDate: Instant? = null
     ) {
         fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
         fun nomCommercial(nomCommercial: String?) = apply { this.nomCommercial = nomCommercial }
@@ -57,6 +63,7 @@ data class CompanyModel(
         fun adminContact(adminContact: ContactModel?) = apply { this.adminContact = adminContact }
         fun bankInfo(bankInfo: BankInfoModel?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressModel?) = apply { this.fiscalAddress = fiscalAddress }
+        fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = CompanyModel(
                 raisonSocial = raisonSocial,
@@ -74,7 +81,8 @@ data class CompanyModel(
 
                 adminContact = adminContact,
                 bankInfo = bankInfo,
-                fiscalAddress = fiscalAddress
+                fiscalAddress = fiscalAddress,
+                lastDate = lastDate
         )
     }
 }
@@ -96,7 +104,9 @@ fun toModel(domain: CompanyDomain) : CompanyModel {
 
             adminContact = domain.adminContact?.let { toModel(it) },
             bankInfo = domain.bankInfo?.let { toModel(it) },
-            fiscalAddress = domain.fiscalAddress?.let { toModel(it) }
+            fiscalAddress = domain.fiscalAddress?.let { toModel(it) },
+
+            lastDate = domain.lastDate
     )
 }
 
@@ -117,6 +127,8 @@ fun fromModel(model: CompanyModel) : CompanyDomain {
 
             adminContact = model.adminContact?.let { fromModel(it) },
             bankInfo = model.bankInfo?.let { fromModel(it) },
-            fiscalAddress = model.fiscalAddress?.let { fromModel(it) }
+            fiscalAddress = model.fiscalAddress?.let { fromModel(it) },
+
+            lastDate = model.lastDate
     )
 }

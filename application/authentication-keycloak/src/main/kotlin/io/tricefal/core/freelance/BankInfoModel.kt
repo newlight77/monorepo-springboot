@@ -1,26 +1,32 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
+
 data class BankInfoModel(
         val iban:  String,
         val owner: String?,
         val bic: String?,
-        val address: AddressModel?
+        val address: AddressModel?,
+        var lastDate: Instant?
 ) {
     data class Builder(
             val iban: String,
             var owner: String? = null,
             var bic: String? = null,
-            var address: AddressModel? = null
+            var address: AddressModel? = null,
+            var lastDate: Instant? = null
     ) {
         fun owner(owner: String?) = apply { this.owner = owner }
         fun bic(bic: String?) = apply { this.bic = bic }
         fun address(address: AddressModel?) = apply { this.address = address }
+        fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = BankInfoModel(
                 iban = iban,
                 owner = owner,
                 bic = bic,
-                address = address
+                address = address,
+                lastDate = lastDate
         )
     }
 }
@@ -30,7 +36,8 @@ fun toModel(domain: BankInfoDomain): BankInfoModel {
             iban = domain.iban,
             owner = domain.owner,
             bic = domain.bic,
-            address = domain.address?.let { toModel(it) }
+            address = domain.address?.let { toModel(it) },
+            lastDate = domain.lastDate
     )
 }
 
@@ -39,6 +46,7 @@ fun fromModel(model: BankInfoModel) : BankInfoDomain {
             iban = model.iban,
             owner = model.owner,
             bic = model.bic,
-            address = model.address?.let { fromModel(it) }
+            address = model.address?.let { fromModel(it) },
+            lastDate = model.lastDate
     )
 }

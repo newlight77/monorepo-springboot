@@ -33,7 +33,8 @@ fun toEntity(domain: CguDomain): CguEntity {
         return CguEntity(
                 null,
                 domain.username,
-                domain.acceptedCguVersion)
+                domain.acceptedCguVersion,
+                domain.lastDate)
 }
 
 fun fromEntity(entity: CguEntity): CguDomain {

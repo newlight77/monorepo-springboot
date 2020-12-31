@@ -13,13 +13,13 @@ class PricerReferenceRepositoryAdapter(private var repository: PricerReferenceJp
     override fun save(pricerRef: PricerReferenceDomain): PricerReferenceDomain {
         repository.all().stream().findFirst().orElse(defaultRef())
         val entity = repository.save(toEntity(pricerRef))
+//        entity.lastDate = pricerRef.lastDate ?: Instant.now()
         return fromEntity(entity)
     }
 
     override fun last(): Optional<PricerReferenceDomain> {
-        return repository.all().stream().findFirst().map {
-            fromEntity(it)
-        }
+        return repository.all().stream().findFirst()
+            .map { fromEntity(it) }
     }
 
     private fun defaultRef(): PricerReferenceEntity {

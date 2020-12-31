@@ -1,12 +1,15 @@
 package io.tricefal.core.note
 
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import java.util.*
 
 @Repository
 class NotesRepositoryAdapter(private var notesJpaRepository: NotesJpaRepository) : NotesRepository<NoteDomain, Long> {
     override fun save(note: NoteDomain) {
-        notesJpaRepository.save(toEntity(note))
+        val entity = toEntity(note)
+        entity.lastDate = note.lastDate ?: Instant.now()
+        notesJpaRepository.save(entity)
     }
 
     override fun delete(id: Long) {
@@ -16,7 +19,9 @@ class NotesRepositoryAdapter(private var notesJpaRepository: NotesJpaRepository)
     }
 
     override fun update(note: NoteDomain) {
-        notesJpaRepository.save(toEntity(note))
+        val entity = toEntity(note)
+        entity.lastDate = Instant.now()
+        notesJpaRepository.save(entity)
     }
 
     override fun findAll(): List<NoteDomain> {

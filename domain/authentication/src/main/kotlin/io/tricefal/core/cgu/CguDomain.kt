@@ -4,7 +4,7 @@ import java.time.Instant
 
 data class CguDomain(
         var username: String,
-        var lastDate: Instant? = Instant.now(),
+        var lastDate: Instant? = null,
         var acceptedCguVersion: String? = null) {
 
     data class Builder(

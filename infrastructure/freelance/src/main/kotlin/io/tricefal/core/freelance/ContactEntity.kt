@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
@@ -40,7 +41,11 @@ data class ContactEntity(
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "address")
-        val address: AddressEntity? = null
+        val address: AddressEntity? = null,
+
+        @Column(name = "last_date")
+        var lastDate: Instant? = Instant.now()
+
 )
 
 fun toEntity(domain: ContactDomain) = ContactEntity(
@@ -53,7 +58,8 @@ fun toEntity(domain: ContactDomain) = ContactEntity(
         landline = domain.landline,
         fax = domain.fax,
         email2 = domain.email2,
-        address = domain.address?.let { toEntity(it) }
+        address = domain.address?.let { toEntity(it) },
+        lastDate = domain.lastDate
 )
 
 fun fromEntity(entity: ContactEntity): ContactDomain {
@@ -66,6 +72,7 @@ fun fromEntity(entity: ContactEntity): ContactDomain {
                 landline = entity.landline,
                 fax = entity.fax,
                 email2 = entity.email2,
-                address = entity.address?.let { fromEntity(it) }
+                address = entity.address?.let { fromEntity(it) },
+                lastDate = entity.lastDate
         )
 }

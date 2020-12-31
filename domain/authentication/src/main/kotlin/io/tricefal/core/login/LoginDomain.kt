@@ -7,11 +7,10 @@ const val EMAIL_REGEX = " ^[\\\\w!#\$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#\$%&’*
 
 data class LoginDomain(
         var username: String,
-        val loginDate: Instant = Instant.now(),
-        val ipAddress: String,
-        val city: String,
-        val region: String,
-        val device: String,
-        val success: Boolean = false,
-        val authorities: Set<String> = HashSet()
+        val loginDate: Instant? = null,
+        val ipAddress: String? = null,
+        val city: String? = null,
+        val region: String? = null,
+        val device: String? = null,
+        val success: Boolean? = false
 )

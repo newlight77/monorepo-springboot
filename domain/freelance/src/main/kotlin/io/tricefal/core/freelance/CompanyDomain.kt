@@ -1,5 +1,7 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
+
 class CompanyDomain(
         val raisonSocial: String?,
         val nomCommercial: String?,
@@ -15,7 +17,9 @@ class CompanyDomain(
 
         val adminContact: ContactDomain?,
         val bankInfo: BankInfoDomain?,
-        val fiscalAddress: AddressDomain?
+        val fiscalAddress: AddressDomain?,
+
+        val lastDate: Instant?
 ) {
     data class Builder(
             var raisonSocial: String? = null,
@@ -32,7 +36,9 @@ class CompanyDomain(
 
             var adminContact: ContactDomain? = null,
             var bankInfo: BankInfoDomain? = null,
-            var fiscalAddress: AddressDomain? = null
+            var fiscalAddress: AddressDomain? = null,
+
+            var lastDate: Instant? = null
     ) {
         fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
         fun nomCommercial(nomCommercial: String?) = apply { this.nomCommercial = nomCommercial }
@@ -48,6 +54,7 @@ class CompanyDomain(
         fun adminContact(adminContact: ContactDomain?) = apply { this.adminContact = adminContact }
         fun bankInfo(bankInfo: BankInfoDomain?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressDomain?) = apply { this.fiscalAddress = fiscalAddress }
+        fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = CompanyDomain(
                 raisonSocial = raisonSocial,
@@ -65,7 +72,9 @@ class CompanyDomain(
 
                 adminContact = adminContact,
                 bankInfo = bankInfo,
-                fiscalAddress = fiscalAddress
+                fiscalAddress = fiscalAddress,
+
+                lastDate = lastDate
         )
     }
 }

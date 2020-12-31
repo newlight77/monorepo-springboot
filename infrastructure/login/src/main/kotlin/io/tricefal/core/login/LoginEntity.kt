@@ -44,12 +44,12 @@ fun toEntity(domain: LoginDomain): LoginEntity {
         return LoginEntity(
                 id = null,
                 username = domain.username,
-                loginDate = domain.loginDate,
-                ipAddress = domain.ipAddress,
-                city = domain.city,
-                region = domain.region,
-                device = domain.device,
-                success = domain.success
+                loginDate = domain.loginDate!!,
+                ipAddress = domain.ipAddress!!,
+                city = domain.city!!,
+                region = domain.region!!,
+                device = domain.device!!,
+                success = domain.success!!
         )
 }
 

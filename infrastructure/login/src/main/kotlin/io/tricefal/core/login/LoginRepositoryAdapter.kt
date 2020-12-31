@@ -1,11 +1,13 @@
 package io.tricefal.core.login
 
 import org.springframework.stereotype.Repository
+import java.time.Instant
 
 @Repository
 class LoginRepositoryAdapter(private var repository: LoginJpaRepository) : ILoginRepository {
     override fun save(login: LoginDomain) {
         val entity = toEntity(login)
+        entity.loginDate = login.loginDate ?: Instant.now()
         repository.save(entity)
     }
 

@@ -5,6 +5,7 @@ import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import java.util.*
 
 @Repository
@@ -17,8 +18,9 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository)
             logger.error("a freelance with username ${freelance.username} is already taken")
             throw DuplicateKeyException("a freelance with username ${freelance.username} is already taken")
         }
-        val freelanceEntity = repository.save(toEntity(freelance))
-        return fromEntity(freelanceEntity)
+        val entity = repository.save(toEntity(freelance))
+        entity.lastDate = freelance.lastDate ?: Instant.now()
+        return fromEntity(entity)
     }
 
     override fun findAll(): List<FreelanceDomain> {
@@ -44,14 +46,15 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository)
         var updated = Optional.empty<FreelanceDomain>()
         entity.ifPresentOrElse(
             {
-                val mewEntity = toEntity(freelance)
-                mewEntity.id = it.id
-                mewEntity.company?.id = it.company?.id
-                mewEntity.contact?.id = it.contact?.id
-                mewEntity.privacyDetail?.id = it.privacyDetail?.id
-                mewEntity.state?.id = it.state?.id
-                repository.save(mewEntity)
-                updated =  Optional.of(fromEntity(mewEntity))
+                val newEntity = toEntity(freelance)
+                newEntity.id = it.id
+                newEntity.company?.id = it.company?.id
+                newEntity.contact?.id = it.contact?.id
+                newEntity.privacyDetail?.id = it.privacyDetail?.id
+                newEntity.state?.id = it.state?.id
+                newEntity.lastDate = it.lastDate ?: Instant.now()
+                repository.save(newEntity)
+                updated =  Optional.of(fromEntity(newEntity))
             },
             {
                 logger.error("unable to find a freelance with username ${freelance.username}")
@@ -68,8 +71,9 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository)
         entity.ifPresentOrElse(
             {
                 operations.let { ops ->
-                    val patched = JsonPatchOperator().apply(entity.get(), ops)
-                    repository.save(patched)
+                    var patched = JsonPatchOperator().apply(entity.get(), ops)
+                    patched.lastDate = it.lastDate ?: Instant.now()
+                    patched = repository.save(patched)
                     updated =  Optional.of(fromEntity(patched))
                 }
             },

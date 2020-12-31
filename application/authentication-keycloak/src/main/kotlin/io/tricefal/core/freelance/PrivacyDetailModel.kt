@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
 import java.time.LocalDate
 
 data class PrivacyDetailModel(
@@ -10,7 +11,8 @@ data class PrivacyDetailModel(
         val citizenship: String?,
         val socialSecurityNumber: String?,
         val nationalIdentityNumber: String?,
-        val information: String?
+        val information: String?,
+        val lastDate: Instant?
 ) {
     data class Builder(
             val username: String,
@@ -20,7 +22,8 @@ data class PrivacyDetailModel(
             var citizenship: String? = null,
             var socialSecurityNumber: String? = null,
             var nationalIdentityNumber: String? = null,
-            var information: String? = null
+            var information: String? = null,
+            var lastDate: Instant? = null
     ) {
         fun birthDate(birthDate: LocalDate?) = apply { this.birthDate = birthDate }
         fun birthCity(birthCity: String?) = apply { this.birthCity = birthCity }
@@ -29,6 +32,7 @@ data class PrivacyDetailModel(
         fun socialSecurityNumber(socialSecurityNumber: String?) = apply { this.socialSecurityNumber = socialSecurityNumber }
         fun nationalIdentityNumber(nationalIdentityNumber: String?) = apply { this.nationalIdentityNumber = nationalIdentityNumber }
         fun information(information: String?) = apply { this.information = information }
+        fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = PrivacyDetailModel(
                 username = username,
@@ -38,7 +42,8 @@ data class PrivacyDetailModel(
                 citizenship = citizenship,
                 socialSecurityNumber = socialSecurityNumber,
                 nationalIdentityNumber = nationalIdentityNumber,
-                information = information
+                information = information,
+                lastDate = lastDate
         )
     }
 }
@@ -52,7 +57,8 @@ fun toModel(domain: PrivacyDetailDomain) : PrivacyDetailModel {
             citizenship = domain.citizenship,
             socialSecurityNumber = domain.socialSecurityNumber,
             nationalIdentityNumber = domain.nationalIdentityNumber,
-            information = domain.information
+            information = domain.information,
+            lastDate = domain.lastDate
     )
 }
 
@@ -65,6 +71,7 @@ fun fromModel(model: PrivacyDetailModel): PrivacyDetailDomain {
             citizenship = model.citizenship,
             socialSecurityNumber = model.socialSecurityNumber,
             nationalIdentityNumber = model.nationalIdentityNumber,
-            information = model.information
+            information = model.information,
+            lastDate = model.lastDate
     )
 }

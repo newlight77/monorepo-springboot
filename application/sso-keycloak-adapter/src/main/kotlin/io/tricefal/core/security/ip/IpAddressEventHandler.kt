@@ -8,10 +8,11 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 @Component
-class IpAddressEventHandler(val ipAddressRepositoryAdapter: IpAddressRepositoryAdapter,
-                            val ipAddressEventPublisher: IpAddressEventPublisher) {
+class IpAddressEventHandler(
+    private val ipAddressRepositoryAdapter: IpAddressRepositoryAdapter,
+    private val ipAddressEventPublisher: IpAddressEventPublisher) {
 
-    var ipAddressesCache: Cache<String, IpAddressEvent> = Caffeine.newBuilder()
+    private var ipAddressesCache: Cache<String, IpAddressEvent> = Caffeine.newBuilder()
         .maximumSize(100)
         .expireAfterWrite(20, TimeUnit.MINUTES)
         .refreshAfterWrite(2, TimeUnit.MINUTES)

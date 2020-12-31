@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.Size
 
@@ -23,7 +24,11 @@ class AddressEntity(
     val city: String = "",
 
     @Column(name = "country")
-        val country: String = ""
+        val country: String = "",
+
+    @Column(name = "last_date")
+    var lastDate: Instant? = Instant.now()
+
 )
 
 fun toEntity(domain: AddressDomain): AddressEntity {
@@ -33,7 +38,8 @@ fun toEntity(domain: AddressDomain): AddressEntity {
             addressMention = domain.addressMention!!,
             postalCode = domain.postalCode!!,
             city = domain.city!!,
-            country = domain.country!!
+            country = domain.country!!,
+            lastDate = domain.lastDate!!
     )
 }
 
@@ -43,6 +49,7 @@ fun fromEntity(entity: AddressEntity): AddressDomain {
             addressMention = entity.addressMention,
             postalCode = entity.postalCode,
             city = entity.city,
-            country = entity.country
+            country = entity.country,
+            lastDate = entity.lastDate
     )
 }

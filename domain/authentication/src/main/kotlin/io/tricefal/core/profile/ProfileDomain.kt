@@ -7,7 +7,7 @@ data class ProfileDomain(
     var username: String,
     var status: Status? = Status.NONE,
     var signupState: SignupState? = SignupState.NONE,
-    var lastDate: Instant? = Instant.now(),
+    var lastDate: Instant? = null,
     var portraitFilename: String? = null,
     var resumeFilename: String? = null,
     var resumeLinkedinFilename: String? = null

@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.Size
 
@@ -21,7 +22,10 @@ data class BankInfoEntity(
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "address")
-        val address: AddressEntity? = null
+        val address: AddressEntity? = null,
+
+        @Column(name = "last_date")
+        var lastDate: Instant? = Instant.now()
 
 )
 
@@ -31,7 +35,8 @@ fun toEntity(domain: BankInfoDomain): BankInfoEntity {
                 iban = domain.iban,
                 owner = domain.owner,
                 bic = domain.bic,
-                address =  domain.address?.let { toEntity(it) }
+                address =  domain.address?.let { toEntity(it) },
+                lastDate = domain.lastDate
         )
 }
 
@@ -40,6 +45,7 @@ fun fromEntity(entity: BankInfoEntity) : BankInfoDomain{
                 iban = entity.iban,
                 owner = entity.owner,
                 bic = entity.bic,
-                address = entity.address?.let { fromEntity(it) }
+                address = entity.address?.let { fromEntity(it) },
+                lastDate = entity.lastDate
         )
 }

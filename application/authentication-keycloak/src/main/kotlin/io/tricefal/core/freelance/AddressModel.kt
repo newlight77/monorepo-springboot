@@ -1,29 +1,35 @@
 package io.tricefal.core.freelance
 
+import java.time.Instant
+
 data class AddressModel(var address: String,
                         var addressMention: String?,
                         var postalCode: String?,
                         var city: String?,
-                        var country: String?
+                        var country: String?,
+                        var lastDate: Instant?
 ) {
     data class Builder(
             val address: String,
             var addressMention: String? = null,
             var postalCode: String? = null,
             var city: String? = null,
-            var country: String? = null
+            var country: String? = null,
+            var lastDate: Instant? = null
     ) {
         fun addressMention(addressMention: String?) = apply { this.addressMention = addressMention }
         fun postalCode(postalCode: String?) = apply { this.postalCode = postalCode }
         fun city(city: String?) = apply { this.city = city }
         fun country(country: String?) = apply { this.country = country }
+        fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = AddressModel(
                 address = address,
                 addressMention = addressMention,
                 postalCode = postalCode,
                 city = city,
-                country = country
+                country = country,
+                lastDate = lastDate
         )
     }
 }
@@ -34,7 +40,8 @@ fun toModel(domain: AddressDomain): AddressModel {
             addressMention = domain.addressMention,
             postalCode = domain.postalCode,
             city = domain.city,
-            country = domain.country
+            country = domain.country,
+            lastDate = domain.lastDate
     )
 }
 
@@ -44,6 +51,7 @@ fun fromModel(model: AddressModel): AddressDomain {
             addressMention = model.addressMention,
             postalCode = model.postalCode,
             city = model.city,
-            country = model.country
+            country = model.country,
+            lastDate = model.lastDate
     )
 }

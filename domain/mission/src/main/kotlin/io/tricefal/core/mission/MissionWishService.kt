@@ -32,14 +32,14 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
     override fun updateOnResumeUploaded(username: String, metafile: MetafileDomain): MissionWishDomain {
         val missionWish = MissionWishDomain.Builder(username)
             .resumeFilename(metafile.filename)
-            .lastDate(Instant.now())
             .build()
         try {
             this.findByUsername(username)
                     .ifPresentOrElse(
                             {
                                 it.resumeFilename = metafile.filename
-                                update(missionWish)
+                                it.lastDate = it.lastDate ?: Instant.now()
+                                update(it)
                             },
                             { create(missionWish) }
                     )
