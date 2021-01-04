@@ -70,12 +70,11 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository)
         var updated = Optional.empty<FreelanceDomain>()
         entity.ifPresentOrElse(
             {
-                operations.let { ops ->
-                    var patched = JsonPatchOperator().apply(entity.get(), ops)
-                    patched.lastDate = it.lastDate ?: Instant.now()
-                    patched = repository.save(patched)
-                    updated =  Optional.of(fromEntity(patched))
-                }
+                if (it.company == null) it.company = CompanyEntity()
+                if (it.contact == null) it.contact = ContactEntity()
+                if (it.privacyDetail == null) it.privacyDetail = PrivacyDetailEntity(username = freelance.username)
+                if (it.state == null) it.state = FreelanceStateEntity(username = freelance.username)
+                updated = applyPatch(operations, it)
             },
             {
                 logger.error("unable to find a freelance with username ${freelance.username}")
@@ -83,6 +82,18 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository)
             }
         )
         return updated
+    }
+
+    private fun applyPatch(
+        operations: List<PatchOperation>,
+        entity: FreelanceEntity,
+    ): Optional<FreelanceDomain> {
+        return operations.let { ops ->
+            var patched = JsonPatchOperator().apply(entity, ops)
+            patched.lastDate = entity.lastDate ?: Instant.now()
+            patched = repository.save(patched)
+            Optional.of(fromEntity(patched))
+        }
     }
 
     class FreelanceNotFoundException(private val msg: String) : Throwable(msg) {}

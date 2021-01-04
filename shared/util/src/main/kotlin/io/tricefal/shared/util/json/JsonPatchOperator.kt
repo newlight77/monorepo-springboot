@@ -26,7 +26,7 @@ class JsonPatchOperator {
 
     private val mapper = ObjectMapper()
 
-    fun <T : Any> apply(source: T, operations: List<PatchOperation>): T {
+    fun <T : Any> apply(source: T, ops: List<PatchOperation>): T {
         return try {
 
             val sourceAdapter = moshi.adapter(source.javaClass)
@@ -35,13 +35,22 @@ class JsonPatchOperator {
 
             val opsListType: Type = Types.newParameterizedType(List::class.java, PatchOperation::class.java)
             val patchOperationAdapter: JsonAdapter<List<PatchOperation>> = moshi.adapter(opsListType)
+
+            val operations = ops.map {
+                if (!sourceNode.findPath(it.path).isNull) {
+                    it.op = "add"
+                }
+                it
+            }
+
             val opJson: String = patchOperationAdapter.toJson(operations)
+
             val patchNode: JsonNode = mapper.readValue(opJson, JsonNode::class.java)
 
             val patched: JsonNode = JsonPatch.fromJson(patchNode).apply(sourceNode)
             sourceAdapter.fromJson(patched.toString()) as T
         } catch (e: Exception) {
-            throw JsonPatchException("Error when trying to apply json patch for $operations")
+            throw JsonPatchException("Error when trying to apply json patch for $ops")
         }
     }
 }
@@ -49,7 +58,7 @@ class JsonPatchOperator {
 class JsonPatchException(private val msg: String) : Throwable(msg) {}
 
 class PatchOperation(
-    val op: String,
+    var op: String,
     val path: String,
     val value: Any,
 ) {

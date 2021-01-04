@@ -29,8 +29,8 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun signup(signup: SignupModel): SignupStateModel {
         val domain = fromModel(signup)
-        val metaNotif = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
-        val result = signupService.signup(domain, metaNotif)
+        val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
+        val result = signupService.signup(domain, metaNotification)
         logger.info("successfully signed up a new user ${signup.username}")
         return toModel(result)
     }
@@ -65,8 +65,8 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun resendCode(username: String): SignupStateModel {
         val domain = signupService.findByUsername(username)
-
-        val result = signupService.resendCode(domain, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
+        val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
+        val result = signupService.resendCode(domain, metaNotification)
         logger.info("successfully resent an activation code for user $username")
         return toModel(result)
     }

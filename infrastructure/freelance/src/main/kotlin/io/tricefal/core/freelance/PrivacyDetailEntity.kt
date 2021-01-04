@@ -10,7 +10,7 @@ import javax.validation.constraints.Size
 data class PrivacyDetailEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        var id: Long?,
+        var id: Long? = null,
 
         @Column(name = "username")
         val username: String,

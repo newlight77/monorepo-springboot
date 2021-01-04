@@ -9,7 +9,7 @@ import javax.validation.constraints.Size
 data class CompanyEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        var id: Long?,
+        var id: Long? = null,
 
         @Column(name = "raison_social", length = 50)
         val raisonSocial: @Size(max = 50) String? = null,

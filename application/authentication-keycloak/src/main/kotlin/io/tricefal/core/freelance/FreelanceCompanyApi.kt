@@ -36,14 +36,14 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
         return freelanceWebHandler.findByUsername(authenticatedUser(principal))
     }
 
-    @RolesAllowed("ROLE_ac_freelance_r")
+    @RolesAllowed("ROLE_ac_freelance_w")
     @PutMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun update(@PathVariable username: String, @RequestBody freelance: FreelanceModel): FreelanceModel {
         return freelanceWebHandler.update(username, freelance)
     }
 
-    @RolesAllowed("ROLE_ac_freelance_r")
+    @RolesAllowed("ROLE_ac_freelance_w")
     @PatchMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun patch(@PathVariable username: String, @RequestBody patchOperations: List<PatchOperation>): FreelanceModel {

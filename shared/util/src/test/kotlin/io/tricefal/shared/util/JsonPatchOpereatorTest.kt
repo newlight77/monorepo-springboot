@@ -46,8 +46,24 @@ class JsonPatchOperatorTest {
         val result = JsonPatchOperator().apply(shapes, listOf(op))
 
         // Arrange
-//        Assertions.assertEquals("circle", result)
-        Assertions.assertEquals("circle", result.shape.name)
+        Assertions.assertEquals("circle", result.shape!!.name)
+    }
+
+    @Test
+    fun `should patch a complex object by adding new value when trying to replace a non existing path`() {
+        // Arranges
+        val shapes = CompositeShape("composite", SimpleShape(x = 1, y = 2))
+
+        val op = PatchOperation.Builder("replace")
+            .path("/shape/name")
+            .value("circle")
+            .build()
+
+        // Act
+        val result = JsonPatchOperator().apply(shapes, listOf(op))
+
+        // Arrange
+        Assertions.assertEquals("circle", result.shape!!.name)
     }
 
     @Test
@@ -153,14 +169,14 @@ class JsonPatchOperatorTest {
 }
 
 data class SimpleShape(
-        val name: String,
-        val x: Int,
-        val y: Int
+        val name: String? = null,
+        val x: Int? = null,
+        val y: Int? = null
 )
 
 data class CompositeShape(
         val name: String,
-        val shape: SimpleShape
+        val shape: SimpleShape? = null
 )
 
 data class ShapeContainer(

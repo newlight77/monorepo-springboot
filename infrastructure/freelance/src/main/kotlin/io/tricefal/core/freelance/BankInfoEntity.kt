@@ -12,7 +12,7 @@ data class BankInfoEntity(
         val id: Long? = null,
 
         @Column(name = "iban", length = 50)
-        val iban: @Size(max = 50) String,
+        val iban: @Size(max = 50) String? = null,
 
         @javax.persistence.Column(name = "owner", length = 50)
         val owner: @Size(max = 50) String? = null,

@@ -8,7 +8,7 @@ import javax.persistence.*
 data class MetafileEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        val id: Long,
+        var id: Long,
 
         @Column(name = "username", length = 50)
         val username: String,

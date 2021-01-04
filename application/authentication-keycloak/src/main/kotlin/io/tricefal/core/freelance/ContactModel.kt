@@ -3,7 +3,7 @@ package io.tricefal.core.freelance
 import java.time.Instant
 
 data class ContactModel(
-        val email: String,
+        val email: String?,
         var lastName: String?,
         var firstName: String?,
         var langKey: String? = null,
@@ -15,7 +15,7 @@ data class ContactModel(
         var lastDate: Instant? = null
 ) {
     data class Builder(
-        val email: String,
+        var email: String? = null,
         var lastName: String? = null,
         var firstName: String? = null,
         var langKey: String? = null,
@@ -27,6 +27,7 @@ data class ContactModel(
         var lastDate: Instant? = null
     ) {
 
+        fun email(email: String?) = apply { this.email = email }
         fun lastName(lastName: String?) = apply { this.lastName = lastName }
         fun firstName(firstName: String?) = apply { this.firstName = firstName }
         fun langKey(langKey: String?) = apply { this.langKey = langKey }

@@ -14,7 +14,7 @@ data class ContactEntity(
 
         @Pattern(regexp = EMAIL_REGEX)
         @Column(length = 100, unique = true)
-        val email: @Size(min = 5, max = 100) String,
+        val email: @Size(min = 5, max = 100) String? = null,
 
         @Column(name = "lastName", length = 50)
         val lastName: @Size(max = 50) String? = null,

@@ -22,6 +22,15 @@ data class ProfileEntity(
         @Column(name = "username", length = 50)
         var username: String,
 
+        @Column(name = "firstname", length = 50)
+        var firstname: String? = null,
+
+        @Column(name = "lastname", length = 50)
+        var lastname: String? = null,
+
+        @Column(name = "phoneNumber", length = 50)
+        var phoneNumber: String? = null,
+
         @Column(name = "status", length = 50)
         var status: String,
 
@@ -46,6 +55,9 @@ fun toEntity(domain: ProfileDomain): ProfileEntity {
         return ProfileEntity(
                 null,
                 username = domain.username,
+                firstname = domain.firstname,
+                lastname = domain.lastname,
+                phoneNumber = domain.phoneNumber,
                 status = domain.status.toString(),
                 signupState = domain.signupState.toString(),
                 lastDate = domain.lastDate,
@@ -58,6 +70,9 @@ fun toEntity(domain: ProfileDomain): ProfileEntity {
 fun fromEntity(entity: ProfileEntity): ProfileDomain {
         return ProfileDomain(
                 username = entity.username,
+                firstname = entity.firstname,
+                lastname = entity.lastname,
+                phoneNumber = entity.phoneNumber,
                 status = toStatus(entity.status),
                 signupState = toState(entity.signupState),
                 lastDate = entity.lastDate,

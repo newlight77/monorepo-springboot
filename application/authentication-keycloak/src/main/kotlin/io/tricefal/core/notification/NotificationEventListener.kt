@@ -14,12 +14,15 @@ class NotificationEventListener(val notificationService: INotificationService,
 
     private var backendBaseUrl = env.getProperty("core.baseUrl")!!
     private var emailFrom = env.getProperty("notification.mail.from")!!
+    private var emailAdmin = env.getProperty("notification.mail.admin")!!
     private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
+    private var smsAdmin = env.getProperty("notification.sms.admin")!!
 
     @EventListener(condition = "#event.isEmailContact()")
     fun handleEmailContactNotificationEvent(event: NotificationEvent) {
         try {
-            notificationService.sendEmailContact(event.emailContactNotification!!, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
+            val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
+            notificationService.sendEmailContact(event.emailContactNotification!!, metaNotification)
         } catch (ex: Throwable) {
             throw CguAcceptedSavingException("Failed to send an email for contact from the notification event ${event.emailContactNotification}", ex)
         }

@@ -3,42 +3,42 @@ package io.tricefal.core.freelance
 import java.time.Instant
 
 class CompanyDomain(
-        val raisonSocial: String?,
-        val nomCommercial: String?,
-        val formeJuridique: String?,
-        val capital: String?,
-        val rcs: String?,
-        val siret: String?,
-        val numDuns: String?,
-        val numTva: String?,
-        val codeNaf: String?,
-        val appartenanceGroupe: String?,
-        val typeEntreprise: String?,
+    val raisonSocial: String?,
+    val nomCommercial: String?,
+    val formeJuridique: String?,
+    val capital: String?,
+    val rcs: String?,
+    val siret: String?,
+    val numDuns: String?,
+    val numTva: String?,
+    val codeNaf: String?,
+    val appartenanceGroupe: String?,
+    val typeEntreprise: String?,
 
-        val adminContact: ContactDomain?,
-        val bankInfo: BankInfoDomain?,
-        val fiscalAddress: AddressDomain?,
+    val adminContact: ContactDomain?,
+    val bankInfo: BankInfoDomain?,
+    val fiscalAddress: AddressDomain?,
 
-        val lastDate: Instant?
+    val lastDate: Instant?
 ) {
     data class Builder(
-            var raisonSocial: String? = null,
-            var nomCommercial: String? = null,
-            var formeJuridique: String? = null,
-            var capital: String? = null,
-            var rcs: String? = null,
-            var siret: String? = null,
-            var numDuns: String? = null,
-            var numTva: String? = null,
-            var codeNaf: String? = null,
-            var appartenanceGroupe: String? = null,
-            var typeEntreprise: String? = null,
+        var raisonSocial: String? = null,
+        var nomCommercial: String? = null,
+        var formeJuridique: String? = null,
+        var capital: String? = null,
+        var rcs: String? = null,
+        var siret: String? = null,
+        var numDuns: String? = null,
+        var numTva: String? = null,
+        var codeNaf: String? = null,
+        var appartenanceGroupe: String? = null,
+        var typeEntreprise: String? = null,
 
-            var adminContact: ContactDomain? = null,
-            var bankInfo: BankInfoDomain? = null,
-            var fiscalAddress: AddressDomain? = null,
+        var adminContact: ContactDomain? = null,
+        var bankInfo: BankInfoDomain? = null,
+        var fiscalAddress: AddressDomain? = null,
 
-            var lastDate: Instant? = null
+        var lastDate: Instant? = null
     ) {
         fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
         fun nomCommercial(nomCommercial: String?) = apply { this.nomCommercial = nomCommercial }

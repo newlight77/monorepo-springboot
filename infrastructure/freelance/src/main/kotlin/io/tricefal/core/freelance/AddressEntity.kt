@@ -12,19 +12,19 @@ class AddressEntity(
     val id: Long? = 0,
 
     @Column(name = "address")
-    val address: String = "",
+    val address: String? = null,
 
     @Column(name = "address_mention", length = 256)
-    val addressMention: @Size(max = 256) String = "",
+    val addressMention: @Size(max = 256) String? = null,
 
     @Column(name = "postal_code")
-    val postalCode: String = "",
+    val postalCode: String? = null,
 
     @Column(name = "city")
-    val city: String = "",
+    val city: String? = null,
 
     @Column(name = "country")
-        val country: String = "",
+        val country: String? = null,
 
     @Column(name = "last_date")
     var lastDate: Instant? = Instant.now()

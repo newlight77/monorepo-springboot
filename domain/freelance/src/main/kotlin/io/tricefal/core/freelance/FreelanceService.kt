@@ -28,6 +28,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     override fun patch(username: String, operations: List<PatchOperation>): FreelanceDomain {
         val freelance = dataAdapter.findByUsername(username)
 //        val ops = operations.filter { acceptOperation(it) }
+
         return if (freelance.isPresent)
                 dataAdapter.patch(freelance.get(), operations)
                     .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${username}") }

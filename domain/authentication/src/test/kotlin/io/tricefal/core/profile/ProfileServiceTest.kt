@@ -22,7 +22,16 @@ class ProfileServiceTest {
     @Test
     fun `should create a profile successfully`() {
         // Arrange
-        val profile = ProfileDomain("kong@gmail.com", Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            SignupState.VALIDATED,
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
         Mockito.`when`(repository.create(profile)).thenReturn(profile)
         service = ProfileService(repository)
 
@@ -37,7 +46,16 @@ class ProfileServiceTest {
     fun `should retrieve last profiles by username`() {
         // Arrange
         val username = "kong@gmail.com"
-        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile1 = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            SignupState.VALIDATED,
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
 
         val profile = Optional.of(profile1)
 
@@ -55,7 +73,16 @@ class ProfileServiceTest {
     fun `should update the profile on status updated`() {
         // Arrange
         val username = "kong@gmail.com"
-        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile1 = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            SignupState.VALIDATED,
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
 
         val profile = Optional.of(profile1)
 
@@ -74,7 +101,16 @@ class ProfileServiceTest {
     fun `should update the profile on signup state updated`() {
         // Arrange
         val username = "kong@gmail.com"
-        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.REGISTERED, Instant.now(), "portrait", "resume", "resume linkedin")
+        val profile1 = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            SignupState.REGISTERED,
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
 
         val profile = Optional.of(profile1)
 
@@ -94,8 +130,16 @@ class ProfileServiceTest {
         // Arrange
         val username = "kong@gmail.com"
         val filename = "new filename"
-        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
-
+        val profile1 = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            SignupState.VALIDATED,
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
         val profile = Optional.of(profile1)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
@@ -114,8 +158,16 @@ class ProfileServiceTest {
         // Arrange
         val username = "kong@gmail.com"
         val filename = "new filename"
-        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
-
+        val profile1 = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            SignupState.VALIDATED,
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
         val profile = Optional.of(profile1)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
@@ -134,8 +186,16 @@ class ProfileServiceTest {
         // Arrange
         val username = "kong@gmail.com"
         val filename = "new filename"
-        val profile1 = ProfileDomain(username, Status.FREELANCE, SignupState.VALIDATED, Instant.now(), "portrait", "resume", "resume linkedin")
-
+        val profile1 = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            SignupState.VALIDATED,
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
         val profile = Optional.of(profile1)
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)

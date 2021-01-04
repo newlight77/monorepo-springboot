@@ -10,11 +10,17 @@ import java.util.*
 @Repository
 class MetafileRepositoryAdapter(val repository: MetafileJpaRepository): IMetafileDataAdapter {
 
-    override fun save(metafile: MetafileDomain, inpputStream: InputStream) {
-        val entity = toEntity(metafile)
-        entity.creationDate = metafile.creationDate ?: Instant.now()
-        val metafileEntity = repository.save(toEntity(metafile))
-        FileStorage().save(inpputStream, Paths.get(metafileEntity.filename))
+    override fun save(metafile: MetafileDomain, inpputStream: InputStream): MetafileDomain {
+        var newEntity = toEntity(metafile)
+        repository.findByUsername(metafile.username).stream().findFirst().ifPresent {
+            newEntity.id = it.id
+            newEntity.creationDate = it.creationDate ?: Instant.now()
+            newEntity = repository.save(newEntity)
+        }
+
+        newEntity = repository.save(newEntity)
+        FileStorage().save(inpputStream, Paths.get(newEntity.filename))
+        return fromEntity(newEntity)
     }
 
     override fun findById(id: Long): Optional<MetafileDomain> {

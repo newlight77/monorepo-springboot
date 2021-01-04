@@ -2,7 +2,7 @@ package io.tricefal.core.freelance
 
 import java.time.Instant
 
-data class AddressModel(var address: String,
+data class AddressModel(var address: String?,
                         var addressMention: String?,
                         var postalCode: String?,
                         var city: String?,
@@ -10,13 +10,14 @@ data class AddressModel(var address: String,
                         var lastDate: Instant?
 ) {
     data class Builder(
-            val address: String,
+            var address: String? = null,
             var addressMention: String? = null,
             var postalCode: String? = null,
             var city: String? = null,
             var country: String? = null,
             var lastDate: Instant? = null
     ) {
+        fun address(address: String?) = apply { this.address = address }
         fun addressMention(addressMention: String?) = apply { this.addressMention = addressMention }
         fun postalCode(postalCode: String?) = apply { this.postalCode = postalCode }
         fun city(city: String?) = apply { this.city = city }

@@ -3,19 +3,20 @@ package io.tricefal.core.freelance
 import java.time.Instant
 
 data class BankInfoModel(
-        val iban:  String,
+        val iban:  String?,
         val owner: String?,
         val bic: String?,
         val address: AddressModel?,
         var lastDate: Instant?
 ) {
     data class Builder(
-            val iban: String,
+            var iban: String? = null,
             var owner: String? = null,
             var bic: String? = null,
             var address: AddressModel? = null,
             var lastDate: Instant? = null
     ) {
+        fun iban(iban: String?) = apply { this.iban = iban }
         fun owner(owner: String?) = apply { this.owner = owner }
         fun bic(bic: String?) = apply { this.bic = bic }
         fun address(address: AddressModel?) = apply { this.address = address }
