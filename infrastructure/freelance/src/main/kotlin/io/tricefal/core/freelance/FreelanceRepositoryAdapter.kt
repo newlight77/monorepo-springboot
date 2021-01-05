@@ -70,10 +70,6 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository)
         var updated = Optional.empty<FreelanceDomain>()
         entity.ifPresentOrElse(
             {
-                if (it.company == null) it.company = CompanyEntity()
-                if (it.contact == null) it.contact = ContactEntity()
-                if (it.privacyDetail == null) it.privacyDetail = PrivacyDetailEntity(username = freelance.username)
-                if (it.state == null) it.state = FreelanceStateEntity(username = freelance.username)
                 updated = applyPatch(operations, it)
             },
             {
@@ -88,6 +84,14 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository)
         operations: List<PatchOperation>,
         entity: FreelanceEntity,
     ): Optional<FreelanceDomain> {
+        if (entity.company == null) entity.company = CompanyEntity()
+        if (entity.company?.adminContact == null) entity.company?.adminContact = ContactEntity()
+        if (entity.company?.adminContact?.address == null) entity.company?.adminContact?.address = AddressEntity()
+        if (entity.contact == null) entity.contact = ContactEntity()
+        if (entity.contact?.address == null) entity.contact?.address = AddressEntity()
+        if (entity.privacyDetail == null) entity.privacyDetail = PrivacyDetailEntity(username = entity.username)
+        if (entity.state == null) entity.state = FreelanceStateEntity(username = entity.username)
+
         return operations.let { ops ->
             var patched = JsonPatchOperator().apply(entity, ops)
             patched.lastDate = entity.lastDate ?: Instant.now()

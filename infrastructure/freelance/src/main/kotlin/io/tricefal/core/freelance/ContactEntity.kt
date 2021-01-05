@@ -41,7 +41,7 @@ data class ContactEntity(
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "address")
-        val address: AddressEntity? = null,
+        var address: AddressEntity? = null,
 
         @Column(name = "last_date")
         var lastDate: Instant? = Instant.now()
