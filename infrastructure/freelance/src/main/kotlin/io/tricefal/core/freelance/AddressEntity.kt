@@ -11,19 +11,19 @@ class AddressEntity(
     @Id
     val id: Long? = 0,
 
-    @Column(name = "address")
+    @Column(name = "address", length = 256)
     val address: String? = null,
 
     @Column(name = "address_mention", length = 256)
     val addressMention: @Size(max = 256) String? = null,
 
-    @Column(name = "postal_code")
-    val postalCode: String? = null,
+    @Column(name = "postal_code", length = 6)
+    val postalCode: @Size(min = 5, max = 8) String? = null,
 
-    @Column(name = "city")
+    @Column(name = "city", length = 50)
     val city: String? = null,
 
-    @Column(name = "country")
+    @Column(name = "country", length = 50)
         val country: String? = null,
 
     @Column(name = "last_date")
@@ -35,11 +35,11 @@ fun toEntity(domain: AddressDomain): AddressEntity {
     return AddressEntity(
             id = null,
             address = domain.address,
-            addressMention = domain.addressMention!!,
-            postalCode = domain.postalCode!!,
-            city = domain.city!!,
-            country = domain.country!!,
-            lastDate = domain.lastDate!!
+            addressMention = domain.addressMention,
+            postalCode = domain.postalCode,
+            city = domain.city,
+            country = domain.country,
+            lastDate = domain.lastDate
     )
 }
 

@@ -168,12 +168,12 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                 .ifPresentOrElse(
                     {
                         it.fiscalFilename = filename
-                        it.state?.kbisUploaded = true
+                        it.state?.fiscalUploaded = true
                         freelance = dataAdapter.update(it)
                             .orElseThrow { NotFoundException("Failed to update the freelance from the fiscal uploaded event for user $username") }
                     },
                     {
-                        freelance.state?.kbisUploaded = true
+                        freelance.state?.fiscalUploaded = true
                         freelance = dataAdapter.create(freelance)
                     }
                 )

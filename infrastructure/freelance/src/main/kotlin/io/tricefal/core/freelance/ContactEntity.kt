@@ -22,18 +22,18 @@ data class ContactEntity(
         @Column(name = "firstName", length = 50)
         val firstName: @Size(max = 50) String? = null,
 
-        @Size(min = 2, max = 6)
-        @Column(name = "lang_key", length = 6)
+        @Size(min = 2, max = 50)
+        @Column(name = "lang_key", length = 50)
         var langKey: String? = null,
 
         @Column(name = "phone", length = 50)
-        val phone: @Size(max = 50) String? = null,
+        val phone: @Size(max = 22) String? = null,
 
         @Column(name = "landline", length = 50)
-        val landline: String? = null,
+        val landline: @Size(max = 20) String? = null,
 
         @Column(name = "fax", length = 50)
-        val fax: @Size(max = 50) String? = null,
+        val fax: @Size(max = 20) String? = null,
 
         @Pattern(regexp = EMAIL_REGEX)
         @Column(length = 100)
