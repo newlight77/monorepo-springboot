@@ -1,12 +1,13 @@
 package io.tricefal.core.freelance
 
+import com.icegreen.greenmail.util.GreenMail
+import com.icegreen.greenmail.util.ServerSetup
 import io.tricefal.core.InfrastructureMockBeans
+import io.tricefal.core.email.EmailMessage
+import io.tricefal.core.email.EmailService
 import io.tricefal.core.metafile.*
 import io.tricefal.shared.util.json.PatchOperation
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.io.TempDir
 import org.mockito.ArgumentCaptor
@@ -40,6 +41,9 @@ class FreelanceWebHandlerTest {
     lateinit var metafileService: MetafileService
 
     @Autowired
+    lateinit var emailService: EmailService
+
+    @Autowired
     lateinit var freelanceService: IFreelanceService
 
     @MockBean
@@ -48,16 +52,32 @@ class FreelanceWebHandlerTest {
     @MockBean
     lateinit var metaFileRepository: MetafileJpaRepository
 
+    @MockBean
+    lateinit var eventPublisher: FreelanceEventPublisher
+
     @TempDir
     lateinit var tempDir: File
 
     @Captor
     var freelanceCaptor: ArgumentCaptor<FreelanceEntity> = ArgumentCaptor.forClass(FreelanceEntity::class.java)
 
+    val greenMail = GreenMail(ServerSetup(2525, null, "smtp"))
+
     @BeforeEach
     internal fun beforeEach() {
-
+        greenMail.reset()
     }
+
+    @BeforeAll
+    internal fun before() {
+        greenMail.start()
+    }
+
+    @AfterAll
+    internal fun after() {
+        greenMail.stop()
+    }
+
 
     @Test
     fun `should create a freelance successfully`() {
@@ -199,6 +219,35 @@ class FreelanceWebHandlerTest {
         Assertions.assertEquals("new name", result.company?.raisonSocial)
     }
 
+    @Test
+    fun `should send notification upon company form completion`() {
+        // Arrange
+        val username ="kong@gmail.com"
+        val state = FreelanceStateModel.Builder(username).build()
+        val company = CompanyModel.Builder(raisonSocial = "raison social").build()
+        val contact = ContactModel.Builder(email = username).build()
+        val privacyDetail = PrivacyDetailModel.Builder(username = username).build()
+        val freelance = FreelanceModel.Builder(username)
+            .company(company)
+            .contact(contact)
+            .privacyDetail(privacyDetail)
+            .status(Status.AVAILABLE)
+            .state(state)
+            .build()
+        val freelanceEntity = toEntity(fromModel(freelance))
+
+        Mockito.`when`(jpaRepository.findByUsername(username)).thenReturn(listOf(freelanceEntity))
+        Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
+        Mockito.doNothing().`when`(eventPublisher).publishCompanyCompletedEvent(username)
+
+        // Act
+        webHandler.completed(username, freelance)
+
+        // Arrange
+        Mockito.verify(eventPublisher).publishCompanyCompletedEvent(username)
+        Mockito.verify(emailService).send(any(EmailMessage::class.java))
+//        Assertions.assertEquals(1, greenMail.receivedMessages.size)
+    }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
 

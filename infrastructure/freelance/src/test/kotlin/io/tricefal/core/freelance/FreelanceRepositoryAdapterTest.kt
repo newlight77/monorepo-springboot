@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.notification.INotificationAdapter
 import io.tricefal.shared.util.json.PatchOperation
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -16,12 +17,18 @@ internal class FreelanceRepositoryAdapterTest {
     @Mock
     lateinit var jpaRepository: FreelanceJpaRepository
 
+    @Mock
+    lateinit var eventPublisher: FreelanceEventPublisher
+
+    @Mock
+    lateinit var notificationAdapter: INotificationAdapter
+
     lateinit var repositoryAdapter: FreelanceRepositoryAdapter
 
     @BeforeEach
     fun beforeEach() {
         Mockito.reset(jpaRepository)
-        repositoryAdapter = FreelanceRepositoryAdapter(jpaRepository)
+        repositoryAdapter = FreelanceRepositoryAdapter(jpaRepository, notificationAdapter, eventPublisher)
     }
 
     @Test

@@ -120,10 +120,6 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         return result
     }
 
-    override fun updateStatus(signup: SignupDomain): Optional<SignupDomain>  {
-        return update(signup)
-    }
-
     override fun statusUpdated(signup: SignupDomain) {
         this.signupEventPublisher.publishStatusUpdatedEvent(signup.username, signup.status.toString())
     }

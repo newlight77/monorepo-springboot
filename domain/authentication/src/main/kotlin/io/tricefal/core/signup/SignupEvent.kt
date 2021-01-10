@@ -11,6 +11,8 @@ class SignupStatusUpdatedEvent(val username: String, val status: String) {
 
 class SignupStateUpdatedEvent(val username: String, val state: String)
 
+class CompanyCompletionEvent(val username: String)
+
 class PortraitUploadedEvent(val metafile: MetafileDomain) {
     val username = metafile.username
     fun isPortrait() : Boolean {

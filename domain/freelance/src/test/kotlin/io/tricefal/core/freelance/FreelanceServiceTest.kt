@@ -1,6 +1,10 @@
 package io.tricefal.core.freelance
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.MetaNotificationDomain
+import io.tricefal.core.notification.SmsNotificationDomain
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -8,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.Instant
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -268,4 +273,35 @@ class FreelanceServiceTest {
         Assertions.assertEquals(result.username, username)
         Assertions.assertEquals(result.fiscalFilename, "new-fiscal.pdf")
     }
+
+
+    @Test
+    fun `should send a notification by email upon company completion`() {
+        // Arranges
+
+        val username = "kong@gmail.com"
+        val freelance = FreelanceDomain.Builder(username)
+            .state(FreelanceStateDomain(username))
+            .build()
+        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl",
+            emailFrom = "emailFrom", smsFrom = "smsFrom",
+            emailAdmin = "adminEmail", smsAdminNumber = "adminNumber")
+
+
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+
+        service = FreelanceService(dataAdapter)
+
+        // Act
+        val result = service.completed(freelance, metaNotification)
+
+        // Arrange
+        Mockito.verify(dataAdapter).sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))
+        Mockito.verify(dataAdapter).companyCompleted(username)
+        Assertions.assertTrue(result.state?.completed!!)
+    }
+
+    private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
 }

@@ -29,6 +29,13 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
         return freelanceWebHandler.create(freelance)
     }
 
+    @RolesAllowed("ROLE_ac_freelance_w")
+    @PostMapping("{username}")
+    @ResponseStatus(HttpStatus.OK)
+    fun completed(@PathVariable username: String, @RequestBody freelance: FreelanceModel): FreelanceModel {
+        return freelanceWebHandler.update(username, freelance)
+    }
+
     @RolesAllowed("ROLE_ac_freelance_r")
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
@@ -40,7 +47,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @PutMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun update(@PathVariable username: String, @RequestBody freelance: FreelanceModel): FreelanceModel {
-        return freelanceWebHandler.update(username, freelance)
+        return freelanceWebHandler.completed(username, freelance)
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")

@@ -18,7 +18,6 @@ interface SignupDataAdapter {
     fun unregister(username: String) : Boolean
     fun sendEmail(username: String, notification: EmailNotificationDomain) : Boolean
     fun sendSms(username: String, notification: SmsNotificationDomain) : Boolean
-    fun updateStatus(signup: SignupDomain): Optional<SignupDomain>
 
     // events
     fun cguAccepted(username: String, cguAcceptedVersion: String)

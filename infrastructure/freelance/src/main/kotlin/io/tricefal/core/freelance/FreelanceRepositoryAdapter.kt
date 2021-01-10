@@ -1,5 +1,7 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.INotificationAdapter
 import io.tricefal.shared.util.json.JsonPatchOperator
 import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
@@ -9,7 +11,9 @@ import java.time.Instant
 import java.util.*
 
 @Repository
-class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository) : FreelanceDataAdapter {
+class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
+                                 val notificationAdapter: INotificationAdapter,
+                                 val eventPublisher: FreelanceEventPublisher) : FreelanceDataAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -78,6 +82,14 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository)
             }
         )
         return updated
+    }
+
+    override fun sendEmail(username: String, companyCompletionNotification: EmailNotificationDomain): Boolean {
+        return notificationAdapter.sendEmail(companyCompletionNotification)
+    }
+
+    override fun companyCompleted(username: String) {
+        eventPublisher.publishCompanyCompletedEvent(username)
     }
 
     private fun applyPatch(

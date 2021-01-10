@@ -3,6 +3,7 @@ package io.tricefal.core.freelance
 import io.tricefal.core.exception.NotAcceptedException
 import io.tricefal.core.exception.NotFoundException
 import io.tricefal.core.metafile.*
+import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
@@ -19,6 +20,11 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val dataFilesPath = env.getProperty("data.files.path")!!
+    private var backendBaseUrl = env.getProperty("core.baseUrl")!!
+    private var emailFrom = env.getProperty("notification.mail.from")!!
+    private var emailAdmin = env.getProperty("notification.mail.admin")!!
+    private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
+    private var smsAdmin = env.getProperty("notification.sms.admin")!!
 
     fun create(freelanceModel: FreelanceModel): FreelanceModel {
         val domain = fromModel(freelanceModel)
@@ -35,7 +41,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
             val domain = fromModel(freelanceModel)
             freelanceService.update(username, domain)
         } catch (ex: Throwable) {
-            throw FreelanceCreationException("Failed to update a freelance with username $username with $freelanceModel", ex)
+            throw FreelanceUpdateException("Failed to update a freelance with username $username with $freelanceModel", ex)
         }
         return toModel(result)
     }
@@ -44,7 +50,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val result = try {
             freelanceService.patch(username, operations)
         } catch (ex: Throwable) {
-            throw FreelanceCreationException("Failed to create a freelance profile with username $username with operations ${operations.joinToString()}", ex)
+            throw FreelanceUpdateException("Failed to create a freelance profile with username $username with operations ${operations.joinToString()}", ex)
         }
         return toModel(result)
     }
@@ -60,6 +66,20 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     fun availables(): List<FreelanceModel> {
         return freelanceService.availables().map { freelanceDomain -> toModel(freelanceDomain) }
+    }
+
+    fun completed(username: String, freelanceModel: FreelanceModel): FreelanceModel {
+        val result = try {
+            val domain = fromModel(freelanceModel)
+            val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl,
+                emailFrom=emailFrom, emailAdmin=emailAdmin,
+                smsFrom=smsFrom, smsAdminNumber=smsAdmin)
+
+            freelanceService.completed(domain, metaNotification)
+        } catch (ex: Throwable) {
+            throw FreelanceCompletedException("Failed to complete a freelance with username $username with $freelanceModel", ex)
+        }
+        return toModel(result)
     }
 
     fun uploadKbis(username: String, file: MultipartFile): FreelanceModel {
@@ -171,7 +191,13 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
     class FreelanceCreationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
         constructor(message: String?) : this(message, null)
     }
+    class FreelanceUpdateException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
     class FreelanceUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class FreelanceCompletedException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
         constructor(message: String?) : this(message, null)
     }
 }

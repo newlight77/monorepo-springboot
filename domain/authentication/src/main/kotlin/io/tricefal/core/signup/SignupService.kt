@@ -194,15 +194,28 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         try {
             signup.status = status
             signup.state!!.statusUpdated = true
-            dataAdapter.updateStatus(signup)
-                .orElseThrow { SignupStatusUpdateException("failed to update the status of the signup for username ${signup.username}")}
-            dataAdapter.statusUpdated(signup)
-            assignRoles(signup, statusToReadRole[status])
             dataAdapter.update(signup)
+            assignRoles(signup, statusToReadRole[status])
             return signup.state!!
         } catch (ex: Throwable) {
             logger.error("failed to update the status of the signup for username ${signup.username}")
             throw SignupStatusUpdateException("failed to update the status of the signup for username ${signup.username}", ex)
+        }
+    }
+
+    override fun companyCompleted(username: String): SignupStateDomain {
+        val signup = dataAdapter.findByUsername(username).orElseThrow {
+            logger.error("a signup with username $username does not exist")
+            throw SignupNotFoundException("a signup with username $username does not exist")
+        }
+
+        try {
+            signup.state?.completed = true
+            dataAdapter.update(signup)
+            return signup.state!!
+        } catch (ex: Throwable) {
+            logger.error("failed to update the state upon company completion of the signup for username ${signup.username}")
+            throw SignupStatusUpdateException("failed to update the state of the signup upon company completion for username ${signup.username}", ex)
         }
     }
 

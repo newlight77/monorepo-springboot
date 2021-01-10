@@ -1,13 +1,17 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
+import java.text.MessageFormat
 import java.time.Instant
 import java.util.*
 
 class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelanceService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
+    private val resourceBundle = ResourceBundle.getBundle("i18n.company", Locale.FRANCE)
 
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
         val result = dataAdapter.findByUsername(freelance.username)
@@ -41,6 +45,16 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 //        if (operation.op == "replace" && operation.path == "/PrivacyDetailDomain") return true
 //        return false
 //    }
+
+    override fun completed(freelance: FreelanceDomain, metaNotification: MetaNotificationDomain): FreelanceDomain {
+        val result = dataAdapter.findByUsername(freelance.username)
+        return if (result.isPresent) {
+            freelance.state?.completed = true
+            dataAdapter.update(freelance)
+            sendEmail(freelance, emailNotification(freelance, metaNotification))
+            freelance
+        } else throw NotFoundException("Failed to update an non existing freelance for user ${freelance.username}")
+    }
 
     override fun findByUsername(username: String): Optional<FreelanceDomain> {
         return dataAdapter.findByUsername(username)
@@ -182,6 +196,46 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             throw FiscalFileUploadException("Failed to update the freelance from the fiscal uploaded event for user $username", ex)
         }
         return freelance
+    }
+
+    private fun sendEmail(freelance: FreelanceDomain, companyCompletionNotification: EmailNotificationDomain): Boolean {
+        try {
+            dataAdapter.sendEmail(freelance.username, companyCompletionNotification)
+            dataAdapter.companyCompleted(freelance.username)
+            return true
+        } catch (ex: Throwable) {
+            logger.error("failed to send an email upon freelance company completion for username ${freelance.username}")
+            throw FreelanceCompletionEmailNotificationException("failed to send an email upon freelance company completion for username ${freelance.username}", ex)
+        }
+    }
+
+    private fun emailNotification(freelance: FreelanceDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+        val emailSubject = getString("company.completion.mail.subject")
+        val emailGreeting = getString("company.completion.mail.greeting", "admin")
+        val emailContent = getString("company.completion.mail.content")
+
+        return EmailNotificationDomain.Builder(freelance.username)
+            .emailFrom(metaNotification.emailFrom)
+            .emailTo(metaNotification.emailAdmin)
+            .emailSubject(emailSubject)
+            .emailGreeting(emailGreeting)
+            .emailContent(emailContent)
+            .build()
+    }
+
+    private fun getString(key: String, vararg params: String?): String? {
+        return try {
+            MessageFormat.format(resourceBundle.getString(key), *params)
+        } catch (ex: MissingResourceException) {
+            throw ResourceBundleMissingKeyException("Failed to retrieve the value for key=$key in resource bundle i18n", ex)
+        }
+    }
+
+    class FreelanceCompletionEmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class ResourceBundleMissingKeyException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
     }
 
 }

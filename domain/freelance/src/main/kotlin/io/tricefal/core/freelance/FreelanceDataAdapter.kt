@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.shared.util.json.PatchOperation
 import java.util.*
 
@@ -10,4 +11,6 @@ interface FreelanceDataAdapter {
     fun availables(): List<FreelanceDomain>
     fun update(freelance: FreelanceDomain): Optional<FreelanceDomain>
     fun patch(freelance: FreelanceDomain, operations: List<PatchOperation>): Optional<FreelanceDomain>
+    fun sendEmail(username: String, companyCompletionNotification: EmailNotificationDomain): Boolean
+    fun companyCompleted(username: String)
 }

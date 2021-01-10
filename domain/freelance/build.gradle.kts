@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
 
+	implementation(project(":domain:notification"))
 	implementation(project(":shared:util"))
 
 }

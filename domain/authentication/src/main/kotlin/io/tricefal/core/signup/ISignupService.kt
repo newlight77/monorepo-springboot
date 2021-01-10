@@ -18,4 +18,5 @@ interface ISignupService {
     fun resumeUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain
     fun resumeLinkedinUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain
     fun updateStatus(signup: SignupDomain, status: Status): SignupStateDomain
+    fun companyCompleted(username: String): SignupStateDomain
 }

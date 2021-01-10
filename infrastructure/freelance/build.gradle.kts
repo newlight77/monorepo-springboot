@@ -17,7 +17,9 @@ repositories {
 }
 
 dependencies {
+	implementation(project(":domain:authentication"))
 	implementation(project(":domain:freelance"))
+	implementation(project(":domain:notification"))
 	implementation(project(":infrastructure:storage"))
 	implementation(project(":shared:util"))
 

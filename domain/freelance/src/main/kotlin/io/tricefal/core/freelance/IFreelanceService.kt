@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.shared.util.json.PatchOperation
 import java.util.*
 
@@ -15,5 +16,6 @@ interface IFreelanceService {
     fun updateOnRcUploaded(username: String, filename: String): FreelanceDomain
     fun updateOnUrssafUploaded(username: String, filename: String): FreelanceDomain
     fun updateOnFiscalUploaded(username: String, filename: String): FreelanceDomain
+    fun completed(freelance: FreelanceDomain, metaNotification: MetaNotificationDomain): FreelanceDomain
 
 }

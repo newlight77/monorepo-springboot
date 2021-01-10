@@ -106,14 +106,44 @@ class SignupServiceTest {
                 .state(state)
                 .build()
 
-        Mockito.`when`(dataAdapter.updateStatus(signup)).thenReturn(Optional.of(signup))
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
 
         // Act
         val result = service.updateStatus(signup, Status.EMPLOYEE)
 
         // Arrange
-        Mockito.verify(dataAdapter).updateStatus(signup)
+        Mockito.verify(dataAdapter).update(signup)
         Assertions.assertTrue(result.statusUpdated!!)
+    }
+
+    @Test
+    fun `should update the signup state upon company completion`() {
+        // Arrange
+        val username = "kong@gmail.com"
+
+        val state = SignupStateDomain.Builder("kong")
+            .statusUpdated(true)
+            .build()
+
+        val signup = SignupDomain.Builder(username)
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(state)
+            .build()
+
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(signup))
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+
+        // Act
+        val result = service.companyCompleted(username)
+
+        // Arrange
+        Mockito.verify(dataAdapter).update(signup)
+        Assertions.assertTrue(result.completed!!)
     }
 
     @Test
