@@ -31,8 +31,8 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .saved(save(signup))
                 .registered(register(signup))
                 .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
-                .emailSent(sendEmail(signup, emailNotification(signup, metaNotification)))
-                .smsSent(sendSms(signup, smsNotification(signup, metaNotification)))
+                .emailSent(sendEmail(signup, singupEmailNotification(signup, metaNotification)))
+                .smsSent(sendSms(signup, signupSmsNotification(signup, metaNotification)))
                 .build()
     }
 
@@ -58,11 +58,11 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .validated(signup.state?.validated)
                 .emailSent(
                         if (signup.state?.emailValidated == true) true
-                        else sendEmail(signup, emailNotification(signup, metaNotification))
+                        else sendEmail(signup, singupEmailNotification(signup, metaNotification))
                 )
                 .smsSent(
                         if (signup.state?.smsValidated == true) true
-                        else sendSms(signup, smsNotification(signup, metaNotification))
+                        else sendSms(signup, signupSmsNotification(signup, metaNotification))
                 )
                 .build()
     }
@@ -97,12 +97,17 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         return dataAdapter.findAll()
     }
 
-    override fun activate(signup: SignupDomain): SignupStateDomain {
-        signup.state?.validated = true
-        dataAdapter.update(signup)
-            .orElseThrow { SignupActivationException("Failed to update the signup state after activation") }
-        assignRoles(signup, statusToReadWriteRole[signup.status])
-        return signup.state!!
+    override fun activate(signup: SignupDomain, metaNotification: MetaNotificationDomain): SignupStateDomain {
+        try {
+            signup.state?.validated = true
+            dataAdapter.update(signup)
+            sendEmail(signup, activatedEmailNotification(signup, metaNotification))
+            assignRoles(signup, statusToReadWriteRole[signup.status])
+            return signup.state!!
+        } catch (ex: Throwable) {
+            logger.error("Failed to update the signup state after activation for username ${signup.username}")
+            throw SignupActivationException("Failed to update the signup state after activation for username ${signup.username}")
+        }
     }
 
     override fun deactivate(signup: SignupDomain): SignupStateDomain {

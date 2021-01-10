@@ -51,7 +51,8 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun activate(username: String): SignupStateModel {
         val domain = signupService.findByUsername(username)
-        val model = this.signupService.activate(domain)
+        val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
+        val model = this.signupService.activate(domain, metaNotification)
         logger.info("successfully activated signup for user $username")
         return toModel(model)
     }

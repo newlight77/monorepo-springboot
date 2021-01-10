@@ -8,7 +8,7 @@ interface ISignupService {
     fun findByUsername(username: String): SignupDomain
     fun findAll(): List<SignupDomain>
     fun delete(signup: SignupDomain, authorizationCode: String?)
-    fun activate(signup: SignupDomain): SignupStateDomain
+    fun activate(signup: SignupDomain, metaNotification: MetaNotificationDomain): SignupStateDomain
     fun deactivate(signup: SignupDomain): SignupStateDomain
     fun resendCode(signup: SignupDomain, metaNotification: MetaNotificationDomain): SignupStateDomain
     fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain

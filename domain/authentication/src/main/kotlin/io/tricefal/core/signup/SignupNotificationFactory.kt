@@ -12,7 +12,7 @@ open class SignupNotificationFactory() {
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val resourceBundle = ResourceBundle.getBundle("i18n.signup", Locale.FRANCE)
 
-    fun smsNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): SmsNotificationDomain {
+    fun signupSmsNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): SmsNotificationDomain {
         val smsContent = getString("signup.sms.content", signup.firstname, signup.activationCode)
 
         return SmsNotificationDomain.Builder(signup.username)
@@ -22,7 +22,7 @@ open class SignupNotificationFactory() {
                 .build()
     }
 
-    fun emailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+    fun singupEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
         val emailActivationLink = emailValidationLink(signup, metaNotification)
         val emailSubject = getString("signup.mail.subject")
         val emailGreeting = getString("signup.mail.greeting", signup.firstname)
@@ -37,7 +37,21 @@ open class SignupNotificationFactory() {
                 .build()
     }
 
-    fun emailValidationLink(signup: SignupDomain, metaNotification: MetaNotificationDomain): String {
+    fun activatedEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+        val emailSubject = getString("signup.activated.mail.subject")
+        val emailGreeting = getString("signup.activated.mail.greeting", signup.firstname)
+        val emailContent = getString("signup.activated.mail.content")
+
+        return EmailNotificationDomain.Builder(signup.username)
+            .emailFrom(metaNotification.emailAdmin)
+            .emailTo(signup.username)
+            .emailSubject(emailSubject)
+            .emailGreeting(emailGreeting)
+            .emailContent(emailContent)
+            .build()
+    }
+
+    private fun emailValidationLink(signup: SignupDomain, metaNotification: MetaNotificationDomain): String {
         return metaNotification.baseUrl + "/signup/email/verify?token=" + signup.activationToken + "." + randomString()
     }
 

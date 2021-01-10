@@ -33,7 +33,9 @@ class SignupServiceTest {
     @Test
     fun `should do a signup`() {
         // Arranges
-        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
+        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl",
+            emailFrom = "emailFrom", smsFrom = "smsFrom",
+            emailAdmin = "adminEmail", smsAdminNumber = "adminNumber")
         val signup = SignupDomain.Builder("kong@gmail.com")
                 .firstname("kong")
                 .lastname("to")
@@ -238,6 +240,9 @@ class SignupServiceTest {
 
         val state = SignupStateDomain.Builder("kong")
             .build()
+        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl",
+            emailFrom = "emailFrom", smsFrom = "smsFrom",
+            emailAdmin = "adminEmail", smsAdminNumber = "adminNumber")
 
         val signup = SignupDomain.Builder(username)
             .firstname("kong")
@@ -250,11 +255,13 @@ class SignupServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
 
         // Act
-        val result = service.activate(signup)
+        val result = service.activate(signup, metaNotification)
 
         // Arrange
+        Mockito.verify(dataAdapter).sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))
         Assertions.assertTrue(result.validated!!)
     }
 
