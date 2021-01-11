@@ -14,9 +14,7 @@ class FreelanceEventListener(val freelanceService: IFreelanceService) {
     @EventListener(condition = "#event.isFreelance()")
     fun handleStatusUpdatedEvent(event: SignupStatusUpdatedEvent) {
         try {
-            val domain = FreelanceDomain.Builder(event.username)
-                    .state(FreelanceStateDomain.Builder(event.username).build()).build()
-            freelanceService.create(domain)
+            freelanceService.signupStatusUpdated(event.username, event.status)
         } catch (ex: Throwable) {
             throw SignupStatusUpdatedException("Failed to create a freelance profile upon status updated for username ${event.username}")
         }

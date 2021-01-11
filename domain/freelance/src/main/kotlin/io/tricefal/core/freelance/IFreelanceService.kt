@@ -5,6 +5,7 @@ import io.tricefal.shared.util.json.PatchOperation
 import java.util.*
 
 interface IFreelanceService {
+    fun signupStatusUpdated(username: String, event: String) : FreelanceDomain
     fun create(freelance: FreelanceDomain) : FreelanceDomain
     fun update(username: String, freelance: FreelanceDomain) : FreelanceDomain
     fun patch(username: String, operations: List<PatchOperation>) : FreelanceDomain

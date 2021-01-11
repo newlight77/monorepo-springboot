@@ -13,8 +13,24 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val resourceBundle = ResourceBundle.getBundle("i18n.company", Locale.FRANCE)
 
+    override fun signupStatusUpdated(username: String, event: String): FreelanceDomain {
+        val contact = ContactDomain.Builder().email(username).build()
+        val adminContact = ContactDomain.Builder().email(username).build()
+        val company = CompanyDomain.Builder().adminContact(adminContact).build()
+        val privacyDetail =PrivacyDetailDomain.Builder(username).build()
+        val state = FreelanceStateDomain.Builder(username).build()
+        val domain = FreelanceDomain.Builder(username)
+            .company(company)
+            .contact(contact)
+            .privacyDetail(privacyDetail)
+            .state(state)
+            .build()
+        val result = dataAdapter.findByUsername(username)
+        return if (result.isPresent) update(username, result.get())
+        else  create(domain)
+    }
+
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
-//        val result = findByUsername(freelance.username)
         val result = dataAdapter.findByUsername(freelance.username)
         return if (result.isPresent) {
             return dataAdapter.update(result.get())
@@ -25,7 +41,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     }
 
     override fun update(username: String, freelance: FreelanceDomain): FreelanceDomain {
-        val result = findByUsername(freelance.username)
+        val result = dataAdapter.findByUsername(freelance.username).orElse(dataAdapter.create(freelance))
         return dataAdapter.update(result)
             .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${freelance.username}") }
     }
