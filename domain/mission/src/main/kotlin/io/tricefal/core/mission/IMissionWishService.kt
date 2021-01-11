@@ -5,7 +5,7 @@ import java.util.*
 
 interface IMissionWishService {
     fun create(missionWish: MissionWishDomain) : MissionWishDomain
-    fun findByUsername(username: String): Optional<MissionWishDomain>
+    fun findByUsername(username: String): MissionWishDomain
     fun findAll(): List<MissionWishDomain>
     fun update(missionWish: MissionWishDomain): MissionWishDomain
     fun updateOnResumeUploaded(username: String, metafile: MetafileDomain): MissionWishDomain

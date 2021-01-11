@@ -21,12 +21,15 @@ class CguServiceTest {
     @Test
     fun `should create a login successfully`() {
         // Arrange
-        val cgu = CguDomain("kong@gmail.com", Instant.now(), "v1")
+        val username = "kong@gmail.com"
+        val cguVersion = "v1"
+        val cgu = CguDomain(username, Instant.now(), cguVersion)
         Mockito.`when`(repository.save(cgu)).thenReturn(cgu)
         service = CguService(repository)
+        Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.of(cgu))
 
         // Act
-        val result = service.save(cgu)
+        val result = service.save(username, cguVersion)
 
         // Arrange
         Mockito.verify(repository).save(cgu)

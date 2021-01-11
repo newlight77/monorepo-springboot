@@ -57,7 +57,7 @@ class MissionWishServiceTest {
         val result = service.findByUsername(username)
 
         // Arrange
-        Assertions.assertEquals(missionWish.username, result.get().username)
+        Assertions.assertEquals(missionWish.username, result.username)
     }
 
     @Test

@@ -40,47 +40,39 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
     }
 
     override fun findByUsername(username: String): Optional<FreelanceDomain> {
-        return repository.findByUsername(username).stream().findFirst().map {
+        val entity = repository.findByUsername(username).stream().findFirst()
+        if (entity.isEmpty) throw NotFoundException("The freelance is not found for username $username")
+        return entity.map {
             fromEntity(it)
         }
     }
 
     override fun update(freelance: FreelanceDomain): Optional<FreelanceDomain> {
         val entity = repository.findByUsername(freelance.username).stream().findFirst()
+        if (entity.isEmpty) throw NotFoundException("The freelance is not found for username ${freelance.username}")
         var updated = Optional.empty<FreelanceDomain>()
-        entity.ifPresentOrElse(
-            {
-                val newEntity = toEntity(freelance)
-                newEntity.id = it.id
-                newEntity.company?.id = it.company?.id
-                newEntity.contact?.id = it.contact?.id
-                newEntity.privacyDetail?.id = it.privacyDetail?.id
-                newEntity.state?.id = it.state?.id
-                newEntity.lastDate = it.lastDate ?: Instant.now()
-                repository.save(newEntity)
-                updated =  Optional.of(fromEntity(newEntity))
-            },
-            {
-                logger.error("unable to find a freelance with username ${freelance.username}")
-                throw FreelanceNotFoundException("unable to find a freelance with username ${freelance.username}")
-            }
-        )
+        entity.ifPresent {
+            val newEntity = toEntity(freelance)
+            newEntity.id = it.id
+            newEntity.company?.id = it.company?.id
+            newEntity.contact?.id = it.contact?.id
+            newEntity.privacyDetail?.id = it.privacyDetail?.id
+            newEntity.state?.id = it.state?.id
+            newEntity.lastDate = it.lastDate ?: Instant.now()
+            repository.save(newEntity)
+            updated = Optional.of(fromEntity(newEntity))
+        }
         return updated
     }
 
     // TODO : use event publisher and listener for persistence
     override fun patch(freelance: FreelanceDomain, operations: List<PatchOperation>): Optional<FreelanceDomain> {
         val entity = repository.findByUsername(freelance.username).stream().findFirst()
+        if (entity.isEmpty) throw NotFoundException("The freelance is not found for username ${freelance.username}")
         var updated = Optional.empty<FreelanceDomain>()
-        entity.ifPresentOrElse(
-            {
-                updated = applyPatch(operations, it)
-            },
-            {
-                logger.error("unable to find a freelance with username ${freelance.username}")
-                throw FreelanceNotFoundException("unable to find a freelance with username ${freelance.username}")
-            }
-        )
+        entity.ifPresent {
+            updated = applyPatch(operations, it)
+        }
         return updated
     }
 

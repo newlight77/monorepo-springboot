@@ -1,5 +1,6 @@
 package io.tricefal.core.profile
 
+import io.tricefal.core.signup.SignupUsernameUniquenessException
 import io.tricefal.core.signup.toStatus
 import org.slf4j.LoggerFactory
 import java.time.Instant
@@ -9,11 +10,17 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    override fun findByUsername(username: String): Optional<ProfileDomain> {
-        return dataAdapter.findByUsername(username)
+    override fun findByUsername(username: String): ProfileDomain {
+        val result = dataAdapter.findByUsername(username)
+        return if (result.isPresent) {
+            result.get()
+        } else throw NotFoundException("Failed to find a freelance for user $username")
     }
 
     override fun save(profile: ProfileDomain): ProfileDomain {
+        dataAdapter.findByUsername(profile.username).ifPresent {
+            throw DuplicateException("a profile with username ${profile.username} already exists")
+        }
         return dataAdapter.create(profile)
     }
 
@@ -22,7 +29,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
             .status(toStatus(status))
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.status = toStatus(status)
@@ -44,7 +51,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
             .signupState(toState(state))
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.signupState = toState(state)
@@ -64,7 +71,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
             .portraitFilename(filename)
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.portraitFilename = filename
@@ -84,7 +91,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
             .resumeFilename(filename)
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.resumeFilename = filename
@@ -104,7 +111,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
             .resumeLinkedinFilename(filename)
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.resumeLinkedinFilename = filename
@@ -119,5 +126,14 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
         return profile
     }
 
-    class ProfileUploadException(private val msg: String, ex: Throwable) : Throwable(ex) {}
+    class ProfileUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class NotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class DuplicateException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+
 }

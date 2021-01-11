@@ -14,29 +14,27 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     private val resourceBundle = ResourceBundle.getBundle("i18n.company", Locale.FRANCE)
 
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
+//        val result = findByUsername(freelance.username)
         val result = dataAdapter.findByUsername(freelance.username)
-        return if (result.isPresent)
-            dataAdapter.update(freelance)
-                .orElseThrow { NotFoundException("freelance already existed, and failed to update for user ${freelance.username}") }
-        else dataAdapter.create(freelance)
+        return if (result.isPresent) {
+            return dataAdapter.update(result.get())
+                .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${freelance.username}") }
+        } else {
+            dataAdapter.create(freelance)
+        }
     }
 
     override fun update(username: String, freelance: FreelanceDomain): FreelanceDomain {
-        val result = dataAdapter.findByUsername(freelance.username)
-        return if (result.isPresent)
-                dataAdapter.update(freelance)
-                    .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${freelance.username}") }
-            else throw NotFoundException("Failed to update an non existing freelance for user ${freelance.username}")
+        val result = findByUsername(freelance.username)
+        return dataAdapter.update(result)
+            .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${freelance.username}") }
     }
 
     override fun patch(username: String, operations: List<PatchOperation>): FreelanceDomain {
         val freelance = dataAdapter.findByUsername(username)
 //        val ops = operations.filter { acceptOperation(it) }
-
-        return if (freelance.isPresent)
-                dataAdapter.patch(freelance.get(), operations)
-                    .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${username}") }
-            else throw NotFoundException("Failed to update an non existing freelance for user ${username}")
+        return dataAdapter.patch(freelance.get(), operations)
+            .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${username}") }
     }
 
 //    private fun acceptOperation(operation: PatchOperation): Boolean {
@@ -47,17 +45,18 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 //    }
 
     override fun completed(freelance: FreelanceDomain, metaNotification: MetaNotificationDomain): FreelanceDomain {
-        val result = dataAdapter.findByUsername(freelance.username)
-        return if (result.isPresent) {
-            freelance.state?.completed = true
-            dataAdapter.update(freelance)
-            sendEmail(freelance, emailNotification(freelance, metaNotification))
-            freelance
-        } else throw NotFoundException("Failed to update an non existing freelance for user ${freelance.username}")
+        val result = findByUsername(freelance.username)
+        result.state?.completed = true
+        dataAdapter.update(result)
+        sendEmail(freelance, emailNotification(freelance, metaNotification))
+        return freelance
     }
 
-    override fun findByUsername(username: String): Optional<FreelanceDomain> {
-        return dataAdapter.findByUsername(username)
+    override fun findByUsername(username: String): FreelanceDomain {
+        val result = dataAdapter.findByUsername(username)
+        return if (result.isPresent) {
+            result.get()
+        } else throw NotFoundException("Failed to find a freelance for user $username")
     }
 
     override fun findAll(): List<FreelanceDomain> {
@@ -100,7 +99,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .lastDate(Instant.now())
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.ribFilename = filename
@@ -126,7 +125,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .lastDate(Instant.now())
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.rcFilename = filename
@@ -152,7 +151,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .lastDate(Instant.now())
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.urssafFilename = filename
@@ -178,7 +177,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .lastDate(Instant.now())
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.fiscalFilename = filename
@@ -240,6 +239,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
 }
 
+class DuplicateException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 class NotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
     constructor(message: String?) : this(message, null)
 }

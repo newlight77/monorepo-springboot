@@ -30,7 +30,7 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler,
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     fun profile(principal: Principal): ProfileModel {
-        return profileWebHandler.find(authenticatedUser(principal))
+        return profileWebHandler.findByUsername(authenticatedUser(principal))
     }
 
     @RolesAllowed("ROLE_user-role")

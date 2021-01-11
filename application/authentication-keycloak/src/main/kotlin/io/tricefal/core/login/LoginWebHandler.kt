@@ -1,6 +1,9 @@
 package io.tricefal.core.login
 
+import io.tricefal.core.exception.GlobalNotFoundException
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class LoginWebHandler(val loginService: ILoginService) {
@@ -9,6 +12,12 @@ class LoginWebHandler(val loginService: ILoginService) {
     }
 
     fun findByUsername(username: String): List<LoginModel> {
-        return loginService.findByUsername(username).map { toModel(it) }
+        if (username.isEmpty()) throw throw ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Invalid username $username")
+        val lists = try {
+            this.loginService.findByUsername(username)
+        } catch (ex: Throwable) {
+            throw GlobalNotFoundException("Failed to find logins with username $username", ex)
+        }
+        return lists.map { toModel(it) }
     }
 }

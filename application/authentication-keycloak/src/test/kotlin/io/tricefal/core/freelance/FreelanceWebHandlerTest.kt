@@ -99,8 +99,9 @@ class FreelanceWebHandlerTest {
         val freelanceEntity = toEntity(fromModel(freelance))
         Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(freelanceEntity)
         Mockito.`when`(jpaRepository.findByUsername("kong@gmail.com")).thenReturn(
-                listOf(),
-                listOf(),
+//                listOf(),
+//                listOf(),
+//                listOf(),
                 listOf(freelanceEntity))
 
         // Act

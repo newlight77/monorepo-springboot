@@ -1,8 +1,9 @@
 package io.tricefal.core.mission
 
-import io.tricefal.core.exception.NotAcceptedException
-import io.tricefal.core.exception.NotFoundException
+import io.tricefal.core.exception.GlobalNotAcceptedException
+import io.tricefal.core.exception.GlobalNotFoundException
 import io.tricefal.core.metafile.*
+import io.tricefal.core.profile.ProfileModel
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
@@ -30,8 +31,13 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
     }
 
     fun findByUsername(username: String): MissionWishModel {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        return toModel(find(username))
+        if (username.isEmpty()) throw GlobalNotAcceptedException("username is $username")
+        val domain = try {
+            this.missionWishService.findByUsername(username)
+        } catch (ex: Throwable) {
+            throw GlobalNotFoundException("Failed to find a freelance with username $username", ex)
+        }
+        return toModel(domain)
     }
 
     fun findAll(): List<MissionWishModel> {
@@ -66,13 +72,6 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
         return metafileService.findByUsername(username)
                 .map { toModel(it) }
                 .first { it.representation == Representation.CV_MISSION }
-    }
-
-    private fun find(username: String): MissionWishDomain {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        val missionWish = this.missionWishService.findByUsername(username)
-                .orElseThrow { NotFoundException("username $username not found") }
-        return missionWish
     }
 
     class MissionWishCreationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {

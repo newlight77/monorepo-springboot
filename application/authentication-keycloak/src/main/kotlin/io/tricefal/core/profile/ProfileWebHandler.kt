@@ -1,14 +1,13 @@
 package io.tricefal.core.profile
 
-import io.tricefal.core.exception.NotAcceptedException
-import io.tricefal.core.exception.NotFoundException
+import io.tricefal.core.exception.GlobalNotAcceptedException
+import io.tricefal.core.exception.GlobalNotFoundException
 import io.tricefal.core.metafile.*
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.lang.Exception
 
 
 @Service
@@ -20,8 +19,14 @@ class ProfileWebHandler(val profileService: IProfileService,
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val dataFilesPath = env.getProperty("data.files.path")!!
 
-    fun find(username: String): ProfileModel {
-         return toModel(findProfile(username))
+    fun findByUsername(username: String): ProfileModel {
+        if (username.isEmpty()) throw GlobalNotAcceptedException("username is $username")
+        val domain = try {
+            this.profileService.findByUsername(username)
+        } catch (ex: Throwable) {
+            throw GlobalNotFoundException("Failed to find a freelance with username $username", ex)
+        }
+        return toModel(domain)
     }
 
     fun portrait(username: String): MetafileModel {
@@ -85,12 +90,6 @@ class ProfileWebHandler(val profileService: IProfileService,
         return toModel(result)
     }
 
-    private fun findProfile(username: String): ProfileDomain {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        val profile = this.profileService.findByUsername(username)
-                .orElseThrow { NotFoundException("username $username not found") }
-        return profile
-    }
 
 }
 

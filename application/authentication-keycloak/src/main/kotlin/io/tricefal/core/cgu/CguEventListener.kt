@@ -14,11 +14,7 @@ class CguEventListener(val cguService: ICguService) {
     @EventListener
     fun handleCguAcceptedEvent(event: CguAcceptedEvent) {
         try {
-            val domain = CguDomain.Builder(event.username)
-                    .lastDate(Instant.now())
-                    .acceptedCguVersion(event.cguAcceptedVersion)
-                    .build()
-            cguService.save(domain)
+            cguService.save(event.username, event.cguAcceptedVersion)
         } catch (ex: Throwable) {
             throw CguAcceptedSavingException("Failed to save a cgu accepted event for user ${event.username} with version ${event.cguAcceptedVersion}")
         }

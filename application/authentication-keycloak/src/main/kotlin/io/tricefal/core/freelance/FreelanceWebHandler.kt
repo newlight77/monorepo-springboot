@@ -1,15 +1,17 @@
 package io.tricefal.core.freelance
 
-import io.tricefal.core.exception.NotAcceptedException
-import io.tricefal.core.exception.NotFoundException
+import io.tricefal.core.exception.GlobalConflictException
+import io.tricefal.core.exception.GlobalNotFoundException
 import io.tricefal.core.metafile.*
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.server.ResponseStatusException
 
 
 @Service
@@ -30,6 +32,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val domain = fromModel(freelanceModel)
         val result = try {
             freelanceService.create(domain)
+        } catch (ex: DuplicateException) {
+            throw GlobalConflictException("freelance already existed with username ${freelanceModel.username} with $freelanceModel", ex)
         } catch (ex: Throwable) {
             throw FreelanceCreationException("Failed to create a freelance profile with username ${freelanceModel.username}", ex)
         }
@@ -40,6 +44,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         val result = try {
             val domain = fromModel(freelanceModel)
             freelanceService.update(username, domain)
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
             throw FreelanceUpdateException("Failed to update a freelance with username $username with $freelanceModel", ex)
         }
@@ -49,6 +55,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
     fun patch(username: String, operations: List<PatchOperation>): FreelanceModel {
         val result = try {
             freelanceService.patch(username, operations)
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
             throw FreelanceUpdateException("Failed to create a freelance profile with username $username with operations ${operations.joinToString()}", ex)
         }
@@ -56,8 +64,13 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
     }
 
     fun findByUsername(username: String): FreelanceModel {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        return toModel(find(username))
+        if (username.isEmpty()) throw throw ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "freelance not found with username $username")
+        val domain = try {
+            this.freelanceService.findByUsername(username)
+        } catch (ex: Throwable) {
+            throw GlobalNotFoundException("Failed to find a freelance with username $username", ex)
+        }
+        return toModel(domain)
     }
 
     fun findAll(): List<FreelanceModel> {
@@ -76,6 +89,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
                 smsFrom=smsFrom, smsAdminNumber=smsAdmin)
 
             freelanceService.completed(domain, metaNotification)
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
             throw FreelanceCompletedException("Failed to complete a freelance with username $username with $freelanceModel", ex)
         }
@@ -88,6 +103,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnKbisUploaded(username, metaFile.filename)
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the kbis document for user $username")
             throw FreelanceUploadException("Failed to upload the kbis document for user $username", ex)
@@ -102,6 +119,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnRibUploaded(username, metaFile.filename)
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the rib document for user $username")
             throw FreelanceUploadException("Failed to upload the rib document for user $username", ex)
@@ -116,6 +135,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnRcUploaded(username, metaFile.filename)
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the rc document for user $username")
             throw FreelanceUploadException("Failed to upload the rc document for user $username", ex)
@@ -130,6 +151,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnUrssafUploaded(username, metaFile.filename)
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the urssaaf document for user $username")
             throw FreelanceUploadException("Failed to upload the urssaaf document for user $username", ex)
@@ -144,6 +167,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
         val result = try {
             freelanceService.updateOnFiscalUploaded(username, metaFile.filename)
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
             logger.error("Failed to upload the fiscal document for user $username")
             throw FreelanceUploadException("Failed to upload the fiscal document for user $username", ex)
@@ -153,39 +178,53 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
     }
 
     fun kbis(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
-                .map { toModel(it) }
-                .first { it.representation == Representation.KBIS }
+        return try {
+                metafileService.findByUsername(username)
+                    .map { toModel(it) }
+                    .first { it.representation == Representation.KBIS }
+            } catch (ex: NotFoundException) {
+                throw GlobalNotFoundException("freelance not found with username $username", ex)
+            }
     }
 
     fun rib(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
+        return try {
+             metafileService.findByUsername(username)
                 .map { toModel(it) }
                 .first { it.representation == Representation.RIB }
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
+        }
     }
 
     fun rc(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
+        return try {
+             metafileService.findByUsername(username)
                 .map { toModel(it) }
                 .first { it.representation == Representation.RC }
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
+        }
     }
 
     fun urssaf(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
+        return try {
+            metafileService.findByUsername(username)
                 .map { toModel(it) }
                 .first { it.representation == Representation.URSSAF }
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
+        }
     }
 
     fun fiscal(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
+        return try {
+            metafileService.findByUsername(username)
                 .map { toModel(it) }
                 .first { it.representation == Representation.FISCAL }
-    }
-
-    private fun find(username: String): FreelanceDomain {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
-        return this.freelanceService.findByUsername(username)
-                .orElseThrow { NotFoundException("username $username not found") }
+        } catch (ex: NotFoundException) {
+            throw GlobalNotFoundException("freelance not found with username $username", ex)
+        }
     }
 
     class FreelanceCreationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {

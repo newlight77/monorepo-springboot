@@ -66,7 +66,7 @@ class ProfileServiceTest {
         val result = service.findByUsername(username)
 
         // Arrange
-        Assertions.assertEquals(profile, result)
+        Assertions.assertEquals(profile.get(), result)
     }
 
     @Test

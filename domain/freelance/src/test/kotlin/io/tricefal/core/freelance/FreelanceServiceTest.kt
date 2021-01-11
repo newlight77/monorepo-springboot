@@ -34,6 +34,7 @@ class FreelanceServiceTest {
         val freelance = FreelanceDomain.Builder("kong@gmail.com")
                 .build()
 
+        Mockito.`when`(dataAdapter.findByUsername("kong@gmail.com")).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(freelance)).thenReturn(freelance)
 
         service = FreelanceService(dataAdapter)
@@ -61,7 +62,7 @@ class FreelanceServiceTest {
         val result = service.findByUsername(username)
 
         // Arrange
-        Assertions.assertEquals(freelance.username, result.get().username)
+        Assertions.assertEquals(freelance.username, result.username)
     }
 
     @Test

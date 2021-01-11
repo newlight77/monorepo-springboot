@@ -15,8 +15,11 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
         else dataAdapter.create(missionWish)
     }
 
-    override fun findByUsername(username: String): Optional<MissionWishDomain> {
-        return dataAdapter.findByUsername(username)
+    override fun findByUsername(username: String): MissionWishDomain {
+        val result = dataAdapter.findByUsername(username)
+        return if (result.isPresent) {
+            result.get()
+        } else throw NotFoundException("Failed to find a freelance for user $username")
     }
 
     override fun findAll(): List<MissionWishDomain> {
@@ -34,7 +37,7 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
             .resumeFilename(metafile.filename)
             .build()
         try {
-            this.findByUsername(username)
+            this.dataAdapter.findByUsername(username)
                     .ifPresentOrElse(
                             {
                                 it.resumeFilename = metafile.filename
@@ -54,5 +57,8 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
 }
 
 class MissionResumeUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class NotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
     constructor(message: String?) : this(message, null)
 }

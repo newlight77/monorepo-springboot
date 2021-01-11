@@ -1,6 +1,6 @@
 package io.tricefal.core.cgu
 
-import io.tricefal.core.exception.NotAcceptedException
+import io.tricefal.core.exception.GlobalNotAcceptedException
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
@@ -19,12 +19,11 @@ class CguWebHandler(val cguService: ICguService,
     }
 
     fun acceptCgu(username: String, cguVersion: String): CguModel {
-        val cgu = findCgu(username)
-        return toModel(cguService.save(cgu))
+        return toModel(cguService.save(username, cguVersion))
     }
 
     private fun findCgu(username: String): CguDomain {
-        if (username.isEmpty()) throw NotAcceptedException("username is $username")
+        if (username.isEmpty()) throw GlobalNotAcceptedException("username is $username")
         return this.cguService.findByUsername(username)
                 .orElseGet { CguDomain.Builder(username).build() }
     }
