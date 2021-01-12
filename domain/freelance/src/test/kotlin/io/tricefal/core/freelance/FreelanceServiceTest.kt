@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
-import io.tricefal.core.notification.SmsNotificationDomain
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
-import java.time.Instant
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -296,7 +294,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.completed(freelance, metaNotification)
+        val result = service.completed(username, metaNotification)
 
         // Arrange
         Mockito.verify(dataAdapter).sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))

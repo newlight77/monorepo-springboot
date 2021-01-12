@@ -81,18 +81,17 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         return freelanceService.availables().map { freelanceDomain -> toModel(freelanceDomain) }
     }
 
-    fun completed(username: String, freelanceModel: FreelanceModel): FreelanceModel {
+    fun completed(username: String): FreelanceModel {
         val result = try {
-            val domain = fromModel(freelanceModel)
             val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl,
                 emailFrom=emailFrom, emailAdmin=emailAdmin,
                 smsFrom=smsFrom, smsAdminNumber=smsAdmin)
 
-            freelanceService.completed(domain, metaNotification)
+            freelanceService.completed(username, metaNotification)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
-            throw FreelanceCompletedException("Failed to complete a freelance with username $username with $freelanceModel", ex)
+            throw FreelanceCompletedException("Failed to complete a freelance with username $username", ex)
         }
         return toModel(result)
     }

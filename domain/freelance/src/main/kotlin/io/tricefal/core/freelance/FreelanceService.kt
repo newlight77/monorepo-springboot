@@ -60,10 +60,10 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 //        return false
 //    }
 
-    override fun completed(freelance: FreelanceDomain, metaNotification: MetaNotificationDomain): FreelanceDomain {
-        val result = findByUsername(freelance.username)
-        result.state?.completed = true
-        dataAdapter.update(result)
+    override fun completed(username: String, metaNotification: MetaNotificationDomain): FreelanceDomain {
+        val freelance = findByUsername(username)
+        freelance.state?.completed = true
+        dataAdapter.update(freelance)
         sendEmail(freelance, emailNotification(freelance, metaNotification))
         return freelance
     }

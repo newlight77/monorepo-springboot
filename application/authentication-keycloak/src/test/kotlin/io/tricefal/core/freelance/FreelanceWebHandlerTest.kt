@@ -92,7 +92,7 @@ class FreelanceWebHandlerTest {
                 .company(company)
                 .contact(contact)
                 .privacyDetail(privacyDetail)
-                .status(Status.AVAILABLE)
+                .availability(Availability.AVAILABLE)
                 .state(state)
                 .build()
 
@@ -108,7 +108,7 @@ class FreelanceWebHandlerTest {
         val result = webHandler.create(freelance)
 
         // Arrange
-        Assertions.assertEquals(Status.AVAILABLE, result.status)
+        Assertions.assertEquals(Availability.AVAILABLE, result.availability)
     }
 
     @Test
@@ -124,7 +124,7 @@ class FreelanceWebHandlerTest {
             .company(company)
             .contact(contact)
             .privacyDetail(privacyDetail)
-            .status(Status.AVAILABLE)
+            .availability(Availability.AVAILABLE)
             .state(state)
             .build()
         val freelanceEntity = toEntity(fromModel(freelance))
@@ -151,7 +151,7 @@ class FreelanceWebHandlerTest {
             .company(company)
             .contact(contact)
             .privacyDetail(privacyDetail)
-            .status(Status.AVAILABLE)
+            .availability(Availability.AVAILABLE)
             .state(state)
             .build()
         val freelanceEntity = toEntity(fromModel(freelance))
@@ -193,7 +193,7 @@ class FreelanceWebHandlerTest {
             .company(company)
             .contact(contact)
             .privacyDetail(privacyDetail)
-            .status(Status.AVAILABLE)
+            .availability(Availability.AVAILABLE)
             .state(state)
             .build()
         val freelanceEntity = toEntity(fromModel(freelance))
@@ -202,13 +202,13 @@ class FreelanceWebHandlerTest {
         val contactEntity = ContactEntity(0, email = username)
         val privacyDetailEntity = PrivacyDetailEntity(0, username)
         val expected = FreelanceEntity( null, username, contactEntity, companyEntity,
-                privacyDetailEntity, state=toEntity(fromModel(state)), status=Status.IN_MISSION.toString())
+                privacyDetailEntity, state=toEntity(fromModel(state)), availability=Availability.IN_MISSION.toString())
 
         Mockito.`when`(jpaRepository.findByUsername(username)).thenReturn(listOf(freelanceEntity))
         Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(expected)
 
         val ops = listOf(
-            PatchOperation.Builder("replace").path("/status").value(Status.IN_MISSION.toString()).build(),
+            PatchOperation.Builder("replace").path("/status").value(Availability.IN_MISSION.toString()).build(),
             PatchOperation.Builder("replace").path("/company/raisonSocial").value("new name").build()
         )
 
@@ -216,7 +216,7 @@ class FreelanceWebHandlerTest {
         val result = webHandler.patch(username, ops)
 
         // Arrange
-        Assertions.assertEquals("IN_MISSION", result.status.toString())
+        Assertions.assertEquals("IN_MISSION", result.availability.toString())
         Assertions.assertEquals("new name", result.company?.raisonSocial)
     }
 
@@ -232,7 +232,7 @@ class FreelanceWebHandlerTest {
             .company(company)
             .contact(contact)
             .privacyDetail(privacyDetail)
-            .status(Status.AVAILABLE)
+            .availability(Availability.AVAILABLE)
             .state(state)
             .build()
         val freelanceEntity = toEntity(fromModel(freelance))
@@ -242,7 +242,7 @@ class FreelanceWebHandlerTest {
         Mockito.doNothing().`when`(eventPublisher).publishCompanyCompletedEvent(username)
 
         // Act
-        webHandler.completed(username, freelance)
+        webHandler.completed(username)
 
         // Arrange
         Mockito.verify(eventPublisher).publishCompanyCompletedEvent(username)

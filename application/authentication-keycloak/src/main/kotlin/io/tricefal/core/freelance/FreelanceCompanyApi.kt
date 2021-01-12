@@ -30,10 +30,10 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")
-    @PostMapping("{username}")
+    @PostMapping("{username}/completed")
     @ResponseStatus(HttpStatus.OK)
-    fun completed(@PathVariable username: String, @RequestBody freelance: FreelanceModel): FreelanceModel {
-        return freelanceWebHandler.update(username, freelance)
+    fun completed(@PathVariable username: String): FreelanceModel {
+        return freelanceWebHandler.completed(username)
     }
 
     @RolesAllowed("ROLE_ac_freelance_r")
@@ -47,7 +47,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     @PutMapping("{username}")
     @ResponseStatus(HttpStatus.OK)
     fun update(@PathVariable username: String, @RequestBody freelance: FreelanceModel): FreelanceModel {
-        return freelanceWebHandler.completed(username, freelance)
+        return freelanceWebHandler.update(username, freelance)
     }
 
     @RolesAllowed("ROLE_ac_freelance_w")

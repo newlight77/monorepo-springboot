@@ -17,6 +17,6 @@ interface IFreelanceService {
     fun updateOnRcUploaded(username: String, filename: String): FreelanceDomain
     fun updateOnUrssafUploaded(username: String, filename: String): FreelanceDomain
     fun updateOnFiscalUploaded(username: String, filename: String): FreelanceDomain
-    fun completed(freelance: FreelanceDomain, metaNotification: MetaNotificationDomain): FreelanceDomain
+    fun completed(username: String, metaNotification: MetaNotificationDomain): FreelanceDomain
 
 }

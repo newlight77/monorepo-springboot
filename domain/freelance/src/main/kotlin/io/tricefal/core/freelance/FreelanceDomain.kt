@@ -4,37 +4,37 @@ import java.time.Instant
 
 data class FreelanceDomain
     constructor(
-            val username: String,
-            val contact: ContactDomain?,
-            val company: CompanyDomain?,
-            val privacyDetail: PrivacyDetailDomain?,
+        val username: String,
+        val contact: ContactDomain?,
+        val company: CompanyDomain?,
+        val privacyDetail: PrivacyDetailDomain?,
 
-            var kbisFilename: String?,
-            var ribFilename: String?,
-            var rcFilename: String?,
-            var urssafFilename: String?,
-            var fiscalFilename: String?,
+        var kbisFilename: String?,
+        var ribFilename: String?,
+        var rcFilename: String?,
+        var urssafFilename: String?,
+        var fiscalFilename: String?,
 
-            var status: Status?,
-            var state: FreelanceStateDomain?,
-            var lastDate: Instant?
+        var availability: Availability?,
+        var state: FreelanceStateDomain?,
+        var lastDate: Instant?
     ) {
 
     data class Builder(
-            val username: String,
-            var contact: ContactDomain? = null,
-            var company: CompanyDomain? = null,
-            var privacyDetail: PrivacyDetailDomain? = null,
+        val username: String,
+        var contact: ContactDomain? = null,
+        var company: CompanyDomain? = null,
+        var privacyDetail: PrivacyDetailDomain? = null,
 
-            var kbisFilename: String? = null,
-            var ribFilename: String? = null,
-            var rcFilename: String? = null,
-            var urssafFilename: String? = null,
-            var fiscalFilename: String? = null,
+        var kbisFilename: String? = null,
+        var ribFilename: String? = null,
+        var rcFilename: String? = null,
+        var urssafFilename: String? = null,
+        var fiscalFilename: String? = null,
 
-            var status: Status? = null,
-            var state: FreelanceStateDomain? = null,
-            var lastDate: Instant? = null
+        var availability: Availability? = null,
+        var state: FreelanceStateDomain? = null,
+        var lastDate: Instant? = null
 
     ) {
         fun contact(contact: ContactDomain?) = apply { this.contact = contact ?: ContactDomain.Builder(username).build() }
@@ -47,7 +47,7 @@ data class FreelanceDomain
         fun urssafFilename(urssafFilename: String?) = apply { this.urssafFilename = urssafFilename }
         fun fiscalFilename(fiscalFilename: String?) = apply { this.fiscalFilename = fiscalFilename }
 
-        fun status(status: Status?) = apply { this.status = status }
+        fun availability(availability: Availability?) = apply { this.availability = availability }
         fun state(state: FreelanceStateDomain?) = apply { this.state = state ?: FreelanceStateDomain.Builder(username).build() }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
@@ -61,14 +61,14 @@ data class FreelanceDomain
                 rcFilename,
                 urssafFilename,
                 fiscalFilename,
-                status,
+                availability,
                 state,
                 lastDate
         )
     }
 }
 
-enum class Status {
+enum class Availability {
     NONE,
     IN_MISSION,
     AVAILABLE_SOON,

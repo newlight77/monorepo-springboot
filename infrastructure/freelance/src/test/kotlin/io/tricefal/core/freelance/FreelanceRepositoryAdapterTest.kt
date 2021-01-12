@@ -47,7 +47,7 @@ internal class FreelanceRepositoryAdapterTest {
         val date = Instant.now()
 
         val domain = FreelanceDomain.Builder(username)
-            .status(Status.NONE)
+            .availability(Availability.NONE)
             .lastDate(date)
             .build()
         val entity = toEntity(domain)
@@ -59,21 +59,21 @@ internal class FreelanceRepositoryAdapterTest {
             .company(CompanyDomain.Builder().build())
             .contact(ContactDomain.Builder().build())
             .privacyDetail(PrivacyDetailDomain.Builder(username).build())
-            .status(Status.AVAILABLE)
+            .availability(Availability.AVAILABLE)
             .lastDate(date)
             .build()
         val transientEntity = toEntity(transientDomain)
 
         Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(transientEntity)
 
-        val ops = listOf(PatchOperation.Builder("replace").path("/status").value(Status.AVAILABLE).build())
+        val ops = listOf(PatchOperation.Builder("replace").path("/status").value(Availability.AVAILABLE).build())
 
         // Act
         val result = repositoryAdapter.patch(freelance = domain, ops)
 
         // Assert
         Assertions.assertThat(result.isPresent).isTrue
-        Assertions.assertThat(result.get().status).isEqualTo(Status.AVAILABLE)
+        Assertions.assertThat(result.get().availability).isEqualTo(Availability.AVAILABLE)
     }
 
     @Test
@@ -83,7 +83,7 @@ internal class FreelanceRepositoryAdapterTest {
         val date = Instant.now()
 
         val domain = FreelanceDomain.Builder(username)
-            .status(Status.NONE)
+            .availability(Availability.NONE)
             .lastDate(date)
             .build()
         val entity = toEntity(domain)
@@ -95,7 +95,7 @@ internal class FreelanceRepositoryAdapterTest {
             .company(CompanyDomain.Builder().build())
             .contact(ContactDomain.Builder().build())
             .privacyDetail(PrivacyDetailDomain.Builder(username).build())
-            .status(Status.AVAILABLE)
+            .availability(Availability.AVAILABLE)
             .lastDate(date)
             .build()
         val transientEntity = toEntity(transientDomain)
@@ -109,7 +109,7 @@ internal class FreelanceRepositoryAdapterTest {
 
         // Assert
         Assertions.assertThat(result.isPresent).isTrue
-        Assertions.assertThat(result.get().status).isEqualTo(Status.AVAILABLE)
+        Assertions.assertThat(result.get().availability).isEqualTo(Availability.AVAILABLE)
     }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)

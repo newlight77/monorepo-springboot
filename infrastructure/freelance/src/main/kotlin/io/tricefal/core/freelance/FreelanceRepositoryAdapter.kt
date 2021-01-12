@@ -34,8 +34,8 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
     }
 
     override fun availables(): List<FreelanceDomain> {
-        return repository.findByStatus(Status.AVAILABLE.toString()) // may return AVAILABLE_SOON
-                .filter { Status.AVAILABLE.toString() == it.status?.toUpperCase() }
+        return repository.findByStatus(Availability.AVAILABLE.toString()) // may return AVAILABLE_SOON
+                .filter { Availability.AVAILABLE.toString() == it.availability?.toUpperCase() }
                 .map { fromEntity(it) }
     }
 
