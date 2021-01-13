@@ -85,7 +85,7 @@ class FreelanceWebHandlerTest {
         val username = "kong@gmail.com"
         val state = FreelanceStateModel.Builder(username)
                 .build()
-        val company = CompanyModel.Builder(raisonSocial = "raison social").build()
+        val company = CompanyModel.Builder(companyName = "raison social").build()
         val contact = ContactModel.Builder(email = username).build()
         val privacyDetail = PrivacyDetailModel.Builder(username = username).build()
         val freelance = FreelanceModel.Builder(username)
@@ -117,7 +117,7 @@ class FreelanceWebHandlerTest {
         val username = "kong@gmail.com"
         val state = FreelanceStateModel.Builder(username)
             .build()
-        val company = CompanyModel.Builder(raisonSocial = "raison social").build()
+        val company = CompanyModel.Builder(companyName = "raison social").build()
         val contact = ContactModel.Builder(email = username).build()
         val privacyDetail = PrivacyDetailModel.Builder(username = username).build()
         val freelance = FreelanceModel.Builder(username)
@@ -144,7 +144,7 @@ class FreelanceWebHandlerTest {
         val username = "kong@gmail.com"
         val state = FreelanceStateModel.Builder(username)
                 .build()
-        val company = CompanyModel.Builder(raisonSocial = "raison social").build()
+        val company = CompanyModel.Builder(companyName = "raison social").build()
         val contact = ContactModel.Builder(email = username).build()
         val privacyDetail = PrivacyDetailModel.Builder(username = username).build()
         val freelance = FreelanceModel.Builder(username)
@@ -187,7 +187,7 @@ class FreelanceWebHandlerTest {
         val username ="kong@gmail.com"
         val state = FreelanceStateModel.Builder(username)
             .build()
-        val company = CompanyModel.Builder(raisonSocial = "raison social").build()
+        val company = CompanyModel.Builder(companyName = "raison social").build()
         val contact = ContactModel.Builder(email = username).build()
         val privacyDetail = PrivacyDetailModel.Builder(username = username).build()
         val freelance = FreelanceModel.Builder(username)
@@ -199,7 +199,7 @@ class FreelanceWebHandlerTest {
             .build()
         val freelanceEntity = toEntity(fromModel(freelance))
 
-        val companyEntity = CompanyEntity(0, raisonSocial = "new name")
+        val companyEntity = CompanyEntity(0, companyName = "new name")
         val contactEntity = ContactEntity(0, email = username)
         val privacyDetailEntity = PrivacyDetailEntity(0, username)
         val expected = FreelanceEntity( null, username, contactEntity, companyEntity,
@@ -226,7 +226,7 @@ class FreelanceWebHandlerTest {
         // Arrange
         val username ="kong@gmail.com"
         val state = FreelanceStateModel.Builder(username).build()
-        val company = CompanyModel.Builder(raisonSocial = "raison social").build()
+        val company = CompanyModel.Builder(companyName = "raison social").build()
         val contact = ContactModel.Builder(email = username).build()
         val privacyDetail = PrivacyDetailModel.Builder(username = username).build()
         val freelance = FreelanceModel.Builder(username)

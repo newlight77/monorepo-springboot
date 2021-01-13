@@ -2,6 +2,8 @@ package io.tricefal.core.freelance
 
 import java.time.Instant
 import javax.persistence.*
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 @Entity
@@ -11,38 +13,46 @@ data class CompanyEntity(
         @Id
         var id: Long? = null,
 
-        @Column(name = "raison_social", length = 50)
-        val raisonSocial: @Size(max = 50) String? = null,
+        @NotNull
+        @Pattern(regexp = EMAIL_REGEX)
+        @Size(min = 3, max = 100)
+        @Column(name = "company_name", length = 100)
+        val companyName: String? = null,
 
-        @Column(name = "nom_commercial", length = 50)
+        @Column(name = "raison_social", length = 100)
+        @Size(min = 3, max = 100)
+        val raisonSocial: String? = null,
+
+        @Column(name = "nom_commercial", length = 100)
+        @Size(min = 3, max = 100)
         val nomCommercial: String? = null,
 
         @Column(name = "forme_juridique", length = 50)
-        val formeJuridique: @Size(max = 50) String? = null,
+        val formeJuridique: String? = null,
 
-        @Column(name = "capital", length = 50)
+        @Column(name = "capital", length = 100)
         val capital: String? = null,
 
-        @Column(name = "rcs", length = 50)
+        @Column(name = "rcs", length = 100)
         val rcs: String? = null,
 
-        @Column(name = "siret", length = 50)
+        @Column(name = "siret", length = 100)
         val siret: String? = null,
 
-        @Column(name = "num_duns", length = 50)
+        @Column(name = "num_duns", length = 100)
         val numDuns: String? = null,
 
-        @Column(name = "num_tva", length = 50)
+        @Column(name = "num_tva", length = 100)
         val numTva: String? = null,
 
-        @Column(name = "code_naf", length = 50)
+        @Column(name = "code_naf", length = 100)
         val codeNaf: String? = null,
 
-        @Column(name = "appartenance_groupe", length = 50)
+        @Column(name = "appartenance_groupe", length = 100)
         val appartenanceGroupe: String? = null,
 
-        @Column(name = "type_entreprise", length = 50)
-        val typeEntreprise: @Size(max = 50) String? = null,
+        @Column(name = "type_entreprise", length = 100)
+        val typeEntreprise: String? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "admin_contact_id")
@@ -56,6 +66,10 @@ data class CompanyEntity(
         @JoinColumn(name = "fiscal_address_id")
         var fiscalAddress: AddressEntity? = null,
 
+        @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(name = "state")
+        var state: CompanyStateEntity? = null,
+
         @Column(name = "last_date")
         var lastDate: Instant? = Instant.now()
 
@@ -64,6 +78,7 @@ data class CompanyEntity(
 fun toEntity(domain: CompanyDomain): CompanyEntity {
         return CompanyEntity(
                 id = null,
+                companyName = domain.companyName,
                 raisonSocial = domain.raisonSocial,
                 nomCommercial = domain.nomCommercial,
                 formeJuridique = domain.formeJuridique,
@@ -78,12 +93,14 @@ fun toEntity(domain: CompanyDomain): CompanyEntity {
                 adminContact = domain.adminContact?.let { toEntity(it) },
                 bankInfo = domain.bankInfo?.let { toEntity(it) },
                 fiscalAddress = domain.fiscalAddress?.let { toEntity(it) },
+                state = domain.state?.let { toEntity(it) },
                 lastDate = domain.lastDate
         )
 }
 
 fun fromEntity(entity: CompanyEntity): CompanyDomain {
         return CompanyDomain(
+                companyName = entity.companyName ?: "......",
                 raisonSocial = entity.raisonSocial,
                 nomCommercial = entity.nomCommercial,
                 formeJuridique = entity.formeJuridique,
@@ -98,6 +115,7 @@ fun fromEntity(entity: CompanyEntity): CompanyDomain {
                 adminContact = entity.adminContact?.let { fromEntity(it) },
                 bankInfo = entity.bankInfo?.let { fromEntity(it) },
                 fiscalAddress = entity.fiscalAddress?.let { fromEntity(it) },
+                state = entity.state?.let { fromEntity(it) },
                 lastDate = entity.lastDate
         )
 }

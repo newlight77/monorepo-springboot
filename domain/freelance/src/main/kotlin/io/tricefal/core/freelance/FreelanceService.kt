@@ -18,7 +18,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         val domain = createFreelance(username)
         val result = dataAdapter.findByUsername(username)
         return if (result.isPresent) update(username, result.get())
-        else  create(domain)
+        else create(domain)
     }
 
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
@@ -32,7 +32,8 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     override fun update(username: String, freelance: FreelanceDomain): FreelanceDomain {
         val result = dataAdapter.findByUsername(freelance.username).orElse(dataAdapter.create(freelance))
-        return dataAdapter.update(result)
+        dataAdapter.update(result)
+        return result
     }
 
     override fun patch(username: String, operations: List<PatchOperation>): FreelanceDomain {
@@ -41,10 +42,12 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         if (freelance.isEmpty){
             var newFreelance = createFreelance(username)
             newFreelance = applyPatch(newFreelance, operations)
-            return dataAdapter.create(newFreelance)
+            dataAdapter.create(newFreelance)
+            return newFreelance
         }
         val patched = applyPatch(freelance.get(), operations)
-        return dataAdapter.update(patched)
+        dataAdapter.update(patched)
+        return patched
 
 //        return dataAdapter.patch(freelance, operations)
 //                .orElseThrow { NotFoundException("Failed to update an non existing freelance for user $username") }
@@ -54,7 +57,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         domain: FreelanceDomain,
         operations: List<PatchOperation>,
     ): FreelanceDomain {
-        if (domain.company == null) domain.company = CompanyDomain.Builder().build()
+        if (domain.company == null) domain.company = CompanyDomain.Builder("......").build()
         if (domain.company?.adminContact == null) domain.company?.adminContact = ContactDomain.Builder().build()
         if (domain.company?.adminContact?.address == null) domain.company?.adminContact?.address = AddressDomain.Builder().build()
         if (domain.company?.bankInfo == null) domain.company?.bankInfo = BankInfoDomain.Builder().build()
@@ -266,7 +269,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         val adminContact = ContactDomain.Builder().email(username).address(adminAddress).build()
         val bankInfo = BankInfoDomain.Builder().build()
         val fiscalAddress = AddressDomain.Builder().build()
-        val company = CompanyDomain.Builder().adminContact(adminContact).bankInfo(bankInfo).fiscalAddress(fiscalAddress).build()
+        val company = CompanyDomain.Builder("......").adminContact(adminContact).bankInfo(bankInfo).fiscalAddress(fiscalAddress).build()
         val privacyDetail = PrivacyDetailDomain.Builder(username).build()
         val state = FreelanceStateDomain.Builder(username).build()
         return FreelanceDomain.Builder(username)

@@ -89,7 +89,7 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
         operations: List<PatchOperation>,
         entity: FreelanceEntity,
     ): Optional<FreelanceDomain> {
-        if (entity.company == null) entity.company = CompanyEntity()
+        if (entity.company == null) entity.company = CompanyEntity(null,"NONE")
         if (entity.company?.adminContact == null) entity.company?.adminContact = ContactEntity()
         if (entity.company?.adminContact?.address == null) entity.company?.adminContact?.address = AddressEntity()
         if (entity.company?.bankInfo == null) entity.company?.bankInfo = BankInfoEntity()
@@ -107,7 +107,6 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
         }
     }
 
-    class FreelanceNotFoundException(private val msg: String) : Throwable(msg) {}
 }
 
 

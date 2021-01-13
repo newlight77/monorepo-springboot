@@ -3,6 +3,7 @@ package io.tricefal.core.freelance
 import java.time.Instant
 
 class CompanyDomain(
+    val companyName: String,
     val raisonSocial: String?,
     val nomCommercial: String?,
     val formeJuridique: String?,
@@ -19,9 +20,17 @@ class CompanyDomain(
     var bankInfo: BankInfoDomain?,
     val fiscalAddress: AddressDomain?,
 
-    val lastDate: Instant?
+    var kbisFilename: String? = null,
+    var ribFilename: String? = null,
+    var rcFilename: String? = null,
+    var urssafFilename: String? = null,
+    var fiscalFilename: String? = null,
+
+    var state: CompanyStateDomain?,
+    var lastDate: Instant?
 ) {
     data class Builder(
+        var companyName: String,
         var raisonSocial: String? = null,
         var nomCommercial: String? = null,
         var formeJuridique: String? = null,
@@ -38,6 +47,13 @@ class CompanyDomain(
         var bankInfo: BankInfoDomain? = null,
         var fiscalAddress: AddressDomain? = null,
 
+        var kbisFilename: String? = null,
+        var ribFilename: String? = null,
+        var rcFilename: String? = null,
+        var urssafFilename: String? = null,
+        var fiscalFilename: String? = null,
+
+        var state: CompanyStateDomain? = null,
         var lastDate: Instant? = null
     ) {
         fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
@@ -54,27 +70,43 @@ class CompanyDomain(
         fun adminContact(adminContact: ContactDomain?) = apply { this.adminContact = adminContact }
         fun bankInfo(bankInfo: BankInfoDomain?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressDomain?) = apply { this.fiscalAddress = fiscalAddress }
+
+        fun kbisFilename(kbisFilename: String?) = apply { this.kbisFilename = kbisFilename }
+        fun ribFilename(ribFilename: String?) = apply { this.ribFilename = ribFilename }
+        fun rcFilename(rcFilename: String?) = apply { this.rcFilename = rcFilename }
+        fun urssafFilename(urssafFilename: String?) = apply { this.urssafFilename = urssafFilename }
+        fun fiscalFilename(fiscalFilename: String?) = apply { this.fiscalFilename = fiscalFilename }
+
+        fun state(state: CompanyStateDomain?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = CompanyDomain(
-                raisonSocial = raisonSocial,
-                nomCommercial = nomCommercial,
-                formeJuridique = formeJuridique,
-                capital = capital,
+            companyName = companyName,
+            raisonSocial = raisonSocial,
+            nomCommercial = nomCommercial,
+            formeJuridique = formeJuridique,
+            capital = capital,
 
-                rcs = rcs,
-                siret = siret,
-                numDuns = numDuns,
-                numTva = numTva,
-                codeNaf = codeNaf,
-                appartenanceGroupe = appartenanceGroupe,
-                typeEntreprise = typeEntreprise,
+            rcs = rcs,
+            siret = siret,
+            numDuns = numDuns,
+            numTva = numTva,
+            codeNaf = codeNaf,
+            appartenanceGroupe = appartenanceGroupe,
+            typeEntreprise = typeEntreprise,
 
-                adminContact = adminContact,
-                bankInfo = bankInfo,
-                fiscalAddress = fiscalAddress,
+            adminContact = adminContact,
+            bankInfo = bankInfo,
+            fiscalAddress = fiscalAddress,
 
-                lastDate = lastDate
+            kbisFilename = kbisFilename,
+            ribFilename = ribFilename,
+            rcFilename = rcFilename,
+            urssafFilename = urssafFilename,
+            fiscalFilename = fiscalFilename,
+
+            state = state,
+            lastDate = lastDate
         )
     }
 }

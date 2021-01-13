@@ -56,7 +56,7 @@ internal class FreelanceRepositoryAdapterTest {
         )
 
         val transientDomain = FreelanceDomain.Builder(username)
-            .company(CompanyDomain.Builder().build())
+            .company(CompanyDomain.Builder("company name").build())
             .contact(ContactDomain.Builder().build())
             .privacyDetail(PrivacyDetailDomain.Builder(username).build())
             .availability(Availability.AVAILABLE)
@@ -92,7 +92,7 @@ internal class FreelanceRepositoryAdapterTest {
         )
 
         val transientDomain = FreelanceDomain.Builder(username)
-            .company(CompanyDomain.Builder().build())
+            .company(CompanyDomain.Builder("company name").build())
             .contact(ContactDomain.Builder().build())
             .privacyDetail(PrivacyDetailDomain.Builder(username).build())
             .availability(Availability.AVAILABLE)

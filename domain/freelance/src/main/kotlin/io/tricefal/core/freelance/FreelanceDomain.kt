@@ -38,7 +38,7 @@ data class FreelanceDomain
 
     ) {
         fun contact(contact: ContactDomain?) = apply { this.contact = contact ?: ContactDomain.Builder(username).build() }
-        fun company(company: CompanyDomain?) = apply { this.company = company ?: CompanyDomain.Builder().build() }
+        fun company(company: CompanyDomain?) = apply { this.company = company ?: CompanyDomain.Builder("......").build() }
         fun privacyDetail(privacyDetail: PrivacyDetailDomain?) = apply { this.privacyDetail = privacyDetail ?: PrivacyDetailDomain.Builder(username).build() }
 
         fun kbisFilename(kbisFilename: String?) = apply { this.kbisFilename = kbisFilename }

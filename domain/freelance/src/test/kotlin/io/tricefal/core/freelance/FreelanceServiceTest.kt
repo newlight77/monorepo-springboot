@@ -73,23 +73,18 @@ class FreelanceServiceTest {
         val date = Instant.now()
 
         val freelance = FreelanceDomain.Builder(username)
-            .availability(Availability.NONE)
-            .lastDate(date)
-            .build()
-
-        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
-
-        val transientDomain = FreelanceDomain.Builder(username)
-            .company(CompanyDomain.Builder().build())
+            .company(CompanyDomain.Builder("company name").build())
             .contact(ContactDomain.Builder().build())
             .privacyDetail(PrivacyDetailDomain.Builder(username).build())
             .availability(Availability.AVAILABLE)
             .lastDate(date)
             .build()
 
-        Mockito.`when`(dataAdapter.update(any(FreelanceDomain::class.java))).thenReturn(transientDomain)
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
 
-        val ops = listOf(PatchOperation.Builder("replace").path("/availability").value(Availability.AVAILABLE).build())
+        Mockito.`when`(dataAdapter.update(any(FreelanceDomain::class.java))).thenReturn(freelance)
+
+        val ops = listOf(PatchOperation.Builder("replace").path("/availability").value(Availability.LOOKING).build())
 
         service = FreelanceService(dataAdapter)
 
@@ -97,7 +92,7 @@ class FreelanceServiceTest {
         val result = service.patch(username, ops)
 
         // Assert
-        org.assertj.core.api.Assertions.assertThat(result.availability).isEqualTo(Availability.AVAILABLE)
+        org.assertj.core.api.Assertions.assertThat(result.availability).isEqualTo(Availability.LOOKING)
     }
 
     @Test
@@ -107,20 +102,16 @@ class FreelanceServiceTest {
         val date = Instant.now()
 
         val freelance = FreelanceDomain.Builder(username)
-            .availability(Availability.NONE)
-            .lastDate(date)
-            .build()
-        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
-
-        val transientDomain = FreelanceDomain.Builder(username)
-            .company(CompanyDomain.Builder().build())
+            .company(CompanyDomain.Builder("company name").build())
             .contact(ContactDomain.Builder().build())
             .privacyDetail(PrivacyDetailDomain.Builder(username).build())
             .availability(Availability.AVAILABLE)
             .lastDate(date)
             .build()
 
-        Mockito.`when`(dataAdapter.update(any(FreelanceDomain::class.java))).thenReturn(transientDomain)
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
+
+        Mockito.`when`(dataAdapter.update(any(FreelanceDomain::class.java))).thenReturn(freelance)
 
         val ops = listOf(PatchOperation.Builder("replace").path("/company/raisonSocial").value("new raisonSocial").build())
 
@@ -130,7 +121,7 @@ class FreelanceServiceTest {
         val result = service.patch(username, ops)
 
         // Assert
-        org.assertj.core.api.Assertions.assertThat(result.availability).isEqualTo(Availability.AVAILABLE)
+        org.assertj.core.api.Assertions.assertThat(result.company?.raisonSocial).isEqualTo("new raisonSocial")
     }
 
     @Test

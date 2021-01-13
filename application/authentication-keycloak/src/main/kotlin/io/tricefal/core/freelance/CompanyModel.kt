@@ -4,6 +4,7 @@ import java.time.Instant
 
 
 data class CompanyModel(
+        val companyName: String,
         val raisonSocial: String?,
         val nomCommercial: String?,
         val formeJuridique: String?,
@@ -20,6 +21,7 @@ data class CompanyModel(
         var bankInfo: BankInfoModel? = null,
         var fiscalAddress: AddressModel? = null,
 
+        var state: CompanyStateModel? = null,
         var lastDate: Instant? = null
 
 //        var kbisFile: MetafileModel? = null,
@@ -29,6 +31,7 @@ data class CompanyModel(
 //        var fiscalFile: MetafileModel? = null
 ) {
     data class Builder(
+            var companyName: String,
             var raisonSocial: String? = null,
             var nomCommercial: String? = null,
             var formeJuridique: String? = null,
@@ -46,6 +49,7 @@ data class CompanyModel(
             var bankInfo: BankInfoModel? = null,
             var fiscalAddress: AddressModel? = null,
 
+            var state: CompanyStateModel? = null,
             var lastDate: Instant? = null
     ) {
         fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
@@ -63,72 +67,89 @@ data class CompanyModel(
         fun adminContact(adminContact: ContactModel?) = apply { this.adminContact = adminContact }
         fun bankInfo(bankInfo: BankInfoModel?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressModel?) = apply { this.fiscalAddress = fiscalAddress }
+        fun state(state: CompanyStateModel?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = CompanyModel(
-                raisonSocial = raisonSocial,
-                nomCommercial = nomCommercial,
-                formeJuridique = formeJuridique,
-                capital = capital,
+            companyName = companyName,
+            raisonSocial = raisonSocial,
+            nomCommercial = nomCommercial,
+            formeJuridique = formeJuridique,
+            capital = capital,
 
-                rcs = rcs,
-                siret = siret,
-                numDuns = numDuns,
-                numTva = numTva,
-                codeNaf = codeNaf,
-                appartenanceGroupe = appartenanceGroupe,
-                typeEntreprise = typeEntreprise,
+            rcs = rcs,
+            siret = siret,
+            numDuns = numDuns,
+            numTva = numTva,
+            codeNaf = codeNaf,
+            appartenanceGroupe = appartenanceGroupe,
+            typeEntreprise = typeEntreprise,
 
-                adminContact = adminContact,
-                bankInfo = bankInfo,
-                fiscalAddress = fiscalAddress,
-                lastDate = lastDate
+            adminContact = adminContact,
+            bankInfo = bankInfo,
+            fiscalAddress = fiscalAddress,
+            state = state,
+            lastDate = lastDate
         )
     }
 }
 
 fun toModel(domain: CompanyDomain) : CompanyModel {
-    return CompanyModel(
-            raisonSocial = domain.raisonSocial,
-            nomCommercial = domain.nomCommercial,
-            formeJuridique = domain.formeJuridique,
-            capital = domain.capital,
+    return CompanyModel.Builder(domain.companyName)
+        .raisonSocial(domain.raisonSocial)
+        .nomCommercial(domain.nomCommercial)
+        .formeJuridique(domain.formeJuridique)
+        .capital(domain.capital)
 
-            rcs = domain.rcs,
-            siret = domain.siret,
-            numDuns = domain.numDuns,
-            numTva = domain.numTva,
-            codeNaf = domain.codeNaf,
-            appartenanceGroupe = domain.appartenanceGroupe,
-            typeEntreprise = domain.typeEntreprise,
+        .rcs(domain.rcs)
+        .siret(domain.siret)
+        .numDuns(domain.numDuns)
+        .numTva(domain.numTva)
+        .codeNaf(domain.codeNaf)
+        .appartenanceGroupe(domain.appartenanceGroupe)
+        .typeEntreprise(domain.typeEntreprise)
 
-            adminContact = domain.adminContact?.let { toModel(it) },
-            bankInfo = domain.bankInfo?.let { toModel(it) },
-            fiscalAddress = domain.fiscalAddress?.let { toModel(it) },
+        .adminContact(domain.adminContact?.let { toModel(it) })
+        .bankInfo(domain.bankInfo?.let { toModel(it) })
+        .fiscalAddress(domain.fiscalAddress?.let { toModel(it) })
 
-            lastDate = domain.lastDate
-    )
+//        .kbisFilename(domain.kbisFilename)
+//        .ribFilename(domain.ribFilename)
+//        .rcFilename(domain.rcFilename)
+//        .urssafFilename(domain.urssafFilename)
+//        f.iscalFilename(domain.fiscalFilename)
+
+        .state(domain.state?.let { toModel(it) })
+        .lastDate(domain.lastDate)
+        .build()
 }
 
 fun fromModel(model: CompanyModel) : CompanyDomain {
-    return CompanyDomain(
-            raisonSocial = model.raisonSocial,
-            nomCommercial = model.nomCommercial,
-            formeJuridique = model.formeJuridique,
-            capital = model.capital,
+    return CompanyDomain.Builder("......")
+        .raisonSocial(model.raisonSocial)
+        .nomCommercial(model.nomCommercial)
+        .formeJuridique(model.formeJuridique)
+        .capital(model.capital)
 
-            rcs = model.rcs,
-            siret = model.siret,
-            numDuns = model.numDuns,
-            numTva = model.numTva,
-            codeNaf = model.codeNaf,
-            appartenanceGroupe = model.appartenanceGroupe,
-            typeEntreprise = model.typeEntreprise,
+        .rcs(model.rcs)
+        .siret(model.siret)
+        .numDuns(model.numDuns)
+        .numTva(model.numTva)
+        .codeNaf(model.codeNaf)
+        .appartenanceGroupe(model.appartenanceGroupe)
+        .typeEntreprise(model.typeEntreprise)
 
-            adminContact = model.adminContact?.let { fromModel(it) },
-            bankInfo = model.bankInfo?.let { fromModel(it) },
-            fiscalAddress = model.fiscalAddress?.let { fromModel(it) },
+        .adminContact(model.adminContact?.let { fromModel(it) })
+        .bankInfo(model.bankInfo?.let { fromModel(it) })
+        .fiscalAddress(model.fiscalAddress?.let { fromModel(it) })
 
-            lastDate = model.lastDate
-    )
+//        .kbisFilename(model.kbisFilename)
+//        .ribFilename(model.ribFilename)
+//        .rcFilename(model.rcFilename)
+//        .urssafFilename(model.urssafFilename)
+//        f.iscalFilename(model.fiscalFilename)
+
+        .state(model.state?.let { fromModel(it) })
+        .lastDate(model.lastDate)
+        .build()
 }
