@@ -13,7 +13,7 @@ data class ContactEntity(
         var id: Long? = null,
 
         @Pattern(regexp = EMAIL_REGEX)
-        @Column(length = 100, unique = true)
+        @Column(name = "email1", length = 100)
         val email: @Size(min = 5, max = 100) String? = null,
 
         @Column(name = "lastName", length = 50)
@@ -36,7 +36,7 @@ data class ContactEntity(
         val fax: @Size(max = 20) String? = null,
 
         @Pattern(regexp = EMAIL_REGEX)
-        @Column(length = 100)
+        @Column(name = "email2", length = 100)
         val email2: @Size(min = 5, max = 100) String ? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])

@@ -11,7 +11,7 @@ class ContactDomain(
     val landline: String? = null,
     val fax: String? = null,
     val email2: String? = null,
-    val address: AddressDomain? = null,
+    var address: AddressDomain? = null,
     val lastDate: Instant? = null
 ) {
     data class Builder(

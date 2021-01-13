@@ -162,6 +162,7 @@ class FreelanceWebHandlerTest {
         Mockito.`when`(multipart.contentType).thenReturn("txt")
         Mockito.`when`(multipart.inputStream).thenReturn(ByteArrayInputStream("testing data".toByteArray()))
         Mockito.`when`(jpaRepository.findByUsername(username)).thenReturn(listOf(freelanceEntity))
+        freelanceEntity.state?.kbisUploaded = true
         Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(freelanceEntity)
         val metafileEntity = toEntity(
                 fromModel(
@@ -181,7 +182,7 @@ class FreelanceWebHandlerTest {
     }
 
     @Test
-    fun `should patch the freelance status`() {
+    fun `should patch the freelance availability`() {
         // Arrange
         val username ="kong@gmail.com"
         val state = FreelanceStateModel.Builder(username)
@@ -208,7 +209,7 @@ class FreelanceWebHandlerTest {
         Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(expected)
 
         val ops = listOf(
-            PatchOperation.Builder("replace").path("/status").value(Availability.IN_MISSION.toString()).build(),
+            PatchOperation.Builder("replace").path("/availability").value(Availability.IN_MISSION.toString()).build(),
             PatchOperation.Builder("replace").path("/company/raisonSocial").value("new name").build()
         )
 
@@ -238,6 +239,7 @@ class FreelanceWebHandlerTest {
         val freelanceEntity = toEntity(fromModel(freelance))
 
         Mockito.`when`(jpaRepository.findByUsername(username)).thenReturn(listOf(freelanceEntity))
+        Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(freelanceEntity)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
         Mockito.doNothing().`when`(eventPublisher).publishCompanyCompletedEvent(username)
 

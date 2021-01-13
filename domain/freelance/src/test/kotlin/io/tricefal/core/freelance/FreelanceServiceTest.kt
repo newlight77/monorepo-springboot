@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
+import io.tricefal.shared.util.json.PatchOperation
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import java.time.Instant
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -63,6 +65,74 @@ class FreelanceServiceTest {
         Assertions.assertEquals(freelance.username, result.username)
     }
 
+
+    @Test
+    fun `should patch a freelance domain`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val date = Instant.now()
+
+        val freelance = FreelanceDomain.Builder(username)
+            .availability(Availability.NONE)
+            .lastDate(date)
+            .build()
+
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
+
+        val transientDomain = FreelanceDomain.Builder(username)
+            .company(CompanyDomain.Builder().build())
+            .contact(ContactDomain.Builder().build())
+            .privacyDetail(PrivacyDetailDomain.Builder(username).build())
+            .availability(Availability.AVAILABLE)
+            .lastDate(date)
+            .build()
+
+        Mockito.`when`(dataAdapter.update(any(FreelanceDomain::class.java))).thenReturn(transientDomain)
+
+        val ops = listOf(PatchOperation.Builder("replace").path("/availability").value(Availability.AVAILABLE).build())
+
+        service = FreelanceService(dataAdapter)
+
+        // Act
+        val result = service.patch(username, ops)
+
+        // Assert
+        org.assertj.core.api.Assertions.assertThat(result.availability).isEqualTo(Availability.AVAILABLE)
+    }
+
+    @Test
+    fun `should patch a freelance domain with a non existing child company`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val date = Instant.now()
+
+        val freelance = FreelanceDomain.Builder(username)
+            .availability(Availability.NONE)
+            .lastDate(date)
+            .build()
+        Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
+
+        val transientDomain = FreelanceDomain.Builder(username)
+            .company(CompanyDomain.Builder().build())
+            .contact(ContactDomain.Builder().build())
+            .privacyDetail(PrivacyDetailDomain.Builder(username).build())
+            .availability(Availability.AVAILABLE)
+            .lastDate(date)
+            .build()
+
+        Mockito.`when`(dataAdapter.update(any(FreelanceDomain::class.java))).thenReturn(transientDomain)
+
+        val ops = listOf(PatchOperation.Builder("replace").path("/company/raisonSocial").value("new raisonSocial").build())
+
+        service = FreelanceService(dataAdapter)
+
+        // Act
+        val result = service.patch(username, ops)
+
+        // Assert
+        org.assertj.core.api.Assertions.assertThat(result.availability).isEqualTo(Availability.AVAILABLE)
+    }
+
     @Test
     fun `should update freelance upon kbis uploaded`() {
         // Arrange
@@ -72,7 +142,7 @@ class FreelanceServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
-        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(freelance)
 
         service = FreelanceService(dataAdapter)
 
@@ -114,7 +184,7 @@ class FreelanceServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
-        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(freelance)
 
         service = FreelanceService(dataAdapter)
 
@@ -156,7 +226,7 @@ class FreelanceServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
-        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(freelance)
 
         service = FreelanceService(dataAdapter)
 
@@ -198,7 +268,7 @@ class FreelanceServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
-        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(freelance)
 
         service = FreelanceService(dataAdapter)
 
@@ -240,7 +310,7 @@ class FreelanceServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
-        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(freelance)
 
         service = FreelanceService(dataAdapter)
 
@@ -288,7 +358,7 @@ class FreelanceServiceTest {
 
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
-        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(Optional.of(freelance))
+        Mockito.`when`(dataAdapter.update(freelance)).thenReturn(freelance)
         Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
 
         service = FreelanceService(dataAdapter)

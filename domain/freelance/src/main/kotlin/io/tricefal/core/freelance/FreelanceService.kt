@@ -2,6 +2,7 @@ package io.tricefal.core.freelance
 
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
+import io.tricefal.shared.util.json.JsonPatchOperator
 import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
 import java.text.MessageFormat
@@ -14,17 +15,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     private val resourceBundle = ResourceBundle.getBundle("i18n.company", Locale.FRANCE)
 
     override fun signupStatusUpdated(username: String, event: String): FreelanceDomain {
-        val contact = ContactDomain.Builder().email(username).build()
-        val adminContact = ContactDomain.Builder().email(username).build()
-        val company = CompanyDomain.Builder().adminContact(adminContact).build()
-        val privacyDetail =PrivacyDetailDomain.Builder(username).build()
-        val state = FreelanceStateDomain.Builder(username).build()
-        val domain = FreelanceDomain.Builder(username)
-            .company(company)
-            .contact(contact)
-            .privacyDetail(privacyDetail)
-            .state(state)
-            .build()
+        val domain = createFreelance(username)
         val result = dataAdapter.findByUsername(username)
         return if (result.isPresent) update(username, result.get())
         else  create(domain)
@@ -34,7 +25,6 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         val result = dataAdapter.findByUsername(freelance.username)
         return if (result.isPresent) {
             return dataAdapter.update(result.get())
-                .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${freelance.username}") }
         } else {
             dataAdapter.create(freelance)
         }
@@ -43,14 +33,42 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     override fun update(username: String, freelance: FreelanceDomain): FreelanceDomain {
         val result = dataAdapter.findByUsername(freelance.username).orElse(dataAdapter.create(freelance))
         return dataAdapter.update(result)
-            .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${freelance.username}") }
     }
 
     override fun patch(username: String, operations: List<PatchOperation>): FreelanceDomain {
         val freelance = dataAdapter.findByUsername(username)
 //        val ops = operations.filter { acceptOperation(it) }
-        return dataAdapter.patch(freelance.get(), operations)
-            .orElseThrow { NotFoundException("Failed to update an non existing freelance for user ${username}") }
+        if (freelance.isEmpty){
+            var newFreelance = createFreelance(username)
+            newFreelance = applyPatch(newFreelance, operations)
+            return dataAdapter.create(newFreelance)
+        }
+        val patched = applyPatch(freelance.get(), operations)
+        return dataAdapter.update(patched)
+
+//        return dataAdapter.patch(freelance, operations)
+//                .orElseThrow { NotFoundException("Failed to update an non existing freelance for user $username") }
+    }
+
+    private fun applyPatch(
+        domain: FreelanceDomain,
+        operations: List<PatchOperation>,
+    ): FreelanceDomain {
+        if (domain.company == null) domain.company = CompanyDomain.Builder().build()
+        if (domain.company?.adminContact == null) domain.company?.adminContact = ContactDomain.Builder().build()
+        if (domain.company?.adminContact?.address == null) domain.company?.adminContact?.address = AddressDomain.Builder().build()
+        if (domain.company?.bankInfo == null) domain.company?.bankInfo = BankInfoDomain.Builder().build()
+        if (domain.company?.adminContact?.address == null) domain.company?.adminContact?.address = AddressDomain.Builder().build()
+        if (domain.contact == null) domain.contact = ContactDomain.Builder().build()
+        if (domain.contact?.address == null) domain.contact?.address = AddressDomain.Builder().build()
+        if (domain.privacyDetail == null) domain.privacyDetail = PrivacyDetailDomain.Builder(username = domain.username).build()
+        if (domain.state == null) domain.state = FreelanceStateDomain(username = domain.username)
+
+        return operations.let { ops ->
+            val patched = JsonPatchOperator().apply(domain, ops)
+            patched.lastDate = domain.lastDate ?: Instant.now()
+            patched
+        }
     }
 
 //    private fun acceptOperation(operation: PatchOperation): Boolean {
@@ -95,7 +113,6 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.kbisFilename = filename
                         it.state?.kbisUploaded = true
                         freelance = dataAdapter.update(it)
-                            .orElseThrow { NotFoundException("Failed to update the freelance from the kbis uploaded event for user $username") }
                     },
                     {
                         freelance.state?.kbisUploaded = true
@@ -121,7 +138,6 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.ribFilename = filename
                         it.state?.ribUploaded = true
                         freelance = dataAdapter.update(it)
-                            .orElseThrow { NotFoundException("Failed to update the freelance from the Rib uploaded event for user $username") }
                     },
                     {
                         freelance.state?.ribUploaded = true
@@ -147,7 +163,6 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.rcFilename = filename
                         it.state?.rcUploaded = true
                         freelance = dataAdapter.update(it)
-                            .orElseThrow { NotFoundException("Failed to update the freelance from the Rc uploaded event for user $username") }
                     },
                     {
                         freelance.state?.rcUploaded = true
@@ -173,7 +188,6 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.urssafFilename = filename
                         it.state?.urssafUploaded = true
                         freelance = dataAdapter.update(it)
-                            .orElseThrow { NotFoundException("Failed to update the freelance from the urssaf uploaded event for user $username") }
                     },
                     {
                         freelance.state?.urssafUploaded = true
@@ -199,7 +213,6 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.fiscalFilename = filename
                         it.state?.fiscalUploaded = true
                         freelance = dataAdapter.update(it)
-                            .orElseThrow { NotFoundException("Failed to update the freelance from the fiscal uploaded event for user $username") }
                     },
                     {
                         freelance.state?.fiscalUploaded = true
@@ -245,6 +258,25 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             throw ResourceBundleMissingKeyException("Failed to retrieve the value for key=$key in resource bundle i18n", ex)
         }
     }
+
+    private fun createFreelance(username: String): FreelanceDomain {
+        val contactAddress = AddressDomain.Builder().build()
+        val contact = ContactDomain.Builder().email(username).address(contactAddress).build()
+        val adminAddress = AddressDomain.Builder().build()
+        val adminContact = ContactDomain.Builder().email(username).address(adminAddress).build()
+        val bankInfo = BankInfoDomain.Builder().build()
+        val fiscalAddress = AddressDomain.Builder().build()
+        val company = CompanyDomain.Builder().adminContact(adminContact).bankInfo(bankInfo).fiscalAddress(fiscalAddress).build()
+        val privacyDetail = PrivacyDetailDomain.Builder(username).build()
+        val state = FreelanceStateDomain.Builder(username).build()
+        return FreelanceDomain.Builder(username)
+            .company(company)
+            .contact(contact)
+            .privacyDetail(privacyDetail)
+            .state(state)
+            .build()
+    }
+
 
     class FreelanceCompletionEmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
         constructor(message: String?) : this(message, null)

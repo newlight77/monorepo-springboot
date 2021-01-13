@@ -9,7 +9,7 @@ import javax.validation.constraints.Size
 data class BankInfoEntity(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Id
-        val id: Long? = null,
+        var id: Long? = null,
 
         @Column(name = "iban", length = 50)
         val iban: @Size(max = 50) String? = null,

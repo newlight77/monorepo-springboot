@@ -34,35 +34,36 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
     }
 
     override fun availables(): List<FreelanceDomain> {
-        return repository.findByStatus(Availability.AVAILABLE.toString()) // may return AVAILABLE_SOON
+        return repository.findByAvailability(Availability.AVAILABLE.toString()) // may return AVAILABLE_SOON
                 .filter { Availability.AVAILABLE.toString() == it.availability?.toUpperCase() }
                 .map { fromEntity(it) }
     }
 
     override fun findByUsername(username: String): Optional<FreelanceDomain> {
         val entity = repository.findByUsername(username).stream().findFirst()
-        if (entity.isEmpty) throw NotFoundException("The freelance is not found for username $username")
         return entity.map {
             fromEntity(it)
         }
     }
 
-    override fun update(freelance: FreelanceDomain): Optional<FreelanceDomain> {
+    override fun update(freelance: FreelanceDomain): FreelanceDomain {
         val entity = repository.findByUsername(freelance.username).stream().findFirst()
         if (entity.isEmpty) throw NotFoundException("The freelance is not found for username ${freelance.username}")
-        var updated = Optional.empty<FreelanceDomain>()
-        entity.ifPresent {
+        return entity.map {
             val newEntity = toEntity(freelance)
             newEntity.id = it.id
             newEntity.company?.id = it.company?.id
+            newEntity.company?.adminContact?.id = it.company?.adminContact?.id
+            newEntity.company?.bankInfo?.id = it.company?.bankInfo?.id
+            newEntity.company?.fiscalAddress?.id = it.company?.fiscalAddress?.id
             newEntity.contact?.id = it.contact?.id
+            newEntity.contact?.address?.id = it.contact?.address?.id
             newEntity.privacyDetail?.id = it.privacyDetail?.id
             newEntity.state?.id = it.state?.id
             newEntity.lastDate = it.lastDate ?: Instant.now()
-            repository.save(newEntity)
-            updated = Optional.of(fromEntity(newEntity))
-        }
-        return updated
+            val updated = repository.save(newEntity)
+            fromEntity(updated)
+        }.orElseThrow()
     }
 
     // TODO : use event publisher and listener for persistence
@@ -91,6 +92,8 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
         if (entity.company == null) entity.company = CompanyEntity()
         if (entity.company?.adminContact == null) entity.company?.adminContact = ContactEntity()
         if (entity.company?.adminContact?.address == null) entity.company?.adminContact?.address = AddressEntity()
+        if (entity.company?.bankInfo == null) entity.company?.bankInfo = BankInfoEntity()
+        if (entity.company?.fiscalAddress == null) entity.company?.fiscalAddress = AddressEntity()
         if (entity.contact == null) entity.contact = ContactEntity()
         if (entity.contact?.address == null) entity.contact?.address = AddressEntity()
         if (entity.privacyDetail == null) entity.privacyDetail = PrivacyDetailEntity(username = entity.username)

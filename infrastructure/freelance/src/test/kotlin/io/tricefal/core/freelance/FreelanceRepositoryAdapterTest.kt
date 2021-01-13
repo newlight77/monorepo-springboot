@@ -66,7 +66,7 @@ internal class FreelanceRepositoryAdapterTest {
 
         Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(transientEntity)
 
-        val ops = listOf(PatchOperation.Builder("replace").path("/status").value(Availability.AVAILABLE).build())
+        val ops = listOf(PatchOperation.Builder("replace").path("/availability").value(Availability.AVAILABLE).build())
 
         // Act
         val result = repositoryAdapter.patch(freelance = domain, ops)

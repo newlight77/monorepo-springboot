@@ -9,7 +9,7 @@ import javax.validation.constraints.Size
 class AddressEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    val id: Long? = 0,
+    var id: Long? = 0,
 
     @Column(name = "address", length = 256)
     val address: String? = null,

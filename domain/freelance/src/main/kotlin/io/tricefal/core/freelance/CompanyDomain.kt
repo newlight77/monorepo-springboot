@@ -15,8 +15,8 @@ class CompanyDomain(
     val appartenanceGroupe: String?,
     val typeEntreprise: String?,
 
-    val adminContact: ContactDomain?,
-    val bankInfo: BankInfoDomain?,
+    var adminContact: ContactDomain?,
+    var bankInfo: BankInfoDomain?,
     val fiscalAddress: AddressDomain?,
 
     val lastDate: Instant?

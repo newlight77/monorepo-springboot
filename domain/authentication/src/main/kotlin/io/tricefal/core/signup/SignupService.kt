@@ -200,6 +200,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             signup.status = status
             signup.state!!.statusUpdated = true
             dataAdapter.update(signup)
+            dataAdapter.statusUpdated(signup)
             assignRoles(signup, statusToReadRole[status])
             return signup.state!!
         } catch (ex: Throwable) {

@@ -5,9 +5,9 @@ import java.time.Instant
 data class FreelanceDomain
     constructor(
         val username: String,
-        val contact: ContactDomain?,
-        val company: CompanyDomain?,
-        val privacyDetail: PrivacyDetailDomain?,
+        var contact: ContactDomain?,
+        var company: CompanyDomain?,
+        var privacyDetail: PrivacyDetailDomain?,
 
         var kbisFilename: String?,
         var ribFilename: String?,
