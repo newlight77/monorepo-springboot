@@ -10,14 +10,14 @@ class CompanyEventPublisher(private val applicationEventPublisher: ApplicationEv
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun publishCompanyCompletedEvent(username: String) = try {
+    fun publishCompanyCompletedEvent(companyName: String) = try {
         applicationEventPublisher.publishEvent(
-                CompanyCompletionEvent(username)
+                CompanyCompletionEvent(companyName)
         )
-        logger.info("A CompanyCompletionEvent has been published user $username")
+        logger.info("A CompanyCompletionEvent has been published user $companyName")
     } catch (ex: Exception) {
-        logger.error("Failed to publish a CompanyCompletionEvent for user $username")
-        throw CompanyCompletionPublicationException("Failed to publish a CompanyCompletionEvent for user $username")
+        logger.error("Failed to publish a CompanyCompletionEvent for user $companyName")
+        throw CompanyCompletionPublicationException("Failed to publish a CompanyCompletionEvent for user $companyName")
     }
 
 }

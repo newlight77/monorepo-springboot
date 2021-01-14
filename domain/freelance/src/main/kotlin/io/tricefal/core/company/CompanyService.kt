@@ -47,7 +47,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         if (company.adminContact == null) company.adminContact = ContactDomain.Builder().build()
         if (company.adminContact?.address == null) company.adminContact?.address = AddressDomain.Builder().build()
         if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().build()
-        if (company.adminContact?.address == null) company.adminContact?.address = AddressDomain.Builder().build()
+        if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().build()
         if (company.state == null) company.state = CompanyStateDomain(companyName = company.companyName)
 
         return operations.let { ops ->
@@ -233,7 +233,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
     private fun createCompany(username: String): CompanyDomain {
         val adminAddress = AddressDomain.Builder().build()
         val adminContact = ContactDomain.Builder().email(username).address(adminAddress).build()
-        val bankInfo = BankInfoDomain.Builder().build()
+        val bankAddress = AddressDomain.Builder().build()
+        val bankInfo = BankInfoDomain.Builder().address(bankAddress).build()
         val fiscalAddress = AddressDomain.Builder().build()
         val state = CompanyStateDomain.Builder(username).build()
         return CompanyDomain.Builder(username)

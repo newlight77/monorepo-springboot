@@ -6,7 +6,7 @@ data class BankInfoDomain(
     val iban:  String?,
     val owner: String?,
     val bic: String?,
-    val address: AddressDomain?,
+    var address: AddressDomain?,
     val lastDate: Instant?
 ) {
     data class Builder(

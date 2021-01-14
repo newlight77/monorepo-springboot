@@ -95,7 +95,8 @@ data class CompanyModel(
 }
 
 fun toModel(domain: CompanyDomain) : CompanyModel {
-    return CompanyModel.Builder(domain.companyName)
+    val companyName = if (domain.companyName.isNullOrEmpty()) domain.nomCommercial!! else domain.companyName
+    return CompanyModel.Builder(companyName)
         .raisonSocial(domain.raisonSocial)
         .nomCommercial(domain.nomCommercial)
         .formeJuridique(domain.formeJuridique)
@@ -125,7 +126,8 @@ fun toModel(domain: CompanyDomain) : CompanyModel {
 }
 
 fun fromModel(model: CompanyModel) : CompanyDomain {
-    return CompanyDomain.Builder("......")
+    val companyName = if (model.companyName.isNullOrEmpty()) model.nomCommercial!! else model.companyName
+    return CompanyDomain.Builder(companyName)
         .raisonSocial(model.raisonSocial)
         .nomCommercial(model.nomCommercial)
         .formeJuridique(model.formeJuridique)

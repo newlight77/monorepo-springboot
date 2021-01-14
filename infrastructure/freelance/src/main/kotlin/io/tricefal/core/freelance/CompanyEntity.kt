@@ -14,10 +14,9 @@ data class CompanyEntity(
         var id: Long? = null,
 
         @NotNull
-        @Pattern(regexp = EMAIL_REGEX)
         @Size(min = 3, max = 100)
         @Column(name = "company_name", length = 100)
-        val companyName: String? = null,
+        val companyName: String,
 
         @Column(name = "raison_social", length = 100)
         @Size(min = 3, max = 100)
@@ -76,9 +75,10 @@ data class CompanyEntity(
 )
 
 fun toEntity(domain: CompanyDomain): CompanyEntity {
+        val companyName = if (domain.companyName.isNullOrEmpty()) domain.nomCommercial!! else domain.companyName
         return CompanyEntity(
                 id = null,
-                companyName = domain.companyName,
+                companyName = companyName,
                 raisonSocial = domain.raisonSocial,
                 nomCommercial = domain.nomCommercial,
                 formeJuridique = domain.formeJuridique,
@@ -99,8 +99,9 @@ fun toEntity(domain: CompanyDomain): CompanyEntity {
 }
 
 fun fromEntity(entity: CompanyEntity): CompanyDomain {
+        val companyName = if (entity.companyName.isNullOrEmpty()) entity.nomCommercial!! else entity.companyName
         return CompanyDomain(
-                companyName = entity.companyName ?: "......",
+                companyName = companyName,
                 raisonSocial = entity.raisonSocial,
                 nomCommercial = entity.nomCommercial,
                 formeJuridique = entity.formeJuridique,
