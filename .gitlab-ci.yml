@@ -53,13 +53,30 @@ unit-test:
   tags:
     - java
 
+code-analysis:
+  stage: quality
+  #image: sonarsource/sonar-scanner-cli
+  image: ciricihq/gitlab-sonar-scanner
+  variables:
+    SONAR_URL: https://ci.tricefal.io/sonar
+    SONAR_ANALYSIS_MODE: publish
+  only:
+    - master
+    - develop
+  script:
+    - gitlab-sonar-scanner
+  dependencies:
+    - unit-test
+  when: on_success
+
 #code-analysis:
 #  stage: quality
+#  image: sonarsource/sonar-scanner-cli
 #  only:
 #    - master
 #    - develop
 #  script:
-#    - make core-code-analysis
+#    - docker run -e SONAR_HOST_URL=http://ci.tricefal.io/sonar -v .:/usr/src sonarsource/sonar-scanner-cli
 #  dependencies:
 #    - unit-test
 #  when: on_success
