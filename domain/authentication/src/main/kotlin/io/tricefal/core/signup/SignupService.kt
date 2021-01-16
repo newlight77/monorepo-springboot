@@ -31,10 +31,11 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .saved(save(signup))
                 .registered(register(signup))
                 .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
-                .emailSent(sendEmail(signup, singupEmailNotification(signup, metaNotification)))
+                .emailSent(sendEmail(signup, metaNotification))
                 .smsSent(sendSms(signup, signupSmsNotification(signup, metaNotification)))
                 .build()
     }
+
 
     override fun resendCode(signup: SignupDomain,
                             metaNotification: MetaNotificationDomain): SignupStateDomain {
@@ -263,6 +264,12 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             logger.error("failed to accept the cgu for username ${signup.username}")
             throw SignupCguAcceptException("failed to accept the cgu for username ${signup.username}", ex)
         }
+    }
+
+    private fun sendEmail(signup: SignupDomain,
+                          metaNotification: MetaNotificationDomain): Boolean {
+        return sendEmail(signup, singupEmailNotification(signup, metaNotification))
+                && sendEmail(signup, notifyAdminForActivation(signup, metaNotification))
     }
 
     private fun sendEmail(signup: SignupDomain, signupNotification: EmailNotificationDomain): Boolean {

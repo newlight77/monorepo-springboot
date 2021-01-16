@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator
 import org.springframework.stereotype.Service
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils
 import java.nio.charset.StandardCharsets
+import javax.mail.internet.InternetAddress
 import javax.mail.util.ByteArrayDataSource
 
 
@@ -40,7 +41,7 @@ class EmailService(private val emailSender: JavaMailSender,
             val isMultipart = emailMessage.attachment?.let { true } ?:false
             val messageHelper = MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name())
             messageHelper.setFrom(emailMessage.from)
-            messageHelper.setTo(emailMessage.to)
+            messageHelper.setTo(InternetAddress.parse(emailMessage.to))
             messageHelper.setSubject(emailMessage.subject)
             emailMessage.attachment?.let {
                 val attachment = ByteArrayDataSource(it, "application/octet-stream")
