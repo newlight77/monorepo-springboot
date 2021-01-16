@@ -58,12 +58,10 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .statusUpdated(signup.state?.statusUpdated)
                 .validated(signup.state?.validated)
                 .emailSent(
-                        if (signup.state?.emailValidated == true) true
-                        else dataAdapter.sendEmail(signup.username, singupEmailNotification(signup, metaNotification))
+                    signup.state?.emailValidated ?: dataAdapter.sendEmail(signup.username, singupEmailNotification(signup, metaNotification))
                 )
                 .smsSent(
-                        if (signup.state?.smsValidated == true) true
-                        else sendSms(signup, signupSmsNotification(signup, metaNotification))
+                    signup.state?.smsValidated ?: sendSms(signup, signupSmsNotification(signup, metaNotification))
                 )
                 .build()
     }

@@ -138,9 +138,6 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
     }
 
     private fun authenticatedUser(principal: Principal): String {
-//        if (principal is KeycloakAuthenticationToken) {
-//            return principal.account.keycloakSecurityContext.token.email
-//        }
         return principal.name
     }
 
