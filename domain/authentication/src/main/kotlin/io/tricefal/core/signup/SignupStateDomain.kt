@@ -42,10 +42,8 @@ class SignupStateDomain
         fun registered(registered: Boolean?) = apply { this.registered = registered }
         fun cguAccepted(cguAccepted: Boolean?) = apply { this.cguAccepted = cguAccepted }
         fun emailSent(emailSent: Boolean?) = apply { this.emailSent = emailSent }
-//        fun emailSent(isEmailSent: () -> Boolean) = apply { this.emailSent = isEmailSent.invoke() }
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
         fun smsSent(smsSent: Boolean?) = apply { this.smsSent = smsSent }
-//        fun smsSent(isActivationCodeSent: () -> Boolean) = apply { this.smsSent = isActivationCodeSent.invoke() }
         fun smsValidated(smsValidated: Boolean?) = apply { this.smsValidated = smsValidated }
         fun portraitUploaded(portraitUploaded: Boolean?) = apply { this.portraitUploaded = portraitUploaded }
         fun resumeUploaded(resumeUploaded: Boolean?) = apply { this.resumeUploaded = resumeUploaded }

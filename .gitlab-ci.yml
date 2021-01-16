@@ -55,7 +55,6 @@ unit-test:
 
 code-analysis:
   stage: quality
-  #image: sonarsource/sonar-scanner-cli
   image: ciricihq/gitlab-sonar-scanner
   variables:
     SONAR_URL: https://ci.tricefal.io/sonar
