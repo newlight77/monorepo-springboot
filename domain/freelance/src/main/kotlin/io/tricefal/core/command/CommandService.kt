@@ -44,6 +44,7 @@ class CommandService(private var dataAdapter: CommandDataAdapter) : ICommandServ
         operations: List<PatchOperation>,
     ): CommandDomain {
         if (command.address == null) command.address = AddressDomain.Builder().build()
+        if (command.contact == null) command.contact = ContactDomain.Builder().build()
 
         return operations.let { ops ->
             val patched = JsonPatchOperator().apply(command, ops)
