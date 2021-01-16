@@ -4,3 +4,6 @@
 image:https://gitlab.com/tricefal/tricefal-core/badges/master/pipeline.svg[link="https://gitlab.com/tricefal/tricefal-core/-/commits/master",title="pipeline status"]
 image:https://gitlab.com/tricefal/tricefal-core/badges/master/coverage.svg[link="https://gitlab.com/tricefal/tricefal-core/-/commits/master",title="coverage report"]
 
+- https://dev.tricefal.io/auth/realms/dev.app/account/[reset password]
+- https://dev.tricefal.io/sonar[sonarqube]
+- https://dev.tricefal.io/api/swagger-ui.html[openapi]
