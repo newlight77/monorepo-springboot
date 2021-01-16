@@ -50,7 +50,7 @@ core-clean-package:
 	@./gradlew -g .gradle/caches clean build -x test
 
 core-test: ## Run tests
-	@./gradlew -g .gradle/caches check
+	@./gradlew -g .gradle/caches check jacocoTestReport
 
 core-code-analysis: ## Run sonarqube
 	@./gradlew -g .gradle/caches sonarqube
