@@ -65,6 +65,20 @@ open class SignupNotificationFactory() {
             .build()
     }
 
+    fun waitingForActivationEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+        val emailSubject = getString("signup.pending.activation.mail.subject")
+        val emailGreeting = getString("signup.pending.activation.mail.greeting", signup.firstname)
+        val emailContent = getString("signup.pending.activation.mail.content")
+
+        return EmailNotificationDomain.Builder(signup.username)
+            .emailFrom(metaNotification.emailFrom)
+            .emailTo(signup.username)
+            .emailSubject(emailSubject)
+            .emailGreeting(emailGreeting)
+            .emailContent(emailContent)
+            .build()
+    }
+
     private fun emailValidationLink(signup: SignupDomain, metaNotification: MetaNotificationDomain): String {
         return metaNotification.baseUrl + "/signup/email/verify?token=" + signup.activationToken + "." + randomString()
     }

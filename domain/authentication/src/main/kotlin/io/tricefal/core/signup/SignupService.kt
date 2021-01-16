@@ -31,7 +31,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .saved(save(signup))
                 .registered(register(signup))
                 .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
-                .emailSent(sendEmail(signup, metaNotification))
+                .emailSent(sendSignupEmailNotification(signup, metaNotification))
                 .smsSent(sendSms(signup, signupSmsNotification(signup, metaNotification)))
                 .build()
     }
@@ -59,7 +59,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .validated(signup.state?.validated)
                 .emailSent(
                         if (signup.state?.emailValidated == true) true
-                        else sendEmail(signup, singupEmailNotification(signup, metaNotification))
+                        else dataAdapter.sendEmail(signup.username, singupEmailNotification(signup, metaNotification))
                 )
                 .smsSent(
                         if (signup.state?.smsValidated == true) true
@@ -102,7 +102,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         try {
             signup.state?.validated = true
             dataAdapter.update(signup)
-            sendEmail(signup, activatedEmailNotification(signup, metaNotification))
+            dataAdapter.sendEmail(signup.username, activatedEmailNotification(signup, metaNotification))
             assignRoles(signup, statusToReadWriteRole[signup.status])
             return signup.state!!
         } catch (ex: Throwable) {
@@ -196,12 +196,13 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    override fun updateStatus(signup: SignupDomain, status: Status): SignupStateDomain {
+    override fun updateStatus(signup: SignupDomain, status: Status, metaNotification: MetaNotificationDomain): SignupStateDomain {
         try {
             signup.status = status
             signup.state!!.statusUpdated = true
             dataAdapter.update(signup)
             dataAdapter.statusUpdated(signup)
+            dataAdapter.sendEmail(signup.username, waitingForActivationEmailNotification(signup, metaNotification))
             assignRoles(signup, statusToReadRole[status])
             return signup.state!!
         } catch (ex: Throwable) {
@@ -266,16 +267,11 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    private fun sendEmail(signup: SignupDomain,
-                          metaNotification: MetaNotificationDomain): Boolean {
-        return sendEmail(signup, singupEmailNotification(signup, metaNotification))
-                && sendEmail(signup, notifyAdminForActivation(signup, metaNotification))
-    }
-
-    private fun sendEmail(signup: SignupDomain, signupNotification: EmailNotificationDomain): Boolean {
+    private fun sendSignupEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): Boolean {
         try {
             signup.state?.emailSent = true
-            dataAdapter.sendEmail(signup.username, signupNotification)
+            dataAdapter.sendEmail(signup.username, singupEmailNotification(signup, metaNotification))
+            dataAdapter.sendEmail(signup.username, notifyAdminForActivation(signup, metaNotification))
             dataAdapter.update(signup)
                 .orElseThrow { SignupEmailNotificationException("failed to update the signup after sending email for username ${signup.username}")}
             return true

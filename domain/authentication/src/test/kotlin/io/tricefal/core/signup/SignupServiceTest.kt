@@ -93,6 +93,9 @@ class SignupServiceTest {
     fun `should update the signup status`() {
         // Arrange
         val username = "kong@gmail.com"
+        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl",
+            emailFrom = "emailFrom", smsFrom = "smsFrom",
+            emailAdmin = "adminEmail", smsAdminNumber = "adminNumber")
 
         val state = SignupStateDomain.Builder("kong")
                 .statusUpdated(true)
@@ -109,9 +112,10 @@ class SignupServiceTest {
                 .build()
 
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
 
         // Act
-        val result = service.updateStatus(signup, Status.EMPLOYEE)
+        val result = service.updateStatus(signup, Status.EMPLOYEE, metaNotification)
 
         // Arrange
         Mockito.verify(dataAdapter).update(signup)

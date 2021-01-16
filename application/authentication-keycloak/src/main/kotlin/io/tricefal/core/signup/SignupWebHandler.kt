@@ -94,8 +94,9 @@ class SignupWebHandler(val signupService: ISignupService,
 
     fun updateStatus(username: String, status: Status): SignupStateModel {
         val domain = signupService.findByUsername(username)
+        val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
 
-        val model = this.signupService.updateStatus(domain, status)
+        val model = this.signupService.updateStatus(domain, status, metaNotification)
         logger.info("successfully updated the status for user $username")
         return toModel(model)
     }
