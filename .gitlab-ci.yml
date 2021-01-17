@@ -11,12 +11,12 @@ cache:
     - .gradle/caches
 
 stages:
-  - compile
+  # - compile
   - unit test
-  - package
+  # - package
   - quality
-  - publish
-  - trigger_deploy_ci
+  # - publish
+  - trigger_main_pipeline
 #  - trigger_deploy
 
 #compile:
@@ -44,6 +44,10 @@ unit-test:
 #    - compile
   script:
     - make core-test
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
   artifacts:
     paths:
       - build/
@@ -64,6 +68,10 @@ code-analysis:
     - develop
   script:
     - gitlab-sonar-scanner
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
   dependencies:
     - unit-test
   when: on_success
@@ -90,12 +98,12 @@ code-analysis:
 #    - unit-test
 #  when: on_success
 
-trigger_deploy_ci:
-  stage: trigger_deploy_ci
+trigger_main_pipeline:
+  stage: trigger_main_pipeline
   variables:
-    CICD_PROJECT_ID: 18283923
+    MAIN_PROJECT_ID: 18283923
   script:
-    - curl -s -X POST -F token=$CI_JOB_TOKEN -F ref=develop -F "variables[TRIGGERER_PIPELINE_ID]=${CI_PIPELINE_ID}" https://gitlab.com/api/v4/projects/${INFRA_PROJECT_ID}/trigger/pipeline | tee res.json
+    - curl -s -X POST -F token=$CI_JOB_TOKEN -F ref=develop -F "variables[TRIGGERER_PIPELINE_ID]=${CI_PIPELINE_ID}" https://gitlab.com/api/v4/projects/${MAIN_PROJECT_ID}/trigger/pipeline | tee res.json
     - cat res.json
   artifacts:
     paths:
