@@ -15,25 +15,28 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     private val resourceBundle = ResourceBundle.getBundle("i18n.company", Locale.FRANCE)
 
     override fun signupStatusUpdated(username: String, event: String): FreelanceDomain {
-        val domain = createFreelance(username)
         val result = dataAdapter.findByUsername(username)
-        return if (result.isPresent) update(username, result.get())
-        else create(domain)
+        return if (result.isEmpty) dataAdapter.create(createFreelance(username))
+        else result.get()
     }
 
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
         val result = dataAdapter.findByUsername(freelance.username)
         return if (result.isPresent) {
-            return dataAdapter.update(result.get())
+            return dataAdapter.update(freelance)
         } else {
             dataAdapter.create(freelance)
         }
     }
 
     override fun update(username: String, freelance: FreelanceDomain): FreelanceDomain {
-        val result = dataAdapter.findByUsername(freelance.username).orElse(dataAdapter.create(freelance))
-        dataAdapter.update(result)
-        return result
+        if (username != freelance.username) throw NotFoundException("Failed to find a freelance for user $username")
+        val result = dataAdapter.findByUsername(freelance.username)
+        return if (result.isPresent) {
+            return dataAdapter.update(freelance)
+        } else {
+            dataAdapter.create(freelance)
+        }
     }
 
     override fun patch(username: String, operations: List<PatchOperation>): FreelanceDomain {
