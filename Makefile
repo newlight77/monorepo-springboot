@@ -40,7 +40,7 @@ git-sub:
 core-clean: ## Run tests
 	@./gradlew clean
 
-core-clean-compile:
+core-clean-assemble:
 	@./gradlew -g .gradle/caches clean assemble
 
 core-package:
