@@ -3,8 +3,7 @@ package io.tricefal.core.freelance
 import java.time.Instant
 
 class CompanyDomain(
-    val companyName: String,
-    val raisonSocial: String?,
+    val raisonSocial: String,
     val nomCommercial: String?,
     val formeJuridique: String?,
     val capital: String?,
@@ -13,12 +12,14 @@ class CompanyDomain(
     val numDuns: String?,
     val numTva: String?,
     val codeNaf: String?,
-    val appartenanceGroupe: String?,
-    val typeEntreprise: String?,
+    var companyCreationDate: Instant?,
+    var companyUpdateDate: Instant?,
 
+    var pdgContact: ContactDomain?,
     var adminContact: ContactDomain?,
     var bankInfo: BankInfoDomain?,
-    val fiscalAddress: AddressDomain?,
+    var fiscalAddress: AddressDomain?,
+    var motherCompany: CompanyDomain?,
 
     var kbisFilename: String? = null,
     var ribFilename: String? = null,
@@ -30,8 +31,7 @@ class CompanyDomain(
     var lastDate: Instant?
 ) {
     data class Builder(
-        var companyName: String,
-        var raisonSocial: String? = null,
+        var raisonSocial: String,
         var nomCommercial: String? = null,
         var formeJuridique: String? = null,
         var capital: String? = null,
@@ -40,12 +40,14 @@ class CompanyDomain(
         var numDuns: String? = null,
         var numTva: String? = null,
         var codeNaf: String? = null,
-        var appartenanceGroupe: String? = null,
-        var typeEntreprise: String? = null,
+        var companyCreationDate: Instant? = null,
+        var companyUpdateDate: Instant? = null,
 
+        var pdgContact: ContactDomain? = null,
         var adminContact: ContactDomain? = null,
         var bankInfo: BankInfoDomain? = null,
         var fiscalAddress: AddressDomain? = null,
+        var motherCompany: CompanyDomain? = null,
 
         var kbisFilename: String? = null,
         var ribFilename: String? = null,
@@ -56,7 +58,7 @@ class CompanyDomain(
         var state: CompanyStateDomain? = null,
         var lastDate: Instant? = null
     ) {
-        fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
+//        fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
         fun nomCommercial(nomCommercial: String?) = apply { this.nomCommercial = nomCommercial }
         fun formeJuridique(formeJuridique: String?) = apply { this.formeJuridique = formeJuridique }
         fun capital(capital: String?) = apply { this.capital = capital }
@@ -65,11 +67,14 @@ class CompanyDomain(
         fun numDuns(numDuns: String?) = apply { this.numDuns = numDuns }
         fun numTva(numTva: String?) = apply { this.numTva = numTva }
         fun codeNaf(codeNaf: String?) = apply { this.codeNaf = codeNaf }
-        fun appartenanceGroupe(appartenanceGroupe: String?) = apply { this.appartenanceGroupe = appartenanceGroupe }
-        fun typeEntreprise(typeEntreprise: String?) = apply { this.typeEntreprise = typeEntreprise }
+        fun companyCreationDate(companyCreationDate: Instant?) = apply { this.companyCreationDate = companyCreationDate }
+        fun companyUpdateDate(companyUpdateDate: Instant?) = apply { this.companyUpdateDate = companyUpdateDate }
+
+        fun pdgContact(pdgContact: ContactDomain?) = apply { this.pdgContact = pdgContact }
         fun adminContact(adminContact: ContactDomain?) = apply { this.adminContact = adminContact }
         fun bankInfo(bankInfo: BankInfoDomain?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressDomain?) = apply { this.fiscalAddress = fiscalAddress }
+        fun motherCompany(motherCompany: CompanyDomain?) = apply { this.motherCompany = motherCompany }
 
         fun kbisFilename(kbisFilename: String?) = apply { this.kbisFilename = kbisFilename }
         fun ribFilename(ribFilename: String?) = apply { this.ribFilename = ribFilename }
@@ -81,7 +86,6 @@ class CompanyDomain(
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = CompanyDomain(
-            companyName = companyName,
             raisonSocial = raisonSocial,
             nomCommercial = nomCommercial,
             formeJuridique = formeJuridique,
@@ -92,12 +96,14 @@ class CompanyDomain(
             numDuns = numDuns,
             numTva = numTva,
             codeNaf = codeNaf,
-            appartenanceGroupe = appartenanceGroupe,
-            typeEntreprise = typeEntreprise,
+            companyCreationDate = companyCreationDate,
+            companyUpdateDate = companyUpdateDate,
 
+            pdgContact = pdgContact,
             adminContact = adminContact,
             bankInfo = bankInfo,
             fiscalAddress = fiscalAddress,
+            motherCompany = motherCompany,
 
             kbisFilename = kbisFilename,
             ribFilename = ribFilename,

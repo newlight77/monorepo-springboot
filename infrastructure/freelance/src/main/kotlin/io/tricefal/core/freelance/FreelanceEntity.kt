@@ -26,12 +26,19 @@ data class FreelanceEntity (
         var contact: ContactEntity? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(name = "address_id")
+        var address: AddressEntity? = null,
+
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "company_id")
         var company: CompanyEntity? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "privacy_detail_id")
         var privacyDetail: PrivacyDetailEntity? = null,
+
+        @Column(name = "with_mission")
+        var withMission: Boolean? = null,
 
         @Column(name = "availability", length = 50)
         var availability: String? = null,
@@ -50,8 +57,10 @@ fun toEntity(domain: FreelanceDomain): FreelanceEntity {
                 id = null,
                 username = domain.username,
                 contact = domain.contact?.let { toEntity(it) },
+                address = domain.address?.let { toEntity(it) },
                 company = domain.company?.let { toEntity(it) },
                 privacyDetail = domain.privacyDetail?.let { toEntity(it) },
+                withMission = domain.withMission,
                 availability = domain.availability?.toString(),
                 state = domain.state?.let { toEntity(it) },
                 lastDate = domain.lastDate
@@ -61,8 +70,10 @@ fun toEntity(domain: FreelanceDomain): FreelanceEntity {
 fun fromEntity(entity: FreelanceEntity): FreelanceDomain {
         return FreelanceDomain.Builder(entity.username)
                 .contact(entity.contact?.let { fromEntity(it) })
+                .address(entity.address?.let { fromEntity(it) })
                 .company(entity.company?.let { fromEntity(it) })
                 .privacyDetail(entity.privacyDetail?.let { fromEntity(it) })
+                .withMission(entity.withMission)
                 .availability(entity.availability?.toUpperCase()?.let { Availability.valueOf(it) })
                 .state(entity.state?.let { fromEntity(it) })
                 .lastDate(entity.lastDate)

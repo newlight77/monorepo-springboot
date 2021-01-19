@@ -113,7 +113,10 @@ class FreelanceServiceTest {
 
         Mockito.`when`(dataAdapter.update(any(FreelanceDomain::class.java))).thenReturn(freelance)
 
-        val ops = listOf(PatchOperation.Builder("replace").path("/company/raisonSocial").value("new raisonSocial").build())
+        val ops = listOf(
+            PatchOperation.Builder("replace").path("/company/raisonSocial").value("new raisonSocial").build(),
+            PatchOperation.Builder("replace").path("/company/nomCommercial").value("new nom commercial").build()
+        )
 
         service = FreelanceService(dataAdapter)
 
@@ -122,6 +125,7 @@ class FreelanceServiceTest {
 
         // Assert
         org.assertj.core.api.Assertions.assertThat(result.company?.raisonSocial).isEqualTo("new raisonSocial")
+        org.assertj.core.api.Assertions.assertThat(result.company?.nomCommercial).isEqualTo("new nom commercial")
     }
 
     @Test

@@ -45,7 +45,7 @@ class CompanyServiceTest {
 
         // Arrange
         Mockito.verify(dataAdapter).create(company)
-        Assertions.assertEquals(company.companyName, result.companyName)
+        Assertions.assertEquals(company.raisonSocial, result.raisonSocial)
     }
 
     @Test
@@ -63,7 +63,7 @@ class CompanyServiceTest {
         val result = service.findByName(companyName)
 
         // Arrange
-        Assertions.assertEquals(company.companyName, result.companyName)
+        Assertions.assertEquals(company.raisonSocial, result.raisonSocial)
     }
 
 
@@ -87,9 +87,9 @@ class CompanyServiceTest {
             .lastDate(date)
             .build()
 
-        Mockito.`when`(dataAdapter.update(any(CompanyDomain::class.java))).thenReturn(transientDomain)
+        Mockito.`when`(dataAdapter.update(eq(companyName), any(CompanyDomain::class.java))).thenReturn(transientDomain)
 
-        val ops = listOf(PatchOperation.Builder("replace").path("/companyName").value("new name").build())
+        val ops = listOf(PatchOperation.Builder("replace").path("/raisonSocial").value("new name").build())
 
         service = CompanyService(dataAdapter)
 
@@ -97,7 +97,7 @@ class CompanyServiceTest {
         val result = service.patch(companyName, ops)
 
         // Assert
-        org.assertj.core.api.Assertions.assertThat(result.companyName).isEqualTo("new name")
+        org.assertj.core.api.Assertions.assertThat(result.raisonSocial).isEqualTo("new name")
     }
 
     @Test
@@ -119,7 +119,7 @@ class CompanyServiceTest {
             .lastDate(date)
             .build()
 
-        Mockito.`when`(dataAdapter.update(any(CompanyDomain::class.java))).thenReturn(transientDomain)
+        Mockito.`when`(dataAdapter.update(eq(companyName), any(CompanyDomain::class.java))).thenReturn(transientDomain)
 
         val ops = listOf(PatchOperation.Builder("replace").path("/bankInfo/iban").value("FR01009940913").build())
 
@@ -141,7 +141,7 @@ class CompanyServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
-        Mockito.`when`(dataAdapter.update(company)).thenReturn(company)
+        Mockito.`when`(dataAdapter.update(companyName, company)).thenReturn(company)
 
         service = CompanyService(dataAdapter)
 
@@ -170,7 +170,7 @@ class CompanyServiceTest {
         val result = service.updateOnKbisUploaded(companyName, "new-kbis.pdf")
 
         // Arrange
-        Assertions.assertEquals(result.companyName, companyName)
+        Assertions.assertEquals(result.raisonSocial, companyName)
         Assertions.assertEquals(result.kbisFilename, filename)
     }
 
@@ -183,7 +183,7 @@ class CompanyServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
-        Mockito.`when`(dataAdapter.update(company)).thenReturn(company)
+        Mockito.`when`(dataAdapter.update(companyName, company)).thenReturn(company)
 
         service = CompanyService(dataAdapter)
 
@@ -212,7 +212,7 @@ class CompanyServiceTest {
         val result = service.updateOnRibUploaded(companyName, filename)
 
         // Arrange
-        Assertions.assertEquals(result.companyName, companyName)
+        Assertions.assertEquals(result.raisonSocial, companyName)
         Assertions.assertEquals(result.ribFilename, "new-rib.pdf")
     }
 
@@ -225,7 +225,7 @@ class CompanyServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
-        Mockito.`when`(dataAdapter.update(company)).thenReturn(company)
+        Mockito.`when`(dataAdapter.update(companyName, company)).thenReturn(company)
 
         service = CompanyService(dataAdapter)
 
@@ -254,7 +254,7 @@ class CompanyServiceTest {
         val result = service.updateOnRcUploaded(companyName, filename)
 
         // Arrange
-        Assertions.assertEquals(result.companyName, companyName)
+        Assertions.assertEquals(result.raisonSocial, companyName)
         Assertions.assertEquals(result.rcFilename, "new-rc.pdf")
     }
 
@@ -267,7 +267,7 @@ class CompanyServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
-        Mockito.`when`(dataAdapter.update(company)).thenReturn(company)
+        Mockito.`when`(dataAdapter.update(companyName, company)).thenReturn(company)
 
         service = CompanyService(dataAdapter)
 
@@ -296,7 +296,7 @@ class CompanyServiceTest {
         val result = service.updateOnUrssafUploaded(companyName, filename)
 
         // Arrange
-        Assertions.assertEquals(result.companyName, companyName)
+        Assertions.assertEquals(result.raisonSocial, companyName)
         Assertions.assertEquals(result.urssafFilename, "new-urssaf.pdf")
     }
 
@@ -309,7 +309,7 @@ class CompanyServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
-        Mockito.`when`(dataAdapter.update(company)).thenReturn(company)
+        Mockito.`when`(dataAdapter.update(companyName, company)).thenReturn(company)
 
         service = CompanyService(dataAdapter)
 
@@ -338,7 +338,7 @@ class CompanyServiceTest {
         val result = service.updateOnFiscalUploaded(companyName, filename)
 
         // Arrange
-        Assertions.assertEquals(result.companyName, companyName)
+        Assertions.assertEquals(result.raisonSocial, companyName)
         Assertions.assertEquals(result.fiscalFilename, "new-fiscal.pdf")
     }
 
@@ -357,7 +357,7 @@ class CompanyServiceTest {
 
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
-        Mockito.`when`(dataAdapter.update(company)).thenReturn(company)
+        Mockito.`when`(dataAdapter.update(companyName, company)).thenReturn(company)
         Mockito.`when`(dataAdapter.sendEmail(eq("company name"), any(EmailNotificationDomain::class.java))).thenReturn(true)
 
         service = CompanyService(dataAdapter)

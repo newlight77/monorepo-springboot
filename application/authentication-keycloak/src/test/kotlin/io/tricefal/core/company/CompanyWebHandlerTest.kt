@@ -80,12 +80,12 @@ class CompanyWebHandlerTest {
         val companyName = "name"
         val contact = ContactModel.Builder(email = email).build()
         val address = AddressModel.Builder().build()
-        val bankInfo = BankInfoModel.Builder().build()
+//        val bankInfo = BankInfoModel.Builder().build()
         val state = CompanyStateModel.Builder(companyName).build()
         val company = CompanyModel.Builder(companyName)
             .adminContact(contact)
             .fiscalAddress(address)
-            .bankInfo(bankInfo)
+//            .bankInfo(bankInfo)
             .state(state)
             .build()
         val companyEntity = toEntity(fromModel(company))
@@ -99,7 +99,7 @@ class CompanyWebHandlerTest {
         val result = webHandler.create(company)
 
         // Arrange
-        Assertions.assertEquals("name", result.companyName)
+        Assertions.assertEquals("name", result.raisonSocial)
     }
 
     @Test
@@ -109,12 +109,12 @@ class CompanyWebHandlerTest {
         val companyName = "name"
         val contact = ContactModel.Builder(email = email).build()
         val address = AddressModel.Builder().build()
-        val bankInfo = BankInfoModel.Builder().build()
+//        val bankInfo = BankInfoModel.Builder().build()
         val state = CompanyStateModel.Builder(companyName).build()
         val company = CompanyModel.Builder(companyName)
             .adminContact(contact)
             .fiscalAddress(address)
-            .bankInfo(bankInfo)
+//            .bankInfo(bankInfo)
             .state(state)
             .build()
         val companyEntity = toEntity(fromModel(company))
@@ -126,7 +126,7 @@ class CompanyWebHandlerTest {
         val result = webHandler.findByName("name")
 
         // Arrange
-        Assertions.assertEquals("name", result.companyName)
+        Assertions.assertEquals("name", result.raisonSocial)
     }
 
     @Test
@@ -136,21 +136,22 @@ class CompanyWebHandlerTest {
         val companyName = "name"
         val contact = ContactModel.Builder(email = email).build()
         val address = AddressModel.Builder().build()
-        val bankInfo = BankInfoModel.Builder().build()
+//        val bankInfo = BankInfoModel.Builder().build()
         val state = CompanyStateModel.Builder(companyName).build()
         val company = CompanyModel.Builder(companyName)
             .adminContact(contact)
             .fiscalAddress(address)
-            .bankInfo(bankInfo)
+//            .bankInfo(bankInfo)
             .state(state)
             .build()
         val companyEntity = toEntity(fromModel(company))
 
-        Mockito.`when`(jpaRepository.findByName(companyName)).thenReturn(listOf(companyEntity))
+        Mockito.`when`(jpaRepository.findByName(companyName)).thenReturn(listOf(companyEntity, companyEntity))
         Mockito.`when`(jpaRepository.save(any(CompanyEntity::class.java))).thenReturn(companyEntity)
 
         val ops = listOf(
-            PatchOperation.Builder("replace").path("/raisonSocial").value("new raison social").build(),
+            PatchOperation.Builder("replace").path("/raisonSocial").value("new raison").build(),
+            PatchOperation.Builder("replace").path("/nomCommercial").value("new nom commercial").build(),
             PatchOperation.Builder("replace").path("/adminContact/lastName").value("new name").build()
         )
 
@@ -158,7 +159,8 @@ class CompanyWebHandlerTest {
         val result = webHandler.patch(companyName, ops)
 
         // Arrange
-        Assertions.assertEquals("new raison social", result.raisonSocial)
+        Assertions.assertEquals("new raison", result.raisonSocial)
+        Assertions.assertEquals("new nom commercial", result.nomCommercial)
         Assertions.assertEquals("new name", result.adminContact?.lastName)
     }
 
@@ -169,12 +171,12 @@ class CompanyWebHandlerTest {
         val companyName = "name"
         val contact = ContactModel.Builder(email = email).build()
         val address = AddressModel.Builder().build()
-        val bankInfo = BankInfoModel.Builder().build()
+//        val bankInfo = BankInfoModel.Builder().build()
         val state = CompanyStateModel.Builder(companyName).build()
         val company = CompanyModel.Builder(companyName)
             .adminContact(contact)
             .fiscalAddress(address)
-            .bankInfo(bankInfo)
+//            .bankInfo(bankInfo)
             .state(state)
             .build()
         val companyEntity = toEntity(fromModel(company))

@@ -16,15 +16,15 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
     private val resourceBundle = ResourceBundle.getBundle("i18n.company", Locale.FRANCE)
 
     override fun create(company: CompanyDomain): CompanyDomain {
-        val result = dataAdapter.findByName(company.companyName)
-        return if (result.isPresent) dataAdapter.update(result.get())
+        val result = dataAdapter.findByName(company.raisonSocial)
+        return if (result.isPresent) dataAdapter.update(result.get().raisonSocial, company)
         else dataAdapter.create(company)
     }
 
     override fun update(companyName: String, company: CompanyDomain): CompanyDomain {
-        val result = dataAdapter.findByName(companyName).orElse(dataAdapter.create(company))
-        dataAdapter.update(result)
-        return result
+        val result = dataAdapter.findByName(companyName)
+        if (result.isEmpty) dataAdapter.create(company)
+        return dataAdapter.update(companyName, result.get())
     }
 
     override fun patch(companyName: String, operations: List<PatchOperation>): CompanyDomain {
@@ -36,7 +36,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             return newCompany
         }
         val patched = applyPatch(company.get(), operations)
-        dataAdapter.update(patched)
+        dataAdapter.update(companyName, patched)
         return patched
     }
 
@@ -44,11 +44,13 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         company: CompanyDomain,
         operations: List<PatchOperation>,
     ): CompanyDomain {
+        if (company.pdgContact == null) company.pdgContact = ContactDomain.Builder().build()
         if (company.adminContact == null) company.adminContact = ContactDomain.Builder().build()
-        if (company.adminContact?.address == null) company.adminContact?.address = AddressDomain.Builder().build()
         if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().build()
         if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().build()
-        if (company.state == null) company.state = CompanyStateDomain(companyName = company.companyName)
+        if (company.fiscalAddress == null) company.fiscalAddress = AddressDomain.Builder().build()
+        if (company.motherCompany == null) company.motherCompany = CompanyDomain.Builder(company.raisonSocial).build()
+        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
 
         return operations.let { ops ->
             val patched = JsonPatchOperator().apply(company, ops)
@@ -60,7 +62,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
     override fun completed(companyName: String, metaNotification: MetaNotificationDomain): CompanyDomain {
         val company = findByName(companyName)
         company.state?.completed = true
-        dataAdapter.update(company)
+        dataAdapter.update(companyName, company)
         sendEmail(company, emailNotification(company, metaNotification))
         return company
     }
@@ -83,7 +85,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     {
                         it.kbisFilename = filename
                         it.state?.kbisUploaded = true
-                        company = dataAdapter.update(it)
+                        company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.kbisUploaded = true
@@ -108,7 +110,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     {
                         it.ribFilename = filename
                         it.state?.ribUploaded = true
-                        company = dataAdapter.update(it)
+                        company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.ribUploaded = true
@@ -133,7 +135,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     {
                         it.rcFilename = filename
                         it.state?.rcUploaded = true
-                        company = dataAdapter.update(it)
+                        company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.rcUploaded = true
@@ -158,7 +160,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     {
                         it.urssafFilename = filename
                         it.state?.urssafUploaded = true
-                        company = dataAdapter.update(it)
+                        company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.urssafUploaded = true
@@ -183,7 +185,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     {
                         it.fiscalFilename = filename
                         it.state?.fiscalUploaded = true
-                        company = dataAdapter.update(it)
+                        company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.fiscalUploaded = true
@@ -199,12 +201,12 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
 
     private fun sendEmail(company: CompanyDomain, companyCompletionNotification: EmailNotificationDomain): Boolean {
         try {
-            dataAdapter.sendEmail(company.companyName, companyCompletionNotification)
-            dataAdapter.companyCompleted(company.companyName)
+            dataAdapter.sendEmail(company.raisonSocial, companyCompletionNotification)
+            dataAdapter.companyCompleted(company.raisonSocial)
             return true
         } catch (ex: Throwable) {
-            logger.error("failed to send an email upon company company completion for username ${company.companyName}")
-            throw CompanyCompletionEmailNotificationException("failed to send an email upon company company completion for username ${company.companyName}", ex)
+            logger.error("failed to send an email upon company company completion for username ${company.raisonSocial}")
+            throw CompanyCompletionEmailNotificationException("failed to send an email upon company company completion for username ${company.raisonSocial}", ex)
         }
     }
 
@@ -213,7 +215,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         val emailGreeting = getString("company.completion.mail.greeting", "admin")
         val emailContent = getString("company.completion.mail.content")
 
-        return EmailNotificationDomain.Builder(company.companyName)
+        return EmailNotificationDomain.Builder(company.raisonSocial)
             .emailFrom(metaNotification.emailFrom)
             .emailTo(metaNotification.emailAdmin)
             .emailSubject(emailSubject)
@@ -231,16 +233,18 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
     }
 
     private fun createCompany(username: String): CompanyDomain {
-        val adminAddress = AddressDomain.Builder().build()
-        val adminContact = ContactDomain.Builder().email(username).address(adminAddress).build()
-        val bankAddress = AddressDomain.Builder().build()
-        val bankInfo = BankInfoDomain.Builder().address(bankAddress).build()
+        val pdgContact = ContactDomain.Builder().email(username).build()
+        val adminContact = ContactDomain.Builder().email(username).build()
+        val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
         val fiscalAddress = AddressDomain.Builder().build()
+        val motherCompany = CompanyDomain.Builder("......").build()
         val state = CompanyStateDomain.Builder(username).build()
-        return CompanyDomain.Builder(username)
+        return CompanyDomain.Builder(raisonSocial = "......")
+            .pdgContact(pdgContact)
             .adminContact(adminContact)
             .bankInfo(bankInfo)
             .fiscalAddress(fiscalAddress)
+            .motherCompany(motherCompany)
             .state(state)
             .build()
     }

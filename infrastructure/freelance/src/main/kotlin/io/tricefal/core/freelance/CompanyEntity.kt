@@ -13,14 +13,9 @@ data class CompanyEntity(
         @Id
         var id: Long? = null,
 
-        @NotNull
-        @Size(min = 3, max = 100)
-        @Column(name = "company_name", length = 100)
-        val companyName: String,
-
         @Column(name = "raison_social", length = 100)
         @Size(min = 3, max = 100)
-        val raisonSocial: String? = null,
+        val raisonSocial: String,
 
         @Column(name = "nom_commercial", length = 100)
         @Size(min = 3, max = 100)
@@ -47,11 +42,15 @@ data class CompanyEntity(
         @Column(name = "code_naf", length = 100)
         val codeNaf: String? = null,
 
-        @Column(name = "appartenance_groupe", length = 100)
-        val appartenanceGroupe: String? = null,
+        @Column(name = "cie_creation_date")
+        var companyCreationDate: Instant? = Instant.now(),
 
-        @Column(name = "type_entreprise", length = 100)
-        val typeEntreprise: String? = null,
+        @Column(name = "cie_update_date")
+        var companyUpdateDate: Instant? = Instant.now(),
+
+        @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(name = "pdg_contact_id")
+        var pdgContact: ContactEntity? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "admin_contact_id")
@@ -66,6 +65,10 @@ data class CompanyEntity(
         var fiscalAddress: AddressEntity? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(name = "mother_company_id")
+        var motherCompany: CompanyEntity? = null,
+
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")
         var state: CompanyStateEntity? = null,
 
@@ -75,10 +78,8 @@ data class CompanyEntity(
 )
 
 fun toEntity(domain: CompanyDomain): CompanyEntity {
-        val companyName = if (domain.companyName.isNullOrEmpty()) domain.nomCommercial!! else domain.companyName
         return CompanyEntity(
                 id = null,
-                companyName = companyName,
                 raisonSocial = domain.raisonSocial,
                 nomCommercial = domain.nomCommercial,
                 formeJuridique = domain.formeJuridique,
@@ -88,20 +89,21 @@ fun toEntity(domain: CompanyDomain): CompanyEntity {
                 numDuns =  domain.numDuns,
                 numTva = domain.numTva,
                 codeNaf = domain.codeNaf,
-                appartenanceGroupe = domain.appartenanceGroupe,
-                typeEntreprise =  domain.typeEntreprise,
+                companyCreationDate = domain.companyCreationDate,
+                companyUpdateDate = domain.companyUpdateDate,
+                pdgContact = domain.pdgContact?.let { toEntity(it) },
                 adminContact = domain.adminContact?.let { toEntity(it) },
                 bankInfo = domain.bankInfo?.let { toEntity(it) },
                 fiscalAddress = domain.fiscalAddress?.let { toEntity(it) },
+                motherCompany = domain.motherCompany?.let { toEntity(it) },
+
                 state = domain.state?.let { toEntity(it) },
                 lastDate = domain.lastDate
         )
 }
 
 fun fromEntity(entity: CompanyEntity): CompanyDomain {
-        val companyName = if (entity.companyName.isNullOrEmpty()) entity.nomCommercial!! else entity.companyName
         return CompanyDomain(
-                companyName = companyName,
                 raisonSocial = entity.raisonSocial,
                 nomCommercial = entity.nomCommercial,
                 formeJuridique = entity.formeJuridique,
@@ -111,11 +113,13 @@ fun fromEntity(entity: CompanyEntity): CompanyDomain {
                 numDuns = entity.numDuns,
                 numTva = entity.numTva,
                 codeNaf = entity.codeNaf,
-                appartenanceGroupe = entity.appartenanceGroupe,
-                typeEntreprise = entity.typeEntreprise,
+                companyCreationDate = entity.companyCreationDate,
+                companyUpdateDate = entity.companyUpdateDate,
+                pdgContact = entity.pdgContact?.let { fromEntity(it) },
                 adminContact = entity.adminContact?.let { fromEntity(it) },
                 bankInfo = entity.bankInfo?.let { fromEntity(it) },
                 fiscalAddress = entity.fiscalAddress?.let { fromEntity(it) },
+                motherCompany = entity.motherCompany?.let { fromEntity(it) },
                 state = entity.state?.let { fromEntity(it) },
                 lastDate = entity.lastDate
         )

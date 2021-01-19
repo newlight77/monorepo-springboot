@@ -39,10 +39,6 @@ data class ContactEntity(
         @Column(name = "email2", length = 100)
         val email2: @Size(min = 5, max = 100) String ? = null,
 
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(name = "address")
-        var address: AddressEntity? = null,
-
         @Column(name = "last_date")
         var lastDate: Instant? = Instant.now()
 
@@ -58,7 +54,6 @@ fun toEntity(domain: ContactDomain) = ContactEntity(
         landline = domain.landline,
         fax = domain.fax,
         email2 = domain.email2,
-        address = domain.address?.let { toEntity(it) },
         lastDate = domain.lastDate
 )
 
@@ -72,7 +67,6 @@ fun fromEntity(entity: ContactEntity): ContactDomain {
                 landline = entity.landline,
                 fax = entity.fax,
                 email2 = entity.email2,
-                address = entity.address?.let { fromEntity(it) },
                 lastDate = entity.lastDate
         )
 }

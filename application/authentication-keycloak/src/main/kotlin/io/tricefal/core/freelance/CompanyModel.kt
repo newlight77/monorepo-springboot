@@ -4,8 +4,7 @@ import java.time.Instant
 
 
 data class CompanyModel(
-        val companyName: String,
-        val raisonSocial: String?,
+        val raisonSocial: String,
         val nomCommercial: String?,
         val formeJuridique: String?,
         val capital: String?,
@@ -14,12 +13,14 @@ data class CompanyModel(
         val numDuns: String?,
         val numTva: String?,
         val codeNaf: String?,
-        val appartenanceGroupe: String?,
-        val typeEntreprise: String?,
+        var companyCreationDate: Instant? = null,
+        var companyUpdateDate: Instant? = null,
 
+        var pdgContact: ContactModel? = null,
         var adminContact: ContactModel? = null,
-        var bankInfo: BankInfoModel? = null,
+//        var bankInfo: BankInfoModel? = null,
         var fiscalAddress: AddressModel? = null,
+        var motherCompany: CompanyModel? = null, // optional
 
         var state: CompanyStateModel? = null,
         var lastDate: Instant? = null
@@ -31,8 +32,7 @@ data class CompanyModel(
 //        var fiscalFile: MetafileModel? = null
 ) {
     data class Builder(
-            var companyName: String,
-            var raisonSocial: String? = null,
+            var raisonSocial: String,
             var nomCommercial: String? = null,
             var formeJuridique: String? = null,
             var capital: String? = null,
@@ -42,17 +42,19 @@ data class CompanyModel(
             var numDuns: String? = null,
             var numTva: String? = null,
             var codeNaf: String? = null,
-            var appartenanceGroupe: String? = null,
-            var typeEntreprise: String? = null,
+            var companyCreationDate: Instant? = null,
+            var companyUpdateDate: Instant? = null,
 
+            var pdgContact: ContactModel? = null,
             var adminContact: ContactModel? = null,
-            var bankInfo: BankInfoModel? = null,
+//            var bankInfo: BankInfoModel? = null,
             var fiscalAddress: AddressModel? = null,
+            var motherCompany: CompanyModel? = null,
 
             var state: CompanyStateModel? = null,
             var lastDate: Instant? = null
     ) {
-        fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
+//        fun raisonSocial(raisonSocial: String?) = apply { this.raisonSocial = raisonSocial }
         fun nomCommercial(nomCommercial: String?) = apply { this.nomCommercial = nomCommercial }
         fun formeJuridique(formeJuridique: String?) = apply { this.formeJuridique = formeJuridique }
         fun capital(capital: String?) = apply { this.capital = capital }
@@ -61,17 +63,19 @@ data class CompanyModel(
         fun numDuns(numDuns: String?) = apply { this.numDuns = numDuns }
         fun numTva(numTva: String?) = apply { this.numTva = numTva }
         fun codeNaf(codeNaf: String?) = apply { this.codeNaf = codeNaf }
-        fun appartenanceGroupe(appartenanceGroupe: String?) = apply { this.appartenanceGroupe = appartenanceGroupe }
-        fun typeEntreprise(typeEntreprise: String?) = apply { this.typeEntreprise = typeEntreprise }
-
+        fun companyCreationDate(companyCreationDate: Instant?) = apply { this.companyCreationDate = companyCreationDate }
+        fun companyUpdateDate(companyUpdateDate: Instant?) = apply { this.companyUpdateDate = companyUpdateDate }
+        
+        fun pdgContact(pdgContact: ContactModel?) = apply { this.pdgContact = pdgContact }
         fun adminContact(adminContact: ContactModel?) = apply { this.adminContact = adminContact }
-        fun bankInfo(bankInfo: BankInfoModel?) = apply { this.bankInfo = bankInfo }
+//        fun bankInfo(bankInfo: BankInfoModel?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressModel?) = apply { this.fiscalAddress = fiscalAddress }
+        fun motherCompany(motherCompany: CompanyModel?) = apply { this.motherCompany = motherCompany }
+        
         fun state(state: CompanyStateModel?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = CompanyModel(
-            companyName = companyName,
             raisonSocial = raisonSocial,
             nomCommercial = nomCommercial,
             formeJuridique = formeJuridique,
@@ -82,12 +86,15 @@ data class CompanyModel(
             numDuns = numDuns,
             numTva = numTva,
             codeNaf = codeNaf,
-            appartenanceGroupe = appartenanceGroupe,
-            typeEntreprise = typeEntreprise,
+            companyCreationDate = companyCreationDate,
+            companyUpdateDate = companyUpdateDate,
 
+            pdgContact = pdgContact,
             adminContact = adminContact,
-            bankInfo = bankInfo,
+//            bankInfo = bankInfo,
             fiscalAddress = fiscalAddress,
+            motherCompany = motherCompany,
+
             state = state,
             lastDate = lastDate
         )
@@ -95,9 +102,7 @@ data class CompanyModel(
 }
 
 fun toModel(domain: CompanyDomain) : CompanyModel {
-    val companyName = if (domain.companyName.isNullOrEmpty()) domain.nomCommercial!! else domain.companyName
-    return CompanyModel.Builder(companyName)
-        .raisonSocial(domain.raisonSocial)
+    return CompanyModel.Builder(domain.raisonSocial)
         .nomCommercial(domain.nomCommercial)
         .formeJuridique(domain.formeJuridique)
         .capital(domain.capital)
@@ -107,12 +112,14 @@ fun toModel(domain: CompanyDomain) : CompanyModel {
         .numDuns(domain.numDuns)
         .numTva(domain.numTva)
         .codeNaf(domain.codeNaf)
-        .appartenanceGroupe(domain.appartenanceGroupe)
-        .typeEntreprise(domain.typeEntreprise)
+        .companyCreationDate(domain.companyCreationDate)
+        .companyUpdateDate(domain.companyUpdateDate)
 
+        .pdgContact(domain.pdgContact?.let { toModel(it) })
         .adminContact(domain.adminContact?.let { toModel(it) })
-        .bankInfo(domain.bankInfo?.let { toModel(it) })
+//        .bankInfo(domain.bankInfo?.let { toModel(it) })
         .fiscalAddress(domain.fiscalAddress?.let { toModel(it) })
+        .motherCompany(domain.motherCompany?.let { toModel(it) })
 
 //        .kbisFilename(domain.kbisFilename)
 //        .ribFilename(domain.ribFilename)
@@ -126,9 +133,7 @@ fun toModel(domain: CompanyDomain) : CompanyModel {
 }
 
 fun fromModel(model: CompanyModel) : CompanyDomain {
-    val companyName = if (model.companyName.isNullOrEmpty()) model.nomCommercial!! else model.companyName
-    return CompanyDomain.Builder(companyName)
-        .raisonSocial(model.raisonSocial)
+    return CompanyDomain.Builder(model.raisonSocial)
         .nomCommercial(model.nomCommercial)
         .formeJuridique(model.formeJuridique)
         .capital(model.capital)
@@ -138,11 +143,12 @@ fun fromModel(model: CompanyModel) : CompanyDomain {
         .numDuns(model.numDuns)
         .numTva(model.numTva)
         .codeNaf(model.codeNaf)
-        .appartenanceGroupe(model.appartenanceGroupe)
-        .typeEntreprise(model.typeEntreprise)
+        .companyCreationDate(model.companyCreationDate)
+        .companyUpdateDate(model.companyUpdateDate)
 
+        .pdgContact(model.pdgContact?.let { fromModel(it) })
         .adminContact(model.adminContact?.let { fromModel(it) })
-        .bankInfo(model.bankInfo?.let { fromModel(it) })
+//        .bankInfo(model.bankInfo?.let { fromModel(it) })
         .fiscalAddress(model.fiscalAddress?.let { fromModel(it) })
 
 //        .kbisFilename(model.kbisFilename)
