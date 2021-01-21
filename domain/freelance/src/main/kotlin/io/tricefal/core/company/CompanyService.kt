@@ -49,7 +49,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().build()
         if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().build()
         if (company.fiscalAddress == null) company.fiscalAddress = AddressDomain.Builder().build()
-        if (company.motherCompany == null) company.motherCompany = CompanyDomain.Builder(company.raisonSocial).build()
+        if (company.motherCompany == null) company.motherCompany = MotherCompanyDomain()
         if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
 
         return operations.let { ops ->
@@ -74,22 +74,21 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         } else throw NotFoundException("Failed to find a company for user $companyName")
     }
 
-    override fun updateOnKbisUploaded(companyName: String, filename: String): CompanyDomain {
+    override fun updateOnKbisUploaded(companyName: String): CompanyDomain {
         var company = CompanyDomain.Builder(companyName)
-            .kbisFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
-                        it.kbisFilename = filename
                         it.state?.kbisUploaded = true
                         company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.kbisUploaded = true
-                        company = dataAdapter.create(company)
+                        dataAdapter.create(company)
                     }
                 )
         } catch (ex: Throwable) {
@@ -99,22 +98,21 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         return company
     }
 
-    override fun updateOnRibUploaded(companyName: String, filename: String): CompanyDomain {
+    override fun updateOnRibUploaded(companyName: String): CompanyDomain {
         var company = CompanyDomain.Builder(companyName)
-            .ribFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
-                        it.ribFilename = filename
                         it.state?.ribUploaded = true
                         company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.ribUploaded = true
-                        company = dataAdapter.create(company)
+                        dataAdapter.create(company)
                     }
                 )
         } catch (ex: Throwable) {
@@ -124,22 +122,21 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         return company
     }
 
-    override fun updateOnRcUploaded(companyName: String, filename: String): CompanyDomain {
+    override fun updateOnRcUploaded(companyName: String): CompanyDomain {
         var company = CompanyDomain.Builder(companyName)
-            .rcFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
-                        it.rcFilename = filename
                         it.state?.rcUploaded = true
                         company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.rcUploaded = true
-                        company = dataAdapter.create(company)
+                        dataAdapter.create(company)
                     }
                 )
         } catch (ex: Throwable) {
@@ -149,22 +146,21 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         return company
     }
 
-    override fun updateOnUrssafUploaded(companyName: String, filename: String): CompanyDomain {
+    override fun updateOnUrssafUploaded(companyName: String): CompanyDomain {
         var company = CompanyDomain.Builder(companyName)
-            .urssafFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
-                        it.urssafFilename = filename
                         it.state?.urssafUploaded = true
                         company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.urssafUploaded = true
-                        company = dataAdapter.create(company)
+                        dataAdapter.create(company)
                     }
                 )
         } catch (ex: Exception) {
@@ -174,22 +170,21 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         return company
     }
 
-    override fun updateOnFiscalUploaded(companyName: String, filename: String): CompanyDomain {
+    override fun updateOnFiscalUploaded(companyName: String): CompanyDomain {
         var company = CompanyDomain.Builder(companyName)
-            .fiscalFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
-                        it.fiscalFilename = filename
                         it.state?.fiscalUploaded = true
                         company = dataAdapter.update(companyName, it)
                     },
                     {
                         company.state?.fiscalUploaded = true
-                        company = dataAdapter.create(company)
+                        dataAdapter.create(company)
                     }
                 )
         } catch (ex: Throwable) {
@@ -237,7 +232,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         val adminContact = ContactDomain.Builder().email(username).build()
         val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
         val fiscalAddress = AddressDomain.Builder().build()
-        val motherCompany = CompanyDomain.Builder("......").build()
+        val motherCompany = MotherCompanyDomain()
         val state = CompanyStateDomain.Builder(username).build()
         return CompanyDomain.Builder(raisonSocial = "......")
             .pdgContact(pdgContact)

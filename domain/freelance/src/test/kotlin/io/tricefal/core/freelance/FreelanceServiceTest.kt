@@ -132,8 +132,8 @@ class FreelanceServiceTest {
     fun `should update freelance upon kbis uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-kbis.pdf"
         val freelance = FreelanceDomain.Builder(username)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
@@ -142,20 +142,20 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnKbisUploaded(username, filename)
+        val result = service.updateOnKbisUploaded(username)
 
         // Arrange
-        Assertions.assertEquals(result.kbisFilename, "new-kbis.pdf")
+        Assertions.assertEquals(result.username, username)
+        Assertions.assertTrue(result.state?.kbisUploaded!!)
     }
 
     @Test
-    fun `should create a new freelance upon kbis uploaded`() {
+    fun `should create a new freelance if not existed upon kbis uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-kbis.pdf"
 
         val newFreelance = FreelanceDomain.Builder(username)
-            .kbisFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newFreelance)
@@ -163,19 +163,18 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnKbisUploaded(username, "new-kbis.pdf")
+        val result = service.updateOnKbisUploaded(username)
 
         // Arrange
         Assertions.assertEquals(result.username, username)
-        Assertions.assertEquals(result.kbisFilename, filename)
     }
 
     @Test
     fun `should update freelance upon rib uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-rib.pdf"
         val freelance = FreelanceDomain.Builder(username)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
@@ -184,20 +183,20 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnRibUploaded(username, filename)
+        val result = service.updateOnRibUploaded(username)
 
         // Arrange
-        Assertions.assertEquals(result.ribFilename, "new-rib.pdf")
+        Assertions.assertEquals(result.username, username)
+        Assertions.assertTrue(result.state?.ribUploaded!!)
     }
 
     @Test
-    fun `should create a new freelance upon rib uploaded`() {
+    fun `should create a new freelance if not existed upon rib uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-rib.pdf"
 
         val newFreelance = FreelanceDomain.Builder(username)
-            .ribFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newFreelance)
@@ -205,19 +204,19 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnRibUploaded(username, filename)
+        val result = service.updateOnRibUploaded(username)
 
         // Arrange
         Assertions.assertEquals(result.username, username)
-        Assertions.assertEquals(result.ribFilename, "new-rib.pdf")
+        Assertions.assertTrue(result.state?.ribUploaded!!)
     }
 
     @Test
     fun `should update freelance upon rc uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-rc.pdf"
         val freelance = FreelanceDomain.Builder(username)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
@@ -226,20 +225,20 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnRcUploaded(username, filename)
+        val result = service.updateOnRcUploaded(username)
 
         // Arrange
-        Assertions.assertEquals(result.rcFilename, "new-rc.pdf")
+        Assertions.assertEquals(result.username, username)
+        Assertions.assertTrue(result.state?.rcUploaded!!)
     }
 
     @Test
-    fun `should create a new freelance upon rc uploaded`() {
+    fun `should create a new freelance if not existed upon rc uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-rc.pdf"
 
         val newFreelance = FreelanceDomain.Builder(username)
-            .rcFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newFreelance)
@@ -247,19 +246,19 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnRcUploaded(username, filename)
+        val result = service.updateOnRcUploaded(username)
 
         // Arrange
         Assertions.assertEquals(result.username, username)
-        Assertions.assertEquals(result.rcFilename, "new-rc.pdf")
+        Assertions.assertTrue(result.state?.rcUploaded!!)
     }
 
     @Test
     fun `should update freelance upon urssaf uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-urssaf.pdf"
         val freelance = FreelanceDomain.Builder(username)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
@@ -268,20 +267,20 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnUrssafUploaded(username, filename)
+        val result = service.updateOnUrssafUploaded(username)
 
         // Arrange
-        Assertions.assertEquals(result.urssafFilename, "new-urssaf.pdf")
+        Assertions.assertEquals(result.username, username)
+        Assertions.assertTrue(result.state?.urssafUploaded!!)
     }
 
     @Test
-    fun `should create a new freelance upon urssaf uploaded`() {
+    fun `should create a new freelance if not existed  upon urssaf uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-urssaf.pdf"
 
         val newFreelance = FreelanceDomain.Builder(username)
-            .urssafFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newFreelance)
@@ -289,19 +288,19 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnUrssafUploaded(username, filename)
+        val result = service.updateOnUrssafUploaded(username)
 
         // Arrange
         Assertions.assertEquals(result.username, username)
-        Assertions.assertEquals(result.urssafFilename, "new-urssaf.pdf")
+        Assertions.assertTrue(result.state?.urssafUploaded!!)
     }
 
     @Test
     fun `should update freelance upon fiscal uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-fiscal.pdf"
         val freelance = FreelanceDomain.Builder(username)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
@@ -310,20 +309,20 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnFiscalUploaded(username, filename)
+        val result = service.updateOnFiscalUploaded(username)
 
         // Arrange
-        Assertions.assertEquals(result.fiscalFilename, "new-fiscal.pdf")
+        Assertions.assertEquals(result.username, username)
+        Assertions.assertTrue(result.state?.fiscalUploaded!!)
     }
 
     @Test
-    fun `should create a new freelance upon fiscal uploaded`() {
+    fun `should create a new freelance if not existed  upon fiscal uploaded`() {
         // Arrange
         val username = "kong@gmail.com"
-        val filename = "new-fiscal.pdf"
 
         val newFreelance = FreelanceDomain.Builder(username)
-            .fiscalFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .build()
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newFreelance)
@@ -331,11 +330,11 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnFiscalUploaded(username, filename)
+        val result = service.updateOnFiscalUploaded(username)
 
         // Arrange
         Assertions.assertEquals(result.username, username)
-        Assertions.assertEquals(result.fiscalFilename, "new-fiscal.pdf")
+        Assertions.assertTrue(result.state?.fiscalUploaded!!)
     }
 
 

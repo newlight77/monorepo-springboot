@@ -55,7 +55,6 @@ class CompanyRepositoryAdapter(private var repository: CompanyJpaRepository,
             newEntity.adminContact?.id = it.adminContact?.id
             newEntity.bankInfo?.id = it.bankInfo?.id
             newEntity.fiscalAddress?.id = it.fiscalAddress?.id
-            newEntity.motherCompany?.id = it.motherCompany?.id
             newEntity.state?.id = it.state?.id
             newEntity.lastDate = it.lastDate ?: Instant.now()
             val updated = repository.save(newEntity)

@@ -2,7 +2,6 @@ package io.tricefal.core.freelance
 
 import java.time.Instant
 
-
 data class CompanyModel(
         val raisonSocial: String,
         val nomCommercial: String?,
@@ -20,16 +19,10 @@ data class CompanyModel(
         var adminContact: ContactModel? = null,
 //        var bankInfo: BankInfoModel? = null,
         var fiscalAddress: AddressModel? = null,
-        var motherCompany: CompanyModel? = null, // optional
+        var motherCompany: MotherCompanyModel? = null, // optional
 
         var state: CompanyStateModel? = null,
         var lastDate: Instant? = null
-
-//        var kbisFile: MetafileModel? = null,
-//        var ribFile: MetafileModel? = null,
-//        var rcFile: MetafileModel? = null,
-//        var urssafFile: MetafileModel? = null,
-//        var fiscalFile: MetafileModel? = null
 ) {
     data class Builder(
             var raisonSocial: String,
@@ -49,7 +42,7 @@ data class CompanyModel(
             var adminContact: ContactModel? = null,
 //            var bankInfo: BankInfoModel? = null,
             var fiscalAddress: AddressModel? = null,
-            var motherCompany: CompanyModel? = null,
+            var motherCompany: MotherCompanyModel? = null,
 
             var state: CompanyStateModel? = null,
             var lastDate: Instant? = null
@@ -70,7 +63,7 @@ data class CompanyModel(
         fun adminContact(adminContact: ContactModel?) = apply { this.adminContact = adminContact }
 //        fun bankInfo(bankInfo: BankInfoModel?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressModel?) = apply { this.fiscalAddress = fiscalAddress }
-        fun motherCompany(motherCompany: CompanyModel?) = apply { this.motherCompany = motherCompany }
+        fun motherCompany(motherCompany: MotherCompanyModel?) = apply { this.motherCompany = motherCompany }
         
         fun state(state: CompanyStateModel?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
@@ -121,12 +114,6 @@ fun toModel(domain: CompanyDomain) : CompanyModel {
         .fiscalAddress(domain.fiscalAddress?.let { toModel(it) })
         .motherCompany(domain.motherCompany?.let { toModel(it) })
 
-//        .kbisFilename(domain.kbisFilename)
-//        .ribFilename(domain.ribFilename)
-//        .rcFilename(domain.rcFilename)
-//        .urssafFilename(domain.urssafFilename)
-//        f.iscalFilename(domain.fiscalFilename)
-
         .state(domain.state?.let { toModel(it) })
         .lastDate(domain.lastDate)
         .build()
@@ -150,12 +137,7 @@ fun fromModel(model: CompanyModel) : CompanyDomain {
         .adminContact(model.adminContact?.let { fromModel(it) })
 //        .bankInfo(model.bankInfo?.let { fromModel(it) })
         .fiscalAddress(model.fiscalAddress?.let { fromModel(it) })
-
-//        .kbisFilename(model.kbisFilename)
-//        .ribFilename(model.ribFilename)
-//        .rcFilename(model.rcFilename)
-//        .urssafFilename(model.urssafFilename)
-//        f.iscalFilename(model.fiscalFilename)
+        .motherCompany(model.motherCompany?.let { fromModel(it) })
 
         .state(model.state?.let { fromModel(it) })
         .lastDate(model.lastDate)

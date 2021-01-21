@@ -19,13 +19,7 @@ class CompanyDomain(
     var adminContact: ContactDomain?,
     var bankInfo: BankInfoDomain?,
     var fiscalAddress: AddressDomain?,
-    var motherCompany: CompanyDomain?,
-
-    var kbisFilename: String? = null,
-    var ribFilename: String? = null,
-    var rcFilename: String? = null,
-    var urssafFilename: String? = null,
-    var fiscalFilename: String? = null,
+    var motherCompany: MotherCompanyDomain?,
 
     var state: CompanyStateDomain?,
     var lastDate: Instant?
@@ -47,13 +41,7 @@ class CompanyDomain(
         var adminContact: ContactDomain? = null,
         var bankInfo: BankInfoDomain? = null,
         var fiscalAddress: AddressDomain? = null,
-        var motherCompany: CompanyDomain? = null,
-
-        var kbisFilename: String? = null,
-        var ribFilename: String? = null,
-        var rcFilename: String? = null,
-        var urssafFilename: String? = null,
-        var fiscalFilename: String? = null,
+        var motherCompany: MotherCompanyDomain? = null,
 
         var state: CompanyStateDomain? = null,
         var lastDate: Instant? = null
@@ -74,13 +62,7 @@ class CompanyDomain(
         fun adminContact(adminContact: ContactDomain?) = apply { this.adminContact = adminContact }
         fun bankInfo(bankInfo: BankInfoDomain?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressDomain?) = apply { this.fiscalAddress = fiscalAddress }
-        fun motherCompany(motherCompany: CompanyDomain?) = apply { this.motherCompany = motherCompany }
-
-        fun kbisFilename(kbisFilename: String?) = apply { this.kbisFilename = kbisFilename }
-        fun ribFilename(ribFilename: String?) = apply { this.ribFilename = ribFilename }
-        fun rcFilename(rcFilename: String?) = apply { this.rcFilename = rcFilename }
-        fun urssafFilename(urssafFilename: String?) = apply { this.urssafFilename = urssafFilename }
-        fun fiscalFilename(fiscalFilename: String?) = apply { this.fiscalFilename = fiscalFilename }
+        fun motherCompany(motherCompany: MotherCompanyDomain?) = apply { this.motherCompany = motherCompany }
 
         fun state(state: CompanyStateDomain?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
@@ -104,12 +86,6 @@ class CompanyDomain(
             bankInfo = bankInfo,
             fiscalAddress = fiscalAddress,
             motherCompany = motherCompany,
-
-            kbisFilename = kbisFilename,
-            ribFilename = ribFilename,
-            rcFilename = rcFilename,
-            urssafFilename = urssafFilename,
-            fiscalFilename = fiscalFilename,
 
             state = state,
             lastDate = lastDate

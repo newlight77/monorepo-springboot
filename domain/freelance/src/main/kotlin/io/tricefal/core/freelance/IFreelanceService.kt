@@ -2,6 +2,7 @@ package io.tricefal.core.freelance
 
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.shared.util.json.PatchOperation
+import java.time.Instant
 import java.util.*
 
 interface IFreelanceService {
@@ -12,11 +13,11 @@ interface IFreelanceService {
     fun findByUsername(username: String): FreelanceDomain
     fun findAll(): List<FreelanceDomain>
     fun availables(): List<FreelanceDomain>
-    fun updateOnKbisUploaded(username: String, filename: String): FreelanceDomain
-    fun updateOnRibUploaded(username: String, filename: String): FreelanceDomain
-    fun updateOnRcUploaded(username: String, filename: String): FreelanceDomain
-    fun updateOnUrssafUploaded(username: String, filename: String): FreelanceDomain
-    fun updateOnFiscalUploaded(username: String, filename: String): FreelanceDomain
+    fun updateOnKbisUploaded(username: String): FreelanceDomain
+    fun updateOnRibUploaded(username: String): FreelanceDomain
+    fun updateOnRcUploaded(username: String): FreelanceDomain
+    fun updateOnUrssafUploaded(username: String): FreelanceDomain
+    fun updateOnFiscalUploaded(username: String): FreelanceDomain
     fun completed(username: String, metaNotification: MetaNotificationDomain): FreelanceDomain
 
 }

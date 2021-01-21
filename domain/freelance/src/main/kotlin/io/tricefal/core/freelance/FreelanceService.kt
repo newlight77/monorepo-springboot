@@ -66,7 +66,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         if (domain.company?.bankInfo == null) domain.company?.bankInfo = BankInfoDomain.Builder().build()
         if (domain.company?.bankInfo?.address == null) domain.company?.bankInfo?.address = AddressDomain.Builder().build()
         if (domain.company?.fiscalAddress == null) domain.company?.fiscalAddress = AddressDomain.Builder().build()
-        if (domain.company?.motherCompany == null) domain.company?.motherCompany = CompanyDomain.Builder("......").build()
+        if (domain.company?.motherCompany == null) domain.company?.motherCompany = MotherCompanyDomain()
 
         if (domain.contact == null) domain.contact = ContactDomain.Builder().build()
         if (domain.address == null) domain.address = AddressDomain.Builder().build()
@@ -110,22 +110,21 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return dataAdapter.availables()
     }
 
-    override fun updateOnKbisUploaded(username: String, filename: String): FreelanceDomain {
+    override fun updateOnKbisUploaded(username: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-            .kbisFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
-                        it.kbisFilename = filename
                         it.state?.kbisUploaded = true
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.kbisUploaded = true
-                        freelance = dataAdapter.create(freelance)
+                        dataAdapter.create(freelance)
                     }
                 )
         } catch (ex: Throwable) {
@@ -135,22 +134,21 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    override fun updateOnRibUploaded(username: String, filename: String): FreelanceDomain {
+    override fun updateOnRibUploaded(username: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-            .ribFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
-                        it.ribFilename = filename
                         it.state?.ribUploaded = true
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.ribUploaded = true
-                        freelance = dataAdapter.create(freelance)
+                        dataAdapter.create(freelance)
                     }
                 )
         } catch (ex: Throwable) {
@@ -160,22 +158,21 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    override fun updateOnRcUploaded(username: String, filename: String): FreelanceDomain {
+    override fun updateOnRcUploaded(username: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-            .rcFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
-                        it.rcFilename = filename
                         it.state?.rcUploaded = true
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.rcUploaded = true
-                        freelance = dataAdapter.create(freelance)
+                        dataAdapter.create(freelance)
                     }
                 )
         } catch (ex: Throwable) {
@@ -185,22 +182,21 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    override fun updateOnUrssafUploaded(username: String, filename: String): FreelanceDomain {
+    override fun updateOnUrssafUploaded(username: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-            .urssafFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
-                        it.urssafFilename = filename
                         it.state?.urssafUploaded = true
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.urssafUploaded = true
-                        freelance = dataAdapter.create(freelance)
+                        dataAdapter.create(freelance)
                     }
                 )
         } catch (ex: Exception) {
@@ -210,22 +206,21 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    override fun updateOnFiscalUploaded(username: String, filename: String): FreelanceDomain {
+    override fun updateOnFiscalUploaded(username: String): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
-            .fiscalFilename(filename)
+            .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
             .build()
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
-                        it.fiscalFilename = filename
                         it.state?.fiscalUploaded = true
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.fiscalUploaded = true
-                        freelance = dataAdapter.create(freelance)
+                        dataAdapter.create(freelance)
                     }
                 )
         } catch (ex: Throwable) {
@@ -278,7 +273,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .adminContact(adminContact)
             .bankInfo(bankInfo)
             .fiscalAddress(fiscalAddress)
-            .motherCompany(CompanyDomain.Builder("......").build())
+            .motherCompany(MotherCompanyDomain())
             .build()
         val address = AddressDomain.Builder().build()
         val contact = ContactDomain.Builder().email(username).build()

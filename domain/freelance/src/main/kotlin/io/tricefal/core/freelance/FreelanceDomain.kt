@@ -10,12 +10,6 @@ data class FreelanceDomain
         var company: CompanyDomain?,
         var privacyDetail: PrivacyDetailDomain?,
 
-        var kbisFilename: String?,
-        var ribFilename: String?,
-        var rcFilename: String?,
-        var urssafFilename: String?,
-        var fiscalFilename: String?,
-
         var withMission: Boolean?,
         var availability: Availability?,
         var state: FreelanceStateDomain?,
@@ -29,12 +23,6 @@ data class FreelanceDomain
         var company: CompanyDomain? = null,
         var privacyDetail: PrivacyDetailDomain? = null,
 
-        var kbisFilename: String? = null,
-        var ribFilename: String? = null,
-        var rcFilename: String? = null,
-        var urssafFilename: String? = null,
-        var fiscalFilename: String? = null,
-
         var withMission: Boolean? = null,
         var availability: Availability? = null,
         var state: FreelanceStateDomain? = null,
@@ -45,12 +33,6 @@ data class FreelanceDomain
         fun address(address: AddressDomain?) = apply { this.address = address ?: AddressDomain.Builder().build() }
         fun company(company: CompanyDomain?) = apply { this.company = company ?: CompanyDomain.Builder("......").build() }
         fun privacyDetail(privacyDetail: PrivacyDetailDomain?) = apply { this.privacyDetail = privacyDetail ?: PrivacyDetailDomain.Builder(username).build() }
-
-        fun kbisFilename(kbisFilename: String?) = apply { this.kbisFilename = kbisFilename }
-        fun ribFilename(ribFilename: String?) = apply { this.ribFilename = ribFilename }
-        fun rcFilename(rcFilename: String?) = apply { this.rcFilename = rcFilename }
-        fun urssafFilename(urssafFilename: String?) = apply { this.urssafFilename = urssafFilename }
-        fun fiscalFilename(fiscalFilename: String?) = apply { this.fiscalFilename = fiscalFilename }
 
         fun withMission(withMission: Boolean?) = apply { this.withMission = withMission }
         fun availability(availability: Availability?) = apply { this.availability = availability }
@@ -64,11 +46,6 @@ data class FreelanceDomain
             address,
             company,
             privacyDetail,
-            kbisFilename,
-            ribFilename,
-            rcFilename,
-            urssafFilename,
-            fiscalFilename,
             withMission,
             availability,
             state,

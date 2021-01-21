@@ -57,7 +57,6 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
             newEntity.company?.adminContact?.id = it.company?.adminContact?.id
             newEntity.company?.bankInfo?.id = it.company?.bankInfo?.id
             newEntity.company?.fiscalAddress?.id = it.company?.fiscalAddress?.id
-            newEntity.company?.motherCompany?.id = it.company?.motherCompany?.id
             newEntity.contact?.id = it.contact?.id
             newEntity.address?.id = it.address?.id
             newEntity.privacyDetail?.id = it.privacyDetail?.id
@@ -96,7 +95,6 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
         if (entity.company?.adminContact == null) entity.company?.adminContact = ContactEntity()
         if (entity.company?.bankInfo == null) entity.company?.bankInfo = BankInfoEntity()
         if (entity.company?.fiscalAddress == null) entity.company?.fiscalAddress = AddressEntity()
-        if (entity.company?.motherCompany == null) entity.company?.motherCompany = CompanyEntity(raisonSocial = "......")
         if (entity.contact == null) entity.contact = ContactEntity()
         if (entity.address == null) entity.address = AddressEntity()
         if (entity.privacyDetail == null) entity.privacyDetail = PrivacyDetailEntity(username = entity.username)

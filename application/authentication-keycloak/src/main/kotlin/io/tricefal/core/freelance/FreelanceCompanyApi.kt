@@ -145,6 +145,7 @@ class FreelanceCompanyApi(val freelanceWebHandler: FreelanceWebHandler) {
         response.contentType = metafile.contentType
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
         response.setHeader("filename", metafile.filename)
+        response.setHeader("updateDate", metafile.creationDate.toString())
         val inputStream = FileInputStream(Paths.get(metafile.filename).toFile())
         return streamingResponseBody(inputStream)
     }

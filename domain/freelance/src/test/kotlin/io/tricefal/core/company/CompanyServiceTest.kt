@@ -136,8 +136,8 @@ class CompanyServiceTest {
     fun `should update company upon kbis uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-kbis.pdf"
         val company = CompanyDomain.Builder(companyName)
+            .state(CompanyStateDomain(companyName))
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
@@ -146,20 +146,20 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnKbisUploaded(companyName, filename)
+        val result = service.updateOnKbisUploaded(companyName)
 
         // Arrange
-        Assertions.assertEquals(result.kbisFilename, "new-kbis.pdf")
+        Assertions.assertEquals(result.raisonSocial, companyName)
+        Assertions.assertTrue(result.state?.kbisUploaded!!)
     }
 
     @Test
     fun `should create a new company upon kbis uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-kbis.pdf"
 
         val newCompany = CompanyDomain.Builder(companyName)
-            .kbisFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .build()
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newCompany)
@@ -167,19 +167,19 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnKbisUploaded(companyName, "new-kbis.pdf")
+        val result = service.updateOnKbisUploaded(companyName)
 
         // Arrange
         Assertions.assertEquals(result.raisonSocial, companyName)
-        Assertions.assertEquals(result.kbisFilename, filename)
+        Assertions.assertTrue(result.state?.kbisUploaded!!)
     }
 
     @Test
     fun `should update company upon rib uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-rib.pdf"
         val company = CompanyDomain.Builder(companyName)
+            .state(CompanyStateDomain(companyName))
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
@@ -188,20 +188,20 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnRibUploaded(companyName, filename)
+        val result = service.updateOnRibUploaded(companyName)
 
         // Arrange
-        Assertions.assertEquals(result.ribFilename, "new-rib.pdf")
+        Assertions.assertEquals(result.raisonSocial, companyName)
+        Assertions.assertTrue(result.state?.ribUploaded!!)
     }
 
     @Test
     fun `should create a new company upon rib uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-rib.pdf"
 
         val newCompany = CompanyDomain.Builder(companyName)
-            .ribFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .build()
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newCompany)
@@ -209,19 +209,20 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnRibUploaded(companyName, filename)
+        val result = service.updateOnRibUploaded(companyName)
 
         // Arrange
         Assertions.assertEquals(result.raisonSocial, companyName)
-        Assertions.assertEquals(result.ribFilename, "new-rib.pdf")
+        Assertions.assertTrue(result.state?.ribUploaded!!)
+
     }
 
     @Test
     fun `should update company upon rc uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-rc.pdf"
         val company = CompanyDomain.Builder(companyName)
+            .state(CompanyStateDomain(companyName))
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
@@ -230,20 +231,21 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnRcUploaded(companyName, filename)
+        val result = service.updateOnRcUploaded(companyName)
 
         // Arrange
-        Assertions.assertEquals(result.rcFilename, "new-rc.pdf")
+        Assertions.assertEquals(result.raisonSocial, companyName)
+        Assertions.assertTrue(result.state?.rcUploaded!!)
+
     }
 
     @Test
     fun `should create a new company upon rc uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-rc.pdf"
 
         val newCompany = CompanyDomain.Builder(companyName)
-            .rcFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .build()
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newCompany)
@@ -251,19 +253,20 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnRcUploaded(companyName, filename)
+        val result = service.updateOnRcUploaded(companyName)
 
         // Arrange
         Assertions.assertEquals(result.raisonSocial, companyName)
-        Assertions.assertEquals(result.rcFilename, "new-rc.pdf")
+        Assertions.assertTrue(result.state?.rcUploaded!!)
+
     }
 
     @Test
     fun `should update company upon urssaf uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-urssaf.pdf"
         val company = CompanyDomain.Builder(companyName)
+            .state(CompanyStateDomain(companyName))
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
@@ -272,20 +275,21 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnUrssafUploaded(companyName, filename)
+        val result = service.updateOnUrssafUploaded(companyName)
 
         // Arrange
-        Assertions.assertEquals(result.urssafFilename, "new-urssaf.pdf")
+        Assertions.assertEquals(result.raisonSocial, companyName)
+        Assertions.assertTrue(result.state?.urssafUploaded!!)
+
     }
 
     @Test
     fun `should create a new company upon urssaf uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-urssaf.pdf"
 
         val newCompany = CompanyDomain.Builder(companyName)
-            .urssafFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .build()
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newCompany)
@@ -293,19 +297,19 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnUrssafUploaded(companyName, filename)
+        val result = service.updateOnUrssafUploaded(companyName)
 
         // Arrange
         Assertions.assertEquals(result.raisonSocial, companyName)
-        Assertions.assertEquals(result.urssafFilename, "new-urssaf.pdf")
+        Assertions.assertTrue(result.state?.urssafUploaded!!)
     }
 
     @Test
     fun `should update company upon fiscal uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-fiscal.pdf"
         val company = CompanyDomain.Builder(companyName)
+            .state(CompanyStateDomain(companyName))
             .build()
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
@@ -314,20 +318,20 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnFiscalUploaded(companyName, filename)
+        val result = service.updateOnFiscalUploaded(companyName)
 
         // Arrange
-        Assertions.assertEquals(result.fiscalFilename, "new-fiscal.pdf")
+        Assertions.assertEquals(result.raisonSocial, companyName)
+        Assertions.assertTrue(result.state?.fiscalUploaded!!)
     }
 
     @Test
     fun `should create a new company upon fiscal uploaded`() {
         // Arrange
         val companyName = "company name"
-        val filename = "new-fiscal.pdf"
 
         val newCompany = CompanyDomain.Builder(companyName)
-            .fiscalFilename(filename)
+            .state(CompanyStateDomain(companyName))
             .build()
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.empty())
         Mockito.`when`(dataAdapter.create(any())).thenReturn(newCompany)
@@ -335,11 +339,11 @@ class CompanyServiceTest {
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.updateOnFiscalUploaded(companyName, filename)
+        val result = service.updateOnFiscalUploaded(companyName)
 
         // Arrange
         Assertions.assertEquals(result.raisonSocial, companyName)
-        Assertions.assertEquals(result.fiscalFilename, "new-fiscal.pdf")
+        Assertions.assertTrue(result.state?.fiscalUploaded!!)
     }
 
 

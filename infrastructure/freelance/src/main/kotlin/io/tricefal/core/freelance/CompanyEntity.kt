@@ -64,9 +64,11 @@ data class CompanyEntity(
         @JoinColumn(name = "fiscal_address_id")
         var fiscalAddress: AddressEntity? = null,
 
-        @OneToOne(cascade = [CascadeType.ALL])
-        @JoinColumn(name = "mother_company_id")
-        var motherCompany: CompanyEntity? = null,
+        @Column(name = "mother_cie_name", length = 100)
+        val motherRaisonSocial: String? = null,
+
+        @Column(name = "mother_cie_type", length = 100)
+        val motherTypeEntreprise: String? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")
@@ -95,8 +97,8 @@ fun toEntity(domain: CompanyDomain): CompanyEntity {
                 adminContact = domain.adminContact?.let { toEntity(it) },
                 bankInfo = domain.bankInfo?.let { toEntity(it) },
                 fiscalAddress = domain.fiscalAddress?.let { toEntity(it) },
-                motherCompany = domain.motherCompany?.let { toEntity(it) },
-
+                motherRaisonSocial = domain.motherCompany?.raisonSocial,
+                motherTypeEntreprise = domain.motherCompany?.typeEntreprise,
                 state = domain.state?.let { toEntity(it) },
                 lastDate = domain.lastDate
         )
@@ -119,7 +121,7 @@ fun fromEntity(entity: CompanyEntity): CompanyDomain {
                 adminContact = entity.adminContact?.let { fromEntity(it) },
                 bankInfo = entity.bankInfo?.let { fromEntity(it) },
                 fiscalAddress = entity.fiscalAddress?.let { fromEntity(it) },
-                motherCompany = entity.motherCompany?.let { fromEntity(it) },
+                motherCompany = MotherCompanyDomain(entity.motherRaisonSocial, entity.motherTypeEntreprise),
                 state = entity.state?.let { fromEntity(it) },
                 lastDate = entity.lastDate
         )

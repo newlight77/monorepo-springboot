@@ -91,133 +91,133 @@ class CompanyWebHandler(val companyService: ICompanyService,
         return io.tricefal.core.freelance.toModel(result)
     }
 
-    fun uploadKbis(username: String, file: MultipartFile): CompanyModel {
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.KBIS))
+    fun uploadKbis(companyName: String, file: MultipartFile): CompanyModel {
+        val metaFile = fromModel(toMetafile(companyName, file, dataFilesPath, Representation.KBIS))
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnKbisUploaded(username, metaFile.filename)
+            companyService.updateOnKbisUploaded(companyName)
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the kbis document for user $username")
-            throw FreelanceUploadException("Failed to upload the kbis document for user $username", ex)
+            logger.error("Failed to upload the kbis document for user $companyName")
+            throw FreelanceUploadException("Failed to upload the kbis document for user $companyName", ex)
         }
-        logger.info("successfully upload the kbis document for user $username")
+        logger.info("successfully upload the kbis document for user $companyName")
         return io.tricefal.core.freelance.toModel(result)
     }
 
-    fun uploadRib(username: String, file: MultipartFile): CompanyModel {
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.RIB))
+    fun uploadRib(companyName: String, file: MultipartFile): CompanyModel {
+        val metaFile = fromModel(toMetafile(companyName, file, dataFilesPath, Representation.RIB))
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnRibUploaded(username, metaFile.filename)
+            companyService.updateOnRibUploaded(companyName)
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the rib document for user $username")
-            throw FreelanceUploadException("Failed to upload the rib document for user $username", ex)
+            logger.error("Failed to upload the rib document for user $companyName")
+            throw FreelanceUploadException("Failed to upload the rib document for user $companyName", ex)
         }
-        logger.info("successfully upload the rib document for user $username")
+        logger.info("successfully upload the rib document for user $companyName")
         return io.tricefal.core.freelance.toModel(result)
     }
 
-    fun uploadRc(username: String, file: MultipartFile): CompanyModel {
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.RC))
+    fun uploadRc(companyName: String, file: MultipartFile): CompanyModel {
+        val metaFile = fromModel(toMetafile(companyName, file, dataFilesPath, Representation.RC))
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnRcUploaded(username, metaFile.filename)
+            companyService.updateOnRcUploaded(companyName)
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the rc document for user $username")
-            throw FreelanceUploadException("Failed to upload the rc document for user $username", ex)
+            logger.error("Failed to upload the rc document for user $companyName")
+            throw FreelanceUploadException("Failed to upload the rc document for user $companyName", ex)
         }
-        logger.info("successfully upload the rc document for user $username")
+        logger.info("successfully upload the rc document for user $companyName")
         return io.tricefal.core.freelance.toModel(result)
     }
 
-    fun uploadUrssaf(username: String, file: MultipartFile): CompanyModel {
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.URSSAF))
+    fun uploadUrssaf(companyName: String, file: MultipartFile): CompanyModel {
+        val metaFile = fromModel(toMetafile(companyName, file, dataFilesPath, Representation.URSSAF))
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnUrssafUploaded(username, metaFile.filename)
+            companyService.updateOnUrssafUploaded(companyName)
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the urssaaf document for user $username")
-            throw FreelanceUploadException("Failed to upload the urssaaf document for user $username", ex)
+            logger.error("Failed to upload the urssaaf document for user $companyName")
+            throw FreelanceUploadException("Failed to upload the urssaaf document for user $companyName", ex)
         }
-        logger.info("successfully upload the urssaaf document for user $username")
+        logger.info("successfully upload the urssaaf document for user $companyName")
         return io.tricefal.core.freelance.toModel(result)
     }
 
-    fun uploadFiscal(username: String, file: MultipartFile): CompanyModel {
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.FISCAL))
+    fun uploadFiscal(companyName: String, file: MultipartFile): CompanyModel {
+        val metaFile = fromModel(toMetafile(companyName, file, dataFilesPath, Representation.FISCAL))
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnFiscalUploaded(username, metaFile.filename)
+            companyService.updateOnFiscalUploaded(companyName)
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the fiscal document for user $username")
-            throw FreelanceUploadException("Failed to upload the fiscal document for user $username", ex)
+            logger.error("Failed to upload the fiscal document for user $companyName")
+            throw FreelanceUploadException("Failed to upload the fiscal document for user $companyName", ex)
         }
-        logger.info("successfully upload the fiscal document for user $username")
+        logger.info("successfully upload the fiscal document for user $companyName")
         return io.tricefal.core.freelance.toModel(result)
     }
 
-    fun kbis(username: String): MetafileModel {
+    fun kbis(companyName: String): MetafileModel {
         return try {
-                metafileService.findByUsername(username)
+                metafileService.findByUsername(companyName)
                     .map { toModel(it) }
                     .first { it.representation == Representation.KBIS }
             } catch (ex: NotFoundException) {
-                throw GlobalNotFoundException("freelance not found with username $username", ex)
+                throw GlobalNotFoundException("freelance not found with username $companyName", ex)
             }
     }
 
-    fun rib(username: String): MetafileModel {
+    fun rib(companyName: String): MetafileModel {
         return try {
-             metafileService.findByUsername(username)
+             metafileService.findByUsername(companyName)
                 .map { toModel(it) }
                 .first { it.representation == Representation.RIB }
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         }
     }
 
-    fun rc(username: String): MetafileModel {
+    fun rc(companyName: String): MetafileModel {
         return try {
-             metafileService.findByUsername(username)
+             metafileService.findByUsername(companyName)
                 .map { toModel(it) }
                 .first { it.representation == Representation.RC }
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         }
     }
 
-    fun urssaf(username: String): MetafileModel {
+    fun urssaf(companyName: String): MetafileModel {
         return try {
-            metafileService.findByUsername(username)
+            metafileService.findByUsername(companyName)
                 .map { toModel(it) }
                 .first { it.representation == Representation.URSSAF }
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         }
     }
 
-    fun fiscal(username: String): MetafileModel {
+    fun fiscal(companyName: String): MetafileModel {
         return try {
-            metafileService.findByUsername(username)
+            metafileService.findByUsername(companyName)
                 .map { toModel(it) }
                 .first { it.representation == Representation.FISCAL }
         } catch (ex: NotFoundException) {
-            throw GlobalNotFoundException("freelance not found with username $username", ex)
+            throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         }
     }
 
