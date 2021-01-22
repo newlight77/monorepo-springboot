@@ -16,6 +16,7 @@ class CompanyDomain(
     var companyUpdateDate: Instant?,
 
     var pdgContact: ContactDomain?,
+    var pdgPrivacyDetail: PrivacyDetailDomain? = null,
     var adminContact: ContactDomain?,
     var bankInfo: BankInfoDomain?,
     var fiscalAddress: AddressDomain?,
@@ -39,6 +40,7 @@ class CompanyDomain(
         var companyUpdateDate: Instant? = null,
 
         var pdgContact: ContactDomain? = null,
+        var pdgPrivacyDetail: PrivacyDetailDomain? = null,
         var adminContact: ContactDomain? = null,
         var bankInfo: BankInfoDomain? = null,
         var fiscalAddress: AddressDomain? = null,
@@ -61,6 +63,7 @@ class CompanyDomain(
         fun companyUpdateDate(companyUpdateDate: Instant?) = apply { this.companyUpdateDate = companyUpdateDate }
 
         fun pdgContact(pdgContact: ContactDomain?) = apply { this.pdgContact = pdgContact }
+        fun pdgPrivacyDetail(pdgPrivacyDetail: PrivacyDetailDomain?) = apply { this.pdgPrivacyDetail = pdgPrivacyDetail }
         fun adminContact(adminContact: ContactDomain?) = apply { this.adminContact = adminContact }
         fun bankInfo(bankInfo: BankInfoDomain?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressDomain?) = apply { this.fiscalAddress = fiscalAddress }
@@ -85,6 +88,7 @@ class CompanyDomain(
             companyUpdateDate = companyUpdateDate,
 
             pdgContact = pdgContact,
+            pdgPrivacyDetail = pdgPrivacyDetail,
             adminContact = adminContact,
             bankInfo = bankInfo,
             fiscalAddress = fiscalAddress,

@@ -45,6 +45,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         operations: List<PatchOperation>,
     ): CompanyDomain {
         if (company.pdgContact == null) company.pdgContact = ContactDomain.Builder().build()
+        if (company.pdgPrivacyDetail == null) company.pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
         if (company.adminContact == null) company.adminContact = ContactDomain.Builder().build()
         if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().build()
         if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().build()
@@ -255,6 +256,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
 
     private fun createCompany(username: String): CompanyDomain {
         val pdgContact = ContactDomain.Builder().email(username).build()
+        val pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
         val adminContact = ContactDomain.Builder().email(username).build()
         val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
         val fiscalAddress = AddressDomain.Builder().build()
@@ -262,6 +264,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         val documents = CompanyDocumentsDomain.Builder().build()
         val state = CompanyStateDomain.Builder(username).build()
         return CompanyDomain.Builder(raisonSocial = "......")
+            .pdgPrivacyDetail(pdgPrivacyDetail)
             .pdgContact(pdgContact)
             .adminContact(adminContact)
             .bankInfo(bankInfo)

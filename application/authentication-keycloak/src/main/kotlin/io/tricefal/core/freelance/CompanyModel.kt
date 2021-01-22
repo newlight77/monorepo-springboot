@@ -16,6 +16,7 @@ data class CompanyModel(
         var companyUpdateDate: Instant? = null,
 
         var pdgContact: ContactModel? = null,
+        var pdgPrivacyDetail: PrivacyDetailModel? = null,
         var adminContact: ContactModel? = null,
 //        var bankInfo: BankInfoModel? = null,
         var fiscalAddress: AddressModel? = null,
@@ -40,6 +41,7 @@ data class CompanyModel(
             var companyUpdateDate: Instant? = null,
 
             var pdgContact: ContactModel? = null,
+            var pdgPrivacyDetail: PrivacyDetailModel? = null,
             var adminContact: ContactModel? = null,
 //            var bankInfo: BankInfoModel? = null,
             var fiscalAddress: AddressModel? = null,
@@ -62,6 +64,7 @@ data class CompanyModel(
         fun companyUpdateDate(companyUpdateDate: Instant?) = apply { this.companyUpdateDate = companyUpdateDate }
         
         fun pdgContact(pdgContact: ContactModel?) = apply { this.pdgContact = pdgContact }
+        fun pdgPrivacyDetail(pdgPrivacyDetail: PrivacyDetailModel?) = apply { this.pdgPrivacyDetail = pdgPrivacyDetail }
         fun adminContact(adminContact: ContactModel?) = apply { this.adminContact = adminContact }
 //        fun bankInfo(bankInfo: BankInfoModel?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressModel?) = apply { this.fiscalAddress = fiscalAddress }
@@ -86,6 +89,7 @@ data class CompanyModel(
             companyUpdateDate = companyUpdateDate,
 
             pdgContact = pdgContact,
+            pdgPrivacyDetail = pdgPrivacyDetail,
             adminContact = adminContact,
 //            bankInfo = bankInfo,
             fiscalAddress = fiscalAddress,
@@ -113,6 +117,7 @@ fun toModel(domain: CompanyDomain) : CompanyModel {
         .companyUpdateDate(domain.companyUpdateDate)
 
         .pdgContact(domain.pdgContact?.let { toModel(it) })
+        .pdgPrivacyDetail(domain.pdgPrivacyDetail?.let { toModel(it) })
         .adminContact(domain.adminContact?.let { toModel(it) })
 //        .bankInfo(domain.bankInfo?.let { toModel(it) })
         .fiscalAddress(domain.fiscalAddress?.let { toModel(it) })
@@ -139,6 +144,7 @@ fun fromModel(model: CompanyModel) : CompanyDomain {
         .companyUpdateDate(model.companyUpdateDate)
 
         .pdgContact(model.pdgContact?.let { fromModel(it) })
+        .pdgPrivacyDetail(model.pdgPrivacyDetail?.let { fromModel(it) })
         .adminContact(model.adminContact?.let { fromModel(it) })
 //        .bankInfo(model.bankInfo?.let { fromModel(it) })
         .fiscalAddress(model.fiscalAddress?.let { fromModel(it) })

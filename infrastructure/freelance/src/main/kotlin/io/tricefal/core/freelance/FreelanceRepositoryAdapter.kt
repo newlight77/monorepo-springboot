@@ -97,7 +97,7 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
         if (entity.company?.fiscalAddress == null) entity.company?.fiscalAddress = AddressEntity()
         if (entity.contact == null) entity.contact = ContactEntity()
         if (entity.address == null) entity.address = AddressEntity()
-        if (entity.privacyDetail == null) entity.privacyDetail = PrivacyDetailEntity(username = entity.username)
+        if (entity.privacyDetail == null) entity.privacyDetail = PrivacyDetailEntity()
         if (entity.state == null) entity.state = FreelanceStateEntity(username = entity.username)
 
         return operations.let { ops ->

@@ -4,27 +4,31 @@ import java.time.Instant
 import java.time.LocalDate
 
 class PrivacyDetailDomain(
-        val username: String,
-        val birthDate: LocalDate?,
-        val birthCity: String?,
-        val birthCountry: String?,
-        val citizenship: String?,
-        val socialSecurityNumber: String?,
-        val nationalIdentityNumber: String?,
-        val information: String?,
-        val lastDate: Instant?
+    val firstname: String?,
+    val lastname: String?,
+    val birthDate: LocalDate?,
+    val birthCity: String?,
+    val birthCountry: String?,
+    val citizenship: String?,
+    val socialSecurityNumber: String?,
+    val nationalIdentityNumber: String?,
+    val information: String?,
+    val lastDate: Instant?
 ) {
     data class Builder(
-            val username: String,
-            var birthDate: LocalDate? = null,
-            var birthCity: String? = null,
-            var birthCountry: String? = null,
-            var citizenship: String? = null,
-            var socialSecurityNumber: String? = null,
-            var nationalIdentityNumber: String? = null,
-            var information: String? = null,
-            var lastDate: Instant? = null
+        var firstname: String? = null,
+        var lastname: String? = null,
+        var birthDate: LocalDate? = null,
+        var birthCity: String? = null,
+        var birthCountry: String? = null,
+        var citizenship: String? = null,
+        var socialSecurityNumber: String? = null,
+        var nationalIdentityNumber: String? = null,
+        var information: String? = null,
+        var lastDate: Instant? = null
     ) {
+        fun firstname(firstname: String?) = apply { this.firstname = firstname }
+        fun lastname(lastname: String?) = apply { this.lastname = lastname }
         fun birthDate(birthDate: LocalDate?) = apply { this.birthDate = birthDate }
         fun birthCity(birthCity: String?) = apply { this.birthCity = birthCity }
         fun birthCountry(birthCountry: String?) = apply { this.birthCountry = birthCountry }
@@ -35,15 +39,16 @@ class PrivacyDetailDomain(
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = PrivacyDetailDomain(
-                username = username,
-                birthDate = birthDate,
-                birthCity = birthCity,
-                birthCountry = birthCountry,
-                citizenship = citizenship,
-                socialSecurityNumber = socialSecurityNumber,
-                nationalIdentityNumber = nationalIdentityNumber,
-                information = information,
-                lastDate = lastDate
+            firstname = firstname,
+            lastname = lastname,
+            birthDate = birthDate,
+            birthCity = birthCity,
+            birthCountry = birthCountry,
+            citizenship = citizenship,
+            socialSecurityNumber = socialSecurityNumber,
+            nationalIdentityNumber = nationalIdentityNumber,
+            information = information,
+            lastDate = lastDate
         )
     }
 

@@ -53,6 +53,10 @@ data class CompanyEntity(
         var pdgContact: ContactEntity? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(name = "pdg_privacy_id")
+        var pdgPrivacyDetail: PrivacyDetailEntity? = null,
+
+        @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "admin_contact_id")
         var adminContact: ContactEntity? = null,
 
@@ -68,11 +72,17 @@ data class CompanyEntity(
         @JoinColumn(name = "documents_id")
         var documents: CompanyDocumentsEntity? = null,
 
-        @Column(name = "mother_cie_name", length = 100)
+        @Column(name = "mother_name", length = 100)
         val motherRaisonSocial: String? = null,
 
-        @Column(name = "mother_cie_type", length = 100)
+        @Column(name = "mother_type", length = 100)
         val motherTypeEntreprise: String? = null,
+
+        @Column(name = "mother_capital", length = 100)
+        val motherCapital: String? = null,
+
+        @Column(name = "mother_creat_date", length = 100)
+        val motherCreationDate: Instant? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")
@@ -98,12 +108,15 @@ fun toEntity(domain: CompanyDomain): CompanyEntity {
                 companyCreationDate = domain.companyCreationDate,
                 companyUpdateDate = domain.companyUpdateDate,
                 pdgContact = domain.pdgContact?.let { toEntity(it) },
+                pdgPrivacyDetail = domain.pdgPrivacyDetail?.let { toEntity(it) },
                 adminContact = domain.adminContact?.let { toEntity(it) },
                 bankInfo = domain.bankInfo?.let { toEntity(it) },
                 fiscalAddress = domain.fiscalAddress?.let { toEntity(it) },
                 documents = domain.documents?.let { toEntity(it) },
                 motherRaisonSocial = domain.motherCompany?.raisonSocial,
                 motherTypeEntreprise = domain.motherCompany?.typeEntreprise,
+                motherCapital = domain.motherCompany?.capital,
+                motherCreationDate = domain.motherCompany?.creationDate,
                 state = domain.state?.let { toEntity(it) },
                 lastDate = domain.lastDate
         )
@@ -123,11 +136,17 @@ fun fromEntity(entity: CompanyEntity): CompanyDomain {
                 companyCreationDate = entity.companyCreationDate,
                 companyUpdateDate = entity.companyUpdateDate,
                 pdgContact = entity.pdgContact?.let { fromEntity(it) },
+                pdgPrivacyDetail = entity.pdgPrivacyDetail?.let { fromEntity(it) },
                 adminContact = entity.adminContact?.let { fromEntity(it) },
                 bankInfo = entity.bankInfo?.let { fromEntity(it) },
                 fiscalAddress = entity.fiscalAddress?.let { fromEntity(it) },
                 documents = entity.documents?.let { fromEntity(it) },
-                motherCompany = MotherCompanyDomain(entity.motherRaisonSocial, entity.motherTypeEntreprise),
+                motherCompany = MotherCompanyDomain(
+                        entity.motherRaisonSocial,
+                        entity.motherTypeEntreprise,
+                        entity.motherCapital,
+                        entity.motherCreationDate
+                ),
                 state = entity.state?.let { fromEntity(it) },
                 lastDate = entity.lastDate
         )

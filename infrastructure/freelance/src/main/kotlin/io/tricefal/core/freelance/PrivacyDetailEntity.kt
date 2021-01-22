@@ -12,8 +12,11 @@ data class PrivacyDetailEntity(
         @Id
         var id: Long? = null,
 
-        @Column(name = "username")
-        val username: String,
+        @Column(name = "firstname")
+        val firstname: String? = null,
+
+        @Column(name = "lastname")
+        val lastname: String? = null,
 
         @Column(name = "birth_date")
         val birthDate: LocalDate? = null,
@@ -43,7 +46,8 @@ data class PrivacyDetailEntity(
 
 fun toEntity(domain: PrivacyDetailDomain) = PrivacyDetailEntity(
         id = null,
-        username = domain.username,
+        firstname = domain.firstname,
+        lastname = domain.lastname,
         birthDate =  domain.birthDate,
         birthCity = domain.birthCity,
         birthCountry =  domain.birthCountry,
@@ -56,7 +60,8 @@ fun toEntity(domain: PrivacyDetailDomain) = PrivacyDetailEntity(
 
 fun fromEntity(entity: PrivacyDetailEntity) : PrivacyDetailDomain {
         return PrivacyDetailDomain(
-                username = entity.username,
+                firstname = entity.firstname,
+                lastname = entity.lastname,
                 birthDate = entity.birthDate,
                 birthCity = entity.birthCity,
                 birthCountry =  entity.birthCountry,

@@ -62,6 +62,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     ): FreelanceDomain {
         if (domain.company == null) domain.company = CompanyDomain.Builder("......").build()
         if (domain.company?.pdgContact == null) domain.company?.pdgContact = ContactDomain.Builder().build()
+        if (domain.company?.pdgPrivacyDetail == null) domain.company?.pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
         if (domain.company?.adminContact == null) domain.company?.adminContact = ContactDomain.Builder().build()
         if (domain.company?.bankInfo == null) domain.company?.bankInfo = BankInfoDomain.Builder().build()
         if (domain.company?.bankInfo?.address == null) domain.company?.bankInfo?.address = AddressDomain.Builder().build()
@@ -71,7 +72,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
         if (domain.contact == null) domain.contact = ContactDomain.Builder().build()
         if (domain.address == null) domain.address = AddressDomain.Builder().build()
-        if (domain.privacyDetail == null) domain.privacyDetail = PrivacyDetailDomain.Builder(username = domain.username).build()
+        if (domain.privacyDetail == null) domain.privacyDetail = PrivacyDetailDomain.Builder().build()
         if (domain.state == null) domain.state = FreelanceStateDomain(username = domain.username)
 
         return operations.let { ops ->
@@ -286,12 +287,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     private fun createFreelance(username: String): FreelanceDomain {
         val pdgContact = ContactDomain.Builder().email(username).build()
+        val pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
         val adminContact = ContactDomain.Builder().email(username).build()
         val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
         val fiscalAddress = AddressDomain.Builder().build()
         val documents = CompanyDocumentsDomain.Builder().build()
         val company = CompanyDomain.Builder("......")
             .pdgContact(pdgContact)
+            .pdgPrivacyDetail(pdgPrivacyDetail)
             .adminContact(adminContact)
             .bankInfo(bankInfo)
             .fiscalAddress(fiscalAddress)
