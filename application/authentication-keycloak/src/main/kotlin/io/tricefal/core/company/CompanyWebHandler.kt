@@ -96,7 +96,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnKbisUploaded(companyName)
+            companyService.updateOnKbisUploaded(companyName, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
@@ -112,7 +112,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnRibUploaded(companyName)
+            companyService.updateOnRibUploaded(companyName, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
@@ -128,7 +128,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnRcUploaded(companyName)
+            companyService.updateOnRcUploaded(companyName, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
@@ -144,7 +144,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnUrssafUploaded(companyName)
+            companyService.updateOnUrssafUploaded(companyName, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
@@ -160,7 +160,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            companyService.updateOnFiscalUploaded(companyName)
+            companyService.updateOnFiscalUploaded(companyName, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {

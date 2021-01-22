@@ -20,6 +20,7 @@ data class CompanyModel(
 //        var bankInfo: BankInfoModel? = null,
         var fiscalAddress: AddressModel? = null,
         var motherCompany: MotherCompanyModel? = null, // optional
+        var documents: CompanyDocumentsModel? = null, // optional
 
         var state: CompanyStateModel? = null,
         var lastDate: Instant? = null
@@ -43,6 +44,7 @@ data class CompanyModel(
 //            var bankInfo: BankInfoModel? = null,
             var fiscalAddress: AddressModel? = null,
             var motherCompany: MotherCompanyModel? = null,
+            var documents: CompanyDocumentsModel? = null,
 
             var state: CompanyStateModel? = null,
             var lastDate: Instant? = null
@@ -64,7 +66,8 @@ data class CompanyModel(
 //        fun bankInfo(bankInfo: BankInfoModel?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressModel?) = apply { this.fiscalAddress = fiscalAddress }
         fun motherCompany(motherCompany: MotherCompanyModel?) = apply { this.motherCompany = motherCompany }
-        
+        fun documents(documents: CompanyDocumentsModel?) = apply { this.documents = documents }
+
         fun state(state: CompanyStateModel?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
@@ -87,6 +90,7 @@ data class CompanyModel(
 //            bankInfo = bankInfo,
             fiscalAddress = fiscalAddress,
             motherCompany = motherCompany,
+            documents = documents,
 
             state = state,
             lastDate = lastDate
@@ -113,6 +117,7 @@ fun toModel(domain: CompanyDomain) : CompanyModel {
 //        .bankInfo(domain.bankInfo?.let { toModel(it) })
         .fiscalAddress(domain.fiscalAddress?.let { toModel(it) })
         .motherCompany(domain.motherCompany?.let { toModel(it) })
+        .documents(domain.documents?.let { toModel(it) })
 
         .state(domain.state?.let { toModel(it) })
         .lastDate(domain.lastDate)
@@ -138,6 +143,7 @@ fun fromModel(model: CompanyModel) : CompanyDomain {
 //        .bankInfo(model.bankInfo?.let { fromModel(it) })
         .fiscalAddress(model.fiscalAddress?.let { fromModel(it) })
         .motherCompany(model.motherCompany?.let { fromModel(it) })
+        .documents(model.documents?.let { fromModel(it) })
 
         .state(model.state?.let { fromModel(it) })
         .lastDate(model.lastDate)

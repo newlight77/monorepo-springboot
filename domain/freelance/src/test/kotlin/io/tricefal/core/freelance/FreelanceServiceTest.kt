@@ -142,7 +142,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnKbisUploaded(username)
+        val result = service.updateOnKbisUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -163,7 +163,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnKbisUploaded(username)
+        val result = service.updateOnKbisUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -183,7 +183,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnRibUploaded(username)
+        val result = service.updateOnRibUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -204,7 +204,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnRibUploaded(username)
+        val result = service.updateOnRibUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -225,7 +225,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnRcUploaded(username)
+        val result = service.updateOnRcUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -246,7 +246,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnRcUploaded(username)
+        val result = service.updateOnRcUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -267,7 +267,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnUrssafUploaded(username)
+        val result = service.updateOnUrssafUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -288,7 +288,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnUrssafUploaded(username)
+        val result = service.updateOnUrssafUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -309,7 +309,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnFiscalUploaded(username)
+        val result = service.updateOnFiscalUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)
@@ -330,7 +330,7 @@ class FreelanceServiceTest {
         service = FreelanceService(dataAdapter)
 
         // Act
-        val result = service.updateOnFiscalUploaded(username)
+        val result = service.updateOnFiscalUploaded(username, "filename", Instant.now())
 
         // Arrange
         Assertions.assertEquals(result.username, username)

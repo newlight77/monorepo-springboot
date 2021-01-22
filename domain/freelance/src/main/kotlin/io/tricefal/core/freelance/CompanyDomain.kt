@@ -20,6 +20,7 @@ class CompanyDomain(
     var bankInfo: BankInfoDomain?,
     var fiscalAddress: AddressDomain?,
     var motherCompany: MotherCompanyDomain?,
+    var documents: CompanyDocumentsDomain?,
 
     var state: CompanyStateDomain?,
     var lastDate: Instant?
@@ -42,6 +43,7 @@ class CompanyDomain(
         var bankInfo: BankInfoDomain? = null,
         var fiscalAddress: AddressDomain? = null,
         var motherCompany: MotherCompanyDomain? = null,
+        var documents: CompanyDocumentsDomain? = null,
 
         var state: CompanyStateDomain? = null,
         var lastDate: Instant? = null
@@ -63,6 +65,7 @@ class CompanyDomain(
         fun bankInfo(bankInfo: BankInfoDomain?) = apply { this.bankInfo = bankInfo }
         fun fiscalAddress(fiscalAddress: AddressDomain?) = apply { this.fiscalAddress = fiscalAddress }
         fun motherCompany(motherCompany: MotherCompanyDomain?) = apply { this.motherCompany = motherCompany }
+        fun documents(documents: CompanyDocumentsDomain?) = apply { this.documents = documents }
 
         fun state(state: CompanyStateDomain?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
@@ -86,6 +89,7 @@ class CompanyDomain(
             bankInfo = bankInfo,
             fiscalAddress = fiscalAddress,
             motherCompany = motherCompany,
+            documents = documents,
 
             state = state,
             lastDate = lastDate

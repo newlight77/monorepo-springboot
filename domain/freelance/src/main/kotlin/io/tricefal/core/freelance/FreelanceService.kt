@@ -67,6 +67,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         if (domain.company?.bankInfo?.address == null) domain.company?.bankInfo?.address = AddressDomain.Builder().build()
         if (domain.company?.fiscalAddress == null) domain.company?.fiscalAddress = AddressDomain.Builder().build()
         if (domain.company?.motherCompany == null) domain.company?.motherCompany = MotherCompanyDomain()
+        if (domain.company?.documents == null) domain.company?.documents = CompanyDocumentsDomain.Builder().build()
 
         if (domain.contact == null) domain.contact = ContactDomain.Builder().build()
         if (domain.address == null) domain.address = AddressDomain.Builder().build()
@@ -110,7 +111,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return dataAdapter.availables()
     }
 
-    override fun updateOnKbisUploaded(username: String): FreelanceDomain {
+    override fun updateOnKbisUploaded(username: String, filename: String, updateDate: Instant): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
             .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
@@ -120,10 +121,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                 .ifPresentOrElse(
                     {
                         it.state?.kbisUploaded = true
+                        it.company?.documents?.kbisFilename = filename
+                        it.company?.documents?.kbisUpdateDate = updateDate
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.kbisUploaded = true
+                        freelance.company?.documents?.kbisFilename = filename
+                        freelance.company?.documents?.kbisUpdateDate = updateDate
                         dataAdapter.create(freelance)
                     }
                 )
@@ -134,7 +139,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    override fun updateOnRibUploaded(username: String): FreelanceDomain {
+    override fun updateOnRibUploaded(username: String, filename: String, updateDate: Instant): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
             .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
@@ -144,10 +149,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                 .ifPresentOrElse(
                     {
                         it.state?.ribUploaded = true
+                        it.company?.documents?.ribFilename = filename
+                        it.company?.documents?.ribUpdateDate = updateDate
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.ribUploaded = true
+                        freelance.company?.documents?.ribFilename = filename
+                        freelance.company?.documents?.ribUpdateDate = updateDate
                         dataAdapter.create(freelance)
                     }
                 )
@@ -158,7 +167,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    override fun updateOnRcUploaded(username: String): FreelanceDomain {
+    override fun updateOnRcUploaded(username: String, filename: String, updateDate: Instant): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
             .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
@@ -168,10 +177,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                 .ifPresentOrElse(
                     {
                         it.state?.rcUploaded = true
+                        it.company?.documents?.rcFilename = filename
+                        it.company?.documents?.rcUpdateDate = updateDate
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.rcUploaded = true
+                        freelance.company?.documents?.rcFilename = filename
+                        freelance.company?.documents?.rcUpdateDate = updateDate
                         dataAdapter.create(freelance)
                     }
                 )
@@ -182,7 +195,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    override fun updateOnUrssafUploaded(username: String): FreelanceDomain {
+    override fun updateOnUrssafUploaded(username: String, filename: String, updateDate: Instant): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
             .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
@@ -192,10 +205,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                 .ifPresentOrElse(
                     {
                         it.state?.urssafUploaded = true
+                        it.company?.documents?.urssafFilename = filename
+                        it.company?.documents?.urssafUpdateDate = updateDate
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.urssafUploaded = true
+                        freelance.company?.documents?.urssafFilename = filename
+                        freelance.company?.documents?.urssafUpdateDate = updateDate
                         dataAdapter.create(freelance)
                     }
                 )
@@ -206,7 +223,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    override fun updateOnFiscalUploaded(username: String): FreelanceDomain {
+    override fun updateOnFiscalUploaded(username: String, filename: String, updateDate: Instant): FreelanceDomain {
         var freelance = FreelanceDomain.Builder(username)
             .state(FreelanceStateDomain.Builder(username).build())
             .lastDate(Instant.now())
@@ -216,10 +233,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                 .ifPresentOrElse(
                     {
                         it.state?.fiscalUploaded = true
+                        it.company?.documents?.fiscalFilename = filename
+                        it.company?.documents?.fiscalUpdateDate = updateDate
                         freelance = dataAdapter.update(it)
                     },
                     {
                         freelance.state?.fiscalUploaded = true
+                        freelance.company?.documents?.fiscalFilename = filename
+                        freelance.company?.documents?.fiscalUpdateDate = updateDate
                         dataAdapter.create(freelance)
                     }
                 )
@@ -268,12 +289,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         val adminContact = ContactDomain.Builder().email(username).build()
         val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
         val fiscalAddress = AddressDomain.Builder().build()
+        val documents = CompanyDocumentsDomain.Builder().build()
         val company = CompanyDomain.Builder("......")
             .pdgContact(pdgContact)
             .adminContact(adminContact)
             .bankInfo(bankInfo)
             .fiscalAddress(fiscalAddress)
             .motherCompany(MotherCompanyDomain())
+            .documents(documents)
             .build()
         val address = AddressDomain.Builder().build()
         val contact = ContactDomain.Builder().email(username).build()

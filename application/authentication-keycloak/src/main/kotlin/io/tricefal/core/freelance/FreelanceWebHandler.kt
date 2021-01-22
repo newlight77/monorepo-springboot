@@ -101,7 +101,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            freelanceService.updateOnKbisUploaded(username)
+            freelanceService.updateOnKbisUploaded(username, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
@@ -117,7 +117,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            freelanceService.updateOnRibUploaded(username)
+            freelanceService.updateOnRibUploaded(username, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
@@ -133,7 +133,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            freelanceService.updateOnRcUploaded(username)
+            freelanceService.updateOnRcUploaded(username, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
@@ -149,7 +149,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            freelanceService.updateOnUrssafUploaded(username)
+            freelanceService.updateOnUrssafUploaded(username, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
@@ -165,7 +165,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            freelanceService.updateOnFiscalUploaded(username)
+            freelanceService.updateOnFiscalUploaded(username, metaFile.filename, metaFile.creationDate!!)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
