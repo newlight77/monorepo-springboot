@@ -97,7 +97,7 @@ class JsonPatchOperatorTest {
     @Test
     fun `should patch an complex object with java instant type`() {
         // Arranges
-        val shape = ComplexWithIntant("java instant", Instant.now())
+        val shape = ComplexWithInstant("java instant", Instant.now())
         val dateTime = Instant.now().toString()
         val op = PatchOperation.Builder("replace")
             .path("/date")
@@ -110,6 +110,23 @@ class JsonPatchOperatorTest {
         // Arrange
         Assertions.assertEquals("java instant", result.name)
         Assertions.assertEquals(dateTime, result.date.toString())
+    }
+
+    @Test
+    fun `should patch an complex object with java instant when having only date format without time`() {
+        // Arranges
+        val shape = ComplexWithInstant("java instant", Instant.now())
+        val op = PatchOperation.Builder("replace")
+            .path("/date")
+            .value("2021-01-22")
+            .build()
+
+        // Act
+        val result = JsonPatchOperator().apply(shape, listOf(op))
+
+        // Arrange
+        Assertions.assertEquals("java instant", result.name)
+        Assertions.assertEquals("2021-01-21T23:00:00Z", result.date.toString())
     }
 
     @Test
@@ -185,7 +202,7 @@ data class ShapeContainer(
         val accumulator: Int
 )
 
-data class ComplexWithIntant(
+data class ComplexWithInstant(
     val name: String,
     val date: Instant
 )
