@@ -24,23 +24,10 @@ open class SignupNotificationFactory() {
 
     fun singupEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
         val emailActivationLink = emailValidationLink(signup, metaNotification)
-        val emailSubject = getString("signup.mail.subject")
-        val emailGreeting = getString("signup.mail.greeting", signup.firstname)
-        val emailContent = getString("signup.mail.content", emailActivationLink, signup.activationCode)
-
-        return EmailNotificationDomain.Builder(signup.username)
-                .emailFrom(metaNotification.emailFrom)
-                .emailTo(signup.username)
-                .emailSubject(emailSubject)
-                .emailGreeting(emailGreeting)
-                .emailContent(emailContent)
-                .build()
-    }
-
-    fun activatedEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
-        val emailSubject = getString("signup.activated.mail.subject")
-        val emailGreeting = getString("signup.activated.mail.greeting", signup.firstname)
-        val emailContent = getString("signup.activated.mail.content")
+        val emailSubject = getString("signup.email.subject")
+        val emailGreeting = getString("signup.email.greeting", signup.firstname)
+        val emailContent = getString("signup.email.content", emailActivationLink, signup.activationCode)
+        val emailSignature = getString("signup.email.signature")
 
         return EmailNotificationDomain.Builder(signup.username)
             .emailFrom(metaNotification.emailFrom)
@@ -48,13 +35,31 @@ open class SignupNotificationFactory() {
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
+            .emailSignature(emailSignature)
+            .build()
+    }
+
+    fun activatedEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+        val emailSubject = getString("signup.activated.email.subject")
+        val emailGreeting = getString("signup.activated.email.greeting", signup.firstname)
+        val emailContent = getString("signup.activated.email.content")
+        val emailSignature = getString("signup.activated.email.signature")
+
+        return EmailNotificationDomain.Builder(signup.username)
+            .emailFrom(metaNotification.emailFrom)
+            .emailTo(signup.username)
+            .emailSubject(emailSubject)
+            .emailGreeting(emailGreeting)
+            .emailContent(emailContent)
+            .emailSignature(emailSignature)
             .build()
     }
 
     fun notifyAdminForActivation(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
-        val emailSubject = getString("signup.activation.mail.subject")
-        val emailGreeting = getString("signup.activation.mail.greeting")
-        val emailContent = getString("signup.activation.mail.content", signup.username)
+        val emailSubject = getString("signup.activation.email.subject")
+        val emailGreeting = getString("signup.activation.email.greeting")
+        val emailContent = getString("signup.activation.email.content", signup.username)
+        val emailSignature = getString("signup.activation.email.signature")
 
         return EmailNotificationDomain.Builder(signup.username)
             .emailFrom(metaNotification.emailFrom)
@@ -62,13 +67,15 @@ open class SignupNotificationFactory() {
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
+            .emailSignature(emailSignature)
             .build()
     }
 
     fun waitingForActivationEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
-        val emailSubject = getString("signup.pending.activation.mail.subject")
-        val emailGreeting = getString("signup.pending.activation.mail.greeting", signup.firstname)
-        val emailContent = getString("signup.pending.activation.mail.content")
+        val emailSubject = getString("signup.pending.activation.email.subject")
+        val emailGreeting = getString("signup.pending.activation.email.greeting", signup.firstname)
+        val emailContent = getString("signup.pending.activation.email.content")
+        val emailSignature = getString("signup.pending.activation.email.signature")
 
         return EmailNotificationDomain.Builder(signup.username)
             .emailFrom(metaNotification.emailFrom)
@@ -76,6 +83,7 @@ open class SignupNotificationFactory() {
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
+            .emailSignature(emailSignature)
             .build()
     }
 

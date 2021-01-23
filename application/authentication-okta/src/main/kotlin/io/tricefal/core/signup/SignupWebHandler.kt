@@ -215,9 +215,9 @@ class SignupWebHandler(val signupService: ISignupService,
     private fun notification(signup: SignupDomain): NotificationDomain {
         val emailActivationLink = emailValidationLink(signup)
         val smsContent = messageSource.getMessage("signup.sms.content", arrayOf(signup.firstname, signup.activationCode), locale)
-        val emailSubject = messageSource.getMessage("signup.mail.subject", arrayOf(), locale)
-        val emailGreeting = messageSource.getMessage("signup.mail.greeting", arrayOf(signup.firstname), locale)
-        val emailContent = messageSource.getMessage("signup.mail.content", arrayOf(emailActivationLink), locale)
+        val emailSubject = messageSource.getMessage("signup.email.subject", arrayOf(), locale)
+        val emailGreeting = messageSource.getMessage("signup.email.greeting", arrayOf(signup.firstname), locale)
+        val emailContent = messageSource.getMessage("signup.email.content", arrayOf(emailActivationLink), locale)
 
         return NotificationDomain.Builder(signup.username)
                 .smsFrom(smsFrom)

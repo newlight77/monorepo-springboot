@@ -40,7 +40,11 @@ class NotificationAdapter(val mailService: EmailService,
                 .subject(signupNotification.emailSubject!!)
                 .content(signupNotification.emailContent!!)
                 .emailTemplate(EmailTemplate.SIGNUP)
-                .model(hashMapOf("greeting" to signupNotification.emailGreeting!!, "content" to signupNotification.emailContent!!))
+                .model(hashMapOf(
+                    "greeting" to signupNotification.emailGreeting!!,
+                    "content" to signupNotification.emailContent!!,
+                    "signature" to signupNotification.emailSignature!!
+                ))
                 .build()
             mailService.send(message)
         } catch (ex: Exception) {

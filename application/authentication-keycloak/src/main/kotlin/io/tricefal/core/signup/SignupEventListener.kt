@@ -2,10 +2,12 @@ package io.tricefal.core.signup
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
-class SignupEventListener(val signupService: ISignupService) {
+class SignupEventListener(val signupService: ISignupService,
+                          private final val env: Environment) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 

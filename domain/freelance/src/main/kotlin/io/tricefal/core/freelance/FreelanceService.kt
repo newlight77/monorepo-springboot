@@ -23,8 +23,12 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
         val result = dataAdapter.findByUsername(freelance.username)
         return if (result.isPresent) {
+            freelance.lastDate = Instant.now()
+            freelance.company?.lastDate = Instant.now()
             return dataAdapter.update(freelance)
         } else {
+            freelance.lastDate = Instant.now()
+            freelance.company?.lastDate = Instant.now()
             dataAdapter.create(freelance)
         }
     }
@@ -33,8 +37,12 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         if (username != freelance.username) throw NotFoundException("Failed to find a freelance for user $username")
         val result = dataAdapter.findByUsername(freelance.username)
         return if (result.isPresent) {
+            freelance.lastDate = Instant.now()
+            freelance.company?.lastDate = Instant.now()
             return dataAdapter.update(freelance)
         } else {
+            freelance.lastDate = Instant.now()
+            freelance.company?.lastDate = Instant.now()
             dataAdapter.create(freelance)
         }
     }
@@ -60,7 +68,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         domain: FreelanceDomain,
         operations: List<PatchOperation>,
     ): FreelanceDomain {
-        if (domain.company == null) domain.company = CompanyDomain.Builder("......").build()
+        if (domain.company == null) domain.company = CompanyDomain.Builder("").build()
         if (domain.company?.pdgContact == null) domain.company?.pdgContact = ContactDomain.Builder().build()
         if (domain.company?.pdgPrivacyDetail == null) domain.company?.pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
         if (domain.company?.adminContact == null) domain.company?.adminContact = ContactDomain.Builder().build()
@@ -77,7 +85,8 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
         return operations.let { ops ->
             val patched = JsonPatchOperator().apply(domain, ops)
-            patched.lastDate = domain.lastDate ?: Instant.now()
+            patched.lastDate = Instant.now()
+            patched.company?.lastDate = Instant.now()
             patched
         }
     }
@@ -92,6 +101,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     override fun completed(username: String, metaNotification: MetaNotificationDomain): FreelanceDomain {
         val freelance = findByUsername(username)
         freelance.state?.completed = true
+        freelance.company?.lastDate = Instant.now()
         dataAdapter.update(freelance)
         sendEmail(freelance, emailNotification(freelance, metaNotification))
         return freelance
@@ -124,6 +134,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.state?.kbisUploaded = true
                         it.company?.documents?.kbisFilename = filename
                         it.company?.documents?.kbisUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         freelance = dataAdapter.update(it)
                     },
                     {
@@ -152,6 +163,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.state?.ribUploaded = true
                         it.company?.documents?.ribFilename = filename
                         it.company?.documents?.ribUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         freelance = dataAdapter.update(it)
                     },
                     {
@@ -180,6 +192,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.state?.rcUploaded = true
                         it.company?.documents?.rcFilename = filename
                         it.company?.documents?.rcUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         freelance = dataAdapter.update(it)
                     },
                     {
@@ -208,6 +221,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.state?.urssafUploaded = true
                         it.company?.documents?.urssafFilename = filename
                         it.company?.documents?.urssafUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         freelance = dataAdapter.update(it)
                     },
                     {
@@ -236,6 +250,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         it.state?.fiscalUploaded = true
                         it.company?.documents?.fiscalFilename = filename
                         it.company?.documents?.fiscalUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         freelance = dataAdapter.update(it)
                     },
                     {
@@ -264,9 +279,10 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     }
 
     private fun emailNotification(freelance: FreelanceDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
-        val emailSubject = getString("company.completion.mail.subject")
-        val emailGreeting = getString("company.completion.mail.greeting", "admin")
-        val emailContent = getString("company.completion.mail.content")
+        val emailSubject = getString("company.completed.email.subject")
+        val emailGreeting = getString("company.completed.email.greeting", "admin")
+        val emailContent = getString("company.completed.email.content")
+        val emailSignature = getString("company.completed.email.signature")
 
         return EmailNotificationDomain.Builder(freelance.username)
             .emailFrom(metaNotification.emailFrom)
@@ -274,6 +290,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
+            .emailSignature(emailSignature)
             .build()
     }
 
@@ -292,7 +309,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
         val fiscalAddress = AddressDomain.Builder().build()
         val documents = CompanyDocumentsDomain.Builder().build()
-        val company = CompanyDomain.Builder("......")
+        val company = CompanyDomain.Builder("")
             .pdgContact(pdgContact)
             .pdgPrivacyDetail(pdgPrivacyDetail)
             .adminContact(adminContact)
@@ -300,6 +317,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .fiscalAddress(fiscalAddress)
             .motherCompany(MotherCompanyDomain())
             .documents(documents)
+            .lastDate(Instant.now())
             .build()
         val address = AddressDomain.Builder().build()
         val contact = ContactDomain.Builder().email(username).build()
@@ -311,6 +329,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .address(address)
             .privacyDetail(privacyDetail)
             .state(state)
+            .lastDate(Instant.now())
             .build()
     }
 

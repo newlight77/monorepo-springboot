@@ -17,14 +17,16 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
 
     override fun create(company: CompanyDomain): CompanyDomain {
         val result = dataAdapter.findByName(company.raisonSocial)
+        company.lastDate = Instant.now()
         return if (result.isPresent) dataAdapter.update(result.get().raisonSocial, company)
         else dataAdapter.create(company)
     }
 
     override fun update(companyName: String, company: CompanyDomain): CompanyDomain {
         val result = dataAdapter.findByName(companyName)
+        company.lastDate = Instant.now()
         if (result.isEmpty) dataAdapter.create(company)
-        return dataAdapter.update(companyName, result.get())
+        return dataAdapter.update(companyName, company)
     }
 
     override fun patch(companyName: String, operations: List<PatchOperation>): CompanyDomain {
@@ -56,7 +58,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
 
         return operations.let { ops ->
             val patched = JsonPatchOperator().apply(company, ops)
-            patched.lastDate = company.lastDate ?: Instant.now()
+            patched.lastDate = Instant.now()
             patched
         }
     }
@@ -64,6 +66,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
     override fun completed(companyName: String, metaNotification: MetaNotificationDomain): CompanyDomain {
         val company = findByName(companyName)
         company.state?.completed = true
+        company.lastDate = Instant.now()
         dataAdapter.update(companyName, company)
         sendEmail(company, emailNotification(company, metaNotification))
         return company
@@ -89,6 +92,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         it.state?.kbisUploaded = true
                         it.documents?.kbisFilename = filename
                         it.documents?.kbisUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         company = dataAdapter.update(companyName, it)
                     },
                     {
@@ -118,6 +122,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         it.state?.ribUploaded = true
                         it.documents?.ribFilename = filename
                         it.documents?.ribUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         company = dataAdapter.update(companyName, it)
                     },
                     {
@@ -147,6 +152,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         it.state?.rcUploaded = true
                         it.documents?.rcFilename = filename
                         it.documents?.rcUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         company = dataAdapter.update(companyName, it)
                     },
                     {
@@ -176,6 +182,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         it.state?.urssafUploaded = true
                         it.documents?.urssafFilename = filename
                         it.documents?.urssafUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         company = dataAdapter.update(companyName, it)
                     },
                     {
@@ -205,6 +212,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         it.state?.fiscalUploaded = true
                         it.documents?.fiscalFilename = filename
                         it.documents?.fiscalUpdateDate = updateDate
+                        it.lastDate = Instant.now()
                         company = dataAdapter.update(companyName, it)
                     },
                     {
@@ -233,9 +241,10 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
     }
 
     private fun emailNotification(company: CompanyDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
-        val emailSubject = getString("company.completion.mail.subject")
-        val emailGreeting = getString("company.completion.mail.greeting", "admin")
-        val emailContent = getString("company.completion.mail.content")
+        val emailSubject = getString("company.completed.email.subject")
+        val emailGreeting = getString("company.completed.email.greeting", "admin")
+        val emailContent = getString("company.completed.email.content")
+        val emailSignature = getString("company.completed.email.signature")
 
         return EmailNotificationDomain.Builder(company.raisonSocial)
             .emailFrom(metaNotification.emailFrom)
@@ -243,6 +252,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
+            .emailSignature(emailSignature)
             .build()
     }
 
@@ -263,7 +273,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         val motherCompany = MotherCompanyDomain()
         val documents = CompanyDocumentsDomain.Builder().build()
         val state = CompanyStateDomain.Builder(username).build()
-        return CompanyDomain.Builder(raisonSocial = "......")
+        return CompanyDomain.Builder(raisonSocial = "")
             .pdgPrivacyDetail(pdgPrivacyDetail)
             .pdgContact(pdgContact)
             .adminContact(adminContact)
