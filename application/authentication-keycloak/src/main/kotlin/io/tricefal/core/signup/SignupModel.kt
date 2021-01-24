@@ -61,7 +61,7 @@ class SignupModel
                 lastname = lastname,
                 phoneNumber = phoneNumber,
                 status = status,
-                signupDate = signupDate ?: Instant.now(),
+                signupDate = signupDate,
                 cguAcceptedVersion = cguAcceptedVersion,
                 resumeFile = resumeFile,
                 state = state,
@@ -81,7 +81,7 @@ fun toModel(domain: SignupDomain): SignupModel {
             .resumeFile(domain.resumeFile?.let { io.tricefal.core.metafile.toModel(it) })
             .cguAcceptedVersion(domain.cguAcceptedVersion)
             .state(domain.state?.let { toModel(it) })
-        .lastDate(domain.lastDate)
+            .lastDate(domain.lastDate)
             .build()
 }
 
@@ -92,7 +92,7 @@ fun fromModel(model: SignupModel): SignupDomain {
             .lastname(model.lastname)
             .phoneNumber(model.phoneNumber)
             .status(model.status ?: Status.NONE)
-            .signupDate(model.signupDate)
+            .signupDate(model.signupDate ?: Instant.now())
             .resumeFile(model.resumeFile?.let { io.tricefal.core.metafile.fromModel(it) })
             .cguAcceptedVersion(model.cguAcceptedVersion)
             .state(model.state?.let { fromModel(it) })

@@ -46,7 +46,9 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun findAll(): List<SignupModel> {
-        return signupService.findAll().map { signupDomain -> toModel(signupDomain) }
+        return signupService.findAll()
+            .map { signupDomain -> toModel(signupDomain) }
+            .sortedByDescending { it.signupDate }
     }
 
     fun activate(username: String): SignupStateModel {
