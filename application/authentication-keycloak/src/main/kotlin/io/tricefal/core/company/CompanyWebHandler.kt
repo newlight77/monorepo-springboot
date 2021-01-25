@@ -85,8 +85,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         } catch (ex: io.tricefal.core.freelance.NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            throw FreelanceWebHandler.FreelanceCompletedException("Failed to complete a freelance with username $companyName",
-                ex)
+            throw FreelanceWebHandler.FreelanceCompletedException("Failed to complete a freelance with username $companyName", ex)
         }
         return io.tricefal.core.freelance.toModel(result)
     }

@@ -280,13 +280,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     private fun emailNotification(freelance: FreelanceDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
         val emailSubject = getString("company.completed.email.subject")
-        val emailGreeting = getString("company.completed.email.greeting", "admin")
+        val emailGreeting = getString("company.completed.email.greeting", freelance.contact?.firstName)
         val emailContent = getString("company.completed.email.content")
         val emailSignature = getString("company.completed.email.signature")
 
         return EmailNotificationDomain.Builder(freelance.username)
             .emailFrom(metaNotification.emailFrom)
-            .emailTo(metaNotification.emailAdmin)
+            .emailTo(freelance.username)
+            .emailBcc(metaNotification.emailAdmin)
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)

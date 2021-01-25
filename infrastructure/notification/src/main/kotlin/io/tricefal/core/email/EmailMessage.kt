@@ -6,12 +6,16 @@ class EmailMessage(var from: String,
                    val to: String,
                    val subject: String,
                    val content: String,
+                   val cc: String? = null,
+                   val bcc: String? = null,
                    var attachment: InputStream? = null,
                    var emailTemplate: EmailTemplate? = null,
                    var model: Map<String, String>? = null) {
 
     constructor() : this(from = "",
                         to = "",
+                        cc = "",
+                        bcc = "",
                         subject = "",
                         content= "")
 
@@ -20,6 +24,8 @@ class EmailMessage(var from: String,
         private lateinit var to: String
         private lateinit var subject: String
         private lateinit var content: String
+        private var cc: String? = null
+        private var bcc: String? = null
         private var attachment: InputStream? = null
         private var emailTemplate: EmailTemplate? = null
         private var model: Map<String, String>? = null
@@ -28,13 +34,17 @@ class EmailMessage(var from: String,
         fun to(to: String) =  apply { this.to = to }
         fun subject(subject: String) =  apply { this.subject = subject }
         fun content(content: String) =  apply { this.content = content }
-        fun attachment(attachment: InputStream) =  apply { this.attachment = attachment }
-        fun emailTemplate(emailTemplate: EmailTemplate) =  apply { this.emailTemplate = emailTemplate }
-        fun model(model: Map<String, String>) =  apply { this.model = model }
+        fun cc(cc: String?) =  apply { this.cc = cc }
+        fun bcc(bcc: String?) =  apply { this.bcc = bcc }
+        fun attachment(attachment: InputStream?) =  apply { this.attachment = attachment }
+        fun emailTemplate(emailTemplate: EmailTemplate?) =  apply { this.emailTemplate = emailTemplate }
+        fun model(model: Map<String, String>?) =  apply { this.model = model }
 
         fun build(): EmailMessage { return EmailMessage(
                 from = from,
                 to = to,
+                cc = cc,
+                bcc = bcc,
                 subject = subject,
                 content = content,
                 attachment = attachment,

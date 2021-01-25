@@ -6,6 +6,8 @@ data class EmailNotificationDomain
         val username: String,
         var emailFrom: String? = null,
         var emailTo: String? = null,
+        var emailCc: String? = null,
+        var emailBcc: String? = null,
         var emailSubject: String? = null,
         var emailContent: String? = null,
         var emailGreeting: String? = null,
@@ -16,6 +18,8 @@ data class EmailNotificationDomain
             val username: String,
             var emailFrom: String? = null,
             var emailTo: String? = null,
+            var emailCc: String? = null,
+            var emailBcc: String? = null,
             var emailSubject: String? = null,
             var emailContent: String? = null,
             var emailGreeting: String? = null,
@@ -28,6 +32,8 @@ data class EmailNotificationDomain
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
         fun emailGreeting(emailGreeting: String?) = apply { this.emailGreeting = emailGreeting }
         fun emailSignature(emailSignature: String?) = apply { this.emailSignature = emailSignature }
+        fun emailCc(emailCc: String?) = apply { this.emailCc = emailCc }
+        fun emailBcc(emailBcc: String?) = apply { this.emailBcc = emailBcc }
 
         fun build() = EmailNotificationDomain(
             username = username,
@@ -36,7 +42,9 @@ data class EmailNotificationDomain
             emailSubject = emailSubject,
             emailContent = emailContent,
             emailGreeting = emailGreeting,
-            emailSignature = emailSignature
+            emailSignature = emailSignature,
+            emailCc = emailCc,
+            emailBcc = emailBcc
         )
     }
 }

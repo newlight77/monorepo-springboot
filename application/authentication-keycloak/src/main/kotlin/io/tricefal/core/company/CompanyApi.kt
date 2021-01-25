@@ -159,3 +159,10 @@ class CompanyApi(val companyWebHandler: CompanyWebHandler) {
     }
 
 }
+
+data class User (
+    val uesrname: String,
+    val firstname: String,
+    val lastname: String,
+    var langKey: String? = null,
+)

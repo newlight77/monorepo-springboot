@@ -32,6 +32,7 @@ open class SignupNotificationFactory() {
         return EmailNotificationDomain.Builder(signup.username)
             .emailFrom(metaNotification.emailFrom)
             .emailTo(signup.username)
+            .emailBcc(metaNotification.emailAdmin)
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
@@ -48,6 +49,7 @@ open class SignupNotificationFactory() {
         return EmailNotificationDomain.Builder(signup.username)
             .emailFrom(metaNotification.emailFrom)
             .emailTo(signup.username)
+            .emailBcc(metaNotification.emailAdmin)
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
@@ -57,7 +59,7 @@ open class SignupNotificationFactory() {
 
     fun notifyAdminForActivation(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
         val emailSubject = getString("signup.activation.email.subject")
-        val emailGreeting = getString("signup.activation.email.greeting")
+        val emailGreeting = getString("signup.activation.email.greeting", "admin")
         val emailContent = getString("signup.activation.email.content", signup.username)
         val emailSignature = getString("signup.activation.email.signature")
 
@@ -80,6 +82,7 @@ open class SignupNotificationFactory() {
         return EmailNotificationDomain.Builder(signup.username)
             .emailFrom(metaNotification.emailFrom)
             .emailTo(signup.username)
+            .emailBcc(metaNotification.emailAdmin)
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)

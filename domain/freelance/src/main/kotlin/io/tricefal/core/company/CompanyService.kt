@@ -247,8 +247,9 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         val emailSignature = getString("company.completed.email.signature")
 
         return EmailNotificationDomain.Builder(company.raisonSocial)
-            .emailFrom(metaNotification.emailFrom)
+            .emailFrom(metaNotification.emailAdmin)
             .emailTo(metaNotification.emailAdmin)
+            .emailBcc(metaNotification.emailAdmin)
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)

@@ -37,6 +37,8 @@ class NotificationAdapter(val mailService: EmailService,
             val message = EmailMessage.Builder()
                 .from(signupNotification.emailFrom!!)
                 .to(signupNotification.emailTo!!)
+                .cc(signupNotification.emailCc)
+                .bcc(signupNotification.emailBcc)
                 .subject(signupNotification.emailSubject!!)
                 .content(signupNotification.emailContent!!)
                 .emailTemplate(EmailTemplate.SIGNUP)
