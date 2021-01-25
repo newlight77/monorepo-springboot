@@ -65,3 +65,16 @@ fun emailTemplateByEnv(env: String) = mapOf(
     "prod" to EmailTemplate.SIGNUP,
     "dev" to EmailTemplate.SIGNUP_DEV,
 )[env]
+
+enum class EmailTemplateThemeStyle(val style: String) {
+    PROD(""),
+    DEV(".greeting { color: #FFD500;} " +
+            ".content { color: #FFD500;}" +
+            ".signature { color: #FFD500;}")
+}
+
+fun emailTemplateThemeStyleByEnv(env: String) = mapOf(
+    "" to EmailTemplateThemeStyle.PROD,
+    "prod" to EmailTemplateThemeStyle.PROD,
+    "dev" to EmailTemplateThemeStyle.DEV,
+)[env]

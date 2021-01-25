@@ -12,6 +12,7 @@ data class EmailNotificationDomain
         var emailContent: String? = null,
         var emailGreeting: String? = null,
         var emailSignature: String? = null,
+        var emailThemeStyle: String? = null,
         var targetEnv: String? = null,
     ) {
 
@@ -26,6 +27,7 @@ data class EmailNotificationDomain
         var emailContent: String? = null,
         var emailGreeting: String? = null,
         var emailSignature: String? = null,
+        var emailThemeStyle: String? = null,
         var targetEnv: String? = null,
     ) {
 
@@ -35,6 +37,7 @@ data class EmailNotificationDomain
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
         fun emailGreeting(emailGreeting: String?) = apply { this.emailGreeting = emailGreeting }
         fun emailSignature(emailSignature: String?) = apply { this.emailSignature = emailSignature }
+        fun emailThemeStyle(emailThemeStyle: String?) = apply { this.emailThemeStyle = emailThemeStyle }
         fun emailCc(emailCc: String?) = apply { this.emailCc = emailCc }
         fun emailBcc(emailBcc: String?) = apply { this.emailBcc = emailBcc }
         fun targetEnv(targetEnv: String?) = apply { this.targetEnv = targetEnv }
@@ -47,6 +50,7 @@ data class EmailNotificationDomain
             emailContent = emailContent,
             emailGreeting = emailGreeting,
             emailSignature = emailSignature,
+            emailThemeStyle = emailThemeStyle,
             emailCc = emailCc,
             emailBcc = emailBcc,
             targetEnv = targetEnv

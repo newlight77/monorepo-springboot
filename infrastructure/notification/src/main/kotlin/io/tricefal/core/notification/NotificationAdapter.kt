@@ -2,8 +2,8 @@ package io.tricefal.core.notification
 
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
-import io.tricefal.core.email.EmailTemplate
 import io.tricefal.core.email.emailTemplateByEnv
+import io.tricefal.core.email.emailTemplateThemeStyleByEnv
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
@@ -44,6 +44,7 @@ class NotificationAdapter(val mailService: EmailService,
                 .content(signupNotification.emailContent!!)
                 .emailTemplate(emailTemplateByEnv(signupNotification.targetEnv ?: ""))
                 .model(hashMapOf(
+                    "themeColor" to emailTemplateThemeStyleByEnv(signupNotification.targetEnv ?: "").toString(),
                     "greeting" to signupNotification.emailGreeting!!,
                     "content" to signupNotification.emailContent!!,
                     "signature" to signupNotification.emailSignature!!

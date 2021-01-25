@@ -42,8 +42,8 @@ class EmailService(private val emailSender: JavaMailSender,
             val messageHelper = MimeMessageHelper(mimeMessage, isMultipart, StandardCharsets.UTF_8.name())
             messageHelper.setFrom(emailMessage.from)
             messageHelper.setTo(InternetAddress.parse(emailMessage.to))
-            emailMessage.cc?.let { messageHelper.addCc(it) }
-            emailMessage.bcc?.let { messageHelper.addBcc(it) }
+            emailMessage.cc?.split(",")?.map { messageHelper.addCc(InternetAddress(it)) }
+            emailMessage.bcc?.split(",")?.map { messageHelper.addBcc(InternetAddress(it)) }
             messageHelper.setSubject(emailMessage.subject)
             emailMessage.attachment?.let {
                 val attachment = ByteArrayDataSource(it, "application/octet-stream")
