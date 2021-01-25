@@ -12,18 +12,21 @@ data class EmailNotificationDomain
         var emailContent: String? = null,
         var emailGreeting: String? = null,
         var emailSignature: String? = null,
+        var targetEnv: String? = null,
     ) {
 
+
     data class Builder (
-            val username: String,
-            var emailFrom: String? = null,
-            var emailTo: String? = null,
-            var emailCc: String? = null,
-            var emailBcc: String? = null,
-            var emailSubject: String? = null,
-            var emailContent: String? = null,
-            var emailGreeting: String? = null,
-            var emailSignature: String? = null,
+        val username: String,
+        var emailFrom: String? = null,
+        var emailTo: String? = null,
+        var emailCc: String? = null,
+        var emailBcc: String? = null,
+        var emailSubject: String? = null,
+        var emailContent: String? = null,
+        var emailGreeting: String? = null,
+        var emailSignature: String? = null,
+        var targetEnv: String? = null,
     ) {
 
         fun emailFrom(emailFrom: String?) = apply { this.emailFrom = emailFrom }
@@ -34,6 +37,7 @@ data class EmailNotificationDomain
         fun emailSignature(emailSignature: String?) = apply { this.emailSignature = emailSignature }
         fun emailCc(emailCc: String?) = apply { this.emailCc = emailCc }
         fun emailBcc(emailBcc: String?) = apply { this.emailBcc = emailBcc }
+        fun targetEnv(targetEnv: String?) = apply { this.targetEnv = targetEnv }
 
         fun build() = EmailNotificationDomain(
             username = username,
@@ -44,7 +48,8 @@ data class EmailNotificationDomain
             emailGreeting = emailGreeting,
             emailSignature = emailSignature,
             emailCc = emailCc,
-            emailBcc = emailBcc
+            emailBcc = emailBcc,
+            targetEnv = targetEnv
         )
     }
 }

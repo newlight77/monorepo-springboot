@@ -292,6 +292,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
             .emailSignature(emailSignature)
+            .targetEnv(metaNotification.targetEnv)
             .build()
     }
 

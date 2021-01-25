@@ -1,3 +1,6 @@
+target:
+    env: ${TARGET_ENV}
+
 server:
     port: 8080
     servlet:

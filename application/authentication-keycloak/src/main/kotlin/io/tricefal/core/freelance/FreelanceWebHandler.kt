@@ -22,6 +22,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val dataFilesPath = env.getProperty("data.files.path")!!
+    private var targetEnv = env.getProperty("target.env")!!
     private var backendBaseUrl = env.getProperty("core.baseUrl")!!
     private var emailFrom = env.getProperty("notification.mail.from")!!
     private var emailAdmin = env.getProperty("notification.mail.admin")!!
@@ -83,7 +84,8 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     fun completed(username: String): FreelanceModel {
         val result = try {
-            val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl,
+            val metaNotification = MetaNotificationDomain(
+                targetEnv=targetEnv, baseUrl=backendBaseUrl,
                 emailFrom=emailFrom, emailAdmin=emailAdmin,
                 smsFrom=smsFrom, smsAdminNumber=smsAdmin)
 

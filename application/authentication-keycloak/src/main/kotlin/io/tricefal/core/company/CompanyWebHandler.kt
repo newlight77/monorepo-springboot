@@ -23,6 +23,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
                         private final val env: Environment) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
+    private val targetEnv = env.getProperty("target.env")!!
     private val dataFilesPath = env.getProperty("data.files.path")!!
     private var backendBaseUrl = env.getProperty("core.baseUrl")!!
     private var emailFrom = env.getProperty("notification.mail.from")!!
@@ -77,7 +78,8 @@ class CompanyWebHandler(val companyService: ICompanyService,
 
     fun completed(companyName: String): CompanyModel {
         val result = try {
-            val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl,
+            val metaNotification = MetaNotificationDomain(
+                targetEnv=targetEnv, baseUrl=backendBaseUrl,
                 emailFrom=emailFrom, emailAdmin=emailAdmin,
                 smsFrom=smsFrom, smsAdminNumber=smsAdmin)
 

@@ -1,3 +1,6 @@
+target:
+    env: local
+
 server:
     port: 9080
     servlet:

@@ -56,5 +56,12 @@ class EmailMessage(var from: String,
 }
 
 enum class EmailTemplate(val filename: String) {
-    SIGNUP("email-template.html")
+    SIGNUP("email-template.html"),
+    SIGNUP_DEV("email-template-dev.html");
 }
+
+fun emailTemplateByEnv(env: String) = mapOf(
+    "" to EmailTemplate.SIGNUP,
+    "prod" to EmailTemplate.SIGNUP,
+    "dev" to EmailTemplate.SIGNUP_DEV,
+)[env]

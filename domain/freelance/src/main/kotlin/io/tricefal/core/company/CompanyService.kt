@@ -254,6 +254,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
             .emailSignature(emailSignature)
+            .targetEnv(metaNotification.targetEnv)
             .build()
     }
 

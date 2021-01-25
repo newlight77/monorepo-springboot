@@ -3,6 +3,7 @@ package io.tricefal.core.notification
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.email.EmailTemplate
+import io.tricefal.core.email.emailTemplateByEnv
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
@@ -41,7 +42,7 @@ class NotificationAdapter(val mailService: EmailService,
                 .bcc(signupNotification.emailBcc)
                 .subject(signupNotification.emailSubject!!)
                 .content(signupNotification.emailContent!!)
-                .emailTemplate(EmailTemplate.SIGNUP)
+                .emailTemplate(emailTemplateByEnv(signupNotification.targetEnv ?: ""))
                 .model(hashMapOf(
                     "greeting" to signupNotification.emailGreeting!!,
                     "content" to signupNotification.emailContent!!,
@@ -56,6 +57,7 @@ class NotificationAdapter(val mailService: EmailService,
         logger.info("An Email has been sent")
         return true
     }
+
 
 }
 

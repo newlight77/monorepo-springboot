@@ -37,6 +37,7 @@ open class SignupNotificationFactory() {
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
             .emailSignature(emailSignature)
+            .targetEnv(metaNotification.targetEnv)
             .build()
     }
 
@@ -54,6 +55,7 @@ open class SignupNotificationFactory() {
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
             .emailSignature(emailSignature)
+            .targetEnv(metaNotification.targetEnv)
             .build()
     }
 
@@ -70,6 +72,7 @@ open class SignupNotificationFactory() {
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
             .emailSignature(emailSignature)
+            .targetEnv(metaNotification.targetEnv)
             .build()
     }
 
@@ -87,6 +90,7 @@ open class SignupNotificationFactory() {
             .emailGreeting(emailGreeting)
             .emailContent(emailContent)
             .emailSignature(emailSignature)
+            .targetEnv(metaNotification.targetEnv)
             .build()
     }
 
