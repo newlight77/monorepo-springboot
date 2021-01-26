@@ -4,9 +4,9 @@ import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.metafile.Representation
 
 class SignupStatusUpdatedEvent(val signup: SignupDomain) {
-    fun isFreelance() = "FREELANCE" === signup.status.toString()
-    fun isEmployee() = "EMPLOYEE" === signup.status.toString()
-    fun isClient() = "CLIENT" === signup.status.toString()
+    fun isFreelance() = Status.FREELANCE === signup.status || Status.FREELANCE_WITH_MISSION === signup.status
+    fun isEmployee() = Status.EMPLOYEE === signup.status
+    fun isClient() = Status.CLIENT === signup.status
 }
 
 class SignupStateUpdatedEvent(val username: String, val state: String)

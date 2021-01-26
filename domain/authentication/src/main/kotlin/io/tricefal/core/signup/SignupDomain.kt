@@ -84,6 +84,7 @@ enum class Status {
     NONE,
     CLIENT,
     FREELANCE,
+    FREELANCE_WITH_MISSION,
     EMPLOYEE;
 }
 

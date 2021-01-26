@@ -46,21 +46,24 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         company: CompanyDomain,
         operations: List<PatchOperation>,
     ): CompanyDomain {
-        if (company.pdgContact == null) company.pdgContact = ContactDomain.Builder().build()
-        if (company.pdgPrivacyDetail == null) company.pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
-        if (company.adminContact == null) company.adminContact = ContactDomain.Builder().build()
-        if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().build()
-        if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().build()
-        if (company.fiscalAddress == null) company.fiscalAddress = AddressDomain.Builder().build()
-        if (company.motherCompany == null) company.motherCompany = MotherCompanyDomain()
-        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
-        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
-
         return operations.let { ops ->
-            val patched = JsonPatchOperator().apply(company, ops)
+            val patched = JsonPatchOperator().apply(completeCompany(company), ops)
             patched.lastDate = Instant.now()
             patched
         }
+    }
+
+    private fun completeCompany(company: CompanyDomain): CompanyDomain {
+        if (company.pdgContact == null) company.pdgContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+        if (company.pdgPrivacyDetail == null) company.pdgPrivacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
+        if (company.adminContact == null) company.adminContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+        if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().lastDate(Instant.now()).build()
+        if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().lastDate(Instant.now()).build()
+        if (company.fiscalAddress == null) company.fiscalAddress = AddressDomain.Builder().lastDate(Instant.now()).build()
+        if (company.motherCompany == null) company.motherCompany = MotherCompanyDomain()
+        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
+        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
+        return company
     }
 
     override fun completed(companyName: String, metaNotification: MetaNotificationDomain): CompanyDomain {

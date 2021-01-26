@@ -302,13 +302,15 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
     }
 
     private val statusToReadRole = mapOf(
-            Status.FREELANCE to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_TRICEFAL_READ),
-            Status.EMPLOYEE to listOf(AccessRight.AC_COLLABORATOR_READ, AccessRight.AC_TRICEFAL_READ),
-            Status.CLIENT to listOf(AccessRight.AC_CLIENT_READ, AccessRight.AC_TRICEFAL_READ)
+        Status.FREELANCE to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_TRICEFAL_READ),
+        Status.FREELANCE_WITH_MISSION to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_TRICEFAL_READ),
+        Status.EMPLOYEE to listOf(AccessRight.AC_COLLABORATOR_READ, AccessRight.AC_TRICEFAL_READ),
+        Status.CLIENT to listOf(AccessRight.AC_CLIENT_READ, AccessRight.AC_TRICEFAL_READ)
     )
 
     private val statusToReadWriteRole = mapOf(
             Status.FREELANCE to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_FREELANCE_WRITE, AccessRight.AC_TRICEFAL_READ),
+            Status.FREELANCE_WITH_MISSION to listOf(AccessRight.AC_FREELANCE_READ, AccessRight.AC_FREELANCE_WRITE, AccessRight.AC_TRICEFAL_READ),
             Status.EMPLOYEE to listOf(AccessRight.AC_COLLABORATOR_READ, AccessRight.AC_COLLABORATOR_WRITE, AccessRight.AC_TRICEFAL_READ),
             Status.CLIENT to listOf(AccessRight.AC_CLIENT_READ, AccessRight.AC_CLIENT_WRTIE, AccessRight.AC_TRICEFAL_READ)
     )
