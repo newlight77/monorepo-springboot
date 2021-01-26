@@ -13,11 +13,19 @@ class FreelanceEventListener(val freelanceService: IFreelanceService) {
     @EventListener(condition = "#event.isFreelance()")
     fun handleStatusUpdatedEvent(event: SignupStatusUpdatedEvent) {
         try {
-            freelanceService.signupStatusUpdated(event.username, event.status)
+            val freelance: FreelanceDomain = FreelanceDomain
+                .Builder(event.signup.username)
+                .contact(ContactDomain.Builder()
+                    .firstName(event.signup.firstname)
+                    .lastName(event.signup.lastname)
+                    .phone(event.signup.phoneNumber)
+                    .build())
+                .build()
+            freelanceService.signupStatusUpdated(freelance)
         } catch (ex: Throwable) {
-            throw SignupStatusUpdatedException("Failed to create a freelance profile upon status updated for username ${event.username}")
+            throw SignupStatusUpdatedException("Failed to create a freelance profile upon status updated for username ${event.signup.username}")
         }
-        logger.info("FreelanceEventListener picked up a FreelanceStatusUpdatedEvent with ${event.username}")
+        logger.info("FreelanceEventListener picked up a FreelanceStatusUpdatedEvent with ${event.signup.username}")
     }
 }
 

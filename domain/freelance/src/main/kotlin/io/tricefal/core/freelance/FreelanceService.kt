@@ -14,9 +14,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val resourceBundle = ResourceBundle.getBundle("i18n.company", Locale.FRANCE)
 
-    override fun signupStatusUpdated(username: String, event: String): FreelanceDomain {
-        val result = dataAdapter.findByUsername(username)
-        return if (result.isEmpty) dataAdapter.create(createFreelance(username))
+    override fun signupStatusUpdated(freelance: FreelanceDomain): FreelanceDomain {
+        val result = dataAdapter.findByUsername(freelance.username)
+        return if (result.isEmpty) dataAdapter.create(completeFreelance(freelance))
         else result.get()
     }
 
@@ -51,7 +51,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         val freelance = dataAdapter.findByUsername(username)
 //        val ops = operations.filter { acceptOperation(it) }
         if (freelance.isEmpty){
-            var newFreelance = createFreelance(username)
+            var newFreelance = completeFreelance(freelance.get())
             newFreelance = applyPatch(newFreelance, operations)
             dataAdapter.create(newFreelance)
             return newFreelance
@@ -65,26 +65,11 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     }
 
     private fun applyPatch(
-        domain: FreelanceDomain,
+        freelance: FreelanceDomain,
         operations: List<PatchOperation>,
     ): FreelanceDomain {
-        if (domain.company == null) domain.company = CompanyDomain.Builder("").build()
-        if (domain.company?.pdgContact == null) domain.company?.pdgContact = ContactDomain.Builder().build()
-        if (domain.company?.pdgPrivacyDetail == null) domain.company?.pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
-        if (domain.company?.adminContact == null) domain.company?.adminContact = ContactDomain.Builder().build()
-        if (domain.company?.bankInfo == null) domain.company?.bankInfo = BankInfoDomain.Builder().build()
-        if (domain.company?.bankInfo?.address == null) domain.company?.bankInfo?.address = AddressDomain.Builder().build()
-        if (domain.company?.fiscalAddress == null) domain.company?.fiscalAddress = AddressDomain.Builder().build()
-        if (domain.company?.motherCompany == null) domain.company?.motherCompany = MotherCompanyDomain()
-        if (domain.company?.documents == null) domain.company?.documents = CompanyDocumentsDomain.Builder().build()
-
-        if (domain.contact == null) domain.contact = ContactDomain.Builder().build()
-        if (domain.address == null) domain.address = AddressDomain.Builder().build()
-        if (domain.privacyDetail == null) domain.privacyDetail = PrivacyDetailDomain.Builder().build()
-        if (domain.state == null) domain.state = FreelanceStateDomain(username = domain.username)
-
         return operations.let { ops ->
-            val patched = JsonPatchOperator().apply(domain, ops)
+            val patched = JsonPatchOperator().apply(completeFreelance(freelance), ops)
             patched.lastDate = Instant.now()
             patched.company?.lastDate = Instant.now()
             patched
@@ -304,37 +289,24 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         }
     }
 
-    private fun createFreelance(username: String): FreelanceDomain {
-        val pdgContact = ContactDomain.Builder().email(username).build()
-        val pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
-        val adminContact = ContactDomain.Builder().email(username).build()
-        val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
-        val fiscalAddress = AddressDomain.Builder().build()
-        val documents = CompanyDocumentsDomain.Builder().build()
-        val company = CompanyDomain.Builder("")
-            .pdgContact(pdgContact)
-            .pdgPrivacyDetail(pdgPrivacyDetail)
-            .adminContact(adminContact)
-            .bankInfo(bankInfo)
-            .fiscalAddress(fiscalAddress)
-            .motherCompany(MotherCompanyDomain())
-            .documents(documents)
-            .lastDate(Instant.now())
-            .build()
-        val address = AddressDomain.Builder().build()
-        val contact = ContactDomain.Builder().email(username).build()
-        val privacyDetail = PrivacyDetailDomain.Builder(username).build()
-        val state = FreelanceStateDomain.Builder(username).build()
-        return FreelanceDomain.Builder(username)
-            .company(company)
-            .contact(contact)
-            .address(address)
-            .privacyDetail(privacyDetail)
-            .state(state)
-            .lastDate(Instant.now())
-            .build()
-    }
+    private fun completeFreelance(freelance: FreelanceDomain): FreelanceDomain {
+        if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
+        if (freelance.company?.pdgContact == null) freelance.company?.pdgContact = ContactDomain.Builder().build()
+        if (freelance.company?.pdgPrivacyDetail == null) freelance.company?.pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
+        if (freelance.company?.adminContact == null) freelance.company?.adminContact = ContactDomain.Builder().build()
+        if (freelance.company?.bankInfo == null) freelance.company?.bankInfo = BankInfoDomain.Builder().build()
+        if (freelance.company?.bankInfo?.address == null) freelance.company?.bankInfo?.address = AddressDomain.Builder().build()
+        if (freelance.company?.fiscalAddress == null) freelance.company?.fiscalAddress = AddressDomain.Builder().build()
+        if (freelance.company?.motherCompany == null) freelance.company?.motherCompany = MotherCompanyDomain()
+        if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
 
+        if (freelance.contact == null) freelance.contact = ContactDomain.Builder().build()
+        if (freelance.address == null) freelance.address = AddressDomain.Builder().build()
+        if (freelance.privacyDetail == null) freelance.privacyDetail = PrivacyDetailDomain.Builder().build()
+        if (freelance.state == null) freelance.state = FreelanceStateDomain(username = freelance.username)
+
+        return freelance
+    }
 
     class FreelanceCompletionEmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
         constructor(message: String?) : this(message, null)

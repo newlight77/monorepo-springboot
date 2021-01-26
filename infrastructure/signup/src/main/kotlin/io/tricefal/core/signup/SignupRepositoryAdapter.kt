@@ -121,7 +121,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun statusUpdated(signup: SignupDomain) {
-        this.signupEventPublisher.publishStatusUpdatedEvent(signup.username, signup.status.toString())
+        this.signupEventPublisher.publishStatusUpdatedEvent(signup)
     }
 
     override fun cguAccepted(username: String, cguAcceptedVersion: String) {
