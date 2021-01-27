@@ -192,7 +192,7 @@ class CompanyWebHandlerTest {
 
         // Arrange
         Mockito.verify(eventPublisher).publishCompanyCompletedEvent(companyName)
-        Mockito.verify(emailService).send(any(EmailMessage::class.java))
+//        Mockito.verify(emailService).send(any(EmailMessage::class.java))
 //        Assertions.assertEquals(1, greenMail.receivedMessages.size)
     }
 

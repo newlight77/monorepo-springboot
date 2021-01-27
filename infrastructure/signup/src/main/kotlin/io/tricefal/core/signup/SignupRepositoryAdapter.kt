@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
+import kotlin.math.sign
 
 @Repository
 class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
@@ -110,14 +111,19 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 
     override fun sendSms(username: String, notification: SmsNotificationDomain): Boolean {
         val result = notificationAdapter.sendSms(notification)
-        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.EMAIL_SENT.toString())
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.SMS_CODE_SENT.toString())
         return result
     }
 
-    override fun sendEmail(username: String, notification: EmailNotificationDomain): Boolean {
-        val result = notificationAdapter.sendEmail(notification)
-        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.EMAIL_SENT.toString())
-        return result
+    override fun sendEmail(notification: EmailNotificationDomain): Boolean {
+//        val result = notificationAdapter.sendEmail(notification)
+//        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.EMAIL_SENT.toString())
+        this.signupEventPublisher.publishEmailNotification(notification)
+        return true
+    }
+
+    override fun stateUpdated(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, signup.state.toString())
     }
 
     override fun statusUpdated(signup: SignupDomain) {

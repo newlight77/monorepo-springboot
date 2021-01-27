@@ -353,7 +353,7 @@ class FreelanceServiceTest {
 
         Mockito.`when`(dataAdapter.findByUsername(username)).thenReturn(Optional.of(freelance))
         Mockito.`when`(dataAdapter.update(freelance)).thenReturn(freelance)
-        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
 
         service = FreelanceService(dataAdapter)
 
@@ -361,7 +361,7 @@ class FreelanceServiceTest {
         val result = service.completed(username, metaNotification)
 
         // Arrange
-        Mockito.verify(dataAdapter).sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))
+        Mockito.verify(dataAdapter).sendEmail(any(EmailNotificationDomain::class.java))
         Mockito.verify(dataAdapter).companyCompleted(username)
         Assertions.assertTrue(result.state?.completed!!)
     }

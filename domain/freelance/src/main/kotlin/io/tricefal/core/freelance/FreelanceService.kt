@@ -89,6 +89,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         freelance.company?.lastDate = Instant.now()
         dataAdapter.update(freelance)
         sendEmail(freelance, emailNotification(freelance, metaNotification))
+        dataAdapter.companyCompleted(freelance.username)
         return freelance
     }
 
@@ -252,10 +253,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         return freelance
     }
 
-    private fun sendEmail(freelance: FreelanceDomain, companyCompletionNotification: EmailNotificationDomain): Boolean {
+    private fun sendEmail(freelance: FreelanceDomain, notification: EmailNotificationDomain): Boolean {
         try {
-            dataAdapter.sendEmail(freelance.username, companyCompletionNotification)
-            dataAdapter.companyCompleted(freelance.username)
+            dataAdapter.sendEmail(notification)
             return true
         } catch (ex: Throwable) {
             logger.error("failed to send an email upon freelance company completion for username ${freelance.username}")

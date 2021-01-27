@@ -62,8 +62,10 @@ class CompanyRepositoryAdapter(private var repository: CompanyJpaRepository,
         }.orElseThrow()
     }
 
-    override fun sendEmail(companyName: String, companyCompletionNotification: EmailNotificationDomain): Boolean {
-        return notificationAdapter.sendEmail(companyCompletionNotification)
+    override fun sendEmail(companyName: String, notification: EmailNotificationDomain): Boolean {
+        this.eventPublisher.publishEmailNotification(notification)
+        return true
+        //return notificationAdapter.sendEmail(companyCompletionNotification)
     }
 
     override fun companyCompleted(companyName: String) {

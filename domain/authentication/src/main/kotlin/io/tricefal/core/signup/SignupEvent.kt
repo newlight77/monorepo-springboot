@@ -2,6 +2,8 @@ package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.metafile.Representation
+import io.tricefal.core.notification.EmailContactNotificationDomain
+import io.tricefal.core.notification.EmailNotificationDomain
 
 class SignupStatusUpdatedEvent(val signup: SignupDomain) {
     fun isFreelance() = Status.FREELANCE === signup.status || Status.FREELANCE_WITH_MISSION === signup.status

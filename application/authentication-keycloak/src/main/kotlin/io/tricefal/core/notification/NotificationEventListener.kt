@@ -18,25 +18,15 @@ class NotificationEventListener(val notificationService: INotificationService,
     private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
     private var smsAdmin = env.getProperty("notification.sms.admin")!!
 
-    @EventListener(condition = "#event.isEmailContact()")
+    @EventListener(condition = "#event.isEmail()")
     fun handleEmailContactNotificationEvent(event: NotificationEvent) {
         try {
             val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
-            notificationService.sendEmailContact(event.emailContactNotification!!, metaNotification)
+            notificationService.sendEmail(event.emailNotification!!, metaNotification)
         } catch (ex: Throwable) {
-            throw CguAcceptedSavingException("Failed to send an email for contact from the notification event ${event.emailContactNotification}", ex)
+            throw CguAcceptedSavingException("Failed to send an email for contact from the notification event ${event.emailNotification}", ex)
         }
-        logger.info("Failed to send an email for feedback from the notification event ${event.emailContactNotification}")
-    }
-
-    @EventListener(condition = "#event.isEmailFeedback()")
-    fun handleEmailFeedbackNotificationEvent(event: NotificationEvent) {
-        try {
-            notificationService.sendEmailContact(event.emailContactNotification!!, MetaNotificationDomain(backendBaseUrl, emailFrom, smsFrom))
-        } catch (ex: Throwable) {
-            throw CguAcceptedSavingException("Failed to send an email for feedback from the notification event ${event.emailContactNotification}")
-        }
-        logger.info("Failed to send an email for feedback from the notification event ${event.emailContactNotification}")
+        logger.info("Failed to send an email for feedback from the notification event ${event.emailNotification}")
     }
 
     class CguAcceptedSavingException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {

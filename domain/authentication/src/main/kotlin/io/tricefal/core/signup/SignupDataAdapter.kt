@@ -16,11 +16,12 @@ interface SignupDataAdapter {
 
     fun register(signup: SignupDomain) : Boolean
     fun unregister(username: String) : Boolean
-    fun sendEmail(username: String, notification: EmailNotificationDomain) : Boolean
+    fun sendEmail(notification: EmailNotificationDomain) : Boolean
     fun sendSms(username: String, notification: SmsNotificationDomain) : Boolean
 
     // events
     fun cguAccepted(username: String, cguAcceptedVersion: String)
+    fun stateUpdated(signup: SignupDomain)
     fun statusUpdated(signup: SignupDomain)
     fun portraitUploaded(fileDomain: MetafileDomain)
     fun resumeUploaded(fileDomain: MetafileDomain)

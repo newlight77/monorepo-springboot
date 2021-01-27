@@ -8,6 +8,7 @@ import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
 import java.security.SecureRandom
 import java.util.*
+import kotlin.math.sign
 
 
 class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService, SignupNotificationFactory() {
@@ -58,7 +59,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .statusUpdated(signup.state?.statusUpdated)
                 .validated(signup.state?.validated)
                 .emailSent(
-                    signup.state?.emailValidated ?: dataAdapter.sendEmail(signup.username, singupEmailNotification(signup, metaNotification))
+                    signup.state?.emailValidated ?: dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification))
                 )
                 .smsSent(
                     signup.state?.smsValidated ?: sendSms(signup, signupSmsNotification(signup, metaNotification))
@@ -100,7 +101,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         try {
             signup.state?.validated = true
             dataAdapter.update(signup)
-            dataAdapter.sendEmail(signup.username, activatedEmailNotification(signup, metaNotification))
+            dataAdapter.sendEmail(activatedEmailNotification(signup, metaNotification))
             assignRoles(signup, statusToReadWriteRole[signup.status])
             return signup.state!!
         } catch (ex: Throwable) {
@@ -200,7 +201,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             signup.state!!.statusUpdated = true
             dataAdapter.update(signup)
             dataAdapter.statusUpdated(signup)
-            dataAdapter.sendEmail(signup.username, waitingForActivationEmailNotification(signup, metaNotification))
+            dataAdapter.sendEmail(waitingForActivationEmailNotification(signup, metaNotification))
             assignRoles(signup, statusToReadRole[status])
             return signup.state!!
         } catch (ex: Throwable) {
@@ -268,8 +269,9 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
     private fun sendSignupEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): Boolean {
         try {
             signup.state?.emailSent = true
-            dataAdapter.sendEmail(signup.username, singupEmailNotification(signup, metaNotification))
-            dataAdapter.sendEmail(signup.username, notifyAdminForActivation(signup, metaNotification))
+            dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification))
+            dataAdapter.sendEmail(notifyAdminForActivation(signup, metaNotification))
+            dataAdapter.stateUpdated(signup)
             dataAdapter.update(signup)
                 .orElseThrow { SignupEmailNotificationException("failed to update the signup after sending email for username ${signup.username}")}
             return true

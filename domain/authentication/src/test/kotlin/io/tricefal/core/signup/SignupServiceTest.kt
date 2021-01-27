@@ -53,7 +53,7 @@ class SignupServiceTest {
         Mockito.`when`(dataAdapter.save(signup)).thenReturn(signup)
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
         Mockito.`when`(dataAdapter.register(signup)).thenReturn(true)
-        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
         Mockito.`when`(dataAdapter.sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         // Act
@@ -112,7 +112,7 @@ class SignupServiceTest {
                 .build()
 
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
-        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
 
         // Act
         val result = service.updateStatus(signup, Status.EMPLOYEE, metaNotification)
@@ -259,13 +259,13 @@ class SignupServiceTest {
             .build()
 
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
-        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
 
         // Act
         val result = service.activate(signup, metaNotification)
 
         // Arrange
-        Mockito.verify(dataAdapter).sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))
+        Mockito.verify(dataAdapter).sendEmail(any(EmailNotificationDomain::class.java))
         Assertions.assertTrue(result.validated!!)
     }
 
@@ -314,14 +314,14 @@ class SignupServiceTest {
             Optional.of(signup)
         )
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
-        Mockito.`when`(dataAdapter.sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
         Mockito.`when`(dataAdapter.sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         // Act
         val result = service.resendCode(signup, metaNotification)
 
         // Arrange
-        Mockito.verify(dataAdapter).sendEmail(eq("kong@gmail.com"), any(EmailNotificationDomain::class.java))
+        Mockito.verify(dataAdapter).sendEmail(any(EmailNotificationDomain::class.java))
         Mockito.verify(dataAdapter).sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))
         Assertions.assertTrue(result.emailSent!!)
         Assertions.assertTrue(result.smsSent!!)

@@ -78,8 +78,10 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
         return updated
     }
 
-    override fun sendEmail(username: String, companyCompletionNotification: EmailNotificationDomain): Boolean {
-        return notificationAdapter.sendEmail(companyCompletionNotification)
+    override fun sendEmail(notification: EmailNotificationDomain): Boolean {
+        this.eventPublisher.publishEmailNotification(notification)
+        return true
+        //return notificationAdapter.sendEmail(companyCompletionNotification)
     }
 
     override fun companyCompleted(username: String) {

@@ -1,5 +1,7 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.NotificationEvent
 import io.tricefal.core.signup.CompanyCompletionEvent
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
@@ -20,9 +22,25 @@ class FreelanceEventPublisher(private val applicationEventPublisher: Application
         throw CompanyCompletionPublicationException("Failed to publish a CompanyCompletionEvent for user $username")
     }
 
+    fun publishEmailNotification(notification: EmailNotificationDomain) {
+        try {
+            applicationEventPublisher.publishEvent(
+                NotificationEvent(notification)
+            )
+            logger.info("An EmailNotificationEvent has been published to ${notification.emailTo}")
+        } catch (ex: Exception) {
+            logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
+            throw EmailNotifiicationPublicationException("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
+        }
+    }
+
 }
 
-class CompanyCompletionPublicationException(private val msg: String) : Throwable(msg) {}
-
+class CompanyCompletionPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class EmailNotifiicationPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 
 

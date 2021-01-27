@@ -2,6 +2,8 @@ package io.tricefal.core.signup
 
 import io.tricefal.core.cgu.CguAcceptedEvent
 import io.tricefal.core.metafile.MetafileDomain
+import io.tricefal.core.notification.EmailNotificationDomain
+import io.tricefal.core.notification.NotificationEvent
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
@@ -83,6 +85,18 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
         }
     }
 
+    fun publishEmailNotification(notification: EmailNotificationDomain) {
+        try {
+            applicationEventPublisher.publishEvent(
+                NotificationEvent(notification)
+            )
+            logger.info("A EmailNotificationEvent has been published to ${notification.emailTo}")
+        } catch (ex: Exception) {
+            logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
+            throw EmailNotifiicationPublicationException("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
+        }
+    }
+
 }
 
 class SignupStatusPublicationException(private val msg: String) : Throwable(msg) {}
@@ -92,5 +106,7 @@ class ProfileResumeUploadedPublicationException(private val msg: String) : Throw
 class ProfileResumeLinkedinUploadedPublicationException(private val msg: String) : Throwable(msg) {}
 class CguAcceptedPublicationException(private val msg: String) : Throwable(msg) {}
 
-
+class EmailNotifiicationPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 

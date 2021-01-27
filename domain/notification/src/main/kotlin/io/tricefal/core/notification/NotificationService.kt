@@ -27,6 +27,15 @@ class NotificationService(private var adapter: INotificationAdapter) : INotifica
         }
     }
 
+    override fun sendEmail(notification: EmailNotificationDomain, metaNotification: MetaNotificationDomain): Boolean {
+        try {
+            return adapter.sendEmail(notification)
+        } catch (ex: Throwable) {
+            logger.error("failed to send an email to ${notification.emailTo}")
+            throw SignupEmailNotificationException("failed to send an email to ${notification.emailTo}", ex)
+        }
+    }
+
     override fun sendSms(notification: SmsNotificationDomain, metaNotification: MetaNotificationDomain): Boolean {
         try {
             notification.smsTo = metaNotification.smsAdminNumber
