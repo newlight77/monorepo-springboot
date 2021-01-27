@@ -2,8 +2,6 @@ package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.metafile.Representation
-import io.tricefal.core.notification.EmailContactNotificationDomain
-import io.tricefal.core.notification.EmailNotificationDomain
 
 class SignupStatusUpdatedEvent(val signup: SignupDomain) {
     fun isFreelance() = Status.FREELANCE === signup.status || Status.FREELANCE_WITH_MISSION === signup.status
@@ -11,7 +9,7 @@ class SignupStatusUpdatedEvent(val signup: SignupDomain) {
     fun isClient() = Status.CLIENT === signup.status
 }
 
-class SignupStateUpdatedEvent(val username: String, val state: String)
+class SignupStateUpdatedEvent(val username: String, val state: SignupState)
 
 class CompanyCompletionEvent(val username: String)
 

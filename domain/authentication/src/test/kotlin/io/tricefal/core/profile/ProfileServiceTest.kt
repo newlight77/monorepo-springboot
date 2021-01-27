@@ -1,5 +1,6 @@
 package io.tricefal.core.profile
 
+import io.tricefal.core.signup.SignupState
 import io.tricefal.core.signup.Status
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

@@ -20,15 +20,12 @@ internal class FreelanceRepositoryAdapterTest {
     @Mock
     lateinit var eventPublisher: FreelanceEventPublisher
 
-    @Mock
-    lateinit var notificationAdapter: INotificationAdapter
-
     lateinit var repositoryAdapter: FreelanceRepositoryAdapter
 
     @BeforeEach
     fun beforeEach() {
         Mockito.reset(jpaRepository)
-        repositoryAdapter = FreelanceRepositoryAdapter(jpaRepository, notificationAdapter, eventPublisher)
+        repositoryAdapter = FreelanceRepositoryAdapter(jpaRepository, eventPublisher)
     }
 
     @Test

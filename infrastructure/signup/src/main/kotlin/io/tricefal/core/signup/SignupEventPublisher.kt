@@ -25,7 +25,7 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
         }
     }
 
-    fun publishStateUpdatedEvent(username: String, state: String) {
+    fun publishStateUpdatedEvent(username: String, state: SignupState) {
         try {
             applicationEventPublisher.publishEvent(
                 SignupStateUpdatedEvent(username, state)

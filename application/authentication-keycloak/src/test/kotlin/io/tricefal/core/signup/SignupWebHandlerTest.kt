@@ -110,7 +110,7 @@ class SignupWebHandlerTest {
         Mockito.`when`(keycloakRegistrationService.register(any(SignupDomain::class.java))).thenReturn(true)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
         Mockito.`when`(smsService.send(any(SmsMessage::class.java))).thenReturn("SM235g4fwee4qf32gqg8g")
-        Mockito.doNothing().`when`(eventPublisher).publishStateUpdatedEvent(eq(username), any(String::class.java))
+        Mockito.doNothing().`when`(eventPublisher).publishStateUpdatedEvent(eq(username), any(SignupState::class.java))
 
         // Act
         val result = signupWebHandler.signup(signup)

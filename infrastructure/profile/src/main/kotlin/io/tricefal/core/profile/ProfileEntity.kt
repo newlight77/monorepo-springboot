@@ -1,5 +1,6 @@
 package io.tricefal.core.profile
 
+import io.tricefal.core.signup.toState
 import io.tricefal.core.signup.toStatus
 import java.time.Instant
 import javax.persistence.*
@@ -48,8 +49,7 @@ data class ProfileEntity(
 
         @Column(name = "resume_linkedin")
         var resumeLinkedin: String? = null
-) {
-}
+)
 
 fun toEntity(domain: ProfileDomain): ProfileEntity {
         return ProfileEntity(

@@ -14,7 +14,7 @@ class NotificationEventPublisher(private val applicationEventPublisher: Applicat
             applicationEventPublisher.publishEvent(
                 NotificationEvent(notification)
             )
-            logger.info("A SignupEmailNotificationEvent has been published to ${notification.emailTo}")
+            logger.info("An EmailNotificationEvent has been published to ${notification.emailTo}")
         } catch (ex: Exception) {
             logger.error("Failed to publish a SignupEmailNotificationEvent to ${notification.emailTo}")
             throw EmailNotifiicationPublicationException("Failed to publish a SignupEmailNotificationEvent to ${notification.emailTo}")

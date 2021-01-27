@@ -5,13 +5,11 @@ import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.NotificationAdapter
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.okta.IamRegisterService
-import io.tricefal.core.profile.SignupState
 import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.Instant
 import java.util.*
-import kotlin.math.sign
 
 @Repository
 class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
@@ -50,7 +48,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     override fun softDelete(username: String) {
         repository.findByUsername(username).stream().findFirst().ifPresentOrElse (
             {
-                this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.DELETED.toString())
+                this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.DELETED)
             },
             {
                 logger.error("unable to delete a registration with username $username")
@@ -101,7 +99,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     override fun register(signup: SignupDomain): Boolean {
         return try {
             val result = registrationService.register(signup)
-            this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.REGISTERED.toString())
+            this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.REGISTERED)
             result
         } catch (ex: Exception) {
             logger.error("Failed to register a user on IAM server for username ${signup.username}")
@@ -111,7 +109,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 
     override fun sendSms(username: String, notification: SmsNotificationDomain): Boolean {
         val result = notificationAdapter.sendSms(notification)
-        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.SMS_CODE_SENT.toString())
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.SMS_CODE_SENT)
         return result
     }
 
@@ -122,8 +120,8 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         return true
     }
 
-    override fun stateUpdated(signup: SignupDomain) {
-        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, signup.state.toString())
+    override fun emailSent(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.EMAIL_SENT)
     }
 
     override fun statusUpdated(signup: SignupDomain) {
@@ -132,22 +130,22 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 
     override fun cguAccepted(username: String, cguAcceptedVersion: String) {
         this.signupEventPublisher.publishCguAcceptedEvent(username, cguAcceptedVersion)
-        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.CGU_ACCEPTED.toString())
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.CGU_ACCEPTED)
     }
 
     override fun portraitUploaded(fileDomain: MetafileDomain) {
         this.signupEventPublisher.publishPortraitUploadedEvent(fileDomain)
-        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.PORTRAIT_UPLOADED.toString())
+        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.PORTRAIT_UPLOADED)
     }
 
     override fun resumeUploaded(fileDomain: MetafileDomain) {
         this.signupEventPublisher.publishResumeUploadedEvent(fileDomain)
-        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_UPLOADED.toString())
+        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_UPLOADED)
     }
 
     override fun resumeLinkedinUploaded(fileDomain: MetafileDomain) {
         this.signupEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
-        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_LINKEDIN_UPLOADED.toString())
+        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_LINKEDIN_UPLOADED)
     }
 
     override fun assignRole(username: String, accessRight: AccessRight) {

@@ -2,6 +2,7 @@ package io.tricefal.core.profile
 
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.metafile.Representation
+import io.tricefal.core.signup.SignupState
 import io.tricefal.core.signup.Status
 import java.time.Instant
 

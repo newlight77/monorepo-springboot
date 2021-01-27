@@ -12,7 +12,6 @@ import java.util.*
 
 @Repository
 class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
-                                 val notificationAdapter: INotificationAdapter,
                                  val eventPublisher: FreelanceEventPublisher) : FreelanceDataAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)

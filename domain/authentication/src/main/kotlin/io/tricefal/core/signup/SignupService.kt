@@ -1,14 +1,12 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileDomain
-import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
 import java.security.SecureRandom
 import java.util.*
-import kotlin.math.sign
 
 
 class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService, SignupNotificationFactory() {
@@ -271,7 +269,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             signup.state?.emailSent = true
             dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification))
             dataAdapter.sendEmail(notifyAdminForActivation(signup, metaNotification))
-            dataAdapter.stateUpdated(signup)
+            dataAdapter.emailSent(signup)
             dataAdapter.update(signup)
                 .orElseThrow { SignupEmailNotificationException("failed to update the signup after sending email for username ${signup.username}")}
             return true

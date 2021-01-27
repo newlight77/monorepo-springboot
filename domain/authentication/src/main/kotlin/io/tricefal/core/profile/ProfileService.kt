@@ -1,10 +1,8 @@
 package io.tricefal.core.profile
 
-import io.tricefal.core.signup.SignupUsernameUniquenessException
+import io.tricefal.core.signup.toState
 import io.tricefal.core.signup.toStatus
 import org.slf4j.LoggerFactory
-import java.time.Instant
-import java.util.*
 
 class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileService {
 

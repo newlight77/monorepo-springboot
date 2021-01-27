@@ -6,30 +6,23 @@ import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
-class NotificationEventListener(val notificationService: INotificationService,
+class NotificationEventListener(val webHandler: NotificationWebHandler,
                                 private final val env: Environment
 ) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    private var backendBaseUrl = env.getProperty("core.baseUrl")!!
-    private var emailFrom = env.getProperty("notification.mail.from")!!
-    private var emailAdmin = env.getProperty("notification.mail.admin")!!
-    private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
-    private var smsAdmin = env.getProperty("notification.sms.admin")!!
-
     @EventListener(condition = "#event.isEmail()")
     fun handleEmailContactNotificationEvent(event: NotificationEvent) {
         try {
-            val metaNotification = MetaNotificationDomain(baseUrl=backendBaseUrl, emailFrom=emailFrom, emailAdmin=emailAdmin, smsFrom=smsFrom, smsAdminNumber=smsAdmin)
-            notificationService.sendEmail(event.emailNotification!!, metaNotification)
+            webHandler.sendEmail(event.emailNotification!!)
         } catch (ex: Throwable) {
-            throw CguAcceptedSavingException("Failed to send an email for contact from the notification event ${event.emailNotification}", ex)
+            throw EmailNotificationEventException("Failed to send an email to ${event.emailNotification?.emailTo} from the notification event ${event.emailNotification}", ex)
         }
-        logger.info("Failed to send an email for feedback from the notification event ${event.emailNotification}")
+        logger.info("an email si successfully sent to ${event.emailNotification?.emailTo} to from the notification event ${event.emailNotification} ")
     }
+}
 
-    class CguAcceptedSavingException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
-        constructor(message: String?) : this(message, null)
-    }
+class EmailNotificationEventException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
 }

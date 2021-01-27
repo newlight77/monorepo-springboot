@@ -21,7 +21,7 @@ interface SignupDataAdapter {
 
     // events
     fun cguAccepted(username: String, cguAcceptedVersion: String)
-    fun stateUpdated(signup: SignupDomain)
+    fun emailSent(signup: SignupDomain)
     fun statusUpdated(signup: SignupDomain)
     fun portraitUploaded(fileDomain: MetafileDomain)
     fun resumeUploaded(fileDomain: MetafileDomain)

@@ -95,3 +95,31 @@ fun toStatus(status: String): Status {
         throw IllegalArgumentException("invalid argument : status=$status")
     }
 }
+
+
+enum class SignupState {
+    NONE,
+    CGU_ACCEPTED,
+    REGISTERED,
+    SMS_CODE_SENT,
+    SMS_CODE_VALIDATED,
+    EMAIL_SENT,
+    EMAIL_VALIDATED,
+    PORTRAIT_UPLOADED, // optional
+    RESUME_UPLOADED,
+    RESUME_LINKEDIN_UPLOADED,
+    STATUS_SET,
+    VALIDATED, // activated by backoffice
+    MISSION_FORM_FILLED,
+    ENTERPRISE_FORM_FILLED,
+    COMPLETED, // everything is done
+    DELETED; // soft deletion
+}
+
+fun toState(state: String): SignupState {
+    try {
+        return SignupState.valueOf(state.toUpperCase())
+    } catch (ex: Exception) {
+        throw IllegalArgumentException("invalid argument : status=$state")
+    }
+}

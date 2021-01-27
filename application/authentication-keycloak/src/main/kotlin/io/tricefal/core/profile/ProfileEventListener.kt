@@ -23,7 +23,7 @@ class ProfileEventListener(val profileService: IProfileService) {
     @EventListener
     fun handleSignupStateUpdatedEvent(event: SignupStateUpdatedEvent) {
         try {
-            this.profileService.updateState(event.username, event.state)
+            this.profileService.updateState(event.username, event.state.toString())
         } catch (ex: Throwable) {
             throw ProfileStateUpdateException("Failed to update the signup state of the profile with username ${event.username}", ex)
         }
