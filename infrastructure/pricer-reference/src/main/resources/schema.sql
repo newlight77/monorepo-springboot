@@ -9,5 +9,6 @@ create table ref_pricer (
     resto_employer int,
     navigo_yr_fee int,
     navigo_yr_employer int,
+    payslip_mtly_fee int,
     primary key (id)
 );

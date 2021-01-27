@@ -11,9 +11,8 @@ class PricerReferenceRepositoryAdapter(private var repository: PricerReferenceJp
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     override fun save(pricerRef: PricerReferenceDomain): PricerReferenceDomain {
-        repository.all().stream().findFirst().orElse(defaultRef())
         val entity = repository.save(toEntity(pricerRef))
-//        entity.lastDate = pricerRef.lastDate ?: Instant.now()
+        entity.lastDate = pricerRef.lastDate ?: Instant.now()
         return fromEntity(entity)
     }
 
@@ -22,21 +21,9 @@ class PricerReferenceRepositoryAdapter(private var repository: PricerReferenceJp
             .map { fromEntity(it) }
     }
 
-    private fun defaultRef(): PricerReferenceEntity {
-        return PricerReferenceEntity(
-                lastDate = Instant.now(),
-                workDaysPerYear = 217,
-                commissionFreelancePercentagePhase1 = 10,
-                employerChargePercentage = 45,
-                monthlyInsurance50 = 50,
-                restaurantDailyContribution = 10,
-                restaurantDailyEmployerPercentage = 50,
-                navigoAnnualFee = 827,
-                navigoAnnualFeeEmployerPercentage = 50
-        )
+    class NoDataException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
     }
-
-    class NoDataException(private val msg: String) : Throwable(msg) {}
 }
 
 

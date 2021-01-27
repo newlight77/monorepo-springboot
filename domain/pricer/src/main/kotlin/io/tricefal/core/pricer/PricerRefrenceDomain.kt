@@ -12,7 +12,8 @@ data class PricerReferenceDomain
             var restaurantDailyContribution: Int,
             var restaurantDailyEmployerPercentage: Int,
             var navigoAnnualFee: Int,
-            var navigoAnnualFeeEmployerPercentage: Int
+            var navigoAnnualFeeEmployerPercentage: Int,
+            var paySlipMonthlyFee: Int
         ) {
 
     fun income(myFee: Int): Double
@@ -27,6 +28,9 @@ data class PricerReferenceDomain
     fun navigoFee(): Double
             = navigoAnnualFee * (navigoAnnualFeeEmployerPercentage.toDouble()/100)
 
+    fun paySlipFee(): Int
+            = 12 * paySlipMonthlyFee
+
     data class Builder(
             var lastDate: Instant? = null,
             var workDaysPerYear: Int? = null,
@@ -37,6 +41,7 @@ data class PricerReferenceDomain
             var restaurantDailyEmployerPercentage: Int? = null,
             var navigoAnnualFee: Int? = null,
             var navigoAnnualFeeEmployerPercentage: Int? = null,
+            var paySlipMonthlyFee: Int? = null,
     ) {
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
         fun workDaysPerYear(workDaysPerYear: Int?) = apply { this.workDaysPerYear = workDaysPerYear }
@@ -47,17 +52,19 @@ data class PricerReferenceDomain
         fun restaurantDailyEmployerPercentage(restaurantDailyEmployerPercentage: Int?) = apply { this.restaurantDailyEmployerPercentage = restaurantDailyEmployerPercentage }
         fun navigoAnnualFee(navigoAnnualFee: Int?) = apply { this.navigoAnnualFee = navigoAnnualFee }
         fun navigoAnnualFeeEmployerPercentage(navigoAnnualFeeEmployerPercentage: Int?) = apply { this.navigoAnnualFeeEmployerPercentage = navigoAnnualFeeEmployerPercentage }
+        fun paySlipMonthlyFee(paySlipMonthlyFee: Int?) = apply { this.paySlipMonthlyFee = paySlipMonthlyFee }
 
         fun build() = PricerReferenceDomain(
-                lastDate = lastDate!!,
-                workDaysPerYear = workDaysPerYear!!,
-                commissionFreelancePercentagePhase1 = commissionFreelancePercentagePhase1!!,
-                employerChargePercentage = employerChargePercentage!!,
-                monthlyInsurance50 = monthlyInsurance50!!,
-                restaurantDailyContribution = restaurantDailyContribution!!,
-                restaurantDailyEmployerPercentage = restaurantDailyEmployerPercentage!!,
-                navigoAnnualFee = navigoAnnualFee!!,
-                navigoAnnualFeeEmployerPercentage = navigoAnnualFeeEmployerPercentage!!
+            lastDate = lastDate!!,
+            workDaysPerYear = workDaysPerYear!!,
+            commissionFreelancePercentagePhase1 = commissionFreelancePercentagePhase1!!,
+            employerChargePercentage = employerChargePercentage!!,
+            monthlyInsurance50 = monthlyInsurance50!!,
+            restaurantDailyContribution = restaurantDailyContribution!!,
+            restaurantDailyEmployerPercentage = restaurantDailyEmployerPercentage!!,
+            navigoAnnualFee = navigoAnnualFee!!,
+            navigoAnnualFeeEmployerPercentage = navigoAnnualFeeEmployerPercentage!!,
+            paySlipMonthlyFee = paySlipMonthlyFee!!
         )
     }
 }

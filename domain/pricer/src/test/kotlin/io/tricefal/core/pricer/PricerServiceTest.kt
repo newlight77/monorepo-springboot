@@ -37,6 +37,7 @@ class PricerServiceTest {
                 .restaurantDailyEmployerPercentage(50)
                 .navigoAnnualFee(827)
                 .navigoAnnualFeeEmployerPercentage(50)
+                .paySlipMonthlyFee(20)
                 .build()
 
         Mockito.`when`(adapter.last()).thenReturn(Optional.of(pricerRef))
@@ -47,7 +48,7 @@ class PricerServiceTest {
         val result = service.toSalary(570)
 
         // Arrange
-        Assertions.assertEquals(74675, result.roundToInt())
+        Assertions.assertEquals(74435, result.roundToInt())
     }
 
 }

@@ -35,7 +35,10 @@ data class PricerReferenceEntity (
         var navigoAnnualFee: Int,
 
         @Column(name = "navigo_yr_employer")
-        var navigoAnnualFeeEmployerPercentage: Int
+        var navigoAnnualFeeEmployerPercentage: Int,
+
+        @Column(name = "payslip_mtly_fee")
+        var paySlipMonthlyFee: Int
 )
 
 fun toEntity(domain: PricerReferenceDomain): PricerReferenceEntity {
@@ -48,7 +51,8 @@ fun toEntity(domain: PricerReferenceDomain): PricerReferenceEntity {
                 restaurantDailyContribution = domain.restaurantDailyContribution,
                 restaurantDailyEmployerPercentage = domain.restaurantDailyEmployerPercentage,
                 navigoAnnualFee = domain.navigoAnnualFee,
-                navigoAnnualFeeEmployerPercentage = domain.navigoAnnualFeeEmployerPercentage
+                navigoAnnualFeeEmployerPercentage = domain.navigoAnnualFeeEmployerPercentage,
+                paySlipMonthlyFee = domain.paySlipMonthlyFee
         )
 }
 
@@ -63,5 +67,6 @@ fun fromEntity(entity: PricerReferenceEntity): PricerReferenceDomain {
                 .restaurantDailyEmployerPercentage(entity.restaurantDailyEmployerPercentage)
                 .navigoAnnualFee(entity.navigoAnnualFee)
                 .navigoAnnualFeeEmployerPercentage(entity.navigoAnnualFeeEmployerPercentage)
+                .paySlipMonthlyFee(entity.paySlipMonthlyFee)
                 .build()
 }
