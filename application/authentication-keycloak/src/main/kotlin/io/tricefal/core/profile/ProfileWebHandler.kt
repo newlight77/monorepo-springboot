@@ -90,9 +90,9 @@ class ProfileWebHandler(val profileService: IProfileService,
         return toModel(result)
     }
 
-    fun updateStatus(username: String, status: String) {
+    fun initProfile(username: String, profile: ProfileDomain) {
         try {
-            this.profileService.updateStatus(username, status)
+            this.profileService.initProfile(username, profile)
         } catch(ex: Throwable) {
             logger.error("Failed to update the profile status for username $username")
             throw ProfileUploadException("Failed to update the profile status for username $username", ex)

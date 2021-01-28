@@ -20,26 +20,24 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
         return dataAdapter.create(profile)
     }
 
-    override fun updateStatus(username: String, status: String): ProfileDomain {
-        var profile = ProfileDomain.Builder(username)
-            .status(Status.valueOf(status))
-            .build()
+    override fun initProfile(username: String, profile: ProfileDomain): ProfileDomain {
+        var newprofile = ProfileDomain.Builder(username).build()
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
-                        it.status = Status.valueOf(status)
-                        profile = dataAdapter.update(it)
+                        it.status = profile.status
+                        newprofile = dataAdapter.update(it)
                     },
                     {
-                        profile = dataAdapter.create(profile)
+                        newprofile = dataAdapter.create(profile)
                     }
                 )
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the status update event for user $username")
             throw ProfileUploadException("Failed to update the profile from the status update event for user $username", ex)
         }
-        return profile
+        return newprofile
     }
 
     override fun updateState(username: String, state: String): ProfileDomain {

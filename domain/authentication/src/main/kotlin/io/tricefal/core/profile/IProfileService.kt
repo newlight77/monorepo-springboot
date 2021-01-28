@@ -6,6 +6,6 @@ interface IProfileService {
     fun updateProfileOnPortraitUploaded(username: String, filename: String): ProfileDomain
     fun updateProfileOnResumeUploaded(username: String, filename: String): ProfileDomain
     fun updateProfileOnResumeLinkedinUploaded(username: String, filename: String): ProfileDomain
-    fun updateStatus(username: String, status: String): ProfileDomain
+    fun initProfile(username: String, profile: ProfileDomain): ProfileDomain
     fun updateState(username: String, state: String): ProfileDomain
 }

@@ -13,7 +13,13 @@ class ProfileEventListener(val webHandler: ProfileWebHandler) {
     @EventListener
     fun handleStatusUpdatedEvent(event: SignupStatusUpdatedEvent) {
         try {
-            this.webHandler.updateStatus(event.username, event.status)
+            val profile = ProfileDomain.Builder(event.username)
+                .firstname(event.firstname)
+                .lastname(event.lastname)
+                .phoneNumber(event.phoneNumber)
+                .status(Status.valueOf(event.status))
+                .build()
+            this.webHandler.initProfile(event.username, profile)
         } catch (ex: Throwable) {
             throw ProfileStatusUpdateException("Failed to update the status of the profile with username ${event.username}", ex)
         }

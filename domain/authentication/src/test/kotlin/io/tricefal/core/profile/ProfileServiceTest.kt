@@ -69,7 +69,7 @@ class ProfileServiceTest {
     }
 
     @Test
-    fun `should update the profile on status updated`() {
+    fun `should init the profile on signup status updated`() {
         // Arrange
         val username = "kong@gmail.com"
         val profile1 = ProfileDomain("kong@gmail.com",
@@ -90,10 +90,10 @@ class ProfileServiceTest {
         service = ProfileService(repository)
 
         // Act
-        val result = service.updateStatus(username, Status.EMPLOYEE.toString())
+        val result = service.initProfile(username, profile1)
 
         // Arrange
-        Assertions.assertEquals(Status.EMPLOYEE, result.status)
+        Assertions.assertEquals(Status.FREELANCE, result.status)
     }
 
     @Test
