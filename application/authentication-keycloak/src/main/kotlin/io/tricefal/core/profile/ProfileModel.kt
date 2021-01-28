@@ -52,9 +52,9 @@ class ProfileModel
 
         fun build() = ProfileModel(
             username = username,
-            firstname = username,
-            lastname = username,
-            phoneNumber = username,
+            firstname = firstname,
+            lastname = lastname,
+            phoneNumber = phoneNumber,
 
             status = status,
             signupState = signupState,
