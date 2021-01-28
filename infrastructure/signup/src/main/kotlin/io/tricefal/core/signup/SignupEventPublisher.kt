@@ -16,7 +16,12 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
     fun publishStatusUpdatedEvent(signup: SignupDomain) {
         try {
             applicationEventPublisher.publishEvent(
-                    SignupStatusUpdatedEvent(signup)
+                    SignupStatusUpdatedEvent(signup.username,
+                        signup.status.toString(),
+                        signup.firstname,
+                        signup.lastname,
+                        signup.phoneNumber,
+                    )
             )
             logger.info("A SignupStatusUpdatedEvent has been published user ${signup.username}")
         } catch (ex: Exception) {
@@ -28,7 +33,7 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
     fun publishStateUpdatedEvent(username: String, state: SignupState) {
         try {
             applicationEventPublisher.publishEvent(
-                SignupStateUpdatedEvent(username, state)
+                SignupStateUpdatedEvent(username, state.toString())
             )
             logger.info("A SignupStateUpdatedEvent has been published user $username")
         } catch (ex: Exception) {

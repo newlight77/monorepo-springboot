@@ -1,7 +1,5 @@
 package io.tricefal.core.profile
 
-import io.tricefal.core.signup.toState
-import io.tricefal.core.signup.toStatus
 import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -35,8 +33,9 @@ data class ProfileEntity(
         @Column(name = "status", length = 50)
         var status: String,
 
-        @Column(name = "signup_state", length = 50)
-        var signupState: String,
+        @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(name = "state")
+        var state: ProfileStateEntity? = null,
 
         @Column(name = "last_date")
         var lastDate: Instant? = Instant.now(),
@@ -59,7 +58,7 @@ fun toEntity(domain: ProfileDomain): ProfileEntity {
                 lastname = domain.lastname,
                 phoneNumber = domain.phoneNumber,
                 status = domain.status.toString(),
-                signupState = domain.signupState.toString(),
+                state = domain.state?.let { toEntity(it) },
                 lastDate = domain.lastDate,
                 portrait = domain.portraitFilename,
                 resume = domain.resumeFilename,
@@ -73,8 +72,8 @@ fun fromEntity(entity: ProfileEntity): ProfileDomain {
                 firstname = entity.firstname,
                 lastname = entity.lastname,
                 phoneNumber = entity.phoneNumber,
-                status = toStatus(entity.status),
-                signupState = toState(entity.signupState),
+                status = Status.valueOf(entity.status),
+                state = entity.state?.let { fromEntity(it) },
                 lastDate = entity.lastDate,
                 portraitFilename = entity.portrait,
                 resumeFilename = entity.resume,

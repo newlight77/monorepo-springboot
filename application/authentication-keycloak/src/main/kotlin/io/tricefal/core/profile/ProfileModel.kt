@@ -2,8 +2,6 @@ package io.tricefal.core.profile
 
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.metafile.Representation
-import io.tricefal.core.signup.SignupState
-import io.tricefal.core.signup.Status
 import java.time.Instant
 
 
@@ -15,7 +13,7 @@ class ProfileModel
         var phoneNumber: String?,
 
         var status: Status?,
-        var signupState: SignupState?,
+        var state: ProfileStateModel? = null,
         val lastDate: Instant?,
 
         var portraitFile: MetafileModel? = null,
@@ -30,7 +28,7 @@ class ProfileModel
         var phoneNumber: String? = null,
 
         var status: Status? = null,
-        var signupState: SignupState? = null,
+        var state: ProfileStateModel? = null,
         var lastDate: Instant? = null,
 
         var portraitFile: MetafileModel? = null,
@@ -43,7 +41,7 @@ class ProfileModel
         fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
 
         fun status(status: Status?) = apply { this.status = status }
-        fun signupState(signupState: SignupState?) = apply { this.signupState = signupState }
+        fun state(state: ProfileStateModel?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun portraitFile(portraitFile: MetafileModel?) = apply { this.portraitFile = portraitFile }
@@ -57,7 +55,7 @@ class ProfileModel
             phoneNumber = phoneNumber,
 
             status = status,
-            signupState = signupState,
+            state = state,
             lastDate = lastDate ?: Instant.now(),
 
             portraitFile = portraitFile,
@@ -73,7 +71,7 @@ fun toModel(domain: ProfileDomain): ProfileModel {
         .lastname(domain.lastname)
         .phoneNumber(domain.phoneNumber)
         .status(domain.status)
-        .signupState(domain.signupState)
+        .state(domain.state?.let { toModel(it) })
         .lastDate(domain.lastDate)
         .portraitFile(domain.portraitFilename?.let { MetafileModel.Builder(domain.username, it, Representation.PORTRAIT).build() })
         .resumeFile(domain.resumeFilename?.let { MetafileModel.Builder(domain.username, it, Representation.CV).build() })
@@ -87,7 +85,7 @@ fun fromModel(model: ProfileModel): ProfileDomain {
         .lastname(model.lastname)
         .phoneNumber(model.phoneNumber)
         .status(model.status)
-        .signupState(model.signupState)
+        .state(model.state?.let { fromModel(it) })
         .lastDate(model.lastDate)
         .portraitFilename(model.portraitFile?.filename)
         .resumeFilename(model.resumeFile?.filename)

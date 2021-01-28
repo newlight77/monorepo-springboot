@@ -101,6 +101,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.update(signup)
             dataAdapter.sendEmail(activatedEmailNotification(signup, metaNotification))
             assignRoles(signup, statusToReadWriteRole[signup.status])
+            dataAdapter.validated(signup)
             return signup.state!!
         } catch (ex: Throwable) {
             logger.error("Failed to update the signup state after activation for username ${signup.username}")
@@ -110,6 +111,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
 
     override fun deactivate(signup: SignupDomain): SignupStateDomain {
         signup.state?.validated = false
+        dataAdapter.unvalidated(signup)
         dataAdapter.update(signup)
             .orElseThrow { SignupDeactivationException("Failed to update the signup state after activation") }
         return signup.state!!
@@ -121,6 +123,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             logger.error("failed to active by code fur user ${signup.username}")
             throw SignupVerificationByCodeException("failed to active by code fur user ${signup.username}")
         }
+        dataAdapter.smsValidated(signup)
         dataAdapter.update(signup)
         return signup.state!!
     }
@@ -146,6 +149,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             logger.info("successfully verified the token by email for user $username")
         }
 
+        dataAdapter.emailValidated(signup)
         dataAdapter.update(signup)
             .orElseThrow { SignupVerificationByCodeFromTokenException("Failed to update the signup state after verification by code") }
         return signup.state!!
@@ -217,6 +221,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         try {
             signup.state?.completed = true
             dataAdapter.update(signup)
+            dataAdapter.companyCompleted(signup)
             return signup.state!!
         } catch (ex: Throwable) {
             logger.error("failed to update the state upon company completion of the signup for username ${signup.username}")

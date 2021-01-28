@@ -110,6 +110,7 @@ enum class SignupState {
     RESUME_LINKEDIN_UPLOADED,
     STATUS_SET,
     VALIDATED, // activated by backoffice
+    UNVALIDATED, // activated by backoffice
     MISSION_FORM_FILLED,
     ENTERPRISE_FORM_FILLED,
     COMPLETED, // everything is done

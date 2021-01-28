@@ -1,7 +1,5 @@
 package io.tricefal.core.profile
 
-import io.tricefal.core.signup.SignupState
-import io.tricefal.core.signup.Status
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -28,7 +26,7 @@ class ProfileServiceTest {
             "to",
             "000000000",
             Status.FREELANCE,
-            SignupState.VALIDATED,
+            ProfileStateDomain.Builder("kong@gmail.com").build(),
             Instant.now(),
             "portrait",
             "resume",
@@ -52,7 +50,7 @@ class ProfileServiceTest {
             "to",
             "000000000",
             Status.FREELANCE,
-            SignupState.VALIDATED,
+            ProfileStateDomain.Builder("kong@gmail.com").build(),
             Instant.now(),
             "portrait",
             "resume",
@@ -79,7 +77,7 @@ class ProfileServiceTest {
             "to",
             "000000000",
             Status.FREELANCE,
-            SignupState.VALIDATED,
+            ProfileStateDomain.Builder("kong@gmail.com").validated(true).build(),
             Instant.now(),
             "portrait",
             "resume",
@@ -107,7 +105,7 @@ class ProfileServiceTest {
             "to",
             "000000000",
             Status.FREELANCE,
-            SignupState.REGISTERED,
+            ProfileStateDomain.Builder("kong@gmail.com").registered(true).build(),
             Instant.now(),
             "portrait",
             "resume",
@@ -120,10 +118,10 @@ class ProfileServiceTest {
         service = ProfileService(repository)
 
         // Act
-        val result = service.updateState(username, SignupState.EMAIL_VALIDATED.toString())
+        val result = service.updateState(username, ProfileState.EMAIL_VALIDATED.toString())
 
         // Arrange
-        Assertions.assertEquals(SignupState.EMAIL_VALIDATED, result.signupState)
+        Assertions.assertTrue(result.state?.emailValidated!!)
     }
 
     @Test
@@ -136,7 +134,7 @@ class ProfileServiceTest {
             "to",
             "000000000",
             Status.FREELANCE,
-            SignupState.VALIDATED,
+            ProfileStateDomain.Builder("kong@gmail.com").validated(true).build(),
             Instant.now(),
             "portrait",
             "resume",
@@ -151,6 +149,7 @@ class ProfileServiceTest {
         val result = service.updateProfileOnPortraitUploaded(username, filename)
 
         // Arrange
+        Assertions.assertTrue(result.state?.portraitUploaded!!)
         Assertions.assertEquals(filename, result.portraitFilename)
     }
 
@@ -164,7 +163,7 @@ class ProfileServiceTest {
             "to",
             "000000000",
             Status.FREELANCE,
-            SignupState.VALIDATED,
+            ProfileStateDomain.Builder("kong@gmail.com").validated(true).build(),
             Instant.now(),
             "portrait",
             "resume",
@@ -179,6 +178,7 @@ class ProfileServiceTest {
         val result = service.updateProfileOnResumeUploaded(username, filename)
 
         // Arrange
+        Assertions.assertTrue(result.state?.resumeUploaded!!)
         Assertions.assertEquals(filename, result.resumeFilename)
     }
 
@@ -192,7 +192,7 @@ class ProfileServiceTest {
             "to",
             "000000000",
             Status.FREELANCE,
-            SignupState.VALIDATED,
+            ProfileStateDomain.Builder("kong@gmail.com").validated(true).build(),
             Instant.now(),
             "portrait",
             "resume",
@@ -207,6 +207,7 @@ class ProfileServiceTest {
         val result = service.updateProfileOnResumeLinkedinUploaded(username, filename)
 
         // Arrange
+        Assertions.assertTrue(result.state?.resumeLinkedinUploaded!!)
         Assertions.assertEquals(filename, result.resumeLinkedinFilename)
     }
 }

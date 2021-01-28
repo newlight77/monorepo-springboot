@@ -1,7 +1,5 @@
 package io.tricefal.core.profile
 
-import io.tricefal.core.signup.toState
-import io.tricefal.core.signup.toStatus
 import org.slf4j.LoggerFactory
 
 class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileService {
@@ -24,13 +22,13 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
 
     override fun updateStatus(username: String, status: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
-            .status(toStatus(status))
+            .status(Status.valueOf(status))
             .build()
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
-                        it.status = toStatus(status)
+                        it.status = Status.valueOf(status)
                         profile = dataAdapter.update(it)
                     },
                     {
@@ -46,13 +44,14 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
 
     override fun updateState(username: String, state: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
-            .signupState(toState(state))
+            .state(ProfileStateDomain.Builder(username).build())
             .build()
+        profile.state?.updateState(state)
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
-                        it.signupState = toState(state)
+                        it.state?.updateState(state)
                         profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }
@@ -66,6 +65,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
 
     override fun updateProfileOnPortraitUploaded(username: String, filename: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
+            .state(ProfileStateDomain.Builder(username).portraitUploaded(true).build())
             .portraitFilename(filename)
             .build()
         try {
@@ -73,6 +73,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                 .ifPresentOrElse(
                     {
                         it.portraitFilename = filename
+                        it.state?.portraitUploaded = true
                         profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }
@@ -86,6 +87,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
 
     override fun updateProfileOnResumeUploaded(username: String, filename: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
+            .state(ProfileStateDomain.Builder(username).resumeUploaded(true).build())
             .resumeFilename(filename)
             .build()
         try {
@@ -93,6 +95,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                 .ifPresentOrElse(
                     {
                         it.resumeFilename = filename
+                        it.state?.resumeUploaded = true
                         profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }
@@ -106,6 +109,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
 
     override fun updateProfileOnResumeLinkedinUploaded(username: String, filename: String): ProfileDomain {
         var profile = ProfileDomain.Builder(username)
+            .state(ProfileStateDomain.Builder(username).resumeLinkedinUploaded(true).build())
             .resumeLinkedinFilename(filename)
             .build()
         try {
@@ -113,6 +117,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                 .ifPresentOrElse(
                     {
                         it.resumeLinkedinFilename = filename
+                        it.state?.resumeLinkedinUploaded = true
                         profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }

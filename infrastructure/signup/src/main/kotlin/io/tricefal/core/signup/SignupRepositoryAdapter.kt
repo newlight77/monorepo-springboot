@@ -126,6 +126,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 
     override fun statusUpdated(signup: SignupDomain) {
         this.signupEventPublisher.publishStatusUpdatedEvent(signup)
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.STATUS_SET)
     }
 
     override fun cguAccepted(username: String, cguAcceptedVersion: String) {
@@ -146,6 +147,26 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     override fun resumeLinkedinUploaded(fileDomain: MetafileDomain) {
         this.signupEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
         this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_LINKEDIN_UPLOADED)
+    }
+
+    override fun validated(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.VALIDATED)
+    }
+
+    override fun unvalidated(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.UNVALIDATED)
+    }
+
+    override fun smsValidated(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.SMS_CODE_VALIDATED)
+    }
+
+    override fun emailValidated(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.EMAIL_VALIDATED)
+    }
+
+    override fun companyCompleted(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.COMPLETED)
     }
 
     override fun assignRole(username: String, accessRight: AccessRight) {

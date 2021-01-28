@@ -1,7 +1,5 @@
 package io.tricefal.core.profile
 
-import io.tricefal.core.signup.SignupState
-import io.tricefal.core.signup.Status
 import java.time.Instant
 
 data class ProfileDomain(
@@ -11,13 +9,13 @@ data class ProfileDomain(
     var phoneNumber: String?,
 
     var status: Status? = Status.NONE,
-    var signupState: SignupState? = SignupState.NONE,
+    var state: ProfileStateDomain? = null,
     var lastDate: Instant? = null,
 
     var portraitFilename: String? = null,
     var resumeFilename: String? = null,
     var resumeLinkedinFilename: String? = null
-    ) {
+) {
 
     data class Builder(
             val username: String,
@@ -27,7 +25,7 @@ data class ProfileDomain(
             var phoneNumber: String? = null,
 
             var status: Status? = Status.NONE,
-            var signupState: SignupState? = SignupState.NONE,
+            var state: ProfileStateDomain? = null,
             var lastDate: Instant? = null,
 
             var portraitFilename: String? = null,
@@ -39,7 +37,7 @@ data class ProfileDomain(
         fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
 
         fun status(status: Status?) = apply { this.status = status }
-        fun signupState(signupState: SignupState?) = apply { this.signupState = signupState }
+        fun state(state: ProfileStateDomain?) = apply { this.state = state }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun portraitFilename(portraitFilename: String?) = apply { this.portraitFilename = portraitFilename }
@@ -48,15 +46,23 @@ data class ProfileDomain(
 
         fun build() = ProfileDomain(
             username = username,
-            firstname = username,
-            lastname = username,
-            phoneNumber = username,
+            firstname = firstname,
+            lastname = lastname,
+            phoneNumber = phoneNumber,
             status = status,
-            signupState = signupState,
+            state = state,
             lastDate = lastDate,
             portraitFilename = portraitFilename,
             resumeFilename = resumeFilename,
             resumeLinkedinFilename = resumeLinkedinFilename
         )
     }
+}
+
+enum class Status {
+    NONE,
+    CLIENT,
+    FREELANCE,
+    FREELANCE_WITH_MISSION,
+    EMPLOYEE;
 }

@@ -27,5 +27,11 @@ interface SignupDataAdapter {
     fun resumeUploaded(fileDomain: MetafileDomain)
     fun resumeLinkedinUploaded(fileDomain: MetafileDomain)
 
+    fun validated(signup: SignupDomain)
+    fun unvalidated(signup: SignupDomain)
+    fun smsValidated(signup: SignupDomain)
+    fun emailValidated(signup: SignupDomain)
+    fun companyCompleted(signup: SignupDomain)
+
     fun assignRole(username: String, accessRight: AccessRight)
 }

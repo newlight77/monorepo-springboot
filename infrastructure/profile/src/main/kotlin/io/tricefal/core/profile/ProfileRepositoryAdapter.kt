@@ -24,12 +24,12 @@ class ProfileRepositoryAdapter(private var repository: ProfileJpaRepository) : P
     }
 
     override fun update(profile: ProfileDomain): ProfileDomain {
-        var newEntity = toEntity(profile)
+        val newEntity = toEntity(profile)
         repository.findByUsername(profile.username).stream().findFirst().ifPresentOrElse(
             {
                 newEntity.id = it.id
                 newEntity.lastDate = it.lastDate ?: Instant.now()
-                newEntity = repository.save(newEntity)
+                repository.save(newEntity)
             },
             {
                 logger.error("unable to find a profile with username ${profile.username}")

@@ -30,7 +30,8 @@ class SignupStateModel(
             var resumeLinkedinUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
             var validated: Boolean? = null,
-            var completed: Boolean? = null) {
+            var completed: Boolean? = null
+) {
         fun saved(saved: Boolean?) = apply { this.saved = saved }
         fun cguAccepted(cguAccepted: Boolean?) = apply { this.cguAccepted = cguAccepted }
         fun registered(registered: Boolean?) = apply { this.registered = registered }

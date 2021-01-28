@@ -90,6 +90,51 @@ class ProfileWebHandler(val profileService: IProfileService,
         return toModel(result)
     }
 
+    fun updateStatus(username: String, status: String) {
+        try {
+            this.profileService.updateStatus(username, status)
+        } catch(ex: Throwable) {
+            logger.error("Failed to update the profile status for username $username")
+            throw ProfileUploadException("Failed to update the profile status for username $username", ex)
+        }
+    }
+
+    fun updateState(username: String, state: String) {
+        try {
+            this.profileService.updateState(username, state)
+        } catch(ex: Throwable) {
+            logger.error("Failed to update the profile state for username $username")
+            throw ProfileUploadException("Failed to update the profile state for username $username", ex)
+        }
+    }
+
+    fun updateProfileOnPortraitUploaded(username: String, filename: String) {
+        try {
+            this.profileService.updateProfileOnPortraitUploaded(username, filename)
+        } catch(ex: Throwable) {
+            logger.error("Failed to update the profile portrait filename for username $username")
+            throw ProfileUploadException("Failed to update the profile portrait filename for username $username", ex)
+        }
+    }
+
+    fun updateProfileOnResumeUploaded(username: String, filename: String) {
+        try {
+            this.profileService.updateProfileOnResumeUploaded(username, filename)
+        } catch(ex: Throwable) {
+            logger.error("Failed to update the profile resume filename for username $username")
+            throw ProfileUploadException("Failed to update the profile resume filename for username $username", ex)
+        }
+    }
+
+    fun updateProfileOnResumeLinkedinUploaded(username: String, filename: String) {
+        try {
+            this.profileService.updateProfileOnResumeLinkedinUploaded(username, filename)
+        } catch(ex: Throwable) {
+            logger.error("Failed to update the profile resume linkedin filename for username $username")
+            throw ProfileUploadException("Failed to update the profile resume linkedin filename for username $username", ex)
+        }
+    }
+
 
 }
 
