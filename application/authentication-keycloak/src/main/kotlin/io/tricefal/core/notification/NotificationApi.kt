@@ -10,14 +10,14 @@ import javax.annotation.security.RolesAllowed
 class NotificationApi(val notificationWebHandler: NotificationWebHandler) {
 
     @RolesAllowed("ROLE_user-role")
-    @GetMapping("contact")
+    @PostMapping("contact")
     @ResponseStatus(HttpStatus.OK)
     fun contact(@RequestBody notification: EmailContactNotificationModel): Boolean {
         return notificationWebHandler.sendContactEmail(notification)
     }
 
     @RolesAllowed("ROLE_user-role")
-    @GetMapping("feedback")
+    @PostMapping("feedback")
     @ResponseStatus(HttpStatus.OK)
     fun feedback(@RequestBody notification: EmailFeedbackNotificationModel): Boolean {
         return notificationWebHandler.sendFeedbackEmail(notification)

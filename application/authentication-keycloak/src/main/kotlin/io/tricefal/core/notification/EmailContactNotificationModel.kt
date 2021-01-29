@@ -3,38 +3,54 @@ package io.tricefal.core.notification
 
 class EmailContactNotificationModel
 private constructor(
-        var emailFrom: String? = null,
         var firstname: String? = null,
         var lastname: String? = null,
-        var emailContent: String? = null) {
+        var emailFrom: String? = null,
+        var emailSubject: String? = null,
+        var emailContent: String? = null,
+        var emailSignature: String? = null,
+        var phoneNumber: String? = null,
+) {
 
     data class Builder (
-            var emailFrom: String? = null,
             var firstname: String? = null,
-            var emailTo: String? = null,
             var lastname: String? = null,
-            var emailContent: String? = null) {
+            var emailFrom: String? = null,
+            var emailSubject: String? = null,
+            var emailContent: String? = null,
+            var emailSignature: String? = null,
+            var phoneNumber: String? = null,
+    ) {
 
-        fun emailFrom(emailFrom: String?) = apply { this.emailFrom = emailFrom }
         fun firstname(firstname: String?) = apply { this.firstname = firstname }
         fun lastname(lastname: String?) = apply { this.lastname = lastname }
+        fun emailFrom(emailFrom: String?) = apply { this.emailFrom = emailFrom }
+        fun emailSubject(emailSubject: String?) = apply { this.emailContent = emailSubject }
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
+        fun emailSignature(emailSignature: String?) = apply { this.emailSignature = emailSignature }
+        fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
 
         fun build() = EmailContactNotificationModel(
-            emailFrom = emailFrom,
             firstname = firstname,
             lastname = lastname,
-            emailContent = emailContent
+            emailFrom = emailFrom,
+            emailSubject = emailSubject,
+            emailContent = emailContent,
+            emailSignature = emailSignature,
+            phoneNumber = phoneNumber,
         )
     }
 }
 
-fun toModel(domainContact: EmailContactNotificationDomain): EmailContactNotificationModel {
+fun toModel(domain: EmailContactNotificationDomain): EmailContactNotificationModel {
     return EmailContactNotificationModel.Builder()
-        .emailFrom(domainContact.emailFrom)
-        .firstname(domainContact.firstname)
-        .lastname(domainContact.lastname)
-        .emailContent(domainContact.emailContent)
+        .firstname(domain.firstname)
+        .lastname(domain.lastname)
+        .emailFrom(domain.emailFrom)
+        .emailSubject(domain.emailSubject)
+        .emailContent(domain.emailContent)
+        .emailSignature(domain.emailSignature)
+        .phoneNumber(domain.phoneNumber)
         .build()
 }
 
@@ -43,6 +59,9 @@ fun fromModel(model: EmailContactNotificationModel): EmailContactNotificationDom
         .emailFrom(model.emailFrom)
         .firstname(model.firstname)
         .lastname(model.lastname)
+        .emailSubject(model.emailSubject)
         .emailContent(model.emailContent)
+        .emailSignature(model.emailSignature)
+        .phoneNumber(model.phoneNumber)
         .build()
 }

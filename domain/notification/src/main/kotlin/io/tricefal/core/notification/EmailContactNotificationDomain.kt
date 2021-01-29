@@ -3,47 +3,56 @@ package io.tricefal.core.notification
 
 data class EmailContactNotificationDomain
     constructor(
-        var emailFrom: String? = null,
-        var emailTo: String? = null,
         var lastname: String? = null,
         var firstname: String? = null,
+        var emailTo: String? = null,
+        var emailFrom: String? = null,
+        var emailSubject: String? = null,
         var emailContent: String? = null,
         var emailSignature: String? = null,
+        var phoneNumber: String? = null,
     ) {
+
 
     data class Builder (
-            var emailFrom: String? = null,
-            var emailTo: String? = null,
-            var lastname: String? = null,
-            var firstname: String? = null,
-            var emailContent: String? = null,
-            var emailSignature: String? = null,
+        var lastname: String? = null,
+        var firstname: String? = null,
+        var emailFrom: String? = null,
+        var emailTo: String? = null,
+        var emailSubject: String? = null,
+        var emailContent: String? = null,
+        var emailSignature: String? = null,
+        var phoneNumber: String? = null,
     ) {
 
-        fun emailFrom(emailFrom: String?) = apply { this.emailFrom = emailFrom }
-        fun emailTo(emailTo: String?) = apply { this.emailTo = emailTo }
         fun lastname(lastname: String?) = apply { this.lastname = lastname }
         fun firstname(firstname: String?) = apply { this.firstname = firstname }
+        fun emailFrom(emailFrom: String?) = apply { this.emailFrom = emailFrom }
+        fun emailTo(emailTo: String?) = apply { this.emailTo = emailTo }
+        fun emailSubject(emailSubject: String?) = apply { this.emailSubject = emailSubject }
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
         fun emailSignature(emailSignature: String?) = apply { this.emailSignature = emailSignature }
+        fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
 
         fun build() = EmailContactNotificationDomain(
-            emailFrom = emailFrom,
-            emailTo = emailTo,
             lastname = lastname,
             firstname = firstname,
+            emailFrom = emailFrom,
+            emailTo = emailTo,
+            emailSubject = emailSubject,
             emailContent = emailContent,
-            emailSignature = emailSignature
+            emailSignature = emailSignature,
+            phoneNumber = phoneNumber
         )
     }
 }
 
 fun toEmail(notification: EmailContactNotificationDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
     return EmailNotificationDomain.Builder("")
-        .emailContent(notification.emailContent)
         .emailFrom(notification.emailFrom)
         .emailTo(metaNotification.emailAdmin)
-        .emailSubject("contact from ${notification.firstname} ${notification.lastname}")
-        .emailSignature(notification.emailSignature)
+        .emailSubject("${notification.emailSubject} : from ${notification.firstname} ${notification.lastname}")
+        .emailContent(notification.emailContent)
+        .emailSignature("${notification.emailSignature} <br> ${notification.firstname} ${notification.lastname} <br> ${notification.phoneNumber}")
         .build()
 }
