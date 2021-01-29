@@ -95,6 +95,8 @@ open class SsoKeycloakConfigurerAdapter: KeycloakWebSecurityConfigurerAdapter() 
                 .antMatchers("/hello")
                 .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html", "/v3/api-docs/**") //
                 .antMatchers(HttpMethod.POST, "/logins") //
+                .antMatchers(HttpMethod.POST, "/notification/contact") //
+                .antMatchers(HttpMethod.POST, "/notification/feedbck") //
                 .antMatchers(HttpMethod.POST, "/signup") //
                 .antMatchers(HttpMethod.GET, "/signup/email/verify**") //
                 .antMatchers(HttpMethod.GET, "/signup/state/*") //

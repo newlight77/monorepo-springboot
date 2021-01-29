@@ -10,6 +10,7 @@ private constructor(
         var emailContent: String? = null,
         var emailSignature: String? = null,
         var phoneNumber: String? = null,
+        var origin: String? = null,
 ) {
 
     data class Builder (
@@ -20,6 +21,7 @@ private constructor(
             var emailContent: String? = null,
             var emailSignature: String? = null,
             var phoneNumber: String? = null,
+            var origin: String? = null,
     ) {
 
         fun firstname(firstname: String?) = apply { this.firstname = firstname }
@@ -29,6 +31,7 @@ private constructor(
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
         fun emailSignature(emailSignature: String?) = apply { this.emailSignature = emailSignature }
         fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
+        fun origin(origin: String?) = apply { this.origin = origin }
 
         fun build() = EmailContactNotificationModel(
             firstname = firstname,
@@ -38,6 +41,7 @@ private constructor(
             emailContent = emailContent,
             emailSignature = emailSignature,
             phoneNumber = phoneNumber,
+            origin = origin,
         )
     }
 }
@@ -51,6 +55,7 @@ fun toModel(domain: EmailContactNotificationDomain): EmailContactNotificationMod
         .emailContent(domain.emailContent)
         .emailSignature(domain.emailSignature)
         .phoneNumber(domain.phoneNumber)
+        .origin(domain.origin)
         .build()
 }
 
@@ -63,5 +68,6 @@ fun fromModel(model: EmailContactNotificationModel): EmailContactNotificationDom
         .emailContent(model.emailContent)
         .emailSignature(model.emailSignature)
         .phoneNumber(model.phoneNumber)
+        .origin(model.origin)
         .build()
 }

@@ -32,28 +32,28 @@ class NotificationAdapter(val mailService: EmailService,
         return true
     }
 
-    override fun sendEmail(signupNotification: EmailNotificationDomain): Boolean {
+    override fun sendEmail(notification: EmailNotificationDomain): Boolean {
         logger.info("Sending an email")
         try {
             val message = EmailMessage.Builder()
-                .from(signupNotification.emailFrom!!)
-                .to(signupNotification.emailTo!!)
-                .cc(signupNotification.emailCc)
-                .bcc(signupNotification.emailBcc)
-                .subject(signupNotification.emailSubject!!)
-                .content(signupNotification.emailContent!!)
-                .emailTemplate(emailTemplateByEnv(signupNotification.targetEnv ?: ""))
+                .from(notification.emailFrom!!)
+                .to(notification.emailTo!!)
+                .cc(notification.emailCc)
+                .bcc(notification.emailBcc)
+                .subject(notification.emailSubject!!)
+                .content(notification.emailContent!!)
+                .emailTemplate(emailTemplateByEnv(notification.targetEnv ?: ""))
                 .model(hashMapOf(
-                    "themeColor" to emailTemplateThemeStyleByEnv(signupNotification.targetEnv ?: "").toString(),
-                    "greeting" to signupNotification.emailGreeting!!,
-                    "content" to signupNotification.emailContent!!,
-                    "signature" to signupNotification.emailSignature!!
+                    "themeColor" to emailTemplateThemeStyleByEnv(notification.targetEnv ?: "").toString(),
+                    "greeting" to notification.emailGreeting!!,
+                    "content" to notification.emailContent!!,
+                    "signature" to notification.emailSignature!!
                 ))
                 .build()
             mailService.send(message)
         } catch (ex: Exception) {
-            logger.error("Failed to send an email notification for user ${signupNotification.emailTo}")
-            throw EmailNotificationException("Failed to send an email notification for user ${signupNotification.emailTo}", ex)
+            logger.error("Failed to send an email notification for user ${notification.emailTo}")
+            throw EmailNotificationException("Failed to send an email notification for user ${notification.emailTo}", ex)
         }
         logger.info("An Email has been sent")
         return true

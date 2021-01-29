@@ -8,9 +8,11 @@ data class EmailFeedbackNotificationDomain
         var emailFrom: String? = null,
         var emailTo: String? = null,
         var emailSubject: String? = null,
+        var emailGreeting: String? = null,
         var emailContent: String? = null,
         var emailSignature: String? = null,
         var phoneNumber: String? = null,
+        var origin: String? = null,
     ) {
 
     data class Builder (
@@ -19,9 +21,11 @@ data class EmailFeedbackNotificationDomain
             var emailFrom: String? = null,
             var emailTo: String? = null,
             var emailSubject: String? = null,
+            var emailGreeting: String? = null,
             var emailContent: String? = null,
             var emailSignature: String? = null,
             var phoneNumber: String? = null,
+            var origin: String? = null,
     ) {
 
         fun lastname(lastname: String?) = apply { this.lastname = lastname }
@@ -29,9 +33,11 @@ data class EmailFeedbackNotificationDomain
         fun emailFrom(emailFrom: String?) = apply { this.emailFrom = emailFrom }
         fun emailTo(emailTo: String?) = apply { this.emailTo = emailTo }
         fun emailSubject(emailSubject: String?) = apply { this.emailSubject = emailSubject }
+        fun emailGreeting(emailGreeting: String?) = apply { this.emailGreeting = emailGreeting }
         fun emailContent(emailContent: String?) = apply { this.emailContent = emailContent }
         fun emailSignature(emailSignature: String?) = apply { this.emailSignature = emailSignature }
         fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
+        fun origin(origin: String?) = apply { this.origin = origin }
 
         fun build() = EmailFeedbackNotificationDomain(
             lastname = lastname,
@@ -39,9 +45,11 @@ data class EmailFeedbackNotificationDomain
             emailFrom = emailFrom,
             emailTo = emailTo,
             emailSubject = emailSubject,
+            emailGreeting = emailGreeting,
             emailContent = emailContent,
             emailSignature = emailSignature,
-            phoneNumber = phoneNumber
+            phoneNumber = phoneNumber,
+            origin = origin,
         )
     }
 }
@@ -50,8 +58,10 @@ fun toEmail(notification: EmailFeedbackNotificationDomain, metaNotification: Met
     return EmailNotificationDomain.Builder("")
         .emailFrom(notification.emailFrom)
         .emailTo(metaNotification.emailAdmin)
-        .emailSubject("${notification.emailSubject} : from ${notification.firstname} ${notification.lastname}")
+        .emailSubject("${notification.emailSubject} : de la part de ${notification.firstname} ${notification.lastname}")
+        .emailGreeting("la team tricefal®,")
         .emailContent(notification.emailContent)
-        .emailSignature("${notification.emailSignature} <br> ${notification.firstname} ${notification.lastname} <br> ${notification.phoneNumber}")
+        .emailSignature("${notification.emailSignature} <br> ${notification.firstname} ${notification.lastname} <br> ${notification.phoneNumber} <br>ip: ${notification.origin}")
+        .targetEnv(metaNotification.targetEnv)
         .build()
 }

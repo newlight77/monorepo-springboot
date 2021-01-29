@@ -82,7 +82,6 @@ class CompanyWebHandler(val companyService: ICompanyService,
                 targetEnv=targetEnv, baseUrl=backendBaseUrl,
                 emailFrom=emailFrom, emailAdmin=emailAdmin,
                 smsFrom=smsFrom, smsAdminNumber=smsAdmin)
-
             companyService.completed(companyName, metaNotification)
         } catch (ex: io.tricefal.core.freelance.NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)

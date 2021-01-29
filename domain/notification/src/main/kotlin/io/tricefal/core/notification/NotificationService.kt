@@ -8,22 +8,22 @@ class NotificationService(private var adapter: INotificationAdapter) : INotifica
 
     override fun sendEmailContact(notification: EmailContactNotificationDomain, metaNotification: MetaNotificationDomain): Boolean {
         try {
-            val emailSignupNotification: EmailNotificationDomain = toEmail(notification, metaNotification)
-            adapter.sendEmail(emailSignupNotification)
+            val emailNotification: EmailNotificationDomain = toEmail(notification, metaNotification)
+            adapter.sendEmail(emailNotification)
             return true
         } catch (ex: Throwable) {
             logger.error("failed to send an email for contact ${notification}")
-            throw SignupEmailNotificationException("failed to send an email for contact ${notification}", ex)
+            throw ContactEmailNotificationException("failed to send an email for contact ${notification}", ex)
         }
     }
 
     override fun sendEmailFeedback(notification: EmailFeedbackNotificationDomain, metaNotification: MetaNotificationDomain): Boolean {
         try {
-            val emailSignupNotification: EmailNotificationDomain = toEmail(notification, metaNotification)
-            return adapter.sendEmail(emailSignupNotification)
+            val emailNotification: EmailNotificationDomain = toEmail(notification, metaNotification)
+            return adapter.sendEmail(emailNotification)
         } catch (ex: Throwable) {
             logger.error("failed to send an email for feedback for username ${notification.emailTo}")
-            throw SignupEmailNotificationException("failed to send an email for feedback ${notification.emailTo}", ex)
+            throw FeedbackEmailNotificationException("failed to send an email for feedback ${notification.emailTo}", ex)
         }
     }
 
@@ -47,6 +47,12 @@ class NotificationService(private var adapter: INotificationAdapter) : INotifica
     }
 }
 
+class ContactEmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class FeedbackEmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 class SignupEmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
     constructor(message: String?) : this(message, null)
 }
