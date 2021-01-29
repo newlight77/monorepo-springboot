@@ -12,6 +12,7 @@ data class MissionWishModel
             var dailyFee: String?,
             var location: String?,
             var missionAbroad: String?,
+            var resumeFilename: String?,
             var lastDate: Instant?
 
     ) {
@@ -25,6 +26,7 @@ data class MissionWishModel
             var dailyFee: String? = null,
             var location: String? = null,
             var missionAbroad: String? = null,
+            var resumeFilename: String? = null,
             var lastDate: Instant? = null
     ) {
         fun summary(summary: String?) = apply { this.summary = summary }
@@ -35,6 +37,7 @@ data class MissionWishModel
         fun dailyFee(dailyFee: String?) = apply { this.dailyFee = dailyFee }
         fun location(location: String?) = apply { this.location = location }
         fun missionAbroad(missionAbroad: String?) = apply { this.missionAbroad = missionAbroad }
+        fun resumeFilename(resumeFilename: String?) = apply { this.resumeFilename = resumeFilename }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = MissionWishModel(
@@ -46,6 +49,7 @@ data class MissionWishModel
                 dailyFee = dailyFee,
                 location = location,
                 missionAbroad = missionAbroad,
+                resumeFilename = resumeFilename,
                 lastDate = lastDate
         )
     }
@@ -60,6 +64,7 @@ fun toModel(domain: MissionWishDomain): MissionWishModel {
             .dailyFee(domain.dailyFee)
             .location(domain.location)
             .missionAbroad(domain.missionAbroad)
+            .resumeFilename(domain.resumeFilename)
             .lastDate(domain.lastDate)
             .build()
 }
@@ -73,6 +78,7 @@ fun fromModel(model: MissionWishModel): MissionWishDomain {
             .dailyFee(model.dailyFee)
             .location(model.location)
             .missionAbroad(model.missionAbroad)
+            .resumeFilename(model.resumeFilename)
             .lastDate(model.lastDate)
             .build()
 }
