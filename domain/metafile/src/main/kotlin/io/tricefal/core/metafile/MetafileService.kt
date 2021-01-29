@@ -20,4 +20,8 @@ class MetafileService(private var dataAdapter: IMetafileDataAdapter) : IMetafile
         return this.dataAdapter.findByUsername(username)
     }
 
+    override fun findByUsername(username: String, representation: Representation): List<MetafileDomain> {
+        return this.dataAdapter.findByUsername(username, representation)
+    }
+
 }

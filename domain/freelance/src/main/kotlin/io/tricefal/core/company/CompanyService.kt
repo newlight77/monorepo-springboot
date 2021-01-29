@@ -92,6 +92,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
+                        if (it.state == null) it.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (it.documents == null) it.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.kbisUploaded = true
                         it.documents?.kbisFilename = filename
                         it.documents?.kbisUpdateDate = updateDate
@@ -99,6 +101,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         company = dataAdapter.update(companyName, it)
                     },
                     {
+                        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
                         company.state?.kbisUploaded = true
                         company.documents?.kbisFilename = filename
                         company.documents?.kbisUpdateDate = updateDate
@@ -122,6 +126,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
+                        if (it.state == null) it.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (it.documents == null) it.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.ribUploaded = true
                         it.documents?.ribFilename = filename
                         it.documents?.ribUpdateDate = updateDate
@@ -129,6 +135,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         company = dataAdapter.update(companyName, it)
                     },
                     {
+                        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
                         company.state?.ribUploaded = true
                         company.documents?.ribFilename = filename
                         company.documents?.ribUpdateDate = updateDate
@@ -152,6 +160,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
+                        if (it.state == null) it.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (it.documents == null) it.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.rcUploaded = true
                         it.documents?.rcFilename = filename
                         it.documents?.rcUpdateDate = updateDate
@@ -159,6 +169,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         company = dataAdapter.update(companyName, it)
                     },
                     {
+                        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
                         company.state?.rcUploaded = true
                         company.documents?.rcFilename = filename
                         company.documents?.rcUpdateDate = updateDate
@@ -182,6 +194,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
+                        if (it.state == null) it.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (it.documents == null) it.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.urssafUploaded = true
                         it.documents?.urssafFilename = filename
                         it.documents?.urssafUpdateDate = updateDate
@@ -189,6 +203,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         company = dataAdapter.update(companyName, it)
                     },
                     {
+                        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
                         company.state?.urssafUploaded = true
                         company.documents?.urssafFilename = filename
                         company.documents?.urssafUpdateDate = updateDate
@@ -212,6 +228,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             this.dataAdapter.findByName(companyName)
                 .ifPresentOrElse(
                     {
+                        if (it.state == null) it.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (it.documents == null) it.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.fiscalUploaded = true
                         it.documents?.fiscalFilename = filename
                         it.documents?.fiscalUpdateDate = updateDate
@@ -219,6 +237,8 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                         company = dataAdapter.update(companyName, it)
                     },
                     {
+                        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
+                        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
                         company.state?.fiscalUploaded = true
                         company.documents?.fiscalFilename = filename
                         company.documents?.fiscalUpdateDate = updateDate

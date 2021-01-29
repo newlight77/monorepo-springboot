@@ -180,9 +180,9 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     fun kbis(username: String): MetafileModel {
         return try {
-                metafileService.findByUsername(username)
+                metafileService.findByUsername(username, Representation.KBIS)
                     .map { toModel(it) }
-                    .first { it.representation == Representation.KBIS }
+                    .first()
             } catch (ex: NotFoundException) {
                 throw GlobalNotFoundException("freelance not found with username $username", ex)
             }
@@ -190,9 +190,9 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     fun rib(username: String): MetafileModel {
         return try {
-             metafileService.findByUsername(username)
+             metafileService.findByUsername(username, Representation.RIB)
                 .map { toModel(it) }
-                .first { it.representation == Representation.RIB }
+                .first()
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         }
@@ -200,9 +200,9 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     fun rc(username: String): MetafileModel {
         return try {
-             metafileService.findByUsername(username)
+             metafileService.findByUsername(username, Representation.RC)
                 .map { toModel(it) }
-                .first { it.representation == Representation.RC }
+                .first()
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         }
@@ -210,9 +210,9 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     fun urssaf(username: String): MetafileModel {
         return try {
-            metafileService.findByUsername(username)
+            metafileService.findByUsername(username, Representation.URSSAF)
                 .map { toModel(it) }
-                .first { it.representation == Representation.URSSAF }
+                .first()
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         }
@@ -220,9 +220,9 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
 
     fun fiscal(username: String): MetafileModel {
         return try {
-            metafileService.findByUsername(username)
+            metafileService.findByUsername(username, Representation.FISCAL)
                 .map { toModel(it) }
-                .first { it.representation == Representation.FISCAL }
+                .first()
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         }

@@ -12,7 +12,7 @@ class MetafileRepositoryAdapter(val repository: MetafileJpaRepository): IMetafil
 
     override fun save(metafile: MetafileDomain, inpputStream: InputStream): MetafileDomain {
         var newEntity = toEntity(metafile)
-        repository.findByUsername(metafile.username).stream().findFirst().ifPresent {
+        repository.findByUsername(metafile.username, metafile.representation.toString()).stream().findFirst().ifPresent {
             newEntity.id = it.id
             newEntity.creationDate = it.creationDate ?: Instant.now()
             newEntity = repository.save(newEntity)
@@ -37,6 +37,12 @@ class MetafileRepositoryAdapter(val repository: MetafileJpaRepository): IMetafil
 
     override fun findByUsername(username: String): List<MetafileDomain> {
         return repository.findByUsername(username).map {
+            fromEntity(it)
+        }
+    }
+
+    override fun findByUsername(username: String, representation: Representation): List<MetafileDomain> {
+        return repository.findByUsername(username, representation.toString()).map {
             fromEntity(it)
         }
     }

@@ -117,6 +117,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
+                        if (it.company == null) it.company = CompanyDomain.Builder("").build()
+                        if (it.company?.state == null) it.company?.state = CompanyStateDomain(companyName = it.company?.raisonSocial ?: "")
+                        if (it.company?.documents == null) it.company?.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.kbisUploaded = true
                         it.company?.documents?.kbisFilename = filename
                         it.company?.documents?.kbisUpdateDate = updateDate
@@ -124,6 +127,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         freelance = dataAdapter.update(it)
                     },
                     {
+                        if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
+                        if (freelance.company?.state == null) freelance.company?.state = CompanyStateDomain(companyName = freelance.company?.raisonSocial ?: "")
+                        if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
                         freelance.state?.kbisUploaded = true
                         freelance.company?.documents?.kbisFilename = filename
                         freelance.company?.documents?.kbisUpdateDate = updateDate
@@ -146,6 +152,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
+                        if (it.company == null) it.company = CompanyDomain.Builder("").build()
+                        if (it.company?.state == null) it.company?.state = CompanyStateDomain(companyName = it.company?.raisonSocial ?: "")
+                        if (it.company?.documents == null) it.company?.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.ribUploaded = true
                         it.company?.documents?.ribFilename = filename
                         it.company?.documents?.ribUpdateDate = updateDate
@@ -153,6 +162,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         freelance = dataAdapter.update(it)
                     },
                     {
+                        if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
+                        if (freelance.company?.state == null) freelance.company?.state = CompanyStateDomain(companyName = freelance.company?.raisonSocial ?: "")
+                        if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
                         freelance.state?.ribUploaded = true
                         freelance.company?.documents?.ribFilename = filename
                         freelance.company?.documents?.ribUpdateDate = updateDate
@@ -175,6 +187,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
+                        if (it.company == null) it.company = CompanyDomain.Builder("").build()
+                        if (it.company?.state == null) it.company?.state = CompanyStateDomain(companyName = it.company?.raisonSocial ?: "")
+                        if (it.company?.documents == null) it.company?.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.rcUploaded = true
                         it.company?.documents?.rcFilename = filename
                         it.company?.documents?.rcUpdateDate = updateDate
@@ -182,6 +197,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         freelance = dataAdapter.update(it)
                     },
                     {
+                        if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
+                        if (freelance.company?.state == null) freelance.company?.state = CompanyStateDomain(companyName = freelance.company?.raisonSocial ?: "")
+                        if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
                         freelance.state?.rcUploaded = true
                         freelance.company?.documents?.rcFilename = filename
                         freelance.company?.documents?.rcUpdateDate = updateDate
@@ -204,6 +222,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
+                        if (it.company == null) it.company = CompanyDomain.Builder("").build()
+                        if (it.company?.state == null) it.company?.state = CompanyStateDomain(companyName = it.company?.raisonSocial ?: "")
+                        if (it.company?.documents == null) it.company?.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.urssafUploaded = true
                         it.company?.documents?.urssafFilename = filename
                         it.company?.documents?.urssafUpdateDate = updateDate
@@ -211,6 +232,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         freelance = dataAdapter.update(it)
                     },
                     {
+                        if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
+                        if (freelance.company?.state == null) freelance.company?.state = CompanyStateDomain(companyName = freelance.company?.raisonSocial ?: "")
+                        if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
                         freelance.state?.urssafUploaded = true
                         freelance.company?.documents?.urssafFilename = filename
                         freelance.company?.documents?.urssafUpdateDate = updateDate
@@ -233,6 +257,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
+                        if (it.company == null) it.company = CompanyDomain.Builder("").build()
+                        if (it.company?.state == null) it.company?.state = CompanyStateDomain(companyName = it.company?.raisonSocial ?: "")
+                        if (it.company?.documents == null) it.company?.documents = CompanyDocumentsDomain.Builder().build()
                         it.state?.fiscalUploaded = true
                         it.company?.documents?.fiscalFilename = filename
                         it.company?.documents?.fiscalUpdateDate = updateDate
@@ -240,6 +267,9 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                         freelance = dataAdapter.update(it)
                     },
                     {
+                        if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
+                        if (freelance.company?.state == null) freelance.company?.state = CompanyStateDomain(companyName = freelance.company?.raisonSocial ?: "")
+                        if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
                         freelance.state?.fiscalUploaded = true
                         freelance.company?.documents?.fiscalFilename = filename
                         freelance.company?.documents?.fiscalUpdateDate = updateDate

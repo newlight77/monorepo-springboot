@@ -69,9 +69,9 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
     }
 
     fun resume(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
+        return metafileService.findByUsername(username, Representation.CV_MISSION)
                 .map { toModel(it) }
-                .first { it.representation == Representation.CV_MISSION }
+                .first()
     }
 
     class MissionWishCreationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {

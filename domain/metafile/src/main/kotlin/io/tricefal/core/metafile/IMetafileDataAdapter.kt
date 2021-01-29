@@ -8,4 +8,5 @@ interface IMetafileDataAdapter {
     fun findById(id: Long): Optional<MetafileDomain>
     fun findByFilename(filename: String): List<MetafileDomain>
     fun findByUsername(username: String): List<MetafileDomain>
+    fun findByUsername(username: String, representation: Representation): List<MetafileDomain>
 }

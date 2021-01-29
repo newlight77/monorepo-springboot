@@ -30,21 +30,21 @@ class ProfileWebHandler(val profileService: IProfileService,
     }
 
     fun portrait(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
+        return metafileService.findByUsername(username, Representation.PORTRAIT)
                 .map { toModel(it) }
-                .first { it.representation == Representation.PORTRAIT }
+                .first()
     }
 
     fun resume(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
+        return metafileService.findByUsername(username, Representation.CV)
                 .map { toModel(it) }
-                .first { it.representation == Representation.CV }
+                .first()
     }
 
     fun resumeLinkedIn(username: String): MetafileModel {
-        return metafileService.findByUsername(username)
+        return metafileService.findByUsername(username, Representation.CV_LINKEDIN)
                 .map { toModel(it) }
-                .first { it.representation == Representation.CV_LINKEDIN }
+                .first()
     }
 
     fun uploadPortrait(username: String, file: MultipartFile): ProfileModel {

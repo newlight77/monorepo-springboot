@@ -174,9 +174,9 @@ class CompanyWebHandler(val companyService: ICompanyService,
 
     fun kbis(companyName: String): MetafileModel {
         return try {
-                metafileService.findByUsername(companyName)
+                metafileService.findByUsername(companyName, Representation.KBIS)
                     .map { toModel(it) }
-                    .first { it.representation == Representation.KBIS }
+                    .first()
             } catch (ex: NotFoundException) {
                 throw GlobalNotFoundException("freelance not found with username $companyName", ex)
             }
@@ -184,9 +184,9 @@ class CompanyWebHandler(val companyService: ICompanyService,
 
     fun rib(companyName: String): MetafileModel {
         return try {
-             metafileService.findByUsername(companyName)
+             metafileService.findByUsername(companyName, Representation.RIB)
                 .map { toModel(it) }
-                .first { it.representation == Representation.RIB }
+                .first()
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         }
@@ -194,9 +194,9 @@ class CompanyWebHandler(val companyService: ICompanyService,
 
     fun rc(companyName: String): MetafileModel {
         return try {
-             metafileService.findByUsername(companyName)
+             metafileService.findByUsername(companyName, Representation.RC)
                 .map { toModel(it) }
-                .first { it.representation == Representation.RC }
+                .first()
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         }
@@ -204,9 +204,9 @@ class CompanyWebHandler(val companyService: ICompanyService,
 
     fun urssaf(companyName: String): MetafileModel {
         return try {
-            metafileService.findByUsername(companyName)
+            metafileService.findByUsername(companyName, Representation.URSSAF)
                 .map { toModel(it) }
-                .first { it.representation == Representation.URSSAF }
+                .first()
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         }
@@ -214,9 +214,9 @@ class CompanyWebHandler(val companyService: ICompanyService,
 
     fun fiscal(companyName: String): MetafileModel {
         return try {
-            metafileService.findByUsername(companyName)
+            metafileService.findByUsername(companyName, Representation.FISCAL)
                 .map { toModel(it) }
-                .first { it.representation == Representation.FISCAL }
+                .first()
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $companyName", ex)
         }

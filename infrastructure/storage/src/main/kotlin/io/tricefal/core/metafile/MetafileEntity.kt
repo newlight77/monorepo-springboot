@@ -16,7 +16,7 @@ data class MetafileEntity(
         @Column(name = "filename", length = 255)
         val filename: String,
 
-        @Column(name = "Representation", length = 50)
+        @Column(name = "representation", length = 50)
         val representation: String,
 
         @Column(name = "content_type", length = 30)

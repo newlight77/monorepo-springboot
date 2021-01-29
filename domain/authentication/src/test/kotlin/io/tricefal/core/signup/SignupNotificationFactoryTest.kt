@@ -36,7 +36,7 @@ class SignupNotificationFactoryTest {
 
         // assert
         Assertions.assertEquals("1234567890", result.smsTo)
-        Assertions.assertEquals("Bonjour kong, le code d\'activation à saisir sur le site www.tricefal.com pour valider votre numéro de portable est 123456", result.smsContent)
+        Assertions.assertEquals("Bonjour kong, le code d\'activation à saisir sur le site <i>www.tricefal.com</i> pour valider votre numéro de portable est 123456", result.smsContent)
     }
 
     @Test
@@ -65,7 +65,7 @@ class SignupNotificationFactoryTest {
         Assertions.assertEquals("kong@gmail.com", result.emailTo)
         Assertions.assertEquals("tricefal® - inscription", result.emailSubject)
         Assertions.assertEquals("Bonjour kong,<br>", result.emailGreeting)
-        Assertions.assertEquals("Merci d\'avoir fait l'inscription sur le site www.tricefal.com. Un compte a été créé. <br> <br> Nous t'invitons à valider ton adresse email via ce lien : <br> baseUrl/signup/email/verify?token=token.random.123456 <br> <br> En route vers de très belles aventures dans la transparence !", result.emailContent)
+        Assertions.assertEquals("Merci d\'avoir fait l'inscription sur le site <i>www.tricefal.com</i>. Un compte a été créé. <br> <br> Nous t'invitons à valider ton adresse email via ce lien : <br> baseUrl/signup/email/verify?token=token.random.123456 <br> <br> En route vers de très belles aventures dans la transparence !", result.emailContent)
     }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
