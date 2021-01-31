@@ -20,7 +20,6 @@ class SignupExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(
             SignupUserNotFoundException::class,
-            SignupPortraitUploadException::class,
             SignupResumeUploadException::class,
             SignupLinkedinResumeUploadException::class,
             SignupVerificationByCodeException::class,

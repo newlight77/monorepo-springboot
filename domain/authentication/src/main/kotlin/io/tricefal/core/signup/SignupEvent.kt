@@ -19,16 +19,7 @@ class SignupStateUpdatedEvent(val username: String, val state: String)
 
 class CompanyCompletionEvent(val username: String)
 
-class PortraitUploadedEvent(val metafile: MetafileDomain) {
-    val username = metafile.username
-    fun isPortrait() : Boolean {
-        return this.metafile.username.isNotBlank()
-                && this.metafile.filename.isNotBlank()
-                && this.metafile.representation == Representation.PORTRAIT
-    }
-}
-
-class ResumeUploadedEvent(var metafile: MetafileDomain) {
+class SignupResumeUploadedEvent(var metafile: MetafileDomain) {
     val username = metafile.username
     fun isResume() : Boolean {
         return this.metafile.username.isNotBlank()
@@ -37,7 +28,7 @@ class ResumeUploadedEvent(var metafile: MetafileDomain) {
     }
 }
 
-class ResumeLinkedinUploadedEvent(var metafile: MetafileDomain) {
+class SignupResumeLinkedinUploadedEvent(var metafile: MetafileDomain) {
     val username = metafile.username
     fun isResumeLinkedin() : Boolean {
         return this.metafile.username.isNotBlank()
@@ -45,6 +36,9 @@ class ResumeLinkedinUploadedEvent(var metafile: MetafileDomain) {
                 && this.metafile.representation == Representation.CV_LINKEDIN
     }
 }
+
+class ProfileResumeUploadedEvent(var username: String, var filename: String)
+class ProfileResumeLinkedinUploadedEvent(var username: String, var filename: String)
 
 class MissionResumeUploadedEvent(var metafile: MetafileDomain) {
     val username = metafile.username

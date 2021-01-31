@@ -108,15 +108,6 @@ class ProfileWebHandler(val profileService: IProfileService,
         }
     }
 
-    fun updateProfileOnPortraitUploaded(username: String, filename: String) {
-        try {
-            this.profileService.updateProfileOnPortraitUploaded(username, filename)
-        } catch(ex: Throwable) {
-            logger.error("Failed to update the profile portrait filename for username $username")
-            throw ProfileUploadException("Failed to update the profile portrait filename for username $username", ex)
-        }
-    }
-
     fun updateProfileOnResumeUploaded(username: String, filename: String) {
         try {
             this.profileService.updateProfileOnResumeUploaded(username, filename)

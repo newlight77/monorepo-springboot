@@ -75,14 +75,6 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, url).build()
     }
 
-    @RolesAllowed("ROLE_user-role")
-    @PostMapping("upload/portrait", consumes = [ "multipart/form-data" ])
-    @ResponseStatus(HttpStatus.OK)
-    fun uploadPortrait(principal: Principal, @RequestParam file : MultipartFile): SignupStateModel {
-        logger.info("signup uploading portrait requested")
-        return signupWebHandler.uploadPortrait(authenticatedUser(principal), file)
-    }
-
 //    @PreAuthorize("hasRole('user-role')")
     @RolesAllowed("ROLE_user-role")
     @PostMapping("upload/cv", consumes = [ "multipart/form-data" ])

@@ -1,6 +1,7 @@
 package io.tricefal.core.signup
 
 import io.tricefal.core.metafile.MetafileModel
+import io.tricefal.core.metafile.originalFilename
 import java.time.Instant
 
 class SignupResendModel(val username: String)
@@ -15,10 +16,12 @@ class SignupModel
         val lastname: String?,
         val phoneNumber: String?,
         var status: Status?,
+        var cguAcceptedVersion: String? = null,
         val signupDate: Instant?,
 
-        var cguAcceptedVersion: String? = null,
-        var resumeFile: MetafileModel? = null,
+        var resumeFilename: String? = null,
+        var resumeLinkedinFilename: String? = null,
+
         var state: SignupStateModel? = null,
 
         var lastDate: Instant? = null
@@ -31,10 +34,12 @@ class SignupModel
             var lastname: String? = null,
             var phoneNumber: String? = null,
             var status: Status? = null,
+            var cguAcceptedVersion: String? = null,
             var signupDate: Instant? = null,
 
-            var cguAcceptedVersion: String? = null,
-            var resumeFile: MetafileModel? = null, // not used
+            var resumeFilename: String? = null,
+            var resumeLinkedinFilename: String? = null,
+
             var state: SignupStateModel? = null,
 
             var lastDate: Instant? = null
@@ -45,57 +50,61 @@ class SignupModel
         fun lastname(lastname: String?) = apply { this.lastname = lastname }
         fun phoneNumber(phoneNumber: String?) = apply { this.phoneNumber = phoneNumber }
         fun status(status: Status) = apply { this.status = status }
+        fun cguAcceptedVersion(cguAcceptedVersion: String?) = apply { this.cguAcceptedVersion = cguAcceptedVersion }
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
 
-        fun cguAcceptedVersion(cguAcceptedVersion: String?) = apply { this.cguAcceptedVersion = cguAcceptedVersion }
-        fun resumeFile(resumeFile: MetafileModel?) = apply { this.resumeFile = resumeFile }
+        fun resumeFilename(resumeFilename: String?) = apply { this.resumeFilename = resumeFilename }
+        fun resumeLinkedinFilename(resumeLinkedinFilename: String?) = apply { this.resumeLinkedinFilename = resumeLinkedinFilename }
         fun state(state: SignupStateModel?) = apply {
             this.state = state ?: SignupStateModel.Builder(username).build()
         }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = SignupModel(
-                username = username,
-                password = password,
-                firstname = firstname,
-                lastname = lastname,
-                phoneNumber = phoneNumber,
-                status = status,
-                signupDate = signupDate,
-                cguAcceptedVersion = cguAcceptedVersion,
-                resumeFile = resumeFile,
-                state = state,
-                lastDate = lastDate
+            username = username,
+            password = password,
+            firstname = firstname,
+            lastname = lastname,
+            phoneNumber = phoneNumber,
+            status = status,
+            signupDate = signupDate,
+            cguAcceptedVersion = cguAcceptedVersion,
+            resumeFilename = resumeFilename,
+            resumeLinkedinFilename = resumeLinkedinFilename,
+            state = state,
+            lastDate = lastDate
         )
     }
 }
 
 fun toModel(domain: SignupDomain): SignupModel {
     return SignupModel.Builder(domain.username)
-            .password(domain.password)
-            .firstname(domain.firstname)
-            .lastname(domain.lastname)
-            .phoneNumber(domain.phoneNumber)
-            .status(domain.status!!)
-            .signupDate(domain.signupDate)
-            .resumeFile(domain.resumeFile?.let { io.tricefal.core.metafile.toModel(it) })
-            .cguAcceptedVersion(domain.cguAcceptedVersion)
-            .state(domain.state?.let { toModel(it) })
-            .lastDate(domain.lastDate)
-            .build()
+        .password(domain.password)
+        .firstname(domain.firstname)
+        .lastname(domain.lastname)
+        .phoneNumber(domain.phoneNumber)
+        .status(domain.status!!)
+        .signupDate(domain.signupDate)
+        .resumeFilename(originalFilename(domain.resumeFilename))
+        .resumeLinkedinFilename(originalFilename(domain.resumeLinkedinFilename))
+        .cguAcceptedVersion(domain.cguAcceptedVersion)
+        .state(domain.state?.let { toModel(it) })
+        .lastDate(domain.lastDate)
+        .build()
 }
 
 fun fromModel(model: SignupModel): SignupDomain {
     return SignupDomain.Builder(model.username)
-            .password(model.password)
-            .firstname(model.firstname)
-            .lastname(model.lastname)
-            .phoneNumber(model.phoneNumber)
-            .status(model.status ?: Status.NONE)
-            .signupDate(model.signupDate ?: Instant.now())
-            .resumeFile(model.resumeFile?.let { io.tricefal.core.metafile.fromModel(it) })
-            .cguAcceptedVersion(model.cguAcceptedVersion)
-            .state(model.state?.let { fromModel(it) })
-            .lastDate(model.lastDate)
-            .build()
+        .password(model.password)
+        .firstname(model.firstname)
+        .lastname(model.lastname)
+        .phoneNumber(model.phoneNumber)
+        .status(model.status ?: Status.NONE)
+        .signupDate(model.signupDate ?: Instant.now())
+        .resumeFilename(model.resumeFilename)
+        .resumeLinkedinFilename(model.resumeLinkedinFilename)
+        .cguAcceptedVersion(model.cguAcceptedVersion)
+        .state(model.state?.let { fromModel(it) })
+        .lastDate(model.lastDate)
+        .build()
 }

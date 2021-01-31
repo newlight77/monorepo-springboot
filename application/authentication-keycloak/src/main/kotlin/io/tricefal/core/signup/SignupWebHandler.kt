@@ -115,17 +115,6 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(model)
     }
 
-    fun uploadPortrait(username: String, file: MultipartFile): SignupStateModel {
-        val domain = signupService.findByUsername(username)
-
-        val metaFile = fromModel(toMetafile(username, file, dataFilesPath, Representation.PORTRAIT))
-        metafileService.save(metaFile, file.inputStream)
-
-        val model = this.signupService.portraitUploaded(domain, metaFile)
-        logger.info("successfully upload the portrait for user $username")
-        return toModel(model)
-    }
-
     fun uploadResume(username: String, file: MultipartFile): SignupStateModel {
         val domain = signupService.findByUsername(username)
 

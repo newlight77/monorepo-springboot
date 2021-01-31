@@ -1,6 +1,6 @@
 package io.tricefal.core.mission
 
-import io.tricefal.core.signup.ResumeUploadedEvent
+import io.tricefal.core.signup.SignupResumeUploadedEvent
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -10,8 +10,8 @@ class MissionWishEventListener(val missionWishService: IMissionWishService) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @EventListener(condition = "#event.isResume()")
-    fun handleResumeUploadedEvent(event: ResumeUploadedEvent): MissionWishModel {
+    @EventListener
+    fun handleResumeUploadedEvent(event: SignupResumeUploadedEvent): MissionWishModel {
         val result = try {
             this.missionWishService.updateOnResumeUploaded(event.username, event.metafile)
         } catch(ex: Throwable) {

@@ -9,7 +9,6 @@ class SignupStateModel(
         var emailValidated: Boolean? = null,
         var smsSent: Boolean? = null,
         var smsValidated: Boolean? = null,
-        var portraitUploaded: Boolean? = null,
         var resumeUploaded: Boolean? = null,
         var resumeLinkedinUploaded: Boolean? = null,
         var statusUpdated: Boolean? = null,
@@ -25,7 +24,6 @@ class SignupStateModel(
             var emailValidated: Boolean? = null,
             var smsSent: Boolean? = null,
             var smsValidated: Boolean? = null,
-            var portraitUploaded: Boolean? = null,
             var resumeUploaded: Boolean? = null,
             var resumeLinkedinUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
@@ -39,7 +37,6 @@ class SignupStateModel(
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
         fun smsSent(smsSent: Boolean?) = apply { this.smsSent = smsSent }
         fun smsValidated(smsValidated: Boolean?) = apply { this.smsValidated = smsValidated }
-        fun portraitUploaded(portraitUploaded: Boolean?) = apply { this.portraitUploaded = portraitUploaded }
         fun resumeUploaded(resumeUploaded: Boolean?) = apply { this.resumeUploaded = resumeUploaded }
         fun resumeLinkedinUploaded(resumeLinkedinUploaded: Boolean?) = apply { this.resumeLinkedinUploaded = resumeLinkedinUploaded }
         fun statusUpdated(statusUpdated: Boolean?) = apply { this.statusUpdated = statusUpdated }
@@ -55,7 +52,6 @@ class SignupStateModel(
                 emailValidated = emailValidated,
                 smsSent = smsSent,
                 smsValidated = smsValidated,
-                portraitUploaded = portraitUploaded,
                 resumeUploaded = resumeUploaded,
                 resumeLinkedinUploaded = resumeLinkedinUploaded,
                 statusUpdated = statusUpdated,
@@ -74,7 +70,6 @@ fun toModel(domain: SignupStateDomain): SignupStateModel {
             .emailValidated(domain.emailValidated)
             .smsSent(domain.smsSent)
             .smsValidated(domain.smsValidated)
-            .portraitUploaded(domain.portraitUploaded)
             .resumeUploaded(domain.resumeUploaded)
             .resumeLinkedinUploaded(domain.resumeLinkedinUploaded)
             .statusUpdated(domain.statusUpdated)
@@ -92,7 +87,6 @@ fun fromModel(model: SignupStateModel): SignupStateDomain {
             .emailValidated(model.emailValidated)
             .smsSent(model.smsSent)
             .smsValidated(model.smsValidated)
-            .portraitUploaded(model.portraitUploaded)
             .resumeUploaded(model.resumeUploaded)
             .resumeLinkedinUploaded(model.resumeLinkedinUploaded)
             .statusUpdated(model.statusUpdated)

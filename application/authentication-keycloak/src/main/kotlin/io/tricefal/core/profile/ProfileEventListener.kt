@@ -36,19 +36,8 @@ class ProfileEventListener(val webHandler: ProfileWebHandler) {
         logger.info("ProfileEventListener picked up a SignupStateUpdatedEvent with ${event.username}")
     }
 
-    @EventListener(condition = "#event.isPortrait()")
-    fun handlePortraitUploadedEvent(event: PortraitUploadedEvent) {
-        try {
-            this.webHandler.updateProfileOnPortraitUploaded(event.username, event.metafile.filename)
-        } catch(ex: Exception) {
-            logger.error("Failed to update the profile portrait for username ${event.username}")
-            throw ProfileUploadException("Failed to update the profile portrait for username ${event.username}", ex)
-        }
-        logger.info("EventHandler picked up portrait upload event with ${event.metafile}")
-    }
-
-    @EventListener(condition = "#event.isResume()")
-    fun handleResumeUploadedEvent(event: ResumeUploadedEvent) {
+    @EventListener
+    fun handleResumeUploadedEvent(event: SignupResumeUploadedEvent) {
         try {
             this.webHandler.updateProfileOnResumeUploaded(event.username, event.metafile.filename)
         } catch(ex: Exception) {
@@ -58,8 +47,8 @@ class ProfileEventListener(val webHandler: ProfileWebHandler) {
         logger.info("EventHandler picked up a resume uploaded event with ${event.metafile}")
     }
 
-    @EventListener(condition = "#event.isResumeLinkedin()")
-    fun handleResumeLinkedinUploadedEvent(event: ResumeLinkedinUploadedEvent) {
+    @EventListener
+    fun handleResumeLinkedinUploadedEvent(event: SignupResumeLinkedinUploadedEvent) {
         try {
             this.webHandler.updateProfileOnResumeLinkedinUploaded(event.username, event.metafile.filename)
         } catch(ex: Exception) {

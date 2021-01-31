@@ -54,6 +54,10 @@ fun fromModel(model: MetafileModel): MetafileDomain {
     )
 }
 
+fun originalFilename(fullPath: String?): String? {
+    return fullPath?.substringAfterLast("/")
+}
+
 fun toMetafile(username: String, file: MultipartFile, dataFilesPath: String, representation: Representation): MetafileModel {
     val timestamp: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"))
     val fileName: String = StringUtils.cleanPath("${dataFilesPath}/${username}/${representation}/${timestamp}-_-${file.originalFilename!!}")

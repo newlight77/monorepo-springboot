@@ -14,9 +14,11 @@ interface ISignupService {
     fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain
     fun verifyByCodeFromToken(token: String): SignupStateDomain
 
-    fun portraitUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain
     fun resumeUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain
     fun resumeLinkedinUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain
     fun updateStatus(signup: SignupDomain, status: Status, metaNotification: MetaNotificationDomain): SignupStateDomain
     fun companyCompleted(username: String): SignupStateDomain
+
+    fun profileResumeUploaded(username: String, filename: String): SignupDomain
+    fun profileResumeLinkedinUploaded(username: String, filename: String): SignupDomain
 }

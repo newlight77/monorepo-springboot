@@ -98,6 +98,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                     },
                     { profile = dataAdapter.create(profile) }
                 )
+            this.dataAdapter.resumeUploaded(username, filename)
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the resume uploaded event for user $username")
             throw ProfileUploadException("Failed to update the profile from the resume uploaded event for user $username", ex)
@@ -120,6 +121,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                     },
                     { profile = dataAdapter.create(profile) }
                 )
+            this.dataAdapter.resumeLinkedinUploaded(username, filename)
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the linkedin resume uploaded event for user $username")
             throw ProfileUploadException("Failed to update the profile from the linkedin resume uploaded event for user $username", ex)

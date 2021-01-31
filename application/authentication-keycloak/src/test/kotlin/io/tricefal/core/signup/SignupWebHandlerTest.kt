@@ -150,6 +150,15 @@ class SignupWebHandlerTest {
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(listOf(signupEntity))
 
+        val filename = "${tempDir.absolutePath}/${username}-test-file-" + Random().nextInt().absoluteValue + ".pdf"
+        val metafileEntity = toEntity(
+            fromModel(
+                MetafileModel.Builder(username, filename, Representation.CV)
+                    .contentType("application/octet-stream")
+                    .size(12345)
+                    .build()))
+        Mockito.`when`(metaFileRepository.findByUsername(username, Representation.CV.toString())).thenReturn(listOf(metafileEntity))
+
         // Act
         val result = signupWebHandler.findByUsername(username)
 
@@ -159,7 +168,7 @@ class SignupWebHandlerTest {
     }
 
     @Test
-    fun `should upload a file for the profile`() {
+    fun `should upload a resume for the signup`() {
         // Arrange
         val username = "kong@gmail.com"
         val state = SignupStateModel.Builder(username)
@@ -183,7 +192,7 @@ class SignupWebHandlerTest {
         Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
         val metafileEntity = toEntity(
                 fromModel(
-                        MetafileModel.Builder(username, filename, Representation.PORTRAIT)
+                        MetafileModel.Builder(username, filename, Representation.CV)
                             .contentType("application/octet-stream")
                             .size(12345)
                             .build()))
@@ -194,6 +203,46 @@ class SignupWebHandlerTest {
 
         // Arrange
         Assertions.assertTrue(result.resumeUploaded!!)
+        Assertions.assertTrue(Files.exists(Paths.get(filename)))
+        Files.deleteIfExists(Paths.get(filename))
+    }
+
+    @Test
+    fun `should upload a resume linkedin for the signup`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val state = SignupStateModel.Builder(username)
+            .build()
+        val signup = SignupModel.Builder(username)
+            .password("password")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .status(Status.FREELANCE)
+            .state(state)
+            .build()
+        val signupEntity = toEntity(fromModel(signup))
+        val multipart = Mockito.mock(MultipartFile::class.java)
+        val filename = "${tempDir.absolutePath}/${username}-test-file-" + Random().nextInt().absoluteValue + ".txt"
+        Mockito.`when`(multipart.originalFilename).thenReturn(filename)
+        Mockito.`when`(multipart.contentType).thenReturn("txt")
+        Mockito.`when`(multipart.inputStream).thenReturn(ByteArrayInputStream("testing data".toByteArray()))
+        Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(listOf(signupEntity))
+        Mockito.`when`(signupJpaRepository.save(any(SignupEntity::class.java))).thenReturn(signupEntity)
+        val metafileEntity = toEntity(
+            fromModel(
+                MetafileModel.Builder(username, filename, Representation.CV_LINKEDIN)
+                    .contentType("application/octet-stream")
+                    .size(12345)
+                    .build()))
+        Mockito.`when`(metaFileRepository.save(any(MetafileEntity::class.java))).thenReturn(metafileEntity)
+
+        // Act
+        val result = signupWebHandler.uploadResumeLinkedin(username, multipart)
+
+        // Arrange
+        Assertions.assertTrue(result.resumeLinkedinUploaded!!)
         Assertions.assertTrue(Files.exists(Paths.get(filename)))
         Files.deleteIfExists(Paths.get(filename))
     }
@@ -245,7 +294,7 @@ class SignupWebHandlerTest {
 
         val expected = SignupEntity( null, username, "kong", "to",
                 "1234567890", "123456", "as3af3af34faf3",
-                Status.EMPLOYEE.toString(), signup.signupDate, signupState=toEntity(fromModel(state)))
+                Status.EMPLOYEE.toString(), "cgu", signup.signupDate, signupState=toEntity(fromModel(state)))
 
         val signupEntity = toEntity(fromModel(signup))
         Mockito.`when`(signupJpaRepository.findByUsername(username)).thenReturn(listOf(signupEntity))

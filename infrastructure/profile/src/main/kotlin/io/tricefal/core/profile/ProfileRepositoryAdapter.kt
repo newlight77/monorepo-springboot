@@ -6,7 +6,10 @@ import java.time.Instant
 import java.util.*
 
 @Repository
-class ProfileRepositoryAdapter(private var repository: ProfileJpaRepository) : ProfileDataAdapter {
+class ProfileRepositoryAdapter(
+    private var repository: ProfileJpaRepository,
+    private var eventPublisher: ProfileEventPublisher
+) : ProfileDataAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -38,6 +41,14 @@ class ProfileRepositoryAdapter(private var repository: ProfileJpaRepository) : P
         )
 
         return fromEntity(newEntity)
+    }
+
+    override fun resumeUploaded(username: String, filename: String) {
+        this.eventPublisher.publishResumeUploadedEvent(username, filename)
+    }
+
+    override fun resumeLinkedinUploaded(username: String, filename: String) {
+        this.eventPublisher.publishResumeLinkedinUploadedEvent(username, filename)
     }
 
     class ProfileNotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {

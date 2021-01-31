@@ -10,7 +10,6 @@ class SignupStateDomain
             var emailValidated: Boolean? = null,
             var smsSent: Boolean?,
             var smsValidated: Boolean? = null,
-            var portraitUploaded: Boolean? = null,
             var resumeUploaded: Boolean? = null,
             var resumeLinkedinUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
@@ -30,7 +29,6 @@ class SignupStateDomain
             var emailValidated: Boolean? = null,
             var smsSent: Boolean? = null,
             var smsValidated: Boolean? = null,
-            var portraitUploaded: Boolean? = null,
             var resumeUploaded: Boolean? = null,
             var resumeLinkedinUploaded: Boolean? = null,
             var statusUpdated: Boolean? = null,
@@ -45,7 +43,6 @@ class SignupStateDomain
         fun emailValidated(emailValidated: Boolean?) = apply { this.emailValidated = emailValidated }
         fun smsSent(smsSent: Boolean?) = apply { this.smsSent = smsSent }
         fun smsValidated(smsValidated: Boolean?) = apply { this.smsValidated = smsValidated }
-        fun portraitUploaded(portraitUploaded: Boolean?) = apply { this.portraitUploaded = portraitUploaded }
         fun resumeUploaded(resumeUploaded: Boolean?) = apply { this.resumeUploaded = resumeUploaded }
         fun resumeLinkedinUploaded(resumeLinkedinUploaded: Boolean?) = apply { this.resumeLinkedinUploaded = resumeLinkedinUploaded }
         fun statusUpdated(statusUpdated: Boolean?) = apply { this.statusUpdated = statusUpdated }
@@ -61,7 +58,6 @@ class SignupStateDomain
                 emailValidated = emailValidated,
                 smsSent = smsSent,
                 smsValidated = smsValidated,
-                portraitUploaded = portraitUploaded,
                 resumeUploaded = resumeUploaded,
                 resumeLinkedinUploaded = resumeLinkedinUploaded,
                 statusUpdated = statusUpdated,

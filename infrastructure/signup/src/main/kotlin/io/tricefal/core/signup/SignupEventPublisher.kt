@@ -42,22 +42,10 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
         }
     }
 
-    fun publishPortraitUploadedEvent(fileDomain: MetafileDomain) {
-        try {
-            applicationEventPublisher.publishEvent(
-                    PortraitUploadedEvent(fileDomain)
-            )
-            logger.info("A PortraitUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
-        } catch (ex: Exception) {
-            logger.error("Failed to publish a PortraitUploadedEvent for user ${fileDomain.username}")
-            throw ProfilePortraitUploadedPublicationException("Failed to publish a PortraitUploadedEvent for user ${fileDomain.username}")
-        }
-    }
-
     fun publishResumeUploadedEvent(fileDomain: MetafileDomain) {
         try {
             applicationEventPublisher.publishEvent(
-                    ResumeUploadedEvent(fileDomain)
+                    SignupResumeUploadedEvent(fileDomain)
             )
             logger.info("A ResumeUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
         } catch (ex: Exception) {
@@ -69,7 +57,7 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
     fun publishResumeLinkedinUploadedEvent(fileDomain: MetafileDomain) {
         try {
             applicationEventPublisher.publishEvent(
-                    ResumeLinkedinUploadedEvent(fileDomain)
+                    SignupResumeLinkedinUploadedEvent(fileDomain)
             )
             logger.info("A ResumeLinkedinUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
         } catch (ex: Exception) {
@@ -106,7 +94,6 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
 
 class SignupStatusPublicationException(private val msg: String) : Throwable(msg) {}
 class SignupStatePublicationException(private val msg: String) : Throwable(msg) {}
-class ProfilePortraitUploadedPublicationException(private val msg: String) : Throwable(msg) {}
 class ProfileResumeUploadedPublicationException(private val msg: String) : Throwable(msg) {}
 class ProfileResumeLinkedinUploadedPublicationException(private val msg: String) : Throwable(msg) {}
 class CguAcceptedPublicationException(private val msg: String) : Throwable(msg) {}

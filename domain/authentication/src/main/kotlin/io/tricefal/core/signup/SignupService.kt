@@ -51,7 +51,6 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .saved(signup.state?.saved)
                 .registered(signup.state?.registered)
                 .emailValidated(signup.state?.emailValidated)
-                .portraitUploaded(signup.state?.portraitUploaded)
                 .resumeUploaded(signup.state?.resumeUploaded)
                 .resumeLinkedinUploaded(signup.state?.resumeLinkedinUploaded)
                 .statusUpdated(signup.state?.statusUpdated)
@@ -155,23 +154,9 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         return signup.state!!
     }
 
-    override fun portraitUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
-        try {
-            signup.resumeFile = metafileDomain
-            signup.state!!.portraitUploaded = true
-            dataAdapter.update(signup)
-                .orElseThrow { SignupPortraitUploadException("failed to update the signup with portrait upload of the signup for username ${signup.username}")}
-            dataAdapter.portraitUploaded(metafileDomain)
-            return signup.state!!
-        } catch (ex: Throwable) {
-            logger.error("failed to update the signup with portrait upload of the signup for username ${signup.username}")
-            throw SignupPortraitUploadException("failed to update the signup with portrait upload of the signup for username ${signup.username}")
-        }
-    }
-
     override fun resumeUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
         try {
-            signup.resumeFile = metafileDomain
+            signup.resumeFilename = metafileDomain.filename
             signup.state!!.resumeUploaded = true
             dataAdapter.update(signup)
                 .orElseThrow { SignupResumeUploadException("failed to update the signup with resume upload of the signup for username ${signup.username}")}
@@ -185,7 +170,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
 
     override fun resumeLinkedinUploaded(signup: SignupDomain, metafileDomain: MetafileDomain): SignupStateDomain {
         try {
-            signup.resumeFile = metafileDomain
+            signup.resumeLinkedinFilename = metafileDomain.filename
             signup.state!!.resumeLinkedinUploaded = true
             dataAdapter.update(signup)
                 .orElseThrow { SignupLinkedinResumeUploadException("failed to update the signup with linkedin upload of the signup for username ${signup.username}")}
@@ -226,6 +211,40 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         } catch (ex: Throwable) {
             logger.error("failed to update the state upon company completion of the signup for username ${signup.username}")
             throw SignupStatusUpdateException("failed to update the state of the signup upon company completion for username ${signup.username}", ex)
+        }
+    }
+
+    override fun profileResumeUploaded(username: String, filename: String): SignupDomain {
+        val signup = dataAdapter.findByUsername(username).orElseThrow {
+            logger.error("a signup with username $username does not exist")
+            throw SignupNotFoundException("a signup with username $username does not exist")
+        }
+
+        try {
+            signup.state?.resumeUploaded = true
+            signup.resumeFilename = filename
+            dataAdapter.update(signup)
+            return signup
+        } catch (ex: Throwable) {
+            logger.error("failed to update the signup and state upon resume upload for username ${signup.username}")
+            throw SignupStatusUpdateException("failed to update the signup and state upon resume upload for username ${signup.username}", ex)
+        }
+    }
+
+    override fun profileResumeLinkedinUploaded(username: String, filename: String): SignupDomain {
+        val signup = dataAdapter.findByUsername(username).orElseThrow {
+            logger.error("a signup with username $username does not exist")
+            throw SignupNotFoundException("a signup with username $username does not exist")
+        }
+
+        try {
+            signup.state?.resumeLinkedinUploaded = true
+            signup.resumeLinkedinFilename = filename
+            dataAdapter.update(signup)
+            return signup
+        } catch (ex: Throwable) {
+            logger.error("failed to update the signup and state upon resume linkedin upload for username ${signup.username}")
+            throw SignupStatusUpdateException("failed to update the signup and state upon resume linkedin upload for username ${signup.username}", ex)
         }
     }
 
@@ -368,9 +387,6 @@ class SignupResumeUploadException(val s: String?, val ex: Throwable?) : Throwabl
     constructor(message: String?) : this(message, null)
 }
 class SignupLinkedinResumeUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
-    constructor(message: String?) : this(message, null)
-}
-class SignupPortraitUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
     constructor(message: String?) : this(message, null)
 }
 class SignupRoleAssignationException(val s: String, ex: Throwable?) : Throwable(ex)

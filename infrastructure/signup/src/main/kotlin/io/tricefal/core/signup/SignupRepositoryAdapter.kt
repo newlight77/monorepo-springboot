@@ -134,11 +134,6 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.CGU_ACCEPTED)
     }
 
-    override fun portraitUploaded(fileDomain: MetafileDomain) {
-        this.signupEventPublisher.publishPortraitUploadedEvent(fileDomain)
-        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.PORTRAIT_UPLOADED)
-    }
-
     override fun resumeUploaded(fileDomain: MetafileDomain) {
         this.signupEventPublisher.publishResumeUploadedEvent(fileDomain)
         this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_UPLOADED)

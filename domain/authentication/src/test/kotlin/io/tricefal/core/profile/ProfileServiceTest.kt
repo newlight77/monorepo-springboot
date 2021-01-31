@@ -172,6 +172,7 @@ class ProfileServiceTest {
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
         Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
+        Mockito.doNothing().`when`(repository).resumeUploaded(username, "new filename")
         service = ProfileService(repository)
 
         // Act
@@ -201,6 +202,7 @@ class ProfileServiceTest {
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
         Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
+        Mockito.doNothing().`when`(repository).resumeLinkedinUploaded(username, "new filename")
         service = ProfileService(repository)
 
         // Act

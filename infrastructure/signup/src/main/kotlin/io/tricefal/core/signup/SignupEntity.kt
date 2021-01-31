@@ -39,8 +39,17 @@ data class SignupEntity(
         @Column(name = "status", length = 50)
         var status: String,
 
+        @Column(name = "cgu_version", length = 50)
+        var cguAcceptedVersion: String? = null,
+
         @Column(name = "signup_date")
         var signupDate: Instant? = null,
+
+        @Column(name = "resume_filename")
+        var resumeFilename: String? = null,
+
+        @Column(name = "resume_linkedin")
+        var resumeLinkedinFilename: String? = null,
 
         @OneToOne(cascade = [CascadeType.ALL])
         @JoinColumn(name = "state")
@@ -49,7 +58,7 @@ data class SignupEntity(
         @Column(name = "last_date")
         var lastDate: Instant? = null,
 
-        )
+)
 
 fun toEntity(domain: SignupDomain): SignupEntity {
         return SignupEntity(
@@ -61,7 +70,10 @@ fun toEntity(domain: SignupDomain): SignupEntity {
                 activationCode = domain.activationCode,
                 activationToken = domain.activationToken,
                 status = domain.status.toString(),
+                cguAcceptedVersion = domain.cguAcceptedVersion,
                 signupDate = domain.signupDate,
+                resumeFilename = domain.resumeFilename,
+                resumeLinkedinFilename = domain.resumeLinkedinFilename,
                 signupState = domain.state?.let { toEntity(it) },
                 lastDate = domain.lastDate
         )
@@ -75,7 +87,10 @@ fun fromEntity(entity: SignupEntity): SignupDomain {
                 .activationCode(entity.activationCode)
                 .activationToken(entity.activationToken)
                 .status(toStatus(entity.status))
+                .cguAcceptedVersion(entity.cguAcceptedVersion)
                 .signupDate(entity.signupDate)
+                .resumeFilename(entity.resumeFilename)
+                .resumeLinkedinFilename(entity.resumeLinkedinFilename)
                 .state(entity.signupState?.let { fromEntity(it) })
                 .lastDate(entity.lastDate)
                 .build()

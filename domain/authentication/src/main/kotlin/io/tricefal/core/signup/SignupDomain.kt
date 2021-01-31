@@ -1,6 +1,5 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.metafile.MetafileDomain
 import java.time.Instant
 
 data class SignupDomain
@@ -12,13 +11,14 @@ data class SignupDomain
             val phoneNumber: String?,
             var activationCode: String?,
             var activationToken: String?,
+
             var status: Status?,
             var cguAcceptedVersion: String?,
             val signupDate: Instant?,
 
-            var portraitFile: MetafileDomain? = null,
-            var resumeFile: MetafileDomain? = null,
-            var resumeLinkedinFile: MetafileDomain? = null,
+            var resumeFilename: String? = null,
+            var resumeLinkedinFilename: String? = null,
+
             var state: SignupStateDomain? = null,
             var lastDate: Instant? = null
     ) {
@@ -35,9 +35,8 @@ data class SignupDomain
             var cguAcceptedVersion: String? = null,
             var signupDate: Instant? = null,
 
-            var portraitFile: MetafileDomain? = null,
-            var resumeFile: MetafileDomain? = null,
-            var resumeLinkedinFile: MetafileDomain? = null,
+            var resumeFilename: String? = null,
+            var resumeLinkedinFilename: String? = null,
 
             var state: SignupStateDomain? = null,
             var lastDate: Instant? = null
@@ -51,9 +50,8 @@ data class SignupDomain
         fun status(status: Status) = apply { this.status = status }
         fun cguAcceptedVersion(cguAcceptedVersion: String?) = apply { this.cguAcceptedVersion = cguAcceptedVersion }
         fun signupDate(signupDate: Instant?) = apply { this.signupDate = signupDate }
-        fun portraitFile(portraitFile: MetafileDomain?) = apply { this.portraitFile = portraitFile }
-        fun resumeFile(resumeFile: MetafileDomain?) = apply { this.resumeFile = resumeFile }
-        fun resumeLinkedinFile(resumeLinkedinFile: MetafileDomain?) = apply { this.resumeLinkedinFile = resumeLinkedinFile }
+        fun resumeFilename(resumeFilename: String?) = apply { this.resumeFilename = resumeFilename }
+        fun resumeLinkedinFilename(resumeLinkedinFilename: String?) = apply { this.resumeLinkedinFilename = resumeLinkedinFilename }
 
         fun state(state: SignupStateDomain?) = apply {
             this.state = state ?: SignupStateDomain.Builder(username).build()
@@ -71,9 +69,8 @@ data class SignupDomain
                 status = status,
                 cguAcceptedVersion = cguAcceptedVersion,
                 signupDate = signupDate,
-                portraitFile = portraitFile,
-                resumeFile = resumeFile,
-                resumeLinkedinFile = resumeLinkedinFile,
+                resumeFilename = resumeFilename,
+                resumeLinkedinFilename = resumeLinkedinFilename,
                 state = state,
                 lastDate = lastDate
         )
@@ -105,7 +102,6 @@ enum class SignupState {
     SMS_CODE_VALIDATED,
     EMAIL_SENT,
     EMAIL_VALIDATED,
-    PORTRAIT_UPLOADED, // optional
     RESUME_UPLOADED,
     RESUME_LINKEDIN_UPLOADED,
     STATUS_SET,

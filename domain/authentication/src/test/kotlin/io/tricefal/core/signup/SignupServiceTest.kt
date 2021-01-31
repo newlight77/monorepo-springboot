@@ -377,30 +377,6 @@ class SignupServiceTest {
     }
 
     @Test
-    fun `should update a signup upon portrait uploaded`() {
-        // Arranges
-        val signup = SignupDomain.Builder("kong@gmail.com")
-            .firstname("kong")
-            .lastname("to")
-            .phoneNumber("1234567890")
-            .signupDate(Instant.now())
-            .activationCode("120815")
-            .status(Status.FREELANCE)
-            .state(SignupStateDomain.Builder("kong@gmail.com").build())
-            .build()
-        val metafileDomain = MetafileDomain("kong@gmail.com", "filename", Representation.PORTRAIT, "pdf", 1024, Instant.now())
-
-        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
-        Mockito.doNothing().`when`(dataAdapter).portraitUploaded(metafileDomain)
-
-        // Act
-        val result = service.portraitUploaded(signup, metafileDomain)
-
-        // Arrange
-        Assertions.assertTrue(result.portraitUploaded!!)
-    }
-
-    @Test
     fun `should update a signup upon resume uploaded`() {
         // Arranges
         val signup = SignupDomain.Builder("kong@gmail.com")
@@ -446,6 +422,58 @@ class SignupServiceTest {
 
         // Arrange
         Assertions.assertTrue(result.resumeLinkedinUploaded!!)
+    }
+
+    @Test
+    fun `should update a signup upon profile resume uploaded`() {
+        // Arranges
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("120815")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
+
+        Mockito.`when`(dataAdapter.findByUsername("kong@gmail.com")).thenReturn(
+            Optional.of(signup)
+        )
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+
+        // Act
+        val result = service.profileResumeUploaded(signup.username, "filename")
+
+        // Arrange
+        Assertions.assertEquals(true, result.state!!.resumeUploaded)
+        Assertions.assertEquals("filename", result.resumeFilename!!)
+    }
+
+    @Test
+    fun `should update a signup upon profile resume linkedin uploaded`() {
+        // Arranges
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("120815")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
+
+        Mockito.`when`(dataAdapter.findByUsername("kong@gmail.com")).thenReturn(
+            Optional.of(signup)
+        )
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+
+        // Act
+        val result = service.profileResumeLinkedinUploaded(signup.username, "filename")
+
+        // Arrange
+        Assertions.assertEquals(true, result.state!!.resumeLinkedinUploaded)
+        Assertions.assertEquals("filename", result.resumeLinkedinFilename!!)
     }
 
     @Test
