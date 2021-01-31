@@ -1,6 +1,5 @@
 package io.tricefal.core.company
 
-import io.tricefal.core.freelance.EmailNotifiicationPublicationException
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.NotificationEvent
 import io.tricefal.core.signup.CompanyCompletionEvent
@@ -38,6 +37,7 @@ class CompanyEventPublisher(private val applicationEventPublisher: ApplicationEv
 }
 
 class CompanyCompletionPublicationException(private val msg: String) : Throwable(msg) {}
+class EmailNotifiicationPublicationException(private val msg: String) : Throwable(msg) {}
 
 
 

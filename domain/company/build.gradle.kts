@@ -13,12 +13,11 @@ repositories {
 
 dependencies {
 
-	implementation(project(":domain:company"))
 	implementation(project(":domain:notification"))
 	implementation(project(":shared:util"))
 
 }
 
 tasks.withType<Jar>() {
-	baseName = "domain-freelance"
+	baseName = "domain-company"
 }

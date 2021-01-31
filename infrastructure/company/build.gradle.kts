@@ -22,7 +22,6 @@ dependencies {
 	implementation(project(":domain:freelance"))
 	implementation(project(":domain:notification"))
 	implementation(project(":infrastructure:storage"))
-	implementation(project(":infrastructure:company"))
 	implementation(project(":shared:util"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
@@ -31,5 +30,5 @@ dependencies {
 }
 
 tasks.withType<Jar>() {
-	baseName = "infra-freelanc"
+	baseName = "infra-company"
 }

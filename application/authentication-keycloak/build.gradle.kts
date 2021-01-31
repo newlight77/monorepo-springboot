@@ -29,12 +29,14 @@ dependencies {
 	implementation(project(":application:sso-keycloak-adapter"))
 
 	implementation(project(":domain:authentication"))
+	implementation(project(":domain:company"))
 	implementation(project(":domain:freelance"))
 	implementation(project(":domain:metafile"))
 	implementation(project(":domain:mission"))
 	implementation(project(":domain:notification"))
 	implementation(project(":domain:pricer"))
 
+	implementation(project(":infrastructure:company"))
 	implementation(project(":infrastructure:cgu"))
 	implementation(project(":infrastructure:encryption"))
 	implementation(project(":infrastructure:ip-address"))

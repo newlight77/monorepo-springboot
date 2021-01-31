@@ -1,9 +1,6 @@
 package io.tricefal.core.company
 
-import io.tricefal.core.freelance.fromEntity
-import io.tricefal.core.freelance.toEntity
 import io.tricefal.core.notification.EmailNotificationDomain
-import io.tricefal.core.notification.INotificationAdapter
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository

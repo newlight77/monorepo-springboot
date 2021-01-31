@@ -1,6 +1,7 @@
 rootProject.name = "tricefal-infrastructure"
 
 include("cgu")
+include("compnay")
 include("encryption")
 include("freelance")
 include("ip-address")
