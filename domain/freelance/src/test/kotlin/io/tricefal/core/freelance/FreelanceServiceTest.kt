@@ -1,7 +1,9 @@
 package io.tricefal.core.freelance
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
+import io.tricefal.core.company.CompanyDomain
+import io.tricefal.core.company.ContactDomain
+import io.tricefal.core.company.PrivacyDetailDomain
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.MetaNotificationDomain
 import io.tricefal.shared.util.json.PatchOperation

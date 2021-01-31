@@ -1,9 +1,11 @@
-package io.tricefal.core.freelance
+package io.tricefal.core.company
 
 import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
+
+const val EMAIL_REGEX = " ^[\\\\w!#\$%&’*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#\$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}\$"
 
 @Entity
 @Table(name = "contact")

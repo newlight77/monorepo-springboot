@@ -1,15 +1,13 @@
 package io.tricefal.core.command
 
 import io.tricefal.core.InfrastructureMockBeans
-import io.tricefal.core.freelance.AddressModel
-import io.tricefal.core.freelance.ContactModel
+import io.tricefal.core.company.AddressModel
+import io.tricefal.core.company.ContactModel
 import io.tricefal.shared.util.json.PatchOperation
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.beans.factory.annotation.Autowired

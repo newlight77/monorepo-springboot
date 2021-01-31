@@ -1,8 +1,8 @@
-package io.tricefal.core.freelance
+package io.tricefal.core.company
 
 import java.time.Instant
 
-data class CompanyDocumentsDomain(
+data class CompanyDocumentsModel(
     var kbisFilename:  String?,
     var ribFilename:  String?,
     var rcFilename:  String?,
@@ -40,7 +40,7 @@ data class CompanyDocumentsDomain(
         fun urssafUpdateDate(urssafUpdateDate: Instant?) = apply { this.urssafUpdateDate = urssafUpdateDate }
         fun fiscalUpdateDate(fiscalUpdateDate: Instant?) = apply { this.fiscalUpdateDate = fiscalUpdateDate }
 
-        fun build() = CompanyDocumentsDomain(
+        fun build() = CompanyDocumentsModel(
             kbisFilename = kbisFilename,
             ribFilename = ribFilename,
             rcFilename = rcFilename,
@@ -53,4 +53,34 @@ data class CompanyDocumentsDomain(
             fiscalUpdateDate = fiscalUpdateDate
         )
     }
+}
+
+fun toModel(domain: CompanyDocumentsDomain): CompanyDocumentsModel {
+    return CompanyDocumentsModel(
+        kbisFilename = domain.kbisFilename,
+        ribFilename = domain.ribFilename,
+        rcFilename = domain.rcFilename,
+        urssafFilename = domain.urssafFilename,
+        fiscalFilename = domain.fiscalFilename,
+        kbisUpdateDate = domain.kbisUpdateDate,
+        ribUpdateDate = domain.ribUpdateDate,
+        rcUpdateDate = domain.rcUpdateDate,
+        urssafUpdateDate = domain.urssafUpdateDate,
+        fiscalUpdateDate = domain.fiscalUpdateDate
+    )
+}
+
+fun fromModel(model: CompanyDocumentsModel) : CompanyDocumentsDomain {
+    return CompanyDocumentsDomain(
+        kbisFilename = model.kbisFilename,
+        ribFilename = model.ribFilename,
+        rcFilename = model.rcFilename,
+        urssafFilename = model.urssafFilename,
+        fiscalFilename = model.fiscalFilename,
+        kbisUpdateDate = model.kbisUpdateDate,
+        ribUpdateDate = model.ribUpdateDate,
+        rcUpdateDate = model.rcUpdateDate,
+        urssafUpdateDate = model.urssafUpdateDate,
+        fiscalUpdateDate = model.fiscalUpdateDate
+    )
 }

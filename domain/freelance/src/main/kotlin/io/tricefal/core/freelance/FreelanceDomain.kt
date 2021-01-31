@@ -1,5 +1,9 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.company.AddressDomain
+import io.tricefal.core.company.CompanyDomain
+import io.tricefal.core.company.ContactDomain
+import io.tricefal.core.company.PrivacyDetailDomain
 import java.time.Instant
 
 data class FreelanceDomain

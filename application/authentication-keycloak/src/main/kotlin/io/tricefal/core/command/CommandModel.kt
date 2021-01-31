@@ -1,7 +1,7 @@
 package io.tricefal.core.command
 
-import io.tricefal.core.freelance.AddressModel
-import io.tricefal.core.freelance.ContactModel
+import io.tricefal.core.company.AddressModel
+import io.tricefal.core.company.ContactModel
 import java.time.Instant
 
 data class CommandModel(
@@ -40,8 +40,8 @@ data class CommandModel(
 fun toModel(domain: CommandDomain): CommandModel {
     return CommandModel(
         companyName = domain.companyName,
-        address = domain.address?.let { io.tricefal.core.freelance.toModel(it) },
-        contact = domain.contact?.let { io.tricefal.core.freelance.toModel(it) },
+        address = domain.address?.let { io.tricefal.core.company.toModel(it) },
+        contact = domain.contact?.let { io.tricefal.core.company.toModel(it) },
         paymentConditionDays = domain.paymentConditionDays,
         paymentMode = domain.paymentMode,
         lastDate = domain.lastDate
@@ -51,8 +51,8 @@ fun toModel(domain: CommandDomain): CommandModel {
 fun fromModel(model: CommandModel) : CommandDomain {
     return CommandDomain(
         companyName = model.companyName,
-        address = model.address?.let { io.tricefal.core.freelance.fromModel(it) },
-        contact = model.contact?.let { io.tricefal.core.freelance.fromModel(it) },
+        address = model.address?.let { io.tricefal.core.company.fromModel(it) },
+        contact = model.contact?.let { io.tricefal.core.company.fromModel(it) },
         paymentConditionDays = model.paymentConditionDays,
         paymentMode = model.paymentMode,
         lastDate = model.lastDate

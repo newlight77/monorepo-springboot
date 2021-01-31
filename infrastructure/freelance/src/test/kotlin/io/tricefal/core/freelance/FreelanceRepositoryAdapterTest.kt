@@ -1,6 +1,8 @@
 package io.tricefal.core.freelance
 
-import io.tricefal.core.notification.INotificationAdapter
+import io.tricefal.core.company.CompanyDomain
+import io.tricefal.core.company.ContactDomain
+import io.tricefal.core.company.PrivacyDetailDomain
 import io.tricefal.shared.util.json.PatchOperation
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach

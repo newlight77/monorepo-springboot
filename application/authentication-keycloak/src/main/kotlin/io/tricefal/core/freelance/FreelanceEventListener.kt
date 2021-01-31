@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.company.ContactDomain
 import io.tricefal.core.signup.SignupStatusUpdatedEvent
 import io.tricefal.core.signup.Status
 import org.slf4j.LoggerFactory

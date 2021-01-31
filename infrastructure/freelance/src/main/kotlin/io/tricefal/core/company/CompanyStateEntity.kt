@@ -1,4 +1,4 @@
-package io.tricefal.core.freelance
+package io.tricefal.core.company
 
 import java.time.Instant
 import javax.persistence.*

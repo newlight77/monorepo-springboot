@@ -3,6 +3,7 @@ package io.tricefal.core.freelance
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.ServerSetup
 import io.tricefal.core.InfrastructureMockBeans
+import io.tricefal.core.company.*
 import io.tricefal.core.email.EmailMessage
 import io.tricefal.core.email.EmailService
 import io.tricefal.core.metafile.*

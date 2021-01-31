@@ -1,5 +1,6 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.company.*
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.INotificationAdapter
 import io.tricefal.shared.util.json.JsonPatchOperator

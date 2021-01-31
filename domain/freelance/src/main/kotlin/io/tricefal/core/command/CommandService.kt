@@ -1,14 +1,11 @@
 package io.tricefal.core.command
 
-import io.tricefal.core.freelance.*
-import io.tricefal.core.notification.EmailNotificationDomain
-import io.tricefal.core.notification.MetaNotificationDomain
+import io.tricefal.core.company.AddressDomain
+import io.tricefal.core.company.ContactDomain
 import io.tricefal.shared.util.json.JsonPatchOperator
 import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
-import java.text.MessageFormat
 import java.time.Instant
-import java.util.*
 
 class CommandService(private var dataAdapter: CommandDataAdapter) : ICommandService {
 

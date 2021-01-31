@@ -1,5 +1,9 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.company.AddressEntity
+import io.tricefal.core.company.CompanyEntity
+import io.tricefal.core.company.ContactEntity
+import io.tricefal.core.company.PrivacyDetailEntity
 import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -56,10 +60,10 @@ fun toEntity(domain: FreelanceDomain): FreelanceEntity {
         return FreelanceEntity(
                 id = null,
                 username = domain.username,
-                contact = domain.contact?.let { toEntity(it) },
-                address = domain.address?.let { toEntity(it) },
-                company = domain.company?.let { toEntity(it) },
-                privacyDetail = domain.privacyDetail?.let { toEntity(it) },
+                contact = domain.contact?.let { io.tricefal.core.company.toEntity(it) },
+                address = domain.address?.let { io.tricefal.core.company.toEntity(it) },
+                company = domain.company?.let { io.tricefal.core.company.toEntity(it) },
+                privacyDetail = domain.privacyDetail?.let { io.tricefal.core.company.toEntity(it) },
                 withMission = domain.withMission,
                 availability = domain.availability?.toString(),
                 state = domain.state?.let { toEntity(it) },
@@ -69,10 +73,10 @@ fun toEntity(domain: FreelanceDomain): FreelanceEntity {
 
 fun fromEntity(entity: FreelanceEntity): FreelanceDomain {
         return FreelanceDomain.Builder(entity.username)
-                .contact(entity.contact?.let { fromEntity(it) })
-                .address(entity.address?.let { fromEntity(it) })
-                .company(entity.company?.let { fromEntity(it) })
-                .privacyDetail(entity.privacyDetail?.let { fromEntity(it) })
+                .contact(entity.contact?.let { io.tricefal.core.company.fromEntity(it) })
+                .address(entity.address?.let { io.tricefal.core.company.fromEntity(it) })
+                .company(entity.company?.let { io.tricefal.core.company.fromEntity(it) })
+                .privacyDetail(entity.privacyDetail?.let { io.tricefal.core.company.fromEntity(it) })
                 .withMission(entity.withMission)
                 .availability(entity.availability?.toUpperCase()?.let { Availability.valueOf(it) })
                 .state(entity.state?.let { fromEntity(it) })

@@ -1,5 +1,9 @@
 package io.tricefal.core.freelance
 
+import io.tricefal.core.company.AddressModel
+import io.tricefal.core.company.CompanyModel
+import io.tricefal.core.company.ContactModel
+import io.tricefal.core.company.PrivacyDetailModel
 import java.time.Instant
 
 
@@ -55,10 +59,10 @@ class FreelanceModel
 
 fun toModel(domain: FreelanceDomain): FreelanceModel {
     return FreelanceModel.Builder(domain.username)
-            .contact(domain.contact?.let { toModel(it) })
-            .address(domain.address?.let { toModel(it) })
-            .company(domain.company?.let { toModel(it) })
-            .privacyDetail(domain.privacyDetail?.let { toModel(it) })
+            .contact(domain.contact?.let { io.tricefal.core.company.toModel(it) })
+            .address(domain.address?.let { io.tricefal.core.company.toModel(it) })
+            .company(domain.company?.let { io.tricefal.core.company.toModel(it) })
+            .privacyDetail(domain.privacyDetail?.let { io.tricefal.core.company.toModel(it) })
             .withMission(domain.withMission)
             .availability(domain.availability)
             .state(domain.state?.let { toModel(it) })
@@ -68,10 +72,10 @@ fun toModel(domain: FreelanceDomain): FreelanceModel {
 
 fun fromModel(model: FreelanceModel): FreelanceDomain {
     return FreelanceDomain.Builder(model.username)
-            .contact(model.contact?.let { fromModel(it) })
-            .address(model.address?.let { fromModel(it) })
-            .company(model.company?.let { fromModel(it) })
-            .privacyDetail(model.privacyDetail?.let { fromModel(it) })
+            .contact(model.contact?.let { io.tricefal.core.company.fromModel(it) })
+            .address(model.address?.let { io.tricefal.core.company.fromModel(it) })
+            .company(model.company?.let { io.tricefal.core.company.fromModel(it) })
+            .privacyDetail(model.privacyDetail?.let { io.tricefal.core.company.fromModel(it) })
             .withMission(model.withMission)
             .availability(model.availability)
             .state(model.state?.let { fromModel(it) })

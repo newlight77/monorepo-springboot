@@ -1,14 +1,14 @@
-package io.tricefal.core.freelance
+package io.tricefal.core.company
 
 import java.time.Instant
 
-data class AddressDomain(val address: String?,
-                         var addressMention: String?,
-                         val postalCode: String?,
-                         val city: String?,
-                         val country: String?,
-                         val lastDate: Instant?)
-{
+data class AddressModel(var address: String?,
+                        var addressMention: String?,
+                        var postalCode: String?,
+                        var city: String?,
+                        var country: String?,
+                        var lastDate: Instant?
+) {
     data class Builder(
             var address: String? = null,
             var addressMention: String? = null,
@@ -24,7 +24,7 @@ data class AddressDomain(val address: String?,
         fun country(country: String?) = apply { this.country = country }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
-        fun build() = AddressDomain(
+        fun build() = AddressModel(
                 address = address,
                 addressMention = addressMention,
                 postalCode = postalCode,
@@ -35,3 +35,24 @@ data class AddressDomain(val address: String?,
     }
 }
 
+fun toModel(domain: AddressDomain): AddressModel {
+    return AddressModel(
+            address = domain.address,
+            addressMention = domain.addressMention,
+            postalCode = domain.postalCode,
+            city = domain.city,
+            country = domain.country,
+            lastDate = domain.lastDate
+    )
+}
+
+fun fromModel(model: AddressModel): AddressDomain {
+    return AddressDomain(
+            address = model.address,
+            addressMention = model.addressMention,
+            postalCode = model.postalCode,
+            city = model.city,
+            country = model.country,
+            lastDate = model.lastDate
+    )
+}

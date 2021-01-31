@@ -1,10 +1,7 @@
 package io.tricefal.core.company
 
-import io.tricefal.core.freelance.CompanyModel
-import io.tricefal.core.freelance.FreelanceModel
 import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.shared.util.json.PatchOperation
-//import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -13,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.io.FileInputStream
 import java.nio.file.Paths
-import java.security.Principal
 import javax.annotation.security.RolesAllowed
 import javax.servlet.http.HttpServletResponse
 

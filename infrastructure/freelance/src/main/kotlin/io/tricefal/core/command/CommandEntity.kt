@@ -1,7 +1,7 @@
 package io.tricefal.core.command
 
-import io.tricefal.core.freelance.AddressEntity
-import io.tricefal.core.freelance.ContactEntity
+import io.tricefal.core.company.AddressEntity
+import io.tricefal.core.company.ContactEntity
 import java.time.Instant
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -41,8 +41,8 @@ fun toEntity(domain: CommandDomain): CommandEntity {
         return CommandEntity(
                 id = null,
                 companyName = domain.companyName,
-                address = domain.address?.let { io.tricefal.core.freelance.toEntity(it) },
-                contact = domain.contact?.let { io.tricefal.core.freelance.toEntity(it) },
+                address = domain.address?.let { io.tricefal.core.company.toEntity(it) },
+                contact = domain.contact?.let { io.tricefal.core.company.toEntity(it) },
                 paymentConditionDays = domain.paymentConditionDays,
                 paymentMode = domain.paymentMode,
                 lastDate = domain.lastDate
@@ -52,8 +52,8 @@ fun toEntity(domain: CommandDomain): CommandEntity {
 fun fromEntity(entity: CommandEntity): CommandDomain {
         return CommandDomain(
                 companyName = entity.companyName,
-                address = entity.address?.let { io.tricefal.core.freelance.fromEntity(it) },
-                contact = entity.contact?.let { io.tricefal.core.freelance.fromEntity(it) },
+                address = entity.address?.let { io.tricefal.core.company.fromEntity(it) },
+                contact = entity.contact?.let { io.tricefal.core.company.fromEntity(it) },
                 paymentConditionDays = entity.paymentConditionDays,
                 paymentMode = entity.paymentMode,
                 lastDate = entity.lastDate

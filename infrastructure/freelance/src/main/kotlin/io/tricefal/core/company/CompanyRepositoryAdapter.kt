@@ -1,13 +1,9 @@
 package io.tricefal.core.company
 
-import io.tricefal.core.freelance.CompanyDomain
-import io.tricefal.core.freelance.CompanyEntity
 import io.tricefal.core.freelance.fromEntity
 import io.tricefal.core.freelance.toEntity
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.INotificationAdapter
-import io.tricefal.shared.util.json.JsonPatchOperator
-import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
@@ -16,7 +12,6 @@ import java.util.*
 
 @Repository
 class CompanyRepositoryAdapter(private var repository: CompanyJpaRepository,
-                               val notificationAdapter: INotificationAdapter,
                                val eventPublisher: CompanyEventPublisher) : CompanyDataAdapter {
 
     private val logger = LoggerFactory.getLogger(this::class.java)

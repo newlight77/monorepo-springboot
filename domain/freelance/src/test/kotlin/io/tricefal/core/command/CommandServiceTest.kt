@@ -1,7 +1,7 @@
 package io.tricefal.core.command
 
-import io.tricefal.core.freelance.AddressDomain
-import io.tricefal.core.freelance.ContactDomain
+import io.tricefal.core.company.AddressDomain
+import io.tricefal.core.company.ContactDomain
 import io.tricefal.shared.util.json.PatchOperation
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

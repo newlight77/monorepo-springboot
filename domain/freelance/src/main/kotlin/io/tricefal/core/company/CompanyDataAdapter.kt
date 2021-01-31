@@ -1,8 +1,6 @@
 package io.tricefal.core.company
 
-import io.tricefal.core.freelance.CompanyDomain
 import io.tricefal.core.notification.EmailNotificationDomain
-import io.tricefal.shared.util.json.PatchOperation
 import java.util.*
 
 interface CompanyDataAdapter {
