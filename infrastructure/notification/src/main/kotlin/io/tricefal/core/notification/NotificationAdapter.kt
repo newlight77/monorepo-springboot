@@ -1,9 +1,6 @@
 package io.tricefal.core.notification
 
-import io.tricefal.core.email.EmailMessage
-import io.tricefal.core.email.EmailService
-import io.tricefal.core.email.emailTemplateByEnv
-import io.tricefal.core.email.emailTemplateThemeStyleByEnv
+import io.tricefal.core.email.*
 import io.tricefal.core.twilio.SmsMessage
 import io.tricefal.core.twilio.SmsService
 import org.slf4j.LoggerFactory
@@ -40,7 +37,7 @@ class NotificationAdapter(val mailService: EmailService,
                 .to(notification.emailTo!!)
                 .cc(notification.emailCc)
                 .bcc(notification.emailBcc)
-                .subject(notification.emailSubject!!)
+                .subject(notification.emailSubject!! + emailSubjectByEnv(notification.targetEnv ?: ""))
                 .content(notification.emailContent!!)
                 .emailTemplate(emailTemplateByEnv(notification.targetEnv ?: ""))
                 .model(hashMapOf(

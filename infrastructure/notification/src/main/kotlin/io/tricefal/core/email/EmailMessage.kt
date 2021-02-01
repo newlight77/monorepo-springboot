@@ -78,3 +78,9 @@ fun emailTemplateThemeStyleByEnv(env: String) = mapOf(
     "prod" to EmailTemplateThemeStyle.PROD,
     "dev" to EmailTemplateThemeStyle.DEV,
 )[env]
+
+fun emailSubjectByEnv(env: String) = mapOf(
+    "" to "",
+    "prod" to "",
+    "dev" to " *** DEV ***",
+)[env]
