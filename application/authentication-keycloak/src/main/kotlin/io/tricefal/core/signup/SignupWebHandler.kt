@@ -73,14 +73,25 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(model)
     }
 
-    fun resendCode(username: String): SignupStateModel {
+    fun resendCodeForValidation(username: String): SignupStateModel {
         val domain = signupService.findByUsername(username)
         val metaNotification = MetaNotificationDomain(
             targetEnv=targetEnv, baseUrl=backendBaseUrl,
             emailFrom=emailFrom, emailAdmin=emailAdmin,
             smsFrom=smsFrom, smsAdminNumber=smsAdmin)
-        val result = signupService.resendCode(domain, metaNotification)
+        val result = signupService.resendCodeBySmsForValidation(domain, metaNotification)
         logger.info("successfully resent an activation code for user $username")
+        return toModel(result)
+    }
+
+    fun resendEmailForValidation(username: String): SignupStateModel {
+        val domain = signupService.findByUsername(username)
+        val metaNotification = MetaNotificationDomain(
+            targetEnv=targetEnv, baseUrl=backendBaseUrl,
+            emailFrom=emailFrom, emailAdmin=emailAdmin,
+            smsFrom=smsFrom, smsAdminNumber=smsAdmin)
+        val result = signupService.resendCodeByEmailForValidation(domain, metaNotification)
+        logger.info("successfully resent an email with validation link for user $username")
         return toModel(result)
     }
 

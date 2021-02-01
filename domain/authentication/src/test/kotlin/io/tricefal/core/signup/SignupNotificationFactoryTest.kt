@@ -19,7 +19,15 @@ class SignupNotificationFactoryTest {
     @Test
     fun `should build an sms notification by substituting value within the sms template`() {
         // arrange
-        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
+        val metaNotification = MetaNotificationDomain(
+            targetEnv = "",
+            baseUrl = "baseUrl",
+            emailFrom = "emailFrom",
+            smsFrom = "smsFrom",
+            emailAdmin = "emailAdmin",
+            emailToName = "emailToName",
+            smsAdminNumber = "adminNumber"
+        )
         val signup = SignupDomain.Builder("kong@gmail.com")
                 .firstname("kong")
                 .lastname("to")
@@ -42,7 +50,15 @@ class SignupNotificationFactoryTest {
     @Test
     fun `should build an email notification by substituting value within the email template`() {
         // arrange
-        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
+        val metaNotification = MetaNotificationDomain(
+            targetEnv = "",
+            baseUrl = "baseUrl",
+            emailFrom = "emailFrom",
+            smsFrom = "smsFrom",
+            emailAdmin = "emailAdmin",
+            emailToName = "emailToName",
+            smsAdminNumber = "adminNumber"
+        )
         val signup = SignupDomain.Builder("kong@gmail.com")
                 .firstname("kong")
                 .lastname("to")
@@ -65,7 +81,7 @@ class SignupNotificationFactoryTest {
         Assertions.assertEquals("kong@gmail.com", result.emailTo)
         Assertions.assertEquals("tricefal® - inscription", result.emailSubject)
         Assertions.assertEquals("Bonjour kong,<br>", result.emailGreeting)
-        Assertions.assertEquals("Merci d\'avoir fait l'inscription sur le site <i>www.tricefal.com</i>. Un compte a été créé. <br> <br> Nous t'invitons à valider ton adresse email via ce lien : <br> baseUrl/signup/email/verify?token=token.random.123456 <br> <br> En route vers de très belles aventures dans la transparence !", result.emailContent)
+        Assertions.assertEquals("Merci d\'avoir fait l'inscription sur le site <i>www.tricefal.com</i>. Un compte a été créé. <br> <br> Nous t'invitons à valider ton adresse email via ce lien : <br> baseUrl/signup/email/verify?token=token.random. <br> <br> En route vers de très belles aventures dans la transparence !", result.emailContent)
     }
 
     private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)

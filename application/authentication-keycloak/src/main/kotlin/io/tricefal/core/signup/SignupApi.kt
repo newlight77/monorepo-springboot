@@ -54,7 +54,15 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @ResponseStatus(HttpStatus.OK)
     fun resendCode(principal: Principal, @RequestBody resendCodeModel : SignupResendModel): SignupStateModel {
         logger.info("signup resend code requested")
-        return signupWebHandler.resendCode(authenticatedUser(principal))
+        return signupWebHandler.resendCodeForValidation(authenticatedUser(principal))
+    }
+
+    @RolesAllowed("ROLE_user-role")
+    @PostMapping("email/resend")
+    @ResponseStatus(HttpStatus.OK)
+    fun resendEmail(principal: Principal, @RequestBody resendCodeModel : SignupResendModel): SignupStateModel {
+        logger.info("signup resend code requested")
+        return signupWebHandler.resendEmailForValidation(authenticatedUser(principal))
     }
 
     @RolesAllowed("ROLE_user-role")

@@ -318,7 +318,7 @@ class SignupServiceTest {
         Mockito.`when`(dataAdapter.sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         // Act
-        val result = service.resendCode(signup, metaNotification)
+        val result = service.resendCodeBySmsForValidation(signup, metaNotification)
 
         // Arrange
         Mockito.verify(dataAdapter).sendEmail(any(EmailNotificationDomain::class.java))

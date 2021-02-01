@@ -35,9 +35,34 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .build()
     }
 
+    override fun resendCodeBySmsForValidation(signup: SignupDomain,
+                                              metaNotification: MetaNotificationDomain): SignupStateDomain {
+        dataAdapter.findByUsername(signup.username).orElseThrow {
+            logger.error("a signup with username ${signup.username} does not exist")
+            throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
+        }
 
-    override fun resendCode(signup: SignupDomain,
-                            metaNotification: MetaNotificationDomain): SignupStateDomain {
+        val activationCode = generateCode()
+        signup.activationCode = activationCode
+        signup.activationToken = "${encode(activationCode)}.${encode(signup.username)}"
+
+        return SignupStateDomain.Builder(signup.username)
+            .saved(signup.state?.saved)
+            .registered(signup.state?.registered)
+            .emailValidated(signup.state?.emailValidated)
+            .resumeUploaded(signup.state?.resumeUploaded)
+            .resumeLinkedinUploaded(signup.state?.resumeLinkedinUploaded)
+            .statusUpdated(signup.state?.statusUpdated)
+            .validated(signup.state?.validated)
+            .emailSent(
+                signup.state?.emailValidated ?: dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification))
+            )
+            .smsSent(sendSms(signup, signupSmsNotification(signup, metaNotification)))
+            .build()
+    }
+
+    override fun resendCodeByEmailForValidation(signup: SignupDomain,
+                                                metaNotification: MetaNotificationDomain): SignupStateDomain {
         dataAdapter.findByUsername(signup.username).orElseThrow {
             logger.error("a signup with username ${signup.username} does not exist")
             throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
@@ -55,9 +80,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .resumeLinkedinUploaded(signup.state?.resumeLinkedinUploaded)
                 .statusUpdated(signup.state?.statusUpdated)
                 .validated(signup.state?.validated)
-                .emailSent(
-                    signup.state?.emailValidated ?: dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification))
-                )
+                .emailSent(dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification)))
                 .smsSent(
                     signup.state?.smsValidated ?: sendSms(signup, signupSmsNotification(signup, metaNotification))
                 )
