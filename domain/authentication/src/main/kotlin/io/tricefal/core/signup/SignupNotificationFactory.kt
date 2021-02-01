@@ -26,7 +26,7 @@ open class SignupNotificationFactory() {
         val emailActivationLink = emailValidationLink(signup, metaNotification)
         val emailSubject = getString("signup.email.subject")
         val emailGreeting = getString("signup.email.greeting", signup.firstname)
-        val emailContent = getString("signup.email.content", emailActivationLink, signup.activationCode)
+        val emailContent = getString("signup.email.content", emailActivationLink, showActivationCodeByEnv(metaNotification.targetEnv, signup.activationCode))
         val emailSignature = getString("signup.email.signature")
 
         return EmailNotificationDomain.Builder(signup.username)
@@ -40,6 +40,13 @@ open class SignupNotificationFactory() {
             .targetEnv(metaNotification.targetEnv)
             .build()
     }
+
+    private fun showActivationCodeByEnv(env: String?, activationCode: String?) = mapOf(
+        null to "",
+        "" to "",
+        "prod" to "",
+        "dev" to activationCode,
+    )[env]
 
     fun activatedEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
         val emailSubject = getString("signup.activated.email.subject")
