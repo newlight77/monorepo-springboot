@@ -16,7 +16,7 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("profile")
 class ProfileAdminApi(val profileWebHandler: ProfileWebHandler) {
 
-    @RolesAllowed("ROLE_ac_tricefal_r")
+    @RolesAllowed("ROLE_ac_tricefal_w")
     @GetMapping("{username}/cv")
     @ResponseStatus(HttpStatus.OK)
     fun downloadCv(@PathVariable username: String): ResponseEntity<ByteArrayResource> {
@@ -37,7 +37,7 @@ class ProfileAdminApi(val profileWebHandler: ProfileWebHandler) {
                 .body(resource)
     }
 
-    @RolesAllowed("ROLE_ac_tricefal_r")
+    @RolesAllowed("ROLE_ac_tricefal_w")
     @GetMapping("{username}/cvLinkedind")
     @ResponseStatus(HttpStatus.OK)
     fun downloadCvLinkedin(@PathVariable username: String): ResponseEntity<ByteArrayResource> {
