@@ -109,7 +109,6 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 
     override fun sendSms(username: String, notification: SmsNotificationDomain): Boolean {
         val result = notificationAdapter.sendSms(notification)
-        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.SMS_CODE_SENT)
         return result
     }
 
@@ -118,6 +117,10 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
 //        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.EMAIL_SENT.toString())
         this.signupEventPublisher.publishEmailNotification(notification)
         return true
+    }
+
+    override fun smsSent(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.SMS_CODE_SENT)
     }
 
     override fun emailSent(signup: SignupDomain) {

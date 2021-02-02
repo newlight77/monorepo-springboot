@@ -10,8 +10,8 @@ interface ISignupService {
     fun delete(signup: SignupDomain, authorizationCode: String?)
     fun activate(signup: SignupDomain, metaNotification: MetaNotificationDomain): SignupStateDomain
     fun deactivate(signup: SignupDomain): SignupStateDomain
-    fun resendCodeBySmsForValidation(signup: SignupDomain, metaNotification: MetaNotificationDomain): SignupStateDomain
-    fun resendCodeByEmailForValidation(signup: SignupDomain, metaNotification: MetaNotificationDomain): SignupStateDomain
+    fun resendCodeBySmsForValidation(signup: SignupDomain, metaNotification: MetaNotificationDomain): Boolean
+    fun resendCodeByEmailForValidation(signup: SignupDomain, metaNotification: MetaNotificationDomain): Boolean
     fun verifyByCode(signup: SignupDomain, code: String): SignupStateDomain
     fun verifyByCodeFromToken(token: String): SignupStateDomain
 

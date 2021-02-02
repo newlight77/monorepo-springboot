@@ -52,7 +52,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @RolesAllowed("ROLE_user-role")
     @PostMapping("code/resend")
     @ResponseStatus(HttpStatus.OK)
-    fun resendCode(principal: Principal, @RequestBody resendCodeModel : SignupResendModel): SignupStateModel {
+    fun resendCode(principal: Principal, @RequestBody resendCodeModel : SignupResendModel): Boolean {
         logger.info("signup resend code requested")
         return signupWebHandler.resendCodeForValidation(authenticatedUser(principal))
     }
@@ -60,7 +60,7 @@ class SignupApi(val signupWebHandler: SignupWebHandler,
     @RolesAllowed("ROLE_user-role")
     @PostMapping("email/resend")
     @ResponseStatus(HttpStatus.OK)
-    fun resendEmail(principal: Principal, @RequestBody resendCodeModel : SignupResendModel): SignupStateModel {
+    fun resendEmail(principal: Principal, @RequestBody resendCodeModel : SignupResendModel): Boolean {
         logger.info("signup resend code requested")
         return signupWebHandler.resendEmailForValidation(authenticatedUser(principal))
     }

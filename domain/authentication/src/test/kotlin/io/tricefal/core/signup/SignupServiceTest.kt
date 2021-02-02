@@ -297,7 +297,35 @@ class SignupServiceTest {
     }
 
     @Test
-    fun `should resend code for a signup`() {
+    fun `should resend activation code sms for a validation`() {
+        // Arranges
+        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .activationCode("123456")
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
+
+        Mockito.`when`(dataAdapter.findByUsername("kong@gmail.com")).thenReturn(
+            Optional.of(signup)
+        )
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.`when`(dataAdapter.sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))).thenReturn(true)
+
+        // Act
+        val result = service.resendCodeBySmsForValidation(signup, metaNotification)
+
+        // Arrange
+        Mockito.verify(dataAdapter).sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `should resend activation code by email for a validation`() {
         // Arranges
         val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
         val signup = SignupDomain.Builder("kong@gmail.com")
@@ -315,16 +343,42 @@ class SignupServiceTest {
         )
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
         Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
+
+        // Act
+        val result = service.resendCodeByEmailForValidation(signup, metaNotification)
+
+        // Arrange
+        Mockito.verify(dataAdapter).sendEmail(any(EmailNotificationDomain::class.java))
+        Assertions.assertTrue(result)
+    }
+
+    @Test
+    fun `should resend activation code by email and for a validation when activation code is not present`() {
+        // Arranges
+        val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl", emailFrom = "emailFrom", smsFrom = "smsFrom")
+        val signup = SignupDomain.Builder("kong@gmail.com")
+            .firstname("kong")
+            .lastname("to")
+            .phoneNumber("1234567890")
+            .signupDate(Instant.now())
+            .status(Status.FREELANCE)
+            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .build()
+
+        Mockito.`when`(dataAdapter.findByUsername("kong@gmail.com")).thenReturn(
+            Optional.of(signup)
+        )
+        Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
+        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
         Mockito.`when`(dataAdapter.sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))).thenReturn(true)
 
         // Act
-        val result = service.resendCodeBySmsForValidation(signup, metaNotification)
+        val result = service.resendCodeByEmailForValidation(signup, metaNotification)
 
         // Arrange
         Mockito.verify(dataAdapter).sendEmail(any(EmailNotificationDomain::class.java))
         Mockito.verify(dataAdapter).sendSms(eq("kong@gmail.com"), any(SmsNotificationDomain::class.java))
-        Assertions.assertTrue(result.emailSent!!)
-        Assertions.assertTrue(result.smsSent!!)
+        Assertions.assertTrue(result)
     }
 
     @Test

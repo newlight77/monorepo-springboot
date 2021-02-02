@@ -30,61 +30,44 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .saved(save(signup))
                 .registered(register(signup))
                 .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
-                .emailSent(sendSignupEmailNotification(signup, metaNotification))
-                .smsSent(sendSms(signup, signupSmsNotification(signup, metaNotification)))
+                .emailSent(sendSignupEmailForValidation(signup, metaNotification))
+                .smsSent(sendSignupSmsForValidation(signup, signupSmsNotification(signup, metaNotification)))
                 .build()
     }
 
     override fun resendCodeBySmsForValidation(signup: SignupDomain,
-                                              metaNotification: MetaNotificationDomain): SignupStateDomain {
+                                              metaNotification: MetaNotificationDomain): Boolean {
         dataAdapter.findByUsername(signup.username).orElseThrow {
             logger.error("a signup with username ${signup.username} does not exist")
             throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
         }
 
-        val activationCode = generateCode()
-        signup.activationCode = activationCode
-        signup.activationToken = "${encode(activationCode)}.${encode(signup.username)}"
-
-        return SignupStateDomain.Builder(signup.username)
-            .saved(signup.state?.saved)
-            .registered(signup.state?.registered)
-            .emailValidated(signup.state?.emailValidated)
-            .resumeUploaded(signup.state?.resumeUploaded)
-            .resumeLinkedinUploaded(signup.state?.resumeLinkedinUploaded)
-            .statusUpdated(signup.state?.statusUpdated)
-            .validated(signup.state?.validated)
-            .emailSent(
-                signup.state?.emailValidated ?: dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification))
-            )
-            .smsSent(sendSms(signup, signupSmsNotification(signup, metaNotification)))
-            .build()
+        return if (signup.activationCode.isNullOrBlank()) {
+            signup.activationCode = generateCode()
+            signup.activationToken = "${encode(signup.activationCode!!)}.${encode(signup.username)}"
+            val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForValidation(signup, metaNotification) else false
+            val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForValidation(signup, signupSmsNotification(signup, metaNotification)) else false
+            emailSent || smsSent
+        } else
+            if (signup.state?.smsValidated != true) sendSignupSmsForValidation(signup, signupSmsNotification(signup, metaNotification)) else false
     }
 
     override fun resendCodeByEmailForValidation(signup: SignupDomain,
-                                                metaNotification: MetaNotificationDomain): SignupStateDomain {
+                                                metaNotification: MetaNotificationDomain): Boolean {
         dataAdapter.findByUsername(signup.username).orElseThrow {
             logger.error("a signup with username ${signup.username} does not exist")
             throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
         }
 
-        val activationCode = generateCode()
-        signup.activationCode = activationCode
-        signup.activationToken = "${encode(activationCode)}.${encode(signup.username)}"
+        return if (signup.activationCode.isNullOrBlank()) {
+            signup.activationCode = generateCode()
+            signup.activationToken = "${encode(signup.activationCode!!)}.${encode(signup.username)}"
+            val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForValidation(signup, metaNotification) else false
+            val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForValidation(signup, signupSmsNotification(signup, metaNotification)) else false
+            emailSent || smsSent
+        } else
+            if (signup.state?.emailValidated != true) sendSignupEmailForValidation(signup, metaNotification) else false
 
-        return SignupStateDomain.Builder(signup.username)
-                .saved(signup.state?.saved)
-                .registered(signup.state?.registered)
-                .emailValidated(signup.state?.emailValidated)
-                .resumeUploaded(signup.state?.resumeUploaded)
-                .resumeLinkedinUploaded(signup.state?.resumeLinkedinUploaded)
-                .statusUpdated(signup.state?.statusUpdated)
-                .validated(signup.state?.validated)
-                .emailSent(dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification)))
-                .smsSent(
-                    signup.state?.smsValidated ?: sendSms(signup, signupSmsNotification(signup, metaNotification))
-                )
-                .build()
     }
 
     override fun delete(signup: SignupDomain, authorizationCode: String?) {
@@ -311,11 +294,11 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    private fun sendSignupEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): Boolean {
+    private fun sendSignupEmailForValidation(signup: SignupDomain, metaNotification: MetaNotificationDomain): Boolean {
         try {
+            if (signup.state?.emailSent == false) dataAdapter.sendEmail(notifyAdminForActivation(signup, metaNotification))
             signup.state?.emailSent = true
             dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification))
-            dataAdapter.sendEmail(notifyAdminForActivation(signup, metaNotification))
             dataAdapter.emailSent(signup)
             dataAdapter.update(signup)
                 .orElseThrow { SignupEmailNotificationException("failed to update the signup after sending email for username ${signup.username}")}
@@ -326,10 +309,11 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    private fun sendSms(signup: SignupDomain, notification: SmsNotificationDomain): Boolean {
+    private fun sendSignupSmsForValidation(signup: SignupDomain, notification: SmsNotificationDomain): Boolean {
         try {
             signup.state?.smsSent = true
             dataAdapter.sendSms(signup.username, notification)
+            dataAdapter.smsSent(signup)
             dataAdapter.update(signup)
                 .orElseThrow { SignupSmsNotificationException("failed to update the signup after sending sms for username ${signup.username}")}
             return true
