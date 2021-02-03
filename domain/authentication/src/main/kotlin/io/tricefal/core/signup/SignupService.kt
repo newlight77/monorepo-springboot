@@ -30,8 +30,8 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .saved(save(signup))
                 .registered(register(signup))
                 .cguAccepted(signup.cguAcceptedVersion?.let { acceptCgu(signup, it) })
-                .emailSent(sendSignupEmailForValidation(signup, metaNotification))
-                .smsSent(sendSignupSmsForValidation(signup, signupSmsNotification(signup, metaNotification)))
+                .emailSent(sendSignupEmailForVerification(signup, metaNotification))
+                .smsSent(sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)))
                 .build()
     }
 
@@ -45,11 +45,11 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         return if (signup.activationCode.isNullOrBlank()) {
             signup.activationCode = generateCode()
             signup.activationToken = "${encode(signup.activationCode!!)}.${encode(signup.username)}"
-            val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForValidation(signup, metaNotification) else false
-            val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForValidation(signup, signupSmsNotification(signup, metaNotification)) else false
+            val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForVerification(signup, metaNotification) else false
+            val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)) else false
             emailSent || smsSent
         } else
-            if (signup.state?.smsValidated != true) sendSignupSmsForValidation(signup, signupSmsNotification(signup, metaNotification)) else false
+            if (signup.state?.smsValidated != true) sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)) else false
     }
 
     override fun resendCodeByEmailForValidation(signup: SignupDomain,
@@ -62,11 +62,11 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         return if (signup.activationCode.isNullOrBlank()) {
             signup.activationCode = generateCode()
             signup.activationToken = "${encode(signup.activationCode!!)}.${encode(signup.username)}"
-            val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForValidation(signup, metaNotification) else false
-            val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForValidation(signup, signupSmsNotification(signup, metaNotification)) else false
+            val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForVerification(signup, metaNotification) else false
+            val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)) else false
             emailSent || smsSent
         } else
-            if (signup.state?.emailValidated != true) sendSignupEmailForValidation(signup, metaNotification) else false
+            if (signup.state?.emailValidated != true) sendSignupEmailForVerification(signup, metaNotification) else false
 
     }
 
@@ -104,7 +104,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         try {
             signup.state?.validated = true
             dataAdapter.update(signup)
-            dataAdapter.sendEmail(activatedEmailNotification(signup, metaNotification))
+            dataAdapter.sendEmail(accountActivatedEmailNotification(signup, metaNotification))
             assignRoles(signup, statusToReadWriteRole[signup.status])
             dataAdapter.validated(signup)
             return signup.state!!
@@ -195,6 +195,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.update(signup)
             dataAdapter.statusUpdated(signup)
             dataAdapter.sendEmail(waitingForActivationEmailNotification(signup, metaNotification))
+            dataAdapter.sendEmail(accountToBeActivatedEmailToAdmin(signup, metaNotification))
             assignRoles(signup, statusToReadRole[status])
             return signup.state!!
         } catch (ex: Throwable) {
@@ -294,11 +295,10 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    private fun sendSignupEmailForValidation(signup: SignupDomain, metaNotification: MetaNotificationDomain): Boolean {
+    private fun sendSignupEmailForVerification(signup: SignupDomain, metaNotification: MetaNotificationDomain): Boolean {
         try {
-            if (signup.state?.emailSent == false) dataAdapter.sendEmail(notifyAdminForActivation(signup, metaNotification))
             signup.state?.emailSent = true
-            dataAdapter.sendEmail(singupEmailNotification(signup, metaNotification))
+            dataAdapter.sendEmail(singupEmailVerificationNotification(signup, metaNotification))
             dataAdapter.emailSent(signup)
             dataAdapter.update(signup)
                 .orElseThrow { SignupEmailNotificationException("failed to update the signup after sending email for username ${signup.username}")}
@@ -309,7 +309,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    private fun sendSignupSmsForValidation(signup: SignupDomain, notification: SmsNotificationDomain): Boolean {
+    private fun sendSignupSmsForVerification(signup: SignupDomain, notification: SmsNotificationDomain): Boolean {
         try {
             signup.state?.smsSent = true
             dataAdapter.sendSms(signup.username, notification)

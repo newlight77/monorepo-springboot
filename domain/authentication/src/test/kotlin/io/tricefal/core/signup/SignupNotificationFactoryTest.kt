@@ -40,7 +40,7 @@ class SignupNotificationFactoryTest {
                 .build()
 
         // Act
-        val result = factory.signupSmsNotification(signup, metaNotification)
+        val result = factory.signupSmsVerificationNotification(signup, metaNotification)
 
         // assert
         Assertions.assertEquals("1234567890", result.smsTo)
@@ -75,7 +75,7 @@ class SignupNotificationFactoryTest {
         Mockito.doReturn("random").`when`(factory).randomString() //mock a spy method
 
         // Act
-        val result = factory.singupEmailNotification(signup, metaNotification)
+        val result = factory.singupEmailVerificationNotification(signup, metaNotification)
 
         // assert
         Assertions.assertEquals("kong@gmail.com", result.emailTo)
