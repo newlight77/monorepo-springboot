@@ -1,5 +1,6 @@
 package io.tricefal.core.mission
 
+import org.springframework.boot.availability.ApplicationAvailability
 import java.time.Instant
 
 data class MissionWishModel
@@ -13,6 +14,7 @@ data class MissionWishModel
             var location: String?,
             var missionAbroad: String?,
             var resumeFilename: String?,
+            var availabilityDate: Instant?,
             var lastDate: Instant?
 
     ) {
@@ -27,6 +29,7 @@ data class MissionWishModel
             var location: String? = null,
             var missionAbroad: String? = null,
             var resumeFilename: String? = null,
+            var availabilityDate: Instant? = null,
             var lastDate: Instant? = null
     ) {
         fun summary(summary: String?) = apply { this.summary = summary }
@@ -38,19 +41,21 @@ data class MissionWishModel
         fun location(location: String?) = apply { this.location = location }
         fun missionAbroad(missionAbroad: String?) = apply { this.missionAbroad = missionAbroad }
         fun resumeFilename(resumeFilename: String?) = apply { this.resumeFilename = resumeFilename }
+        fun availabilityDate(availabilityDate: Instant?) = apply { this.availabilityDate = availabilityDate }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = MissionWishModel(
-                username = username,
-                summary = summary,
-                technologies = technologies,
-                domains = domains,
-                clients = clients,
-                dailyFee = dailyFee,
-                location = location,
-                missionAbroad = missionAbroad,
-                resumeFilename = resumeFilename,
-                lastDate = lastDate
+            username = username,
+            summary = summary,
+            technologies = technologies,
+            domains = domains,
+            clients = clients,
+            dailyFee = dailyFee,
+            location = location,
+            missionAbroad = missionAbroad,
+            resumeFilename = resumeFilename,
+            availabilityDate = availabilityDate,
+            lastDate = lastDate
         )
     }
 }
@@ -65,6 +70,7 @@ fun toModel(domain: MissionWishDomain): MissionWishModel {
             .location(domain.location)
             .missionAbroad(domain.missionAbroad)
             .resumeFilename(domain.resumeFilename)
+            .availabilityDate(domain.availabilityDate)
             .lastDate(domain.lastDate)
             .build()
 }
@@ -79,6 +85,7 @@ fun fromModel(model: MissionWishModel): MissionWishDomain {
             .location(model.location)
             .missionAbroad(model.missionAbroad)
             .resumeFilename(model.resumeFilename)
+            .availabilityDate(model.availabilityDate)
             .lastDate(model.lastDate)
             .build()
 }

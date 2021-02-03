@@ -13,6 +13,7 @@ data class MissionWishDomain
             var location: String?,
             var missionAbroad: String?,
             var resumeFilename: String?,
+            var availabilityDate: Instant?,
             var lastDate: Instant?
 
     ) {
@@ -27,6 +28,7 @@ data class MissionWishDomain
             var location: String? = null,
             var missionAbroad: String? = null,
             var resumeFilename: String? = null,
+            var availabilityDate: Instant? = null,
             var lastDate: Instant? = null
     ) {
         fun summary(summary: String?) = apply { this.summary = summary }
@@ -38,19 +40,21 @@ data class MissionWishDomain
         fun location(location: String?) = apply { this.location = location }
         fun missionAbroad(missionAbroad: String?) = apply { this.missionAbroad = missionAbroad }
         fun resumeFilename(resumeFilename: String?) = apply { this.resumeFilename = resumeFilename }
+        fun availabilityDate(availabilityDate: Instant?) = apply { this.availabilityDate = availabilityDate }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = MissionWishDomain(
-                username = username,
-                summary = summary,
-                technologies = technologies,
-                domains = domains,
-                clients = clients,
-                dailyFee = dailyFee,
-                location = location,
-                missionAbroad = missionAbroad,
-                resumeFilename = resumeFilename,
-                lastDate = lastDate
+            username = username,
+            summary = summary,
+            technologies = technologies,
+            domains = domains,
+            clients = clients,
+            dailyFee = dailyFee,
+            location = location,
+            missionAbroad = missionAbroad,
+            resumeFilename = resumeFilename,
+            availabilityDate = availabilityDate,
+            lastDate = lastDate
         )
     }
 }

@@ -45,6 +45,9 @@ data class MissionWishEntity (
         @Column(name = "cv_filename", length = 300)
         var resumeFilename: String? = null,
 
+        @Column(name = "availability_date")
+        var availabilityDate: Instant? = Instant.now(),
+
         @Column(name = "last_date")
         var lastDate: Instant? = Instant.now()
 
@@ -62,6 +65,7 @@ fun toEntity(domain: MissionWishDomain): MissionWishEntity {
                 location = domain.location,
                 missionAbroad = domain.missionAbroad,
                 resumeFilename = domain.resumeFilename,
+                availabilityDate = domain.availabilityDate,
                 lastDate = domain.lastDate
         )
 }
@@ -76,6 +80,7 @@ fun fromEntity(entity: MissionWishEntity): MissionWishDomain {
                 .location(entity.location)
                 .missionAbroad(entity.missionAbroad)
                 .resumeFilename(entity.resumeFilename)
+                .availabilityDate(entity.availabilityDate)
                 .lastDate(entity.lastDate)
                 .build()
 }
