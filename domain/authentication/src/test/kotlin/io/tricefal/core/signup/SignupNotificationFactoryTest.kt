@@ -44,7 +44,7 @@ class SignupNotificationFactoryTest {
 
         // assert
         Assertions.assertEquals("1234567890", result.smsTo)
-        Assertions.assertEquals("Bonjour kong, le code d\'activation à saisir sur le site www.tricefal.com pour valider votre numéro de portable est 123456", result.smsContent)
+        Assertions.assertEquals("Bonjour kong, le code à saisir sur le site www.tricefal.com pour valider votre numéro de portable est 123456", result.smsContent)
     }
 
     @Test
