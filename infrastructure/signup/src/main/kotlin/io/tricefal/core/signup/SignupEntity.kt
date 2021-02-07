@@ -55,6 +55,10 @@ data class SignupEntity(
         @JoinColumn(name = "state")
         var signupState: SignupStateEntity? = null,
 
+        @OneToOne(cascade = [CascadeType.ALL])
+        @JoinColumn(name = "comment")
+        var comment: CommentEntity? = null,
+
         @Column(name = "last_date")
         var lastDate: Instant? = null,
 
@@ -75,6 +79,7 @@ fun toEntity(domain: SignupDomain): SignupEntity {
                 resumeFilename = domain.resumeFilename,
                 resumeLinkedinFilename = domain.resumeLinkedinFilename,
                 signupState = domain.state?.let { toEntity(it) },
+                comment = domain.comment?.let { toEntity(it) },
                 lastDate = domain.lastDate
         )
 }
@@ -93,5 +98,6 @@ fun fromEntity(entity: SignupEntity): SignupDomain {
                 .resumeLinkedinFilename(entity.resumeLinkedinFilename)
                 .state(entity.signupState?.let { fromEntity(it) })
                 .lastDate(entity.lastDate)
+                .comment(entity.comment?.let { fromEntity(it) })
                 .build()
 }

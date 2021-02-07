@@ -1,6 +1,5 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.metafile.MetafileModel
 import io.tricefal.core.metafile.originalFilename
 import java.time.Instant
 
@@ -24,6 +23,7 @@ class SignupModel
 
         var state: SignupStateModel? = null,
 
+        var comment: CommentModel? = null,
         var lastDate: Instant? = null
     ) {
 
@@ -42,6 +42,7 @@ class SignupModel
 
             var state: SignupStateModel? = null,
 
+            var comment: CommentModel? = null,
             var lastDate: Instant? = null
     ) {
 
@@ -58,6 +59,7 @@ class SignupModel
         fun state(state: SignupStateModel?) = apply {
             this.state = state ?: SignupStateModel.Builder(username).build()
         }
+        fun comment(comment: CommentModel?) = apply { this.comment = comment }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = SignupModel(
@@ -72,6 +74,7 @@ class SignupModel
             resumeFilename = resumeFilename,
             resumeLinkedinFilename = resumeLinkedinFilename,
             state = state,
+            comment = comment,
             lastDate = lastDate
         )
     }
@@ -90,6 +93,7 @@ fun toModel(domain: SignupDomain): SignupModel {
         .cguAcceptedVersion(domain.cguAcceptedVersion)
         .state(domain.state?.let { toModel(it) })
         .lastDate(domain.lastDate)
+        .comment(domain.comment?.let { toModel(it) })
         .build()
 }
 
@@ -105,6 +109,7 @@ fun fromModel(model: SignupModel): SignupDomain {
         .resumeLinkedinFilename(model.resumeLinkedinFilename)
         .cguAcceptedVersion(model.cguAcceptedVersion)
         .state(model.state?.let { fromModel(it) })
+        .comment(model.comment?.let { fromModel(it) })
         .lastDate(model.lastDate)
         .build()
 }

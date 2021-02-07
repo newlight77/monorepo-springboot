@@ -32,6 +32,14 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
     }
 
     @RolesAllowed("ROLE_ac_tricefal_w")
+    @PutMapping("{username}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    fun addComment(@PathVariable username: String, @RequestBody comment: CommentModel): CommentModel {
+        logger.info("signup activation requested")
+        return signupWebHandler.addComment(username, comment)
+    }
+
+    @RolesAllowed("ROLE_ac_tricefal_w")
     @PutMapping("{username}/activate")
     @ResponseStatus(HttpStatus.OK)
     fun activate(@PathVariable username: String): SignupStateModel {

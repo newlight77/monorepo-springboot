@@ -148,4 +148,11 @@ class SignupWebHandler(val signupService: ISignupService,
         return toModel(model)
     }
 
+    fun addComment(username: String, comment: CommentModel): CommentModel {
+        val comment = this.signupService.addComment(username, fromModel(comment))
+        logger.info("successfully verified the activation code for user $username")
+        return toModel(comment)
+
+    }
+
 }

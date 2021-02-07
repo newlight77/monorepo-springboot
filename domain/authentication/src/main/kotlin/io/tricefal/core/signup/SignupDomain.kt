@@ -20,6 +20,7 @@ data class SignupDomain
             var resumeLinkedinFilename: String? = null,
 
             var state: SignupStateDomain? = null,
+            var comment: CommentDomain? = null,
             var lastDate: Instant? = null
     ) {
 
@@ -39,6 +40,7 @@ data class SignupDomain
             var resumeLinkedinFilename: String? = null,
 
             var state: SignupStateDomain? = null,
+            var comment: CommentDomain? = null,
             var lastDate: Instant? = null
     ) {
         fun password(password: String?) = apply { this.password = password }
@@ -56,23 +58,25 @@ data class SignupDomain
         fun state(state: SignupStateDomain?) = apply {
             this.state = state ?: SignupStateDomain.Builder(username).build()
         }
+        fun comment(comment: CommentDomain?) = apply { this.comment = comment }
         fun lastDate(lastDate: Instant?) = apply { this.lastDate = lastDate }
 
         fun build() = SignupDomain(
-                username = username,
-                password = password,
-                firstname = firstname,
-                lastname = lastname,
-                phoneNumber = phoneNumber,
-                activationCode = activationCode,
-                activationToken = activationToken,
-                status = status,
-                cguAcceptedVersion = cguAcceptedVersion,
-                signupDate = signupDate,
-                resumeFilename = resumeFilename,
-                resumeLinkedinFilename = resumeLinkedinFilename,
-                state = state,
-                lastDate = lastDate
+            username = username,
+            password = password,
+            firstname = firstname,
+            lastname = lastname,
+            phoneNumber = phoneNumber,
+            activationCode = activationCode,
+            activationToken = activationToken,
+            status = status,
+            cguAcceptedVersion = cguAcceptedVersion,
+            signupDate = signupDate,
+            resumeFilename = resumeFilename,
+            resumeLinkedinFilename = resumeLinkedinFilename,
+            state = state,
+            comment = comment,
+            lastDate = lastDate
         )
     }
 }

@@ -255,6 +255,22 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
+    override fun addComment(username: String, comment: CommentDomain): CommentDomain {
+        val signup = dataAdapter.findByUsername(username).orElseThrow {
+            logger.error("a signup with username $username does not exist")
+            throw SignupNotFoundException("a signup with username $username does not exist")
+        }
+
+        try {
+            signup.comment = comment
+            dataAdapter.update(signup)
+            return comment
+        } catch (ex: Throwable) {
+            logger.error("failed to add a comment on the signup for username ${signup.username}")
+            throw SignupStatusUpdateException("failed to add a comment on the signup for username ${signup.username}", ex)
+        }
+    }
+
     private fun register(signup: SignupDomain): Boolean {
         try {
             if (dataAdapter.register(signup)) {
