@@ -44,10 +44,12 @@ class CompanyRepositoryAdapter(private var repository: CompanyJpaRepository,
             newEntity.id = it.id
             newEntity.id = it.id
             newEntity.pdgContact?.id = it.pdgContact?.id
+            newEntity.pdgPrivacyDetail?.id = it.pdgPrivacyDetail?.id
             newEntity.adminContact?.id = it.adminContact?.id
             newEntity.bankInfo?.id = it.bankInfo?.id
             newEntity.fiscalAddress?.id = it.fiscalAddress?.id
             newEntity.state?.id = it.state?.id
+            newEntity.documents?.id = it.documents?.id
             newEntity.lastDate = it.lastDate ?: Instant.now()
             val updated = repository.save(newEntity)
             fromEntity(updated)

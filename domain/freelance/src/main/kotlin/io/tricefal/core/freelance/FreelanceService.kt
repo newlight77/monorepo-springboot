@@ -388,24 +388,24 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             .build()
     }
 
-    private fun completeFreelance(freelance: FreelanceDomain): FreelanceDomain {
-        if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
-        if (freelance.company?.pdgContact == null) freelance.company?.pdgContact = ContactDomain.Builder().lastDate(Instant.now()).build()
-        if (freelance.company?.pdgPrivacyDetail == null) freelance.company?.pdgPrivacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
-        if (freelance.company?.adminContact == null) freelance.company?.adminContact = ContactDomain.Builder().lastDate(Instant.now()).build()
-        if (freelance.company?.bankInfo == null) freelance.company?.bankInfo = BankInfoDomain.Builder().lastDate(Instant.now()).build()
-        if (freelance.company?.bankInfo?.address == null) freelance.company?.bankInfo?.address = AddressDomain.Builder().lastDate(Instant.now()).build()
-        if (freelance.company?.fiscalAddress == null) freelance.company?.fiscalAddress = AddressDomain.Builder().lastDate(Instant.now()).build()
-        if (freelance.company?.motherCompany == null) freelance.company?.motherCompany = MotherCompanyDomain()
-        if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
-
-        if (freelance.address == null) freelance.address = AddressDomain.Builder().lastDate(Instant.now()).build()
-        if (freelance.contact == null) freelance.contact = ContactDomain.Builder().email(freelance.username).lastDate(Instant.now()).build()
-        if (freelance.privacyDetail == null) freelance.privacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
-        if (freelance.state == null) freelance.state = FreelanceStateDomain(username = freelance.username)
-
-        return freelance
-    }
+//    private fun completeFreelance(freelance: FreelanceDomain): FreelanceDomain {
+//        if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
+//        if (freelance.company?.pdgContact == null) freelance.company?.pdgContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+//        if (freelance.company?.pdgPrivacyDetail == null) freelance.company?.pdgPrivacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
+//        if (freelance.company?.adminContact == null) freelance.company?.adminContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+//        if (freelance.company?.bankInfo == null) freelance.company?.bankInfo = BankInfoDomain.Builder().lastDate(Instant.now()).build()
+//        if (freelance.company?.bankInfo?.address == null) freelance.company?.bankInfo?.address = AddressDomain.Builder().lastDate(Instant.now()).build()
+//        if (freelance.company?.fiscalAddress == null) freelance.company?.fiscalAddress = AddressDomain.Builder().lastDate(Instant.now()).build()
+//        if (freelance.company?.motherCompany == null) freelance.company?.motherCompany = MotherCompanyDomain()
+//        if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
+//
+//        if (freelance.address == null) freelance.address = AddressDomain.Builder().lastDate(Instant.now()).build()
+//        if (freelance.contact == null) freelance.contact = ContactDomain.Builder().email(freelance.username).lastDate(Instant.now()).build()
+//        if (freelance.privacyDetail == null) freelance.privacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
+//        if (freelance.state == null) freelance.state = FreelanceStateDomain(username = freelance.username)
+//
+//        return freelance
+//    }
 
     class FreelanceCompletionEmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
         constructor(message: String?) : this(message, null)

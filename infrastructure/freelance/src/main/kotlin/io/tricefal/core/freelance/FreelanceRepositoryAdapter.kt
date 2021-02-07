@@ -1,10 +1,6 @@
 package io.tricefal.core.freelance
 
-import io.tricefal.core.company.*
 import io.tricefal.core.notification.EmailNotificationDomain
-import io.tricefal.core.notification.INotificationAdapter
-import io.tricefal.shared.util.json.JsonPatchOperator
-import io.tricefal.shared.util.json.PatchOperation
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
@@ -54,9 +50,12 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
             newEntity.id = currentEntity.id
             newEntity.company?.id = currentEntity.company?.id
             newEntity.company?.pdgContact?.id = currentEntity.company?.pdgContact?.id
+            newEntity.company?.pdgPrivacyDetail?.id = currentEntity.company?.pdgPrivacyDetail?.id
             newEntity.company?.adminContact?.id = currentEntity.company?.adminContact?.id
             newEntity.company?.bankInfo?.id = currentEntity.company?.bankInfo?.id
             newEntity.company?.fiscalAddress?.id = currentEntity.company?.fiscalAddress?.id
+            newEntity.company?.state?.id = currentEntity.company?.state?.id
+            newEntity.company?.documents?.id = currentEntity.company?.documents?.id
             newEntity.contact?.id = currentEntity.contact?.id
             newEntity.address?.id = currentEntity.address?.id
             newEntity.privacyDetail?.id = currentEntity.privacyDetail?.id
