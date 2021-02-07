@@ -29,9 +29,10 @@ class ProfileRepositoryAdapter(
     override fun update(profile: ProfileDomain): ProfileDomain {
         val newEntity = toEntity(profile)
         repository.findByUsername(profile.username).stream().findFirst().ifPresentOrElse(
-            {
-                newEntity.id = it.id
-                newEntity.lastDate = it.lastDate ?: Instant.now()
+            { currentEntity ->
+                newEntity.id = currentEntity.id
+                newEntity.lastDate = currentEntity.lastDate ?: Instant.now()
+                currentEntity.state?.id.let { newEntity.state?.id = it }
                 repository.save(newEntity)
             },
             {
