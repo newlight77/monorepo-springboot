@@ -72,10 +72,12 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         val signupEntity = repository.findByUsername(signup.username).stream().findFirst()
         var updated = Optional.empty<SignupDomain>()
         signupEntity.ifPresentOrElse(
-                {
+                { currentEntity ->
                     val newEntity = toEntity(signup)
-                    newEntity.id = it.id
-                    newEntity.lastDate = it.lastDate ?: Instant.now()
+                    newEntity.id = currentEntity.id
+                    newEntity.lastDate = currentEntity.lastDate ?: Instant.now()
+                    currentEntity.signupState?.id.let { newEntity.signupState?.id = it }
+                    currentEntity.comment?.id.let { newEntity.comment?.id = it }
                     repository.save(newEntity)
                     updated =  Optional.of(fromEntity(newEntity))
                 },
