@@ -30,13 +30,15 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
 
     override fun patch(companyName: String, operations: List<PatchOperation>): CompanyDomain {
         val company = dataAdapter.findByName(companyName)
-        if (company.isEmpty){
-            var newCompany = createCompany(companyName)
-            newCompany = applyPatch(newCompany, operations)
-            dataAdapter.create(newCompany)
-            return newCompany
+
+        val acceptedOps = operations.filter { acceptOperation(it) }
+        val tobePatched = if (company.isPresent) company.get() else dataAdapter.create(createCompany(companyName))
+
+        acceptedOps.parallelStream().forEach() { op ->
+            createMissingChildForPatch(tobePatched, op)
         }
-        val patched = applyPatch(company.get(), operations)
+
+        val patched = applyPatch(tobePatched, acceptedOps)
         dataAdapter.update(companyName, patched)
         return patched
     }
@@ -46,23 +48,10 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         operations: List<PatchOperation>,
     ): CompanyDomain {
         return operations.let { ops ->
-            val patched = JsonPatchOperator().apply(completeCompany(company), ops)
+            val patched = JsonPatchOperator().apply(company, ops)
             patched.lastDate = Instant.now()
             patched
         }
-    }
-
-    private fun completeCompany(company: CompanyDomain): CompanyDomain {
-        if (company.pdgContact == null) company.pdgContact = ContactDomain.Builder().lastDate(Instant.now()).build()
-        if (company.pdgPrivacyDetail == null) company.pdgPrivacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
-        if (company.adminContact == null) company.adminContact = ContactDomain.Builder().lastDate(Instant.now()).build()
-        if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().lastDate(Instant.now()).build()
-        if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().lastDate(Instant.now()).build()
-        if (company.fiscalAddress == null) company.fiscalAddress = AddressDomain.Builder().lastDate(Instant.now()).build()
-        if (company.motherCompany == null) company.motherCompany = MotherCompanyDomain()
-        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
-        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
-        return company
     }
 
     override fun completed(companyName: String, metaNotification: MetaNotificationDomain): CompanyDomain {
@@ -288,23 +277,94 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         }
     }
 
-    private fun createCompany(username: String): CompanyDomain {
-        val pdgContact = ContactDomain.Builder().email(username).build()
-        val pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
-        val adminContact = ContactDomain.Builder().email(username).build()
-        val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
-        val fiscalAddress = AddressDomain.Builder().build()
-        val motherCompany = MotherCompanyDomain()
-        val documents = CompanyDocumentsDomain.Builder().build()
-        val state = CompanyStateDomain.Builder(username).build()
+
+    private fun acceptOperation(operation: PatchOperation): Boolean {
+        if (operation.op == "replace" && operation.path.startsWith("/state")) return true
+
+        if (operation.op == "replace" && operation.path.startsWith("/pdgContact")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/pdgPrivacyDetail")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/adminContact")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/bankInfo")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/bankInfo/address")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/fiscalAddress")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/motherCompany")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/documents")) return true
+
+        if (operation.op == "replace" && operation.path == "/raisonSocial") return true
+        if (operation.op == "replace" && operation.path == "/nomCommercial") return true
+        if (operation.op == "replace" && operation.path == "/formeJuridique") return true
+        if (operation.op == "replace" && operation.path == "/capital") return true
+        if (operation.op == "replace" && operation.path == "/rcs") return true
+        if (operation.op == "replace" && operation.path == "/siret") return true
+        if (operation.op == "replace" && operation.path == "/numDuns") return true
+        if (operation.op == "replace" && operation.path == "/numTva") return true
+        if (operation.op == "replace" && operation.path == "/codeNaf") return true
+        if (operation.op == "replace" && operation.path == "/companyCreationDate") return true
+        return false
+    }
+
+    private fun createMissingChildForPatch(company: CompanyDomain, operation: PatchOperation): CompanyDomain {
+        if (operation.op == "replace" && operation.path.startsWith("/state")) {
+            if (company.state == null) company.state = CompanyStateDomain(company.raisonSocial)
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/pdgContact")) {
+            if (company.pdgContact == null) company.pdgContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/pdgPrivacyDetail")) {
+            if (company.pdgPrivacyDetail == null) company.pdgPrivacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/adminContact")) {
+            if (company.adminContact == null) company.adminContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/bankInfo")) {
+            if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().lastDate(Instant.now()).build()
+            if (operation.op == "replace" && operation.path == "/bankInfo/address") {
+                if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().lastDate(Instant.now()).build()
+            }
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/fiscalAddress")) {
+            if (company.fiscalAddress == null) company.fiscalAddress = AddressDomain.Builder().lastDate(Instant.now()).build()
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/motherCompany")) {
+            if (company.motherCompany == null) company.motherCompany = MotherCompanyDomain()
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/documents")) {
+            if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
+        }
+
+        return company
+    }
+
+    //    private fun completeCompany(company: CompanyDomain): CompanyDomain {
+//        if (company.pdgContact == null) company.pdgContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+//        if (company.pdgPrivacyDetail == null) company.pdgPrivacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
+//        if (company.adminContact == null) company.adminContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+//        if (company.bankInfo == null) company.bankInfo = BankInfoDomain.Builder().lastDate(Instant.now()).build()
+//        if (company.bankInfo?.address == null) company.bankInfo?.address = AddressDomain.Builder().lastDate(Instant.now()).build()
+//        if (company.fiscalAddress == null) company.fiscalAddress = AddressDomain.Builder().lastDate(Instant.now()).build()
+//        if (company.motherCompany == null) company.motherCompany = MotherCompanyDomain()
+//        if (company.documents == null) company.documents = CompanyDocumentsDomain.Builder().build()
+//        if (company.state == null) company.state = CompanyStateDomain(companyName = company.raisonSocial)
+//        return company
+//    }
+
+    private fun createCompany(companyName: String): CompanyDomain {
+//        val pdgContact = ContactDomain.Builder().email(username).build()
+//        val pdgPrivacyDetail = PrivacyDetailDomain.Builder().build()
+//        val adminContact = ContactDomain.Builder().email(username).build()
+//        val bankInfo = BankInfoDomain.Builder().address(AddressDomain.Builder().build()).build()
+//        val fiscalAddress = AddressDomain.Builder().build()
+//        val motherCompany = MotherCompanyDomain()
+//        val documents = CompanyDocumentsDomain.Builder().build()
+        val state = CompanyStateDomain.Builder(companyName).build()
         return CompanyDomain.Builder(raisonSocial = "")
-            .pdgPrivacyDetail(pdgPrivacyDetail)
-            .pdgContact(pdgContact)
-            .adminContact(adminContact)
-            .bankInfo(bankInfo)
-            .fiscalAddress(fiscalAddress)
-            .motherCompany(motherCompany)
-            .documents(documents)
+//            .pdgPrivacyDetail(pdgPrivacyDetail)
+//            .pdgContact(pdgContact)
+//            .adminContact(adminContact)
+//            .bankInfo(bankInfo)
+//            .fiscalAddress(fiscalAddress)
+//            .motherCompany(motherCompany)
+//            .documents(documents)
             .state(state)
             .build()
     }
