@@ -31,5 +31,5 @@ dependencies {
 }
 
 tasks.withType<Jar>() {
-	baseName = "infra-freelanc"
+	baseName = "infra-freelance"
 }

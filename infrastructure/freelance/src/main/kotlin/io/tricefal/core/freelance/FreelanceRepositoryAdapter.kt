@@ -49,34 +49,34 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
     override fun update(freelance: FreelanceDomain): FreelanceDomain {
         val entity = repository.findByUsername(freelance.username).stream().findFirst()
         if (entity.isEmpty) throw NotFoundException("The freelance is not found for username ${freelance.username}")
-        return entity.map {
+        return entity.map { currentEntity ->
             val newEntity = toEntity(freelance)
-            newEntity.id = it.id
-            newEntity.company?.id = it.company?.id
-            newEntity.company?.pdgContact?.id = it.company?.pdgContact?.id
-            newEntity.company?.adminContact?.id = it.company?.adminContact?.id
-            newEntity.company?.bankInfo?.id = it.company?.bankInfo?.id
-            newEntity.company?.fiscalAddress?.id = it.company?.fiscalAddress?.id
-            newEntity.contact?.id = it.contact?.id
-            newEntity.address?.id = it.address?.id
-            newEntity.privacyDetail?.id = it.privacyDetail?.id
-            newEntity.state?.id = it.state?.id
-            newEntity.lastDate = it.lastDate ?: Instant.now()
+            newEntity.id = currentEntity.id
+            newEntity.company?.id = currentEntity.company?.id
+            newEntity.company?.pdgContact?.id = currentEntity.company?.pdgContact?.id
+            newEntity.company?.adminContact?.id = currentEntity.company?.adminContact?.id
+            newEntity.company?.bankInfo?.id = currentEntity.company?.bankInfo?.id
+            newEntity.company?.fiscalAddress?.id = currentEntity.company?.fiscalAddress?.id
+            newEntity.contact?.id = currentEntity.contact?.id
+            newEntity.address?.id = currentEntity.address?.id
+            newEntity.privacyDetail?.id = currentEntity.privacyDetail?.id
+            newEntity.state?.id = currentEntity.state?.id
+            newEntity.lastDate = currentEntity.lastDate ?: Instant.now()
             val updated = repository.save(newEntity)
             fromEntity(updated)
         }.orElseThrow()
     }
 
     // TODO : use event publisher and listener for persistence
-    override fun patch(freelance: FreelanceDomain, operations: List<PatchOperation>): Optional<FreelanceDomain> {
-        val entity = repository.findByUsername(freelance.username).stream().findFirst()
-        if (entity.isEmpty) throw NotFoundException("The freelance is not found for username ${freelance.username}")
-        var updated = Optional.empty<FreelanceDomain>()
-        entity.ifPresent {
-            updated = applyPatch(operations, it)
-        }
-        return updated
-    }
+//    override fun patch(freelance: FreelanceDomain, operations: List<PatchOperation>): Optional<FreelanceDomain> {
+//        val entity = repository.findByUsername(freelance.username).stream().findFirst()
+//        if (entity.isEmpty) throw NotFoundException("The freelance is not found for username ${freelance.username}")
+//        var updated = Optional.empty<FreelanceDomain>()
+//        entity.ifPresent {
+//            updated = applyPatch(operations, it)
+//        }
+//        return updated
+//    }
 
     override fun sendEmail(notification: EmailNotificationDomain): Boolean {
         this.eventPublisher.publishEmailNotification(notification)
@@ -88,27 +88,27 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
         eventPublisher.publishCompanyCompletedEvent(username)
     }
 
-    private fun applyPatch(
-        operations: List<PatchOperation>,
-        entity: FreelanceEntity,
-    ): Optional<FreelanceDomain> {
-        if (entity.company == null) entity.company = CompanyEntity(null,"NONE")
-        if (entity.company?.pdgContact == null) entity.company?.pdgContact = ContactEntity()
-        if (entity.company?.adminContact == null) entity.company?.adminContact = ContactEntity()
-        if (entity.company?.bankInfo == null) entity.company?.bankInfo = BankInfoEntity()
-        if (entity.company?.fiscalAddress == null) entity.company?.fiscalAddress = AddressEntity()
-        if (entity.contact == null) entity.contact = ContactEntity()
-        if (entity.address == null) entity.address = AddressEntity()
-        if (entity.privacyDetail == null) entity.privacyDetail = PrivacyDetailEntity()
-        if (entity.state == null) entity.state = FreelanceStateEntity(username = entity.username)
-
-        return operations.let { ops ->
-            var patched = JsonPatchOperator().apply(entity, ops)
-            patched.lastDate = entity.lastDate ?: Instant.now()
-            patched = repository.save(patched)
-            Optional.of(fromEntity(patched))
-        }
-    }
+//    private fun applyPatch(
+//        operations: List<PatchOperation>,
+//        entity: FreelanceEntity,
+//    ): Optional<FreelanceDomain> {
+//        if (entity.company == null) entity.company = CompanyEntity(null,"NONE")
+//        if (entity.company?.pdgContact == null) entity.company?.pdgContact = ContactEntity()
+//        if (entity.company?.adminContact == null) entity.company?.adminContact = ContactEntity()
+//        if (entity.company?.bankInfo == null) entity.company?.bankInfo = BankInfoEntity()
+//        if (entity.company?.fiscalAddress == null) entity.company?.fiscalAddress = AddressEntity()
+//        if (entity.contact == null) entity.contact = ContactEntity()
+//        if (entity.address == null) entity.address = AddressEntity()
+//        if (entity.privacyDetail == null) entity.privacyDetail = PrivacyDetailEntity()
+//        if (entity.state == null) entity.state = FreelanceStateEntity(username = entity.username)
+//
+//        return operations.let { ops ->
+//            var patched = JsonPatchOperator().apply(entity, ops)
+//            patched.lastDate = entity.lastDate ?: Instant.now()
+//            patched = repository.save(patched)
+//            Optional.of(fromEntity(patched))
+//        }
+//    }
 
 }
 

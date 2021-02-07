@@ -17,7 +17,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     override fun signupStatusUpdated(freelance: FreelanceDomain): FreelanceDomain {
         val result = dataAdapter.findByUsername(freelance.username)
-        return if (result.isEmpty) dataAdapter.create(completeFreelance(freelance))
+        return if (result.isEmpty) dataAdapter.create(createFreelance(freelance.username))
         else result.get()
     }
 
@@ -50,14 +50,14 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     override fun patch(username: String, operations: List<PatchOperation>): FreelanceDomain {
         val freelance = dataAdapter.findByUsername(username)
-//        val ops = operations.filter { acceptOperation(it) }
-        if (freelance.isEmpty){
-            var newFreelance = completeFreelance(freelance.get())
-            newFreelance = applyPatch(newFreelance, operations)
-            dataAdapter.create(newFreelance)
-            return newFreelance
+        val acceptedOps = operations.filter { acceptOperation(it) }
+        val tobePatched = if (freelance.isPresent) freelance.get() else dataAdapter.create(createFreelance(username))
+
+        acceptedOps.parallelStream().forEach() { op ->
+            createMissingChildForPatch(tobePatched, op)
         }
-        val patched = applyPatch(freelance.get(), operations)
+
+        val patched = applyPatch(tobePatched, acceptedOps)
         dataAdapter.update(patched)
         return patched
 
@@ -70,19 +70,12 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         operations: List<PatchOperation>,
     ): FreelanceDomain {
         return operations.let { ops ->
-            val patched = JsonPatchOperator().apply(completeFreelance(freelance), ops)
+            val patched = JsonPatchOperator().apply(freelance, ops)
             patched.lastDate = Instant.now()
             patched.company?.lastDate = Instant.now()
             patched
         }
     }
-
-//    private fun acceptOperation(operation: PatchOperation): Boolean {
-//        if (operation.op == "replace" && operation.path == "/contact") return true
-//        if (operation.op == "replace" && operation.path == "/company") return true
-//        if (operation.op == "replace" && operation.path == "/PrivacyDetailDomain") return true
-//        return false
-//    }
 
     override fun completed(username: String, metaNotification: MetaNotificationDomain): FreelanceDomain {
         val freelance = findByUsername(username)
@@ -318,6 +311,81 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         } catch (ex: MissingResourceException) {
             throw ResourceBundleMissingKeyException("Failed to retrieve the value for key=$key in resource bundle i18n", ex)
         }
+    }
+
+    private fun acceptOperation(operation: PatchOperation): Boolean {
+        if (operation.op == "replace" && operation.path.startsWith("/address")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/contact")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/privacyDetail")) return true
+        if (operation.op == "replace" && operation.path.startsWith("/state")) return true
+
+        if (operation.op == "replace" && operation.path.startsWith("/company/")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/company/pdgContact")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/company/pdgPrivacyDetail")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/company/adminContact")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/company/bankInfo")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/company/bankInfo/address")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/company/fiscalAddress")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/company/motherCompany")) return true
+//        if (operation.op == "replace" && operation.path.startsWith("/company/documents")) return true
+
+        if (operation.op == "replace" && operation.path == "/withMission") return true
+        if (operation.op == "replace" && operation.path == "/availability") return true
+        return false
+    }
+
+    private fun createMissingChildForPatch(freelance: FreelanceDomain, operation: PatchOperation): FreelanceDomain {
+        if (operation.op == "replace" && operation.path.startsWith("/address")) {
+            if (freelance.address == null) freelance.address = AddressDomain.Builder().lastDate(Instant.now()).build()
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/contact")) {
+            if (freelance.contact == null) freelance.contact = ContactDomain.Builder().email(freelance.username).lastDate(Instant.now()).build()
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/privacyDetail")) {
+            if (freelance.privacyDetail == null) freelance.privacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
+        }
+        if (operation.op == "replace" && operation.path.startsWith("/state")) {
+            if (freelance.state == null) freelance.state = FreelanceStateDomain(username = freelance.username)
+        }
+
+        if (operation.path.startsWith("/company/")) {
+
+            if (freelance.company == null) freelance.company = CompanyDomain.Builder("").build()
+
+            if (operation.op == "replace" && operation.path.startsWith("/company/pdgContact")) {
+                if (freelance.company?.pdgContact == null) freelance.company?.pdgContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+            }
+            if (operation.op == "replace" && operation.path.startsWith("/company/pdgPrivacyDetail")) {
+                if (freelance.company?.pdgPrivacyDetail == null) freelance.company?.pdgPrivacyDetail = PrivacyDetailDomain.Builder().lastDate(Instant.now()).build()
+            }
+            if (operation.op == "replace" && operation.path.startsWith("/company/adminContact")) {
+                if (freelance.company?.adminContact == null) freelance.company?.adminContact = ContactDomain.Builder().lastDate(Instant.now()).build()
+            }
+            if (operation.op == "replace" && operation.path.startsWith("/company/bankInfo")) {
+                if (freelance.company?.bankInfo == null) freelance.company?.bankInfo = BankInfoDomain.Builder().lastDate(Instant.now()).build()
+                if (operation.op == "replace" && operation.path == "/company/bankInfo/address") {
+                    if (freelance.company?.bankInfo?.address == null) freelance.company?.bankInfo?.address = AddressDomain.Builder().lastDate(Instant.now()).build()
+                }
+            }
+            if (operation.op == "replace" && operation.path.startsWith("/company/fiscalAddress")) {
+                if (freelance.company?.fiscalAddress == null) freelance.company?.fiscalAddress = AddressDomain.Builder().lastDate(Instant.now()).build()
+            }
+            if (operation.op == "replace" && operation.path.startsWith("/company/motherCompany")) {
+                if (freelance.company?.motherCompany == null) freelance.company?.motherCompany = MotherCompanyDomain()
+            }
+            if (operation.op == "replace" && operation.path.startsWith("/company/documents")) {
+                if (freelance.company?.documents == null) freelance.company?.documents = CompanyDocumentsDomain.Builder().build()
+            }
+        }
+
+        return freelance
+    }
+
+    private fun createFreelance(username: String): FreelanceDomain {
+        return FreelanceDomain.Builder(username)
+            .contact(ContactDomain.Builder().lastDate(Instant.now()).build())
+            .state(FreelanceStateDomain(username = username))
+            .build()
     }
 
     private fun completeFreelance(freelance: FreelanceDomain): FreelanceDomain {
