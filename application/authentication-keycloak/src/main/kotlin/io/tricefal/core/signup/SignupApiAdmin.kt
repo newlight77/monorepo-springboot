@@ -27,8 +27,17 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
     @RolesAllowed("ROLE_ac_tricefal_r")
     @GetMapping("list")
     @ResponseStatus(HttpStatus.OK)
-    fun signups(): List<SignupModel> {
-        return signupWebHandler.findAll()
+    fun all(@RequestParam status: String?): List<SignupModel> {
+        if (status.isNullOrBlank()) return signupWebHandler.findAll().filter { it.status != Status.NONE }
+        return when (status.toUpperCase()) {
+            "REGISTERED" -> signupWebHandler.findAll().filter { it.status != Status.NONE }
+            "NONE" -> signupWebHandler.findAll().filter { it.status == Status.NONE }
+            "CLIENT" -> signupWebHandler.findAll().filter { it.status == Status.CLIENT }
+            "EMPLOYEE" -> signupWebHandler.findAll().filter { it.status == Status.EMPLOYEE }
+            "FREELANCE" -> signupWebHandler.findAll().filter { it.status == Status.FREELANCE  || it.status == Status.FREELANCE_WITH_MISSION }
+            "FREELANCE_WITH_MISSION" -> signupWebHandler.findAll().filter { it.status == Status.FREELANCE_WITH_MISSION }
+            else -> signupWebHandler.findAll()
+        }
     }
 
     @RolesAllowed("ROLE_ac_tricefal_w")
