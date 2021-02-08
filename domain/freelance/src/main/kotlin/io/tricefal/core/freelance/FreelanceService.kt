@@ -17,7 +17,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
 
     override fun signupStatusUpdated(freelance: FreelanceDomain): FreelanceDomain {
         val result = dataAdapter.findByUsername(freelance.username)
-        return if (result.isEmpty) dataAdapter.create(createFreelance(freelance.username))
+        return if (result.isEmpty) dataAdapter.create(freelance)
         else result.get()
     }
 
