@@ -83,8 +83,8 @@ class FreelanceRepositoryAdapter(private var repository: FreelanceJpaRepository,
         //return notificationAdapter.sendEmail(companyCompletionNotification)
     }
 
-    override fun companyCompleted(username: String) {
-        eventPublisher.publishCompanyCompletedEvent(username)
+    override fun companyCompleted(username: String, companyName: String) {
+        eventPublisher.publishCompanyCompletedEvent(username, companyName)
     }
 
 //    private fun applyPatch(

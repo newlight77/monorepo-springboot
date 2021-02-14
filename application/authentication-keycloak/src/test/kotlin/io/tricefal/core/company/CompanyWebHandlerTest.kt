@@ -167,9 +167,9 @@ class CompanyWebHandlerTest {
     @Test
     fun `should send notification upon company form completion`() {
         // Arrange
-        val email = "kong@gmail.com"
+        val username = "kong@gmail.com"
         val companyName = "name"
-        val contact = ContactModel.Builder(email = email).build()
+        val contact = ContactModel.Builder(email = username).build()
         val address = AddressModel.Builder().build()
 //        val bankInfo = BankInfoModel.Builder().build()
         val state = CompanyStateModel.Builder(companyName).build()
@@ -185,13 +185,13 @@ class CompanyWebHandlerTest {
         Mockito.`when`(jpaRepository.findByName(companyName)).thenReturn(listOf(companyEntity))
         Mockito.`when`(jpaRepository.save(any(CompanyEntity::class.java))).thenReturn(companyEntity)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
-        Mockito.doNothing().`when`(eventPublisher).publishCompanyCompletedEvent(companyName)
+        Mockito.doNothing().`when`(eventPublisher).publishCompanyCompletedEvent(username, companyName)
 
         // Act
-        webHandler.completed(companyName)
+        webHandler.completed(username, companyName)
 
         // Arrange
-        Mockito.verify(eventPublisher).publishCompanyCompletedEvent(companyName)
+        Mockito.verify(eventPublisher).publishCompanyCompletedEvent(username, companyName)
 //        Mockito.verify(emailService).send(any(EmailMessage::class.java))
 //        Assertions.assertEquals(1, greenMail.receivedMessages.size)
     }

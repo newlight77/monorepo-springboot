@@ -7,7 +7,7 @@ import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 
 @Component
-class SignupEventListener(val signupService: ISignupService,
+class SignupEventListener(val webHandler: SignupWebHandler,
                           private final val env: Environment) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -15,7 +15,7 @@ class SignupEventListener(val signupService: ISignupService,
     @EventListener
     fun handCompanyCompletedEvent(event: CompanyCompletionEvent): SignupStateDomain = try {
         logger.info("EventHandler picked up a company completion event with ${event.username}")
-        this.signupService.companyCompleted(event.username)
+        this.webHandler.companyCompleted(event.username)
     } catch(ex: Throwable) {
         logger.error("Failed to update the signup on company completion for username ${event.username}")
         throw CompanyCompletionException("Failed to update the signup on company completion for username ${event.username}", ex)
@@ -24,7 +24,7 @@ class SignupEventListener(val signupService: ISignupService,
     @EventListener
     fun handleResumeUploadedEvent(event: ProfileResumeUploadedEvent) {
         try {
-            this.signupService.profileResumeUploaded(event.username, event.filename)
+            this.webHandler.profileResumeUploaded(event.username, event.filename)
         } catch(ex: Exception) {
             logger.error("Failed to update the profile resume for username ${event.username}")
             throw ProfileUploadException("Failed to update the profile resume for username ${event.username}", ex)
@@ -35,7 +35,7 @@ class SignupEventListener(val signupService: ISignupService,
     @EventListener
     fun handleResumeLinkedinUploadedEvent(event: ProfileResumeLinkedinUploadedEvent) {
         try {
-            this.signupService.profileResumeLinkedinUploaded(event.username, event.filename)
+            this.webHandler.profileResumeLinkedinUploaded(event.username, event.filename)
         } catch(ex: Exception) {
             logger.error("Failed to update the profile resume linkedin for username ${event.username}")
             throw ProfileUploadException("Failed to update the profile resume linkedin for username ${event.username}", ex)

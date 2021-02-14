@@ -345,7 +345,9 @@ class FreelanceServiceTest {
         // Arranges
 
         val username = "kong@gmail.com"
+        val companyName = "companyName"
         val freelance = FreelanceDomain.Builder(username)
+            .company(CompanyDomain.Builder(companyName).build())
             .state(FreelanceStateDomain(username))
             .build()
         val metaNotification = MetaNotificationDomain(baseUrl = "baseUrl",
@@ -364,7 +366,7 @@ class FreelanceServiceTest {
 
         // Arrange
         Mockito.verify(dataAdapter).sendEmail(any(EmailNotificationDomain::class.java))
-        Mockito.verify(dataAdapter).companyCompleted(username)
+        Mockito.verify(dataAdapter).companyCompleted(username, companyName)
         Assertions.assertTrue(result.state?.completed!!)
     }
 

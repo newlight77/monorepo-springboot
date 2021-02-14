@@ -17,7 +17,7 @@ class SignupStatusUpdatedEvent(
 
 class SignupStateUpdatedEvent(val username: String, val state: String)
 
-class CompanyCompletionEvent(val username: String)
+class CompanyCompletionEvent(val username: String, companyName: String)
 
 class SignupResumeUploadedEvent(var metafile: MetafileDomain) {
     val username = metafile.username

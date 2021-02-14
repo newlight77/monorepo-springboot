@@ -8,6 +8,6 @@ interface CompanyDataAdapter {
     fun findByName(companyName: String): Optional<CompanyDomain>
     fun findAll(): List<CompanyDomain>
     fun update(companyName: String, company: CompanyDomain): CompanyDomain
-    fun sendEmail(companyName: String, notification: EmailNotificationDomain): Boolean
-    fun companyCompleted(companyName: String)
+    fun sendEmail(notification: EmailNotificationDomain): Boolean
+    fun companyCompleted(username: String, companyName: String)
 }

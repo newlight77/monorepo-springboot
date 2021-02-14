@@ -74,13 +74,13 @@ class CompanyWebHandler(val companyService: ICompanyService,
         return toModel(domain)
     }
 
-    fun completed(companyName: String): CompanyModel {
+    fun completed(username: String, companyName: String): CompanyModel {
         val result = try {
             val metaNotification = MetaNotificationDomain(
                 targetEnv=targetEnv, baseUrl=backendBaseUrl,
                 emailFrom=emailFrom, emailAdmin=emailAdmin,
                 smsFrom=smsFrom, smsAdminNumber=smsAdmin)
-            companyService.completed(companyName, metaNotification)
+            companyService.completed(username, companyName, metaNotification)
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("company not found with username $companyName", ex)
         } catch (ex: Throwable) {

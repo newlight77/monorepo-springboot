@@ -54,12 +54,12 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         }
     }
 
-    override fun completed(companyName: String, metaNotification: MetaNotificationDomain): CompanyDomain {
+    override fun completed(username: String, companyName: String, metaNotification: MetaNotificationDomain): CompanyDomain {
         val company = findByName(companyName)
         company.state?.completed = true
         company.lastDate = Instant.now()
         dataAdapter.update(companyName, company)
-        sendEmail(company, emailNotification(company, metaNotification))
+        sendEmail(username, company, emailNotification(username, company, metaNotification))
         return company
     }
 
@@ -240,10 +240,10 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         return company
     }
 
-    private fun sendEmail(company: CompanyDomain, companyCompletionNotification: EmailNotificationDomain): Boolean {
+    private fun sendEmail(username: String, company: CompanyDomain, companyCompletionNotification: EmailNotificationDomain): Boolean {
         try {
-            dataAdapter.sendEmail(company.raisonSocial, companyCompletionNotification)
-            dataAdapter.companyCompleted(company.raisonSocial)
+            dataAdapter.sendEmail(companyCompletionNotification)
+            dataAdapter.companyCompleted(username, company.raisonSocial)
             return true
         } catch (ex: Throwable) {
             logger.error("failed to send an email upon company company completion for username ${company.raisonSocial}")
@@ -251,15 +251,15 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
         }
     }
 
-    private fun emailNotification(company: CompanyDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
+    private fun emailNotification(username: String, company: CompanyDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {
         val emailSubject = getString("company.completed.email.subject")
         val emailGreeting = getString("company.completed.email.greeting", "admin")
         val emailContent = getString("company.completed.email.content")
         val emailSignature = getString("company.completed.email.signature")
 
         return EmailNotificationDomain.Builder(company.raisonSocial)
-            .emailFrom(metaNotification.emailAdmin)
-            .emailTo(metaNotification.emailAdmin)
+            .emailFrom(metaNotification.emailFrom)
+            .emailTo(username)
             .emailBcc(metaNotification.emailAdmin)
             .emailSubject(emailSubject)
             .emailGreeting(emailGreeting)

@@ -12,9 +12,9 @@ class CompanyEventPublisher(private val applicationEventPublisher: ApplicationEv
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun publishCompanyCompletedEvent(companyName: String) = try {
+    fun publishCompanyCompletedEvent(username: String, companyName: String) = try {
         applicationEventPublisher.publishEvent(
-                CompanyCompletionEvent(companyName)
+                CompanyCompletionEvent(username, companyName)
         )
         logger.info("A CompanyCompletionEvent has been published user $companyName")
     } catch (ex: Exception) {

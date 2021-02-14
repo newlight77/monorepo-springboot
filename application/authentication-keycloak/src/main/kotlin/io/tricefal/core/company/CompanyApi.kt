@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.io.FileInputStream
 import java.nio.file.Paths
+import java.security.Principal
 import javax.annotation.security.RolesAllowed
 import javax.servlet.http.HttpServletResponse
 
@@ -30,8 +31,8 @@ class CompanyApi(val companyWebHandler: CompanyWebHandler) {
     @RolesAllowed("ROLE_ac_tricefal_w")
     @PostMapping("{companyName}/completed")
     @ResponseStatus(HttpStatus.OK)
-    fun completed(@PathVariable companyName: String): CompanyModel {
-        return companyWebHandler.completed(companyName)
+    fun completed(principal: Principal, @PathVariable companyName: String): CompanyModel {
+        return companyWebHandler.completed(authenticatedUser(principal), companyName)
     }
 
     @RolesAllowed("ROLE_ac_tricefal_r")
@@ -133,6 +134,10 @@ class CompanyApi(val companyWebHandler: CompanyWebHandler) {
     fun downloadfiscal(@PathVariable companyName: String, response: HttpServletResponse): StreamingResponseBody {
         val metafile = companyWebHandler.fiscal(companyName)
         return toStreamingResponse(response, metafile)
+    }
+
+    private fun authenticatedUser(principal: Principal): String {
+        return principal.name
     }
 
     private fun toStreamingResponse(response: HttpServletResponse, metafile: MetafileModel): StreamingResponseBody {

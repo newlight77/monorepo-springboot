@@ -229,8 +229,9 @@ class FreelanceWebHandlerTest {
     fun `should send notification upon company form completion`() {
         // Arrange
         val username ="kong@gmail.com"
+        val companyName = "name"
         val state = FreelanceStateModel.Builder(username).build()
-        val company = CompanyModel.Builder(raisonSocial = "raison social").build()
+        val company = CompanyModel.Builder(raisonSocial = companyName).build()
         val contact = ContactModel.Builder(email = username).build()
         val privacyDetail = PrivacyDetailModel.Builder().build()
         val freelance = FreelanceModel.Builder(username)
@@ -245,13 +246,13 @@ class FreelanceWebHandlerTest {
         Mockito.`when`(jpaRepository.findByUsername(username)).thenReturn(listOf(freelanceEntity))
         Mockito.`when`(jpaRepository.save(any(FreelanceEntity::class.java))).thenReturn(freelanceEntity)
         Mockito.`when`(emailService.send(any(EmailMessage::class.java))).thenReturn(true)
-        Mockito.doNothing().`when`(eventPublisher).publishCompanyCompletedEvent(username)
+        Mockito.doNothing().`when`(eventPublisher).publishCompanyCompletedEvent(username, companyName)
 
         // Act
         webHandler.completed(username)
 
         // Arrange
-        Mockito.verify(eventPublisher).publishCompanyCompletedEvent(username)
+        Mockito.verify(eventPublisher).publishCompanyCompletedEvent(username, companyName)
 //        Mockito.verify(emailService).send(any(EmailMessage::class.java))
 //        Assertions.assertEquals(1, greenMail.receivedMessages.size)
     }

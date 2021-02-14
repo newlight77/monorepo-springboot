@@ -15,6 +15,6 @@ interface ICompanyService {
     fun updateOnRcUploaded(companyName: String, filename: String, updateDate: Instant): CompanyDomain
     fun updateOnUrssafUploaded(companyName: String, filename: String, updateDate: Instant): CompanyDomain
     fun updateOnFiscalUploaded(companyName: String, filename: String, updateDate: Instant): CompanyDomain
-    fun completed(companyName: String, metaNotification: MetaNotificationDomain): CompanyDomain
+    fun completed(username: String, companyName: String, metaNotification: MetaNotificationDomain): CompanyDomain
 
 }

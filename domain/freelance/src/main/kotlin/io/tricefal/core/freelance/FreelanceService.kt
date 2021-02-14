@@ -83,7 +83,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
         freelance.company?.lastDate = Instant.now()
         dataAdapter.update(freelance)
         sendEmail(freelance, emailNotification(freelance, metaNotification))
-        dataAdapter.companyCompleted(freelance.username)
+        dataAdapter.companyCompleted(freelance.username, freelance.company?.raisonSocial!!)
         return freelance
     }
 

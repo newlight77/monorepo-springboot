@@ -369,7 +369,8 @@ class CompanyServiceTest {
     @Test
     fun `should send a notification by email upon company completion`() {
         // Arranges
-
+        val username = "kong@gmail.com"
+        val date = Instant.now()
         val companyName = "company name"
         val company = CompanyDomain.Builder(companyName)
             .state(CompanyStateDomain(companyName))
@@ -381,16 +382,16 @@ class CompanyServiceTest {
 
         Mockito.`when`(dataAdapter.findByName(companyName)).thenReturn(Optional.of(company))
         Mockito.`when`(dataAdapter.update(companyName, company)).thenReturn(company)
-        Mockito.`when`(dataAdapter.sendEmail(eq("company name"), any(EmailNotificationDomain::class.java))).thenReturn(true)
+        Mockito.`when`(dataAdapter.sendEmail(any(EmailNotificationDomain::class.java))).thenReturn(true)
 
         service = CompanyService(dataAdapter)
 
         // Act
-        val result = service.completed(companyName, metaNotification)
+        val result = service.completed(username, companyName, metaNotification)
 
         // Arrange
-        Mockito.verify(dataAdapter).sendEmail(eq("company name"), any(EmailNotificationDomain::class.java))
-        Mockito.verify(dataAdapter).companyCompleted(companyName)
+        Mockito.verify(dataAdapter).sendEmail(any(EmailNotificationDomain::class.java))
+        Mockito.verify(dataAdapter).companyCompleted(username, companyName)
         Assertions.assertTrue(result.state?.completed!!)
     }
 

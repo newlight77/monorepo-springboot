@@ -8,6 +8,7 @@ import io.tricefal.core.notification.MetaNotificationDomain
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
@@ -149,10 +150,25 @@ class SignupWebHandler(val signupService: ISignupService,
     }
 
     fun addComment(username: String, comment: CommentModel): CommentModel {
-        val comment = this.signupService.addComment(username, fromModel(comment))
+        val newComment = this.signupService.addComment(username, fromModel(comment))
         logger.info("successfully verified the activation code for user $username")
-        return toModel(comment)
+        return toModel(newComment)
 
+    }
+
+    @Async
+    fun companyCompleted(username: String): SignupStateDomain {
+        return signupService.companyCompleted(username)
+    }
+
+    @Async
+    fun profileResumeUploaded(username: String, filename: String) {
+        signupService.profileResumeUploaded(username, filename)
+    }
+
+    @Async
+    fun profileResumeLinkedinUploaded(username: String, filename: String) {
+        signupService.profileResumeLinkedinUploaded(username, filename)
     }
 
 }

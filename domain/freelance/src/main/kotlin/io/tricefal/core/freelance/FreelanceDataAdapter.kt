@@ -12,5 +12,5 @@ interface FreelanceDataAdapter {
     fun update(freelance: FreelanceDomain): FreelanceDomain
 //    fun patch(freelance: FreelanceDomain, operations: List<PatchOperation>): Optional<FreelanceDomain>
     fun sendEmail(notification: EmailNotificationDomain): Boolean
-    fun companyCompleted(username: String)
+    fun companyCompleted(username: String, companyName: String)
 }
