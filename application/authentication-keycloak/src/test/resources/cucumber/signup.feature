@@ -39,13 +39,15 @@ Feature: signup
   Glossary:
 
   - status: a given user is given one or many status such as freelance, collaborator, customer and backoffice
+  - actor : an actor is defined as a user with a given status (freelance, collaborator, customer and backoffice), but could also be shareholder
   - profile: a composition of roles according to a status (freelance, customer, collaborator, backoffice).
     A profile can be translated to a status, but it will be used purposely for authorization management
   - roles: a role is associated to a right that the portal would use to verify a user can or not access to a functionality
   - freelance: a freelance status is associated to a consultant who has his own enterprise declared juridically.
     He can then access the portal and benefit from the business model that tricefal provides. He will be assigned a mission
   - collaborator: a collaborator is an employee and consultant of tricefal. He will be assigned a mission
-  - customer: a customer is the one who will give a mission order and he seeks for experts to get things done (ex. software developement)
+  - customer: a customer is the a company which would be provide several misssion, typically is represented by multiple mission orderer to fullfill the business needs (ex. software development)
+  - mission orderer: an orderer is the one who will give a mission order and he seeks for experts to get things done (ex. software development)
   - backoffice: a backoffice status is a hidden as it is meant for internal purpose.
   - general purpose views regarding tricefal
   - resume: A resume is a formal document that a job applicant creates to itemize his or her qualifications for a position.
