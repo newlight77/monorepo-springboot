@@ -12,7 +12,7 @@ class PricerReferenceRepositoryAdapter(private var repository: PricerReferenceJp
 
     override fun save(pricerRef: PricerReferenceDomain): PricerReferenceDomain {
         val entity = repository.save(toEntity(pricerRef))
-        entity.lastDate = pricerRef.lastDate ?: Instant.now()
+        entity.lastDate = pricerRef.lastDate
         return fromEntity(entity)
     }
 

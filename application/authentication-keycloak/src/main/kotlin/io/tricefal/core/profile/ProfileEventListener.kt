@@ -11,7 +11,7 @@ class ProfileEventListener(val webHandler: ProfileWebHandler) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @EventListener
-    fun handleStatusUpdatedEvent(event: SignupStatusUpdatedEvent) {
+    fun handleNewSignupEvent(event: NewSignupEvent) {
         try {
             val profile = ProfileDomain.Builder(event.username)
                 .firstname(event.firstname)
@@ -20,6 +20,16 @@ class ProfileEventListener(val webHandler: ProfileWebHandler) {
                 .status(Status.valueOf(event.status))
                 .build()
             this.webHandler.initProfile(event.username, profile)
+        } catch (ex: Throwable) {
+            throw ProfileStatusUpdateException("Failed to create a new profile with username ${event.username}", ex)
+        }
+        logger.info("ProfileEventListener picked up a NewSignupEvent with ${event.username}")
+    }
+
+    @EventListener
+    fun handleStatusUpdatedEvent(event: SignupStatusUpdatedEvent) {
+        try {
+            this.webHandler.updateStatus(event.username, Status.valueOf(event.status))
         } catch (ex: Throwable) {
             throw ProfileStatusUpdateException("Failed to update the status of the profile with username ${event.username}", ex)
         }

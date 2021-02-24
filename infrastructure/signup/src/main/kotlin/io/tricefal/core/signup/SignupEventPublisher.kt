@@ -13,6 +13,23 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    fun publishNewSignupEvent(signup: SignupDomain) {
+        try {
+            applicationEventPublisher.publishEvent(
+                NewSignupEvent(signup.username,
+                    signup.status.toString(),
+                    signup.firstname,
+                    signup.lastname,
+                    signup.phoneNumber,
+                )
+            )
+            logger.info("A NewSignupEvent has been published user ${signup.username}")
+        } catch (ex: Exception) {
+            logger.error("Failed to publish a NewSignupEvent for user ${signup.username}")
+            throw SignupStatusPublicationException("Failed to publish a NewSignupEvent for user ${signup.username}")
+        }
+    }
+
     fun publishStatusUpdatedEvent(signup: SignupDomain) {
         try {
             applicationEventPublisher.publishEvent(

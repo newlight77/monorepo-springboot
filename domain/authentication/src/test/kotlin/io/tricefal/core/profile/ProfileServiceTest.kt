@@ -72,7 +72,7 @@ class ProfileServiceTest {
     fun `should init the profile on signup status updated`() {
         // Arrange
         val username = "kong@gmail.com"
-        val profile1 = ProfileDomain("kong@gmail.com",
+        val profile = ProfileDomain("kong@gmail.com",
             "kong",
             "to",
             "000000000",
@@ -83,14 +83,12 @@ class ProfileServiceTest {
             "resume",
             "resume linkedin")
 
-        val profile = Optional.of(profile1)
-
-        Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
-        Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
+        Mockito.`when`(repository.findByUsername(username)).thenReturn(Optional.empty())
+        Mockito.`when`(repository.create(profile)).thenReturn(profile)
         service = ProfileService(repository)
 
         // Act
-        val result = service.initProfile(username, profile1)
+        val result = service.create(profile)
 
         // Arrange
         Assertions.assertEquals(Status.FREELANCE, result.status)

@@ -1,6 +1,15 @@
 package io.tricefal.core.signup
 
-// outgoing to profile and freelance
+// outgoing to profile
+class NewSignupEvent(
+    val username: String,
+    val status: String,
+    val firstname: String?,
+    val lastname: String?,
+    val phoneNumber: String?
+)
+
+// outgoing to freelance
 class SignupStatusUpdatedEvent(
     val username: String,
     val status: String,

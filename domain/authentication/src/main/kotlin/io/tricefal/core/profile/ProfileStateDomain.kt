@@ -79,6 +79,7 @@ class ProfileStateDomain
 
     fun updateState(state: String) {
         when(ProfileState.valueOf(state.toUpperCase())) {
+            ProfileState.SAVED ->  this.saved = true
             ProfileState.CGU_ACCEPTED -> this.cguAccepted = true
             ProfileState.REGISTERED -> this.registered = true
             ProfileState.SMS_CODE_SENT -> this.smsSent = true
@@ -95,12 +96,14 @@ class ProfileStateDomain
             ProfileState.ENTERPRISE_FORM_FILLED -> this.entrepriseFormFilled = true
             ProfileState.COMPLETED -> this.completed = true
             ProfileState.DELETED -> this.deleted = true
+            ProfileState.NONE -> {}
         }
     }
 }
 
 enum class ProfileState {
     NONE,
+    SAVED,
     CGU_ACCEPTED,
     REGISTERED,
     SMS_CODE_SENT,

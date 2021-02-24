@@ -106,7 +106,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun saved(signup: SignupDomain) {
-        this.signupEventPublisher.publishStatusUpdatedEvent(signup)
+        this.signupEventPublisher.publishNewSignupEvent(signup)
         this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.SAVED)
     }
 

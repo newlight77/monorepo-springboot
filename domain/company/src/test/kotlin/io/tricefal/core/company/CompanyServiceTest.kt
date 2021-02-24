@@ -370,7 +370,6 @@ class CompanyServiceTest {
     fun `should send a notification by email upon company completion`() {
         // Arranges
         val username = "kong@gmail.com"
-        val date = Instant.now()
         val companyName = "company name"
         val company = CompanyDomain.Builder(companyName)
             .state(CompanyStateDomain(companyName))
