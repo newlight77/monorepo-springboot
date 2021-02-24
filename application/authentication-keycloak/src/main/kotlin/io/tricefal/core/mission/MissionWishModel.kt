@@ -1,6 +1,5 @@
 package io.tricefal.core.mission
 
-import org.springframework.boot.availability.ApplicationAvailability
 import java.time.Instant
 
 data class MissionWishModel

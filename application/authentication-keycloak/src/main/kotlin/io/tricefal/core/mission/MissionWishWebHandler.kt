@@ -3,10 +3,10 @@ package io.tricefal.core.mission
 import io.tricefal.core.exception.GlobalNotAcceptedException
 import io.tricefal.core.exception.GlobalNotFoundException
 import io.tricefal.core.metafile.*
-import io.tricefal.core.profile.ProfileModel
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
@@ -69,9 +69,24 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
     }
 
     fun resume(username: String): MetafileModel {
-        return metafileService.findByUsername(username, Representation.CV_MISSION)
-                .map { toModel(it) }
-                .first()
+        var missionCv = metafileService.findByUsername(username, Representation.CV_MISSION)
+        if (missionCv.isEmpty())
+            missionCv = metafileService.findByUsername(username, Representation.CV)
+        if (missionCv.isEmpty())
+            throw GlobalNotFoundException("Failed to find a resume for user $username")
+        return missionCv
+            .map { toModel(it) }
+            .first()
+    }
+
+    @Async
+    fun updateOnResumeUploaded(username: String, filename: String): MissionWishDomain {
+        return try {
+            missionWishService.updateOnResumeUploaded(username, filename)
+        } catch (ex: Throwable) {
+            logger.error("Failed to update mission wish on resume upload for user $username")
+            throw MissionWishUploadException("Failed to update mission wish on resume upload for user $username", ex)
+        }
     }
 
     class MissionWishCreationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {

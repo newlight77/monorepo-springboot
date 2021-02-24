@@ -6,14 +6,14 @@ import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
 @Component
-class MissionWishEventListener(val missionWishService: IMissionWishService) {
+class MissionWishEventListener(val webHandler: MissionWishWebHandler) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @EventListener
     fun handleResumeUploadedEvent(event: SignupResumeUploadedEvent): MissionWishModel {
         val result = try {
-            this.missionWishService.updateOnResumeUploaded(event.username, event.filename)
+            this.webHandler.updateOnResumeUploaded(event.username, event.filename)
         } catch(ex: Throwable) {
             logger.error("Failed to update the mission wish on resume uploaded for username ${event.username}")
             throw MissionWishCreationException("Failed to update the mission wish on resume uploaded for username ${event.username}", ex)
