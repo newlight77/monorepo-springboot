@@ -4,11 +4,6 @@ security:
     csrf:
         enabled: ${SECURITY_ENABLED_CSRF}
 #    ignored: /**
-    oauth:
-        issuer: ${OKTA_OAUTH2_ISSUER}
-        audience: ${OKTA_OAUTH2_AUDIENCE}
-        client-id: ${OKTA_OAUTH2_CLIENT_ID}
-        client-secret: ${OKTA_OAUTH2_CLIENT_SECRET}
 
 keycloak:
 #    configurationFile: ${KEYCLOAK_CONFIGFILE}

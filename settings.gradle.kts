@@ -3,8 +3,6 @@ rootProject.name = "tricefal-core"
 include(":application")
 include(":application:signup")
 include(":application:sso-keycloak-adapter")
-//include(":application:authentication-okta")
-//include(":application:note")
 
 include(":domain")
 include(":domain:company")
