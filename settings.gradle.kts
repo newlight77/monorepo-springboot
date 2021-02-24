@@ -1,13 +1,12 @@
 rootProject.name = "tricefal-core"
 
 include(":application")
-include(":application:authentication-keycloak")
+include(":application:signup")
 include(":application:sso-keycloak-adapter")
 //include(":application:authentication-okta")
-include(":application:note")
+//include(":application:note")
 
 include(":domain")
-include(":domain:authentication")
 include(":domain:company")
 include(":domain:freelance")
 include(":domain:metafile")
@@ -15,6 +14,7 @@ include(":domain:mission")
 include(":domain:note")
 include(":domain:notification")
 include(":domain:pricer")
+include(":domain:signup")
 
 include(":infrastructure")
 include(":infrastructure:company")

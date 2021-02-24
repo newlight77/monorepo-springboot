@@ -1,5 +1,5 @@
 rootProject.name = "tricefal-application"
 
-include("authentication-keycloak")
+include("signup")
 //include("authentication-okta")
-include("note")
+//include("note")

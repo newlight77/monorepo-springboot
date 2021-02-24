@@ -17,10 +17,10 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":domain:authentication"))
 	implementation(project(":domain:company"))
 	implementation(project(":domain:freelance"))
 	implementation(project(":domain:notification"))
+	implementation(project(":domain:signup"))
 	implementation(project(":infrastructure:storage"))
 	implementation(project(":infrastructure:company"))
 	implementation(project(":shared:util"))

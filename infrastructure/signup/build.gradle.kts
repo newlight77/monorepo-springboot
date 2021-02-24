@@ -17,9 +17,9 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":domain:authentication"))
 	implementation(project(":domain:metafile"))
 	implementation(project(":domain:notification"))
+	implementation(project(":domain:signup"))
 	implementation(project(":infrastructure:cgu"))
 	implementation(project(":infrastructure:encryption"))
 	implementation(project(":infrastructure:freelance"))

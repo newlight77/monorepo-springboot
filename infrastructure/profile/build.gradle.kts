@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-	implementation(project(":domain:authentication"))
 	implementation(project(":domain:metafile"))
+	implementation(project(":domain:signup"))
 	implementation(project(":infrastructure:storage"))
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")

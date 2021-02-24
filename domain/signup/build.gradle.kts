@@ -20,5 +20,5 @@ dependencies {
 }
 
 tasks.withType<Jar>() {
-	baseName = "domain-authentication"
+	baseName = "domain-signup"
 }

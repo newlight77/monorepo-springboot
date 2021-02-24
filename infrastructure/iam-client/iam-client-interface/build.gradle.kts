@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
 
-	implementation(project(":domain:authentication"))
+	implementation(project(":domain:signup"))
 
 }
 
