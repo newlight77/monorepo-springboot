@@ -49,8 +49,7 @@ dependencies {
 	implementation(project(":infrastructure:signup"))
 	implementation(project(":infrastructure:storage"))
 
-	implementation(project(":infrastructure:iam-client:iam-client-interface"))
-	implementation(project(":infrastructure:iam-client:keycloak-client"))
+	implementation(project(":infrastructure:keycloak-client"))
 
 	implementation("org.springdoc:springdoc-openapi-data-rest:1.4.3")
 	implementation("org.springdoc:springdoc-openapi-ui:1.4.3")
@@ -61,17 +60,6 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
-
-//	implementation("org.springframework.security:spring-security-oauth2-client")
-//	implementation("org.springframework.security:spring-security-oauth2-jose")
-
-//	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.3")
-//	implementation("org.keycloak:keycloak-spring-boot-starter:11.0.3")
-
-//	implementation("com.okta.jwt:okta-jwt-verifier:0.4.0")
-//	implementation("com.okta.jwt:okta-jwt-verifier-impl:0.4.0")
-
-//	implementation("io.jsonwebtoken:jjwt:0.9.1")
 
 	implementation("com.github.ben-manes.caffeine:caffeine:2.8.1")
 

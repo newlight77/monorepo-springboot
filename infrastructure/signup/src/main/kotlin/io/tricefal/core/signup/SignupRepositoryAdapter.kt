@@ -1,9 +1,9 @@
 package io.tricefal.core.signup
 
+import io.tricefal.core.keycloak.IamRegisterService
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.NotificationAdapter
 import io.tricefal.core.notification.SmsNotificationDomain
-import io.tricefal.core.okta.IamRegisterService
 import io.tricefal.core.right.AccessRight
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
