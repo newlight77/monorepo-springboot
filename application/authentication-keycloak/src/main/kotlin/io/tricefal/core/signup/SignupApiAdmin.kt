@@ -43,9 +43,10 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
     @RolesAllowed("ROLE_ac_tricefal_w")
     @PutMapping("{username}/comment")
     @ResponseStatus(HttpStatus.OK)
-    fun addComment(@PathVariable username: String, @RequestBody comment: CommentModel): CommentModel {
+    fun addComment(principal: Principal, @PathVariable targetUsername: String, @RequestBody comment: CommentModel): CommentModel {
         logger.info("signup activation requested")
-        return signupWebHandler.addComment(username, comment)
+        comment.author = authenticatedUser(principal)
+        return signupWebHandler.addComment(targetUsername, comment)
     }
 
     @RolesAllowed("ROLE_ac_tricefal_w")
@@ -70,4 +71,7 @@ class SignupApiAdmin(val signupWebHandler: SignupWebHandler,
         signupWebHandler.delete(username, authorizationCode)
     }
 
+    private fun authenticatedUser(principal: Principal): String {
+        return principal.name
+    }
 }

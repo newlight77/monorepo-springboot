@@ -13,12 +13,12 @@ class MissionWishEventListener(val missionWishService: IMissionWishService) {
     @EventListener
     fun handleResumeUploadedEvent(event: SignupResumeUploadedEvent): MissionWishModel {
         val result = try {
-            this.missionWishService.updateOnResumeUploaded(event.username, event.metafile)
+            this.missionWishService.updateOnResumeUploaded(event.username, event.filename)
         } catch(ex: Throwable) {
             logger.error("Failed to update the mission wish on resume uploaded for username ${event.username}")
             throw MissionWishCreationException("Failed to update the mission wish on resume uploaded for username ${event.username}", ex)
         }
-        logger.info("EventHandler picked up a resume uploaded event with ${event.metafile}")
+        logger.info("EventHandler picked up a resume uploaded event with ${event.filename}")
         return toModel(result)
     }
 

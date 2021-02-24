@@ -29,6 +29,14 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
     private var smsFrom = env.getProperty("notification.sms.twilio.phoneNumber")!!
     private var smsAdmin = env.getProperty("notification.sms.admin")!!
 
+    fun initFreelance(freelance: FreelanceDomain) {
+        try {
+            freelanceService.create(freelance)
+        } catch (ex: DuplicateException) {
+            throw FreelanceCreationException("can not initiate the creation of freelance with username ${freelance.username} with $freelance", ex)
+        }
+    }
+
     fun create(freelanceModel: FreelanceModel): FreelanceModel {
         val domain = fromModel(freelanceModel)
         val result = try {

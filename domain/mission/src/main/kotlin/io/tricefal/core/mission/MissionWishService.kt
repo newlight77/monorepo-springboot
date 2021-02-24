@@ -1,9 +1,7 @@
 package io.tricefal.core.mission
 
-import io.tricefal.core.metafile.MetafileDomain
 import org.slf4j.LoggerFactory
 import java.time.Instant
-import java.util.*
 
 class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMissionWishService {
 
@@ -32,21 +30,21 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
         return missionWish
     }
 
-    override fun updateOnResumeUploaded(username: String, metafile: MetafileDomain): MissionWishDomain {
+    override fun updateOnResumeUploaded(username: String, filename: String): MissionWishDomain {
         val missionWish = MissionWishDomain.Builder(username)
-            .resumeFilename(metafile.filename)
+            .resumeFilename(filename)
             .build()
         try {
             this.dataAdapter.findByUsername(username)
                     .ifPresentOrElse(
                             {
-                                it.resumeFilename = metafile.filename
+                                it.resumeFilename = filename
                                 it.lastDate = it.lastDate ?: Instant.now()
                                 update(it)
                             },
                             { create(missionWish) }
                     )
-            dataAdapter.updateOnResumeUploaded(username, metafile)
+            dataAdapter.updateOnResumeUploaded(username, filename)
         } catch (ex: Throwable) {
             logger.error("Failed to update the mission wish from the resume uploaded event for user $username")
             throw MissionResumeUploadException("Failed to mission wish the profile from the resume uploaded event for user $username", ex)

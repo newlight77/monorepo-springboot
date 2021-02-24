@@ -15,12 +15,6 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val resourceBundle = ResourceBundle.getBundle("i18n.company", Locale.FRANCE)
 
-    override fun signupStatusUpdated(freelance: FreelanceDomain): FreelanceDomain {
-        val result = dataAdapter.findByUsername(freelance.username)
-        return if (result.isEmpty) dataAdapter.create(freelance)
-        else result.get()
-    }
-
     override fun create(freelance: FreelanceDomain): FreelanceDomain {
         val result = dataAdapter.findByUsername(freelance.username)
         return if (result.isPresent) {

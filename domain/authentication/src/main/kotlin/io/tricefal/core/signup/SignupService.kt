@@ -42,14 +42,17 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
         }
 
-        return if (signup.activationCode.isNullOrBlank()) {
-            signup.activationCode = generateCode()
-            signup.activationToken = "${encode(signup.activationCode!!)}.${encode(signup.username)}"
-            val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForVerification(signup, metaNotification) else false
-            val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)) else false
-            emailSent || smsSent
-        } else
-            if (signup.state?.smsValidated != true) sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)) else false
+        return when {
+            signup.activationCode.isNullOrBlank() -> {
+                signup.activationCode = generateCode()
+                signup.activationToken = "${encode(signup.activationCode!!)}.${encode(signup.username)}"
+                val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForVerification(signup, metaNotification) else false
+                val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)) else false
+                emailSent || smsSent
+            }
+            signup.state?.smsValidated != true -> sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification))
+            else -> false
+        }
     }
 
     override fun resendCodeByEmailForValidation(signup: SignupDomain,
@@ -59,14 +62,17 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             throw SignupNotFoundException("a signup with username ${signup.username} does not exist")
         }
 
-        return if (signup.activationCode.isNullOrBlank()) {
-            signup.activationCode = generateCode()
-            signup.activationToken = "${encode(signup.activationCode!!)}.${encode(signup.username)}"
-            val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForVerification(signup, metaNotification) else false
-            val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)) else false
-            emailSent || smsSent
-        } else
-            if (signup.state?.emailValidated != true) sendSignupEmailForVerification(signup, metaNotification) else false
+        return when {
+            signup.activationCode.isNullOrBlank() -> {
+                signup.activationCode = generateCode()
+                signup.activationToken = "${encode(signup.activationCode!!)}.${encode(signup.username)}"
+                val emailSent = if (signup.state?.emailValidated != true) sendSignupEmailForVerification(signup, metaNotification) else false
+                val smsSent = if (signup.state?.smsValidated != true) sendSignupSmsForVerification(signup, signupSmsVerificationNotification(signup, metaNotification)) else false
+                emailSent || smsSent
+            }
+            signup.state?.emailValidated != true -> sendSignupEmailForVerification(signup, metaNotification)
+            else -> false
+        }
 
     }
 
@@ -76,10 +82,10 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 if (signup.activationCode == authorizationCode) dataAdapter.delete(signup.username)
             } else {
                 // soft deletion
-                dataAdapter.softDelete(signup.username)
                 signup.state?.deleted = true
                 dataAdapter.update(signup)
                     .orElseThrow { SignupDeletionException("Failed to update the signup state after soft deletion") }
+                dataAdapter.softDeleted(signup.username)
             }
         } catch (ex: Exception) {
             logger.error("failed to delete from persistence the signup for username ${signup.username}")
@@ -116,9 +122,9 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
 
     override fun deactivate(signup: SignupDomain): SignupStateDomain {
         signup.state?.validated = false
-        dataAdapter.unvalidated(signup)
         dataAdapter.update(signup)
             .orElseThrow { SignupDeactivationException("Failed to update the signup state after activation") }
+        dataAdapter.unvalidated(signup)
         return signup.state!!
     }
 
@@ -128,8 +134,8 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             logger.error("failed to active by code fur user ${signup.username}")
             throw SignupVerificationByCodeException("failed to active by code fur user ${signup.username}")
         }
-        dataAdapter.smsValidated(signup)
         dataAdapter.update(signup)
+        dataAdapter.smsValidated(signup)
         return signup.state!!
     }
 
@@ -154,9 +160,9 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             logger.info("successfully verified the token by email for user $username")
         }
 
-        dataAdapter.emailValidated(signup)
         dataAdapter.update(signup)
             .orElseThrow { SignupVerificationByCodeFromTokenException("Failed to update the signup state after verification by code") }
+        dataAdapter.emailValidated(signup)
         return signup.state!!
     }
 
@@ -166,7 +172,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             signup.state!!.resumeUploaded = true
             dataAdapter.update(signup)
                 .orElseThrow { SignupResumeUploadException("failed to update the signup with resume upload of the signup for username ${signup.username}")}
-            dataAdapter.resumeUploaded(metafileDomain)
+            dataAdapter.resumeUploaded(signup.username, metafileDomain.filename)
             return signup.state!!
         } catch (ex: Throwable) {
             logger.error("failed to update the signup with resume upload of the signup for username ${signup.username}")
@@ -180,7 +186,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             signup.state!!.resumeLinkedinUploaded = true
             dataAdapter.update(signup)
                 .orElseThrow { SignupLinkedinResumeUploadException("failed to update the signup with linkedin upload of the signup for username ${signup.username}")}
-            dataAdapter.resumeLinkedinUploaded(metafileDomain)
+            dataAdapter.resumeLinkedinUploaded(signup.username, metafileDomain.filename)
             return signup.state!!
         } catch (ex: Throwable) {
             logger.error("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
@@ -193,10 +199,10 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             signup.status = status
             signup.state!!.statusUpdated = true
             dataAdapter.update(signup)
-            dataAdapter.statusUpdated(signup)
             dataAdapter.sendEmail(waitingForActivationEmailNotification(signup, metaNotification))
             dataAdapter.sendEmail(accountToBeActivatedEmailToAdmin(signup, metaNotification))
             assignRoles(signup, statusToReadRole[status])
+            dataAdapter.statusUpdated(signup)
             return signup.state!!
         } catch (ex: Throwable) {
             logger.error("failed to update the status of the signup for username ${signup.username}")
@@ -231,6 +237,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             signup.state?.resumeUploaded = true
             signup.resumeFilename = filename
             dataAdapter.update(signup)
+            dataAdapter.resumeUploaded(username, filename)
             return signup
         } catch (ex: Throwable) {
             logger.error("failed to update the signup and state upon resume upload for username ${signup.username}")
@@ -248,6 +255,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             signup.state?.resumeLinkedinUploaded = true
             signup.resumeLinkedinFilename = filename
             dataAdapter.update(signup)
+            dataAdapter.resumeLinkedinUploaded(username, filename)
             return signup
         } catch (ex: Throwable) {
             logger.error("failed to update the signup and state upon resume linkedin upload for username ${signup.username}")
@@ -255,15 +263,16 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         }
     }
 
-    override fun addComment(username: String, comment: CommentDomain): CommentDomain {
-        val signup = dataAdapter.findByUsername(username).orElseThrow {
-            logger.error("a signup with username $username does not exist")
-            throw SignupNotFoundException("a signup with username $username does not exist")
+    override fun addComment(targetUsername: String, comment: CommentDomain): CommentDomain {
+        val signup = dataAdapter.findByUsername(targetUsername).orElseThrow {
+            logger.error("a signup with username $targetUsername does not exist")
+            throw SignupNotFoundException("a signup with username $targetUsername does not exist")
         }
 
         try {
             signup.comment = comment
             dataAdapter.update(signup)
+            dataAdapter.commented(targetUsername, comment)
             return comment
         } catch (ex: Throwable) {
             logger.error("failed to add a comment on the signup for username ${signup.username}")
@@ -277,6 +286,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 signup.state?.registered = true
                 dataAdapter.update(signup)
                     .orElseThrow { SignupUserRegistrationException("failed to update the signup after register for username ${signup.username}")}
+                dataAdapter.registered(signup)
                 return true
             }
             return false
@@ -291,6 +301,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         try {
             signup.state!!.saved = true
             dataAdapter.save(signup)
+            dataAdapter.saved(signup)
             return true
         } catch (ex: Throwable) {
             logger.error("failed to persist the signup for username ${signup.username}")
@@ -301,9 +312,9 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
     private fun acceptCgu(signup: SignupDomain, cguAcceptedVersion: String) : Boolean {
         try {
             signup.state?.cguAccepted = true
-            dataAdapter.cguAccepted(signup.username, cguAcceptedVersion)
             dataAdapter.update(signup)
                 .orElseThrow { SignupCguAcceptException("failed to update the signup after accepting cgu for username ${signup.username}")}
+            dataAdapter.cguAccepted(signup.username, cguAcceptedVersion)
             return true
         } catch (ex: Throwable) {
             logger.error("failed to accept the cgu for username ${signup.username}")

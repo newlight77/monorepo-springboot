@@ -433,19 +433,20 @@ class SignupServiceTest {
     @Test
     fun `should update a signup upon resume uploaded`() {
         // Arranges
-        val signup = SignupDomain.Builder("kong@gmail.com")
+        val username = "kong@gmail.com"
+        val signup = SignupDomain.Builder(username)
             .firstname("kong")
             .lastname("to")
             .phoneNumber("1234567890")
             .signupDate(Instant.now())
             .activationCode("120815")
             .status(Status.FREELANCE)
-            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .state(SignupStateDomain.Builder(username).build())
             .build()
-        val metafileDomain = MetafileDomain("kong@gmail.com", "filename", Representation.PORTRAIT, "pdf", 1024, Instant.now())
+        val metafileDomain = MetafileDomain(username, "filename", Representation.PORTRAIT, "pdf", 1024, Instant.now())
 
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
-        Mockito.doNothing().`when`(dataAdapter).resumeUploaded(metafileDomain)
+        Mockito.doNothing().`when`(dataAdapter).resumeUploaded(username, "filename")
 
         // Act
         val result = service.resumeUploaded(signup, metafileDomain)
@@ -457,19 +458,20 @@ class SignupServiceTest {
     @Test
     fun `should update a signup upon resume linkedin uploaded`() {
         // Arranges
-        val signup = SignupDomain.Builder("kong@gmail.com")
+        val username = "kong@gmail.com"
+        val signup = SignupDomain.Builder(username)
             .firstname("kong")
             .lastname("to")
             .phoneNumber("1234567890")
             .signupDate(Instant.now())
             .activationCode("120815")
             .status(Status.FREELANCE)
-            .state(SignupStateDomain.Builder("kong@gmail.com").build())
+            .state(SignupStateDomain.Builder(username).build())
             .build()
-        val metafileDomain = MetafileDomain("kong@gmail.com", "filename", Representation.PORTRAIT, "pdf", 1024, Instant.now())
+        val metafileDomain = MetafileDomain(username, "filename", Representation.PORTRAIT, "pdf", 1024, Instant.now())
 
         Mockito.`when`(dataAdapter.update(signup)).thenReturn(Optional.of(signup))
-        Mockito.doNothing().`when`(dataAdapter).resumeLinkedinUploaded(metafileDomain)
+        Mockito.doNothing().`when`(dataAdapter).resumeLinkedinUploaded(username, "filename")
 
         // Act
         val result = service.resumeLinkedinUploaded(signup, metafileDomain)

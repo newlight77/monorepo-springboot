@@ -100,6 +100,7 @@ fun toStatus(status: String): Status {
 
 enum class SignupState {
     NONE,
+    SAVED,
     CGU_ACCEPTED,
     REGISTERED,
     SMS_CODE_SENT,
@@ -111,8 +112,8 @@ enum class SignupState {
     STATUS_SET,
     VALIDATED, // activated by backoffice
     UNVALIDATED, // activated by backoffice
-    MISSION_FORM_FILLED,
-    ENTERPRISE_FORM_FILLED,
+    MISSION_COMPLETED,
+    COMPANY_COMPLETED,
     COMPLETED, // everything is done
     DELETED; // soft deletion
 }

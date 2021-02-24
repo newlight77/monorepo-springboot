@@ -1,6 +1,5 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.NotificationAdapter
 import io.tricefal.core.notification.SmsNotificationDomain
@@ -45,17 +44,6 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         )
     }
 
-    override fun softDelete(username: String) {
-        repository.findByUsername(username).stream().findFirst().ifPresentOrElse (
-            {
-                this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.DELETED)
-            },
-            {
-                logger.error("unable to delete a registration with username $username")
-                throw SignupNotFoundException("unable to delete a registration with username $username")
-            }
-        )
-    }
     override fun findAll(): List<SignupDomain> {
         return repository.findAll().map {
             fromEntity(it)
@@ -101,7 +89,6 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     override fun register(signup: SignupDomain): Boolean {
         return try {
             val result = registrationService.register(signup)
-            this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.REGISTERED)
             result
         } catch (ex: Exception) {
             logger.error("Failed to register a user on IAM server for username ${signup.username}")
@@ -110,15 +97,26 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
     }
 
     override fun sendSms(username: String, notification: SmsNotificationDomain): Boolean {
-        val result = notificationAdapter.sendSms(notification)
-        return result
+        return notificationAdapter.sendSms(notification)
     }
 
     override fun sendEmail(notification: EmailNotificationDomain): Boolean {
-//        val result = notificationAdapter.sendEmail(notification)
-//        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.EMAIL_SENT.toString())
         this.signupEventPublisher.publishEmailNotification(notification)
         return true
+    }
+
+    override fun saved(signup: SignupDomain) {
+        this.signupEventPublisher.publishStatusUpdatedEvent(signup)
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.SAVED)
+    }
+
+    override fun cguAccepted(username: String, cguAcceptedVersion: String) {
+        this.signupEventPublisher.publishCguAcceptedEvent(username, cguAcceptedVersion)
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.CGU_ACCEPTED)
+    }
+
+    override fun registered(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.REGISTERED)
     }
 
     override fun smsSent(signup: SignupDomain) {
@@ -129,24 +127,27 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.EMAIL_SENT)
     }
 
+    override fun smsValidated(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.SMS_CODE_VALIDATED)
+    }
+
+    override fun emailValidated(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.EMAIL_VALIDATED)
+    }
+
+    override fun resumeUploaded(username: String, filename: String) {
+        this.signupEventPublisher.publishResumeUploadedEvent(username, filename)
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.RESUME_UPLOADED)
+    }
+
+    override fun resumeLinkedinUploaded(username: String, filename: String) {
+        this.signupEventPublisher.publishResumeLinkedinUploadedEvent(username, filename)
+        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.RESUME_LINKEDIN_UPLOADED)
+    }
+
     override fun statusUpdated(signup: SignupDomain) {
         this.signupEventPublisher.publishStatusUpdatedEvent(signup)
         this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.STATUS_SET)
-    }
-
-    override fun cguAccepted(username: String, cguAcceptedVersion: String) {
-        this.signupEventPublisher.publishCguAcceptedEvent(username, cguAcceptedVersion)
-        this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.CGU_ACCEPTED)
-    }
-
-    override fun resumeUploaded(fileDomain: MetafileDomain) {
-        this.signupEventPublisher.publishResumeUploadedEvent(fileDomain)
-        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_UPLOADED)
-    }
-
-    override fun resumeLinkedinUploaded(fileDomain: MetafileDomain) {
-        this.signupEventPublisher.publishResumeLinkedinUploadedEvent(fileDomain)
-        this.signupEventPublisher.publishStateUpdatedEvent(fileDomain.username, SignupState.RESUME_LINKEDIN_UPLOADED)
     }
 
     override fun validated(signup: SignupDomain) {
@@ -157,16 +158,28 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.UNVALIDATED)
     }
 
-    override fun smsValidated(signup: SignupDomain) {
-        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.SMS_CODE_VALIDATED)
-    }
-
-    override fun emailValidated(signup: SignupDomain) {
-        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.EMAIL_VALIDATED)
+    override fun missionCompleted(signup: SignupDomain) {
+        this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.MISSION_COMPLETED)
     }
 
     override fun companyCompleted(signup: SignupDomain) {
         this.signupEventPublisher.publishStateUpdatedEvent(signup.username, SignupState.COMPLETED)
+    }
+
+    override fun commented(targetUsername: String, comment: CommentDomain) {
+        this.signupEventPublisher.publishCommentAddedEvent(targetUsername, comment)
+    }
+
+    override fun softDeleted(username: String) {
+        repository.findByUsername(username).stream().findFirst().ifPresentOrElse (
+            {
+                this.signupEventPublisher.publishStateUpdatedEvent(username, SignupState.DELETED)
+            },
+            {
+                logger.error("unable to do a soft delete of a signup with username $username")
+                throw SignupNotFoundException("unable to do a soft delete of a signup with username $username")
+            }
+        )
     }
 
     override fun assignRole(username: String, accessRight: AccessRight) {

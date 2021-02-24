@@ -22,5 +22,5 @@ interface ISignupService {
 
     fun profileResumeUploaded(username: String, filename: String): SignupDomain
     fun profileResumeLinkedinUploaded(username: String, filename: String): SignupDomain
-    fun addComment(username: String, comment: CommentDomain): CommentDomain
+    fun addComment(targetUsername: String, comment: CommentDomain): CommentDomain
 }

@@ -1,8 +1,6 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.metafile.MetafileDomain
-import io.tricefal.core.metafile.Representation
-
+// outgoing to profile and freelance
 class SignupStatusUpdatedEvent(
     val username: String,
     val status: String,
@@ -15,36 +13,17 @@ class SignupStatusUpdatedEvent(
     fun isClient() = Status.CLIENT.toString() === status
 }
 
+// outgoing to profile
 class SignupStateUpdatedEvent(val username: String, val state: String)
-
-class CompanyCompletionEvent(val username: String, companyName: String)
-
-class SignupResumeUploadedEvent(var metafile: MetafileDomain) {
-    val username = metafile.username
-    fun isResume() : Boolean {
-        return this.metafile.username.isNotBlank()
-                && this.metafile.filename.isNotBlank()
-                && this.metafile.representation == Representation.CV
-    }
-}
-
-class SignupResumeLinkedinUploadedEvent(var metafile: MetafileDomain) {
-    val username = metafile.username
-    fun isResumeLinkedin() : Boolean {
-        return this.metafile.username.isNotBlank()
-                && this.metafile.filename.isNotBlank()
-                && this.metafile.representation == Representation.CV_LINKEDIN
-    }
-}
-
+// incoming from company and freelance
+class CompanyCompletionEvent(val username: String, val companyName: String)
+// outgoing to mission and profile
+class SignupResumeUploadedEvent(var username: String, var filename: String)
+// outgoing to profile
+class SignupResumeLinkedinUploadedEvent(var username: String, var filename: String)
+// incoming from profile
 class ProfileResumeUploadedEvent(var username: String, var filename: String)
+// incoming from profile
 class ProfileResumeLinkedinUploadedEvent(var username: String, var filename: String)
 
-class MissionResumeUploadedEvent(var metafile: MetafileDomain) {
-    val username = metafile.username
-    fun isMissionResume() : Boolean {
-        return this.metafile.username.isNotBlank()
-                && this.metafile.filename.isNotBlank()
-                && this.metafile.representation == Representation.CV_MISSION
-    }
-}
+class SignupCommentAddedEvent(var targetUsername: String, var comment: CommentDomain)

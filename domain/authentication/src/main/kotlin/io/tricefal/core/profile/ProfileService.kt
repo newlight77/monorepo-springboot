@@ -13,7 +13,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
         } else throw NotFoundException("Failed to find a freelance for user $username")
     }
 
-    override fun save(profile: ProfileDomain): ProfileDomain {
+    override fun create(profile: ProfileDomain): ProfileDomain {
         dataAdapter.findByUsername(profile.username).ifPresent {
             throw DuplicateException("a profile with username ${profile.username} already exists")
         }
@@ -21,23 +21,27 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     }
 
     override fun initProfile(username: String, profile: ProfileDomain): ProfileDomain {
-        var newprofile = ProfileDomain.Builder(username).build()
+        var newProfile = ProfileDomain.Builder(username).build()
         try {
             this.dataAdapter.findByUsername(username)
                 .ifPresentOrElse(
                     {
                         it.status = profile.status
-                        newprofile = dataAdapter.update(it)
+                        it.lastname = profile.lastname
+                        it.firstname = profile.firstname
+                        it.phoneNumber =  profile.phoneNumber
+                        it.status = profile.status
+                        newProfile = dataAdapter.update(it)
                     },
                     {
-                        newprofile = dataAdapter.create(profile)
+                        newProfile = dataAdapter.create(profile)
                     }
                 )
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the status update event for user $username")
-            throw ProfileUploadException("Failed to update the profile from the status update event for user $username", ex)
+            throw ProfileUpdateException("Failed to update the profile from the status update event for user $username", ex)
         }
-        return newprofile
+        return newProfile
     }
 
     override fun updateState(username: String, state: String): ProfileDomain {
@@ -130,6 +134,9 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
     }
 
     class ProfileUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+        constructor(message: String?) : this(message, null)
+    }
+    class ProfileUpdateException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
         constructor(message: String?) : this(message, null)
     }
     class NotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {

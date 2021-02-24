@@ -35,7 +35,7 @@ class ProfileServiceTest {
         service = ProfileService(repository)
 
         // Act
-        service.save(profile)
+        service.create(profile)
 
         // Arrange
         Mockito.verify(repository).create(profile)

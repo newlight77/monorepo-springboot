@@ -16,12 +16,12 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
     fun publishStatusUpdatedEvent(signup: SignupDomain) {
         try {
             applicationEventPublisher.publishEvent(
-                    SignupStatusUpdatedEvent(signup.username,
-                        signup.status.toString(),
-                        signup.firstname,
-                        signup.lastname,
-                        signup.phoneNumber,
-                    )
+                SignupStatusUpdatedEvent(signup.username,
+                    signup.status.toString(),
+                    signup.firstname,
+                    signup.lastname,
+                    signup.phoneNumber,
+                )
             )
             logger.info("A SignupStatusUpdatedEvent has been published user ${signup.username}")
         } catch (ex: Exception) {
@@ -42,34 +42,34 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
         }
     }
 
-    fun publishResumeUploadedEvent(fileDomain: MetafileDomain) {
+    fun publishResumeUploadedEvent(username: String, filename: String) {
         try {
             applicationEventPublisher.publishEvent(
-                    SignupResumeUploadedEvent(fileDomain)
+                SignupResumeUploadedEvent(username, filename)
             )
-            logger.info("A ResumeUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
+            logger.info("A ResumeUploadedEvent has been published: $filename for user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a ResumeUploadedEvent for user ${fileDomain.username}")
-            throw ProfileResumeUploadedPublicationException("Failed to publish a ResumeUploadedEvent for user ${fileDomain.username}")
+            logger.error("Failed to publish a ResumeUploadedEvent for user $username")
+            throw ProfileResumeUploadedPublicationException("Failed to publish a ResumeUploadedEvent for user $username")
         }
     }
 
-    fun publishResumeLinkedinUploadedEvent(fileDomain: MetafileDomain) {
+    fun publishResumeLinkedinUploadedEvent(username: String, filename: String) {
         try {
             applicationEventPublisher.publishEvent(
-                    SignupResumeLinkedinUploadedEvent(fileDomain)
+                SignupResumeLinkedinUploadedEvent(username, filename)
             )
-            logger.info("A ResumeLinkedinUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
+            logger.info("A ResumeLinkedinUploadedEvent has been published: $filename for user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a ResumeLinkedinUploadedEvent for user ${fileDomain.username}")
-            throw ProfileResumeLinkedinUploadedPublicationException("Failed to publish a ResumeLinkedinUploadedEvent for user ${fileDomain.username}")
+            logger.error("Failed to publish a ResumeLinkedinUploadedEvent for user $username")
+            throw ProfileResumeLinkedinUploadedPublicationException("Failed to publish a ResumeLinkedinUploadedEvent for user $username")
         }
     }
 
     fun publishCguAcceptedEvent(username: String, cguAcceptedVersion: String) {
         try {
             applicationEventPublisher.publishEvent(
-                    CguAcceptedEvent(username, cguAcceptedVersion)
+                CguAcceptedEvent(username, cguAcceptedVersion)
             )
             logger.info("A CguAcceptedEvent has been published for user $username with version $cguAcceptedVersion")
         } catch (ex: Exception) {
@@ -88,6 +88,12 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
             throw EmailNotifiicationPublicationException("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
         }
+    }
+
+    fun publishCommentAddedEvent(targetUsername: String, comment: CommentDomain) {
+        applicationEventPublisher.publishEvent(
+            SignupCommentAddedEvent(targetUsername, comment)
+        )
     }
 
 }

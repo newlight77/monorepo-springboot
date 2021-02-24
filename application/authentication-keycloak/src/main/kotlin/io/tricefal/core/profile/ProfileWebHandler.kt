@@ -19,6 +19,16 @@ class ProfileWebHandler(val profileService: IProfileService,
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val dataFilesPath = env.getProperty("data.files.path")!!
 
+    fun initProfile(username: String, profile: ProfileDomain) {
+        try {
+            this.profileService.create(profile)
+            //this.profileService.initProfile(username, profile)
+        } catch(ex: Throwable) {
+            logger.error("Failed to update the profile status for username $username")
+            throw ProfileUploadException("Failed to update the profile status for username $username", ex)
+        }
+    }
+
     fun findByUsername(username: String): ProfileModel {
         if (username.isEmpty()) throw GlobalNotAcceptedException("username is $username")
         val domain = try {
@@ -90,15 +100,6 @@ class ProfileWebHandler(val profileService: IProfileService,
         return toModel(result)
     }
 
-    fun initProfile(username: String, profile: ProfileDomain) {
-        try {
-            this.profileService.initProfile(username, profile)
-        } catch(ex: Throwable) {
-            logger.error("Failed to update the profile status for username $username")
-            throw ProfileUploadException("Failed to update the profile status for username $username", ex)
-        }
-    }
-
     fun updateState(username: String, state: String) {
         try {
             this.profileService.updateState(username, state)
@@ -125,7 +126,6 @@ class ProfileWebHandler(val profileService: IProfileService,
             throw ProfileUploadException("Failed to update the profile resume linkedin filename for username $username", ex)
         }
     }
-
 
 }
 

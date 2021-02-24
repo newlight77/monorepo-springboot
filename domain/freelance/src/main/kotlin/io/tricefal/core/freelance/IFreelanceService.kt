@@ -6,7 +6,6 @@ import java.time.Instant
 import java.util.*
 
 interface IFreelanceService {
-    fun signupStatusUpdated(freelance: FreelanceDomain) : FreelanceDomain
     fun create(freelance: FreelanceDomain) : FreelanceDomain
     fun update(username: String, freelance: FreelanceDomain) : FreelanceDomain
     fun patch(username: String, operations: List<PatchOperation>) : FreelanceDomain

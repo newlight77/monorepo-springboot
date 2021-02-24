@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 import java.time.Instant
 
 @Component
-class FreelanceEventListener(val freelanceService: IFreelanceService) {
+class FreelanceEventListener(val webHandler: FreelanceWebHandler) {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -27,7 +27,7 @@ class FreelanceEventListener(val freelanceService: IFreelanceService) {
                     .lastDate(Instant.now())
                     .build())
                 .build()
-            freelanceService.signupStatusUpdated(freelance)
+            webHandler.initFreelance(freelance)
         } catch (ex: Throwable) {
             throw SignupStatusUpdatedException("Failed to create a freelance profile upon status updated for username ${event.username}")
         }

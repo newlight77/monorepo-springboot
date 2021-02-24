@@ -10,15 +10,15 @@ class MissionWishEventPublisher(private val applicationEventPublisher: Applicati
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun publishMissionResumeUploadedEvent(fileDomain: MetafileDomain) {
+    fun publishMissionResumeUploadedEvent(username: String, filename: String) {
         try {
             applicationEventPublisher.publishEvent(
-                MissionResumeUploadedEvent(fileDomain)
+                MissionResumeUploadedEvent(username, filename)
             )
-            logger.info("A MissionResumeUploadedEvent has been published: ${fileDomain.filename} for user ${fileDomain.username}")
+            logger.info("A MissionResumeUploadedEvent has been published: $filename for user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a MissionResumeUploadedEvent for user ${fileDomain.username}")
-            throw MissionResumeUpdatedPublicationException("Failed to publish a MissionResumeUploadedEvent for user ${fileDomain.username}")
+            logger.error("Failed to publish a MissionResumeUploadedEvent for user $username")
+            throw MissionResumeUpdatedPublicationException("Failed to publish a MissionResumeUploadedEvent for user $username")
         }
     }
 }
