@@ -78,6 +78,7 @@ code-analysis:
   variables:
     SONAR_URL: https://ci.tricefal.io/sonar
     SONAR_ANALYSIS_MODE: publish
+    SONAR_TOKEN: f1843a5c58e6658ed82e95e169868d014e1d04b1
   only:
     - master
     - develop

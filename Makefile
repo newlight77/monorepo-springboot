@@ -53,7 +53,10 @@ core-test: ## Run tests
 	@./gradlew -g .gradle/caches check jacocoTestReport
 
 core-code-analysis: ## Run sonarqube
-	@./gradlew -g .gradle/caches sonarqube
+	#@./gradlew -g .gradle/caches sonarqube
+	#@./gradlew sonarqube -Dsonar.qualitygate.wait=true
+	@docker run --rm -e SONAR_HOST_URL=https://ci.tricefal.io/sonar -e SONAR_LOGIN="f1843a5c58e6658ed82e95e169868d014e1d04b1" -v ~/wks/src/tricefal/tricefal/core:/usr/src sonarsource/sonar-scanner-cli
+	#@docker run -e SONAR_URL=https://ci.tricefal.io/sonar -e SONAR_ANALYSIS_MODE=publish -e SONAR_TOKEN="f1843a5c58e6658ed82e95e169868d014e1d04b1" ciricihq/gitlab-sonar-scanner gitlab-sonar-scanner
 
 core-boot: dc-up-infra
 	@./.run -b
