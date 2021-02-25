@@ -62,7 +62,7 @@ package:
     - master
     - develop
   script:
-    - make core-package
+    - make core-clean-package
   artifacts:
     paths:
       - application/signup/build/
@@ -82,6 +82,14 @@ code-analysis:
     - develop
   script:
     - gitlab-sonar-scanner
+  artifacts:
+    paths:
+      #      - .gradle
+      - build/
+      - application/**/build/
+      - domain/**/build/
+      - infrastructure/**/build/
+      - shared/**/build/
   dependencies:
     - unit-test
   when: on_success
@@ -147,6 +155,11 @@ cd_pipeline:
     - cat res.json
   artifacts:
     paths:
+      - build/
+      - application/**/build/
+      - domain/**/build/
+      - infrastructure/**/build/
+      - shared/**/build/
       - res.json
   dependencies:
     - build-image
