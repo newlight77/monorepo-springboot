@@ -94,7 +94,7 @@ tasks.withType<BootRun> {
 }
 
 tasks.withType<Jar>() {
-    baseName = "app-auth-keycloak"
+    baseName = "app-signup"
 }
 
 testlogger {

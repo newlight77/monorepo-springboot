@@ -69,13 +69,16 @@ core-test-api:
 	@./test-api.sh -u=newlight77+test1@gmail.com --api-url=http://localhost:8080/api/keycloak
 
 
+dc-build: ## build docker image for spring-boot
+	@docker-compose -f docker-compose.build.yml build core
+
 dc-up: ## Run all containers
 	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak dbcore core
 
-dc-up-keycloak: ## Run all containers
+dc-up-keycloak: ## Run keycloak containers
 	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak
 
-dc-up-infra: ## Run all containers
+dc-up-infra: ## Run infrastructure containers
 	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak dbcore
 
 dc-down: ## Stop all containers

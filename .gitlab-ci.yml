@@ -14,34 +14,34 @@ cache:
     - .gradle/build-cache
 
 stages:
-  - compile
-  - unit test
+#  - compile
   - package
+  - unit test
   - quality
   # - publish
-  - trigger_main_pipeline
-#  - trigger_deploy
+  - build images
+  - CD pipeline
 
-assemble:
-  stage: compile
-  script:
-    - make core-clean-assemble
-  artifacts:
-    paths:
-#      - .gradle
-      - build/
-      - application/**/build/
-      - domain/**/build/
-      - infrastructure/**/build/
-      - shared/**/build/
-  allow_failure: false
-  tags:
-    - java
+#assemble:
+#  stage: compile
+#  script:
+#    - make core-clean-assemble
+#  artifacts:
+#    paths:
+##      - .gradle
+#      - build/
+#      - application/**/build/
+#      - domain/**/build/
+#      - infrastructure/**/build/
+#      - shared/**/build/
+#  allow_failure: false
+#  tags:
+#    - java
 
 unit-test:
   stage: unit test
   dependencies:
-    - assemble
+    - package
   script:
     - make core-test
   artifacts:
@@ -61,13 +61,11 @@ package:
   only:
     - master
     - develop
-  dependencies:
-    - unit-test
   script:
     - make core-package
   artifacts:
     paths:
-      - application/authentication-keycloak/build/
+      - application/signup/build/
   allow_failure: false
   tags:
     - java
@@ -110,8 +108,38 @@ code-analysis:
 #    - unit-test
 #  when: on_success
 
-trigger_main_pipeline:
-  stage: trigger_main_pipeline
+build-image:
+  image: docker:19.03.12-dind
+  stage: build images
+  services:
+    - name: docker:19.03.12-dind
+      command: ["--insecure-registry=registry.gitlab.com"]
+  variables:
+    DOCKER_DRIVER: overlay2
+    VERSION: v1.0.0
+    ENV: local
+  before_script:
+    - apk add --no-cache make git
+    - apk add --no-cache docker-compose
+    - docker info
+    - docker-compose --version
+    - VERSION=$(git describe --always)
+    - echo $VERSION $ENV
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker-compose -f ./docker-compose.build.yml pull core
+    - docker-compose -f ./docker-compose.build.yml build core
+    - docker-compose -f ./docker-compose.build.yml push core
+  only:
+    - master
+    - develop
+  dependencies:
+    - code-analysis
+  tags:
+    - image
+
+cd_pipeline:
+  stage: CD pipeline
   variables:
     MAIN_PROJECT_ID: 18283923
   script:
@@ -121,8 +149,7 @@ trigger_main_pipeline:
     paths:
       - res.json
   dependencies:
-    - code-analysis
-#    - package
+    - build-image
 
 after_script:
   - echo "End CI"
