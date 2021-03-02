@@ -10,7 +10,7 @@ services:
     env_file:
       - ./config/core.docker.env
     volumes:
-      - ./application/authentication-keycloak/build/libs:/app/
+      - ./application/signup/build/libs:/app/
       - core_files:/data/files:rw
       - core_logs:/data/logs:rw
     ports:
@@ -29,8 +29,8 @@ services:
     env_file:
       - config/dbcore.env
     volumes:
-      - ./application/authentication-keycloak/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
-      - ./application/authentication-keycloak/src/main/resources/ref-data.sql:/docker-entrypoint-initdb.d/data.sql:ro
+      - ./application/signup/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+      - ./application/signup/src/main/resources/ref-data.sql:/docker-entrypoint-initdb.d/data.sql:ro
       - dbcore_data:/var/lib/postgresql/data:rw
     ports:
       - "5432:5432"
