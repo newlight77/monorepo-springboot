@@ -17,6 +17,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
         dataAdapter.findByUsername(profile.username).ifPresent {
             throw DuplicateException("a profile with username ${profile.username} already exists")
         }
+        if (profile.state == null) profile.state = ProfileStateDomain.Builder(profile.username).saved(true).build()
         return dataAdapter.create(profile)
     }
 
