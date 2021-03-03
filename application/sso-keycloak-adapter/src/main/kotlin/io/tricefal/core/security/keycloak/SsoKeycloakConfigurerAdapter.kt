@@ -90,17 +90,21 @@ open class SsoKeycloakConfigurerAdapter: KeycloakWebSecurityConfigurerAdapter() 
 
     override fun configure(webSecurity: WebSecurity) {
         webSecurity
-                .ignoring()
-                // All of Spring Security will ignore the requests
-                .antMatchers("/hello")
-                .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html", "/v3/api-docs/**") //
-                .antMatchers(HttpMethod.POST, "/logins") //
-                .antMatchers(HttpMethod.POST, "/notification/contact") //
-                .antMatchers(HttpMethod.POST, "/notification/feedback") //
-                .antMatchers(HttpMethod.POST, "/signup") //
-                .antMatchers(HttpMethod.GET, "/signup/email/verify**") //
-                .antMatchers(HttpMethod.GET, "/signup/state/*") //
-                .antMatchers(HttpMethod.GET, "/pricer") //
+            .ignoring()
+            // All of Spring Security will ignore the requests
+            .antMatchers("/hello")
+
+            .antMatchers(HttpMethod.GET, "/actuator/**") //
+
+            .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/swagger-ui/index.html", "/v3/api-docs/**") //
+
+            .antMatchers(HttpMethod.POST, "/logins") //
+            .antMatchers(HttpMethod.POST, "/notification/contact") //
+            .antMatchers(HttpMethod.POST, "/notification/feedback") //
+            .antMatchers(HttpMethod.POST, "/signup") //
+            .antMatchers(HttpMethod.GET, "/signup/email/verify**") //
+            .antMatchers(HttpMethod.GET, "/signup/state/*") //
+            .antMatchers(HttpMethod.GET, "/pricer") //
     }
 
     @Throws(Exception::class)

@@ -41,14 +41,14 @@ class PropertiesConfigurer : PropertySourcesPlaceholderConfigurer(), Environment
 
         envPropSources.map {
             with(logger) {
-                info("property name : ${it.name}")
+                //info("property name : ${it.name}")
                 info("property source class : ${it.source.javaClass}")
             }
         }
 
         envPropSources.map { propertySource ->
             val propertyLocations = propertySource.getProperty("application.properties.locations") as String?
-            logger.info("propertyLocations are $propertyLocations")
+            //logger.info("propertyLocations are $propertyLocations")
             propertyLocations
                 ?.split(",")
                 ?.map { filename -> loadProperties(filename) }

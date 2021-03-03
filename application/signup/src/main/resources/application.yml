@@ -108,9 +108,11 @@ core:
     frontendUrl: ${CORE_FRONTEND_URL}
 
 ## Can be set to false to disable security during local development
-#management:
-#    endpoints:
-#        web:
+management:
+    endpoints:
+        web:
+            exposure:
+                include: ${SPRING_ACTUATOR_ENDPOINTS}
 #            cors:
 #                allowed-origins: *
 #                allowed-headers: *
