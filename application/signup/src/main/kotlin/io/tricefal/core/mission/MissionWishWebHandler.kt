@@ -80,8 +80,8 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
     }
 
     @Async
-    fun updateOnResumeUploaded(username: String, filename: String): MissionWishDomain {
-        return try {
+    fun updateOnResumeUploaded(username: String, filename: String) {
+        try {
             missionWishService.updateOnResumeUploaded(username, filename)
         } catch (ex: Throwable) {
             logger.error("Failed to update mission wish on resume upload for user $username")
