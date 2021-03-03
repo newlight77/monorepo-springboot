@@ -30,6 +30,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                 .ifPresentOrElse(
                     {
                         it.status = status
+                        it.state?.statusUpdated = true
                         profile = dataAdapter.update(it)
                     },
                     { profile = dataAdapter.create(profile) }
