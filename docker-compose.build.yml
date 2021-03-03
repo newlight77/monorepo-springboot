@@ -9,7 +9,7 @@ version: "3.6"
 
 services:
   core:
-    image: registry.gitlab.com/tricefal/tricefal/core:${VERSION}
+    image: registry.gitlab.com/tricefal/tricefal-core:${VERSION}
     build:
       context: .
       dockerfile: ./Dockerfile
