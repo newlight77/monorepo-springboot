@@ -1,4 +1,4 @@
-# Tricefal Core
+= Tricefal Core
 
 
 image:https://gitlab.com/tricefal/tricefal-core/badges/master/pipeline.svg[link="https://gitlab.com/tricefal/tricefal-core/-/commits/master",title="pipeline status"]

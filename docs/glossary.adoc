@@ -1,0 +1,7 @@
+= Glossary
+
+- statut: freelance, salarié, client
+- acteur : freelance, salarié, client, associé, actionnaire, ceux qui composent l'écosysteme
+- consultant : freelance, salarié, associé
+- partie : pour désigner les différents acteurs
+- entité : est plutôt utilisé pour des sociétés dans ce contexte
