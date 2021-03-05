@@ -8,7 +8,7 @@ buildscript {
 			.resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
 }
 
-group = "io.tricefal.application"
+group = "io.tricefal.shared"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
@@ -33,7 +33,7 @@ dependencies {
 }
 
 tasks.withType<Jar>() {
-	baseName = "application-sso-keycloak-adapter"
+	baseName = "sso-keycloak-adapter"
 }
 
 testlogger {

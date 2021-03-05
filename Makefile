@@ -70,10 +70,10 @@ core-test-api:
 
 
 dc-build: ## build docker image for spring-boot
-	@docker-compose -f docker-compose.build.yml build core
+	@docker-compose -f docker-compose.build.yml build core-app-signup
 
 dc-up: ## Run all containers
-	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak dbcore core
+	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak dbcore core-app-signup
 
 dc-up-keycloak: ## Run keycloak containers
 	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak

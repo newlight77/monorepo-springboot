@@ -1,7 +1,7 @@
 version: "3.6"
 
 services:
-  core:
+  core-app-signup:
     image: openjdk:13-slim
     container_name: core
     hostname: docker_core
@@ -18,7 +18,7 @@ services:
       - "5080:5080"
     depends_on:
       - dbcore
-    command: java ${DEBUG_ARG} -jar /app/app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=localhost
+    command: java ${DEBUG_ARG} -jar /app/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=localhost
 
   dbcore:
     image: postgres:13.1

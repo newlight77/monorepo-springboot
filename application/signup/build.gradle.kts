@@ -25,8 +25,7 @@ repositories {
 dependencies {
 
 	implementation(project(":shared:util"))
-
-	implementation(project(":application:sso-keycloak-adapter"))
+	implementation(project(":shared:sso-keycloak-adapter"))
 
 	implementation(project(":domain:company"))
 	implementation(project(":domain:freelance"))
@@ -95,7 +94,7 @@ tasks.withType<BootRun> {
 }
 
 tasks.withType<Jar>() {
-    baseName = "app-signup"
+    baseName = "core-app-signup"
 }
 
 testlogger {

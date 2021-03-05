@@ -110,6 +110,6 @@ logInfo "launching the application"
 if [ "${SPRING_BOOT}" = 'true' ]; then
   ./gradlew :application:signup:bootRun
 else
-  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/core/application/signup/build/libs/app-uth-keycloak-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
-  java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/signup/build/libs/app-signup-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
+  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/core/application/signup/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
+  java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/signup/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
 fi

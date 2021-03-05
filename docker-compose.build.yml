@@ -8,8 +8,8 @@
 version: "3.6"
 
 services:
-  core:
-    image: registry.gitlab.com/tricefal/tricefal-core:${VERSION}
+  core-app-signup:
+    image: registry.gitlab.com/tricefal/tricefal-core/core-app-signup:${VERSION}
     build:
       context: .
       dockerfile: ./Dockerfile

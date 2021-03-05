@@ -21,7 +21,7 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter:2.3.0.RELEASE")
 
-	implementation("org.keycloak:keycloak-admin-client:11.0.2")
+	implementation("org.keycloak:keycloak-admin-client:12.0.2")
 
 	implementation("com.squareup.retrofit2:retrofit:2.9.0")
 	implementation("com.squareup.retrofit2:converter-gson:2.9.0")

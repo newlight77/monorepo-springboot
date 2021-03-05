@@ -2,7 +2,6 @@ rootProject.name = "tricefal-core"
 
 include(":application")
 include(":application:signup")
-include(":application:sso-keycloak-adapter")
 
 include(":domain")
 include(":domain:company")
@@ -30,3 +29,4 @@ include(":infrastructure:storage")
 
 include(":shared")
 include(":shared:util")
+include(":shared:sso-keycloak-adapter")

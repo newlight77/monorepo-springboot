@@ -1,7 +1,6 @@
 package io.tricefal.core.security.keycloak
 
 import io.tricefal.core.security.ip.IpAddressEventHandler
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 import javax.servlet.FilterChain
