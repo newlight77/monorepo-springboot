@@ -78,7 +78,6 @@ code-analysis:
   variables:
     SONAR_URL: https://ci.tricefal.io/sonar
     SONAR_ANALYSIS_MODE: publish
-    SONAR_TOKEN: f1843a5c58e6658ed82e95e169868d014e1d04b1
   only:
     - master
     - develop
@@ -130,6 +129,9 @@ build-image:
     DOCKER_DRIVER: overlay2
     VERSION: latest
     ENV: local
+    GROUP_REGISTRY: registry.gitlab.com/tricefal/
+    GROUP_REGISTRY_USER: tricefal-read
+    # GROUP_REGISTRY_PASSWORD: on gitlab.com project/settings/cicd/variables
   before_script:
     - apk add --no-cache make git
     - apk add --no-cache docker-compose
