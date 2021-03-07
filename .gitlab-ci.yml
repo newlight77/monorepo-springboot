@@ -61,6 +61,8 @@ package:
   only:
     - master
     - develop
+    - /^[0-9].[0-9].[0-9]$/
+    - /^v[0-9].[0-9].[0-9]$/
   script:
     - make core-clean-package
   artifacts:
@@ -80,6 +82,8 @@ code-analysis:
   only:
     - master
     - develop
+    - /^[0-9].[0-9].[0-9]$/
+    - /^v[0-9].[0-9].[0-9]$/
   script:
     - gitlab-sonar-scanner
   artifacts:
@@ -141,6 +145,8 @@ build-image:
   only:
     - master
     - develop
+    - /^[0-9].[0-9].[0-9]$/
+    - /^v[0-9].[0-9].[0-9]$/
   dependencies:
     - code-analysis
   tags:
@@ -161,6 +167,11 @@ cd_pipeline:
       - infrastructure/**/build/
       - shared/**/build/
       - res.json
+  only:
+    - master
+    - develop
+    - /^[0-9].[0-9].[0-9]$/
+    - /^v[0-9].[0-9].[0-9]$/
   dependencies:
     - build-image
 
