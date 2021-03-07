@@ -138,9 +138,15 @@ build-image:
     - VERSION=$(git describe --always)
     - echo $VERSION $ENV
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u $GROUP_REGISTRY_USER -p $GROUP_REGISTRY_PASSWORD $GROUP_REGISTRY
     - docker-compose -f ./docker-compose.yml pull
     - docker-compose -f ./docker-compose.yml build
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker-compose -f ./docker-compose.yml push
+    - VERSION=latest
+    - docker login -u $GROUP_REGISTRY_USER -p $GROUP_REGISTRY_PASSWORD $GROUP_REGISTRY
+    - docker-compose -f ./docker-compose.yml build
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker-compose -f ./docker-compose.yml push
   only:
     - master
