@@ -1,19 +1,8 @@
-# VERSION=latest
-# ENV=dev
-# ENABLE_BUILD=false
-
 version: "3.6"
 
 services:
   core-app-signup:
-    image: registry.gitlab.com/tricefal/tricefal-core/core-app-signup:${VERSION}
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      args:
-        VERSION: ${VERSION}
-        ENV: ${ENV}
-        ENABLE_BUILD: ${ENABLE_BUILD}
+    image: openjdk:13-slim
     container_name: core
     hostname: docker_core
     networks:
@@ -21,7 +10,7 @@ services:
     env_file:
       - ./config/core.docker.env
     volumes:
-      - ./config/core.docker.env:/app/config/app.env:ro
+      - ./application/signup/build/libs:/app/
       - core_files:/data/files:rw
       - core_logs:/data/logs:rw
     ports:
@@ -29,7 +18,7 @@ services:
       - "5080:5080"
     depends_on:
       - dbcore
-    restart: unless-stopped
+    command: java ${DEBUG_ARG} -jar /app/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=localhost
 
   dbcore:
     image: postgres:13.1
@@ -38,15 +27,13 @@ services:
     networks:
       - internal-subnet
     env_file:
-      - ./config/dbcore.env
+      - config/dbcore.env
     volumes:
       - ./application/signup/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
       - ./application/signup/src/main/resources/ref-data.sql:/docker-entrypoint-initdb.d/data.sql:ro
-      - ./infrastructure/pricer-reference/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/pricer-schema.sql:ro
-      - ./infrastructure/pricer-reference/src/main/resources/data.sql:/docker-entrypoint-initdb.d/pricer-data.sql:ro
-      - dbcore_data:/var/lib/postgresql/data
-    # ports:
-    #   - "5432:5432"
+      - dbcore_data:/var/lib/postgresql/data:rw
+    ports:
+      - "5432:5432"
     restart: unless-stopped
 
   keycloak:
@@ -55,23 +42,19 @@ services:
     hostname: docker_keycloak
     networks:
       - internal-subnet
-    # ports:
-    #   - "1080:8080"
-    #   - "1443:8443"
+    ports:
+      - "1080:8080"
+      - "1443:8443"
     depends_on:
       - dbkeycloak
     env_file:
       - ./config/keycloak.env
     volumes:
-      - ./config/keycloak/${ENV}/:/opt/jboss/keycloak/imports/:rw
-      - ./config/certs/${ENV}/${ENV}.tricefal.io.fullchain.pem:/etc/x509/https/tls.crt:ro
-      - ./config/certs/${ENV}/${ENV}.tricefal.io.key:/etc/x509/https/tls.key:ro
+      - ./config/keycloak/:/opt/jboss/keycloak/imports/
     command:
-      - "-b 0.0.0.0"
       - "-Dkeycloak.profile.feature.docker=enabled"
       - "-Dkeycloak.migration.action=import"
       - "-Dkeycloak.migration.dir=/opt/jboss/keycloak/imports/"
-      - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     restart: unless-stopped
 
   dbkeycloak:
@@ -84,7 +67,7 @@ services:
     env_file:
       - ./config/dbkeycloak.env
     volumes:
-      - dbkeycloak_data:/var/lib/postgresql/data
+      - dbkeycloak_data:/var/lib/postgresql/data:rw
 
 networks:
   internal-subnet:

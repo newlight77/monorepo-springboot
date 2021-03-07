@@ -139,9 +139,9 @@ build-image:
     - echo $VERSION $ENV
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker-compose -f ./docker-compose.build.yml pull core
-    - docker-compose -f ./docker-compose.build.yml build core
-    - docker-compose -f ./docker-compose.build.yml push core
+    - docker-compose -f ./docker-compose.yml pull core
+    - docker-compose -f ./docker-compose.yml build core
+    - docker-compose -f ./docker-compose.yml push core
   only:
     - master
     - develop

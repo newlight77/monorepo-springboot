@@ -21,20 +21,13 @@ env:
 help: ## Display this help screen
 	@grep -h -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-clean: core-clean git-clean
+clean: core-clean
 
 kill:
 	@tools/scripts/kill-process.sh --$(keyword)
 
 kill-java:
 	@tools/scripts/kill-process.sh --java --tricefal
-
-git-clean:
-	@git clean -fXd -e \!node_modules -e \!node_modules/**/*
-
-git-sub:
-	@git submodule update --init --recursive
-
 
 
 core-clean: ## Run tests
@@ -69,19 +62,19 @@ core-test-api:
 	@./test-api.sh -u=newlight77+test1@gmail.com --api-url=http://localhost:8080/api/keycloak
 
 
-dc-build: ## build docker image for spring-boot
-	@docker-compose -f docker-compose.build.yml build core-app-signup
+dc-build:
+	@docker-compose -f docker-compose.yml build core-app-signup
 
-dc-up: ## Run all containers
-	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak dbcore core-app-signup
+dc-up:
+	@docker-compose -f docker-compose.yml up -d keycloak core-app-signup
 
-dc-up-keycloak: ## Run keycloak containers
-	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak
+dc-up-local:
+	@docker-compose -f docker-compose.local.yml up -d core-app-signup keycloak
 
-dc-up-infra: ## Run infrastructure containers
-	@docker-compose -f docker-compose.yml up -d dbkeycloak keycloak dbcore
+dc-up-keycloak:
+	@docker-compose -f docker-compose.yml up -d keycloak
 
-dc-down: ## Stop all containers
+dc-down:
 	@docker-compose -f docker-compose.yml down
 
 dc-clean:
@@ -93,12 +86,12 @@ dc-restart: down up ## Restart all containers
 
 
 db-psql: ## Launch PostgreSQL Shell
-	@docker-compose -f docker-compose.yml exec postgres psql -U $(POSTGRES_USER) $(POSTGRES_DB)
+	@docker-compose -f docker-compose.yml exec dbcore psql -U $(POSTGRES_USER) $(POSTGRES_DB)
 
 db-pgsh: ## Launch a shell inside PostgreSQL container
-	@docker-compose -f docker-compose.yml exec postgres sh
+	@docker-compose -f docker-compose.yml exec dbcore sh
 
 db-pgdump: ## Dump the database
-	@docker-compose -f docker-compose.yml exec postgres pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB)
+	@docker-compose -f docker-compose.yml exec dbcore pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB)
 
 
