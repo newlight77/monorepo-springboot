@@ -121,7 +121,7 @@ code-analysis:
 #  when: on_success
 
 build-image:
-  image: docker:19.03.12-dind
+  image: docker:19.03.12
   stage: build images
   services:
     - name: docker:19.03.12-dind
