@@ -49,7 +49,7 @@ services:
     restart: unless-stopped
 
   keycloak:
-    image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak:${SHORT_VERSION}
+    image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak:latest
     container_name: keycloak
     hostname: docker_keycloak
     networks:
