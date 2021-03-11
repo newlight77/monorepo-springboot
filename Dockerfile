@@ -30,8 +30,8 @@ WORKDIR /app
 # RUN addgroup -S spring && adduser -S spring -G spring
 RUN adduser spring
 
-COPY --from=builder /code/application/signup/build/libs/*.jar /app/libs/application.jar
-COPY --from=builder /code/config/core.docker.env /app/config/app.env
+COPY --from=builder /code/application/signup/build/libs/*.jar /app/libs/core-app-signup.jar
+COPY --from=builder /code/config/core-app.docker.env /app/config/core-app.env
 COPY --from=builder /code/.run /app/.run
 
 RUN chown -R spring:spring /app
@@ -48,4 +48,4 @@ EXPOSE 5080
 
 USER spring:spring
 
-ENTRYPOINT [ "sh", ".run" ]
+ENTRYPOINT [ "sh", "/app/.run", "--run-mode=docker"]

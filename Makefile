@@ -5,12 +5,13 @@ SHELL := /bin/sh
 
 export DEBUG_ARG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080"
 
+export ENV ?= local
 #export BUILD = $(shell git describe --always)-$(shell date +%Y%m%d%H%M%S)
 #export TAG = $(shell git describe --abbrev=0 --tags)
 #BRANCH = $(shell git branch --show-current)
 export VERSION ?= $(shell git describe --always)
 
-include ./config/core.env
+include ./config/core-app.${ENV}.env
 export
 
 $(info version = $(VERSION))
@@ -52,30 +53,38 @@ core-code-analysis: ## Run sonarqube
 	#@docker run -e SONAR_URL=https://ci.tricefal.io/sonar -e SONAR_ANALYSIS_MODE=publish -e SONAR_TOKEN="f1843a5c58e6658ed82e95e169868d014e1d04b1" ciricihq/gitlab-sonar-scanner gitlab-sonar-scanner
 
 core-boot: dc-up-infra
-	@./.run -b
+	@./.run --env=local --run-mode=boot
 
 core-run: dc-up-infra
-	@./.run
-#	@java $(DEBUG_ARG) -jar core/application/build/libs/core-application-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
+	@./.run --env=local --run-mode=local
+#	@java $(DEBUG_ARG) -jar core/application/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
 
 core-test-api:
 	@./test-api.sh -u=newlight77+test1@gmail.com --api-url=http://localhost:8080/api/keycloak
 
 
 dc-build:
-	@docker-compose -f docker-compose.yml build core-app-signup
+	@docker-compose build core-app-signup
+
+dc-build-push:
+	@docker system prune -f
+	@docker-compose build core-app-signup
+	@docker-compose push core-app-signup
+
+dc-push:
+	@docker-compose push core-app-signup
 
 dc-up:
-	@docker-compose -f docker-compose.yml up -d keycloak core-app-signup
+	@docker-compose up -d core-app-signup keycloak
 
 dc-up-local:
 	@docker-compose -f docker-compose.local.yml up -d core-app-signup keycloak
 
 dc-up-keycloak:
-	@docker-compose -f docker-compose.yml up -d keycloak
+	@docker-compose up -d keycloak
 
 dc-down:
-	@docker-compose -f docker-compose.yml down
+	@docker-compose down
 
 dc-clean:
 	@docker system prune
@@ -86,12 +95,12 @@ dc-restart: down up ## Restart all containers
 
 
 db-psql: ## Launch PostgreSQL Shell
-	@docker-compose -f docker-compose.yml exec dbcore psql -U $(POSTGRES_USER) $(POSTGRES_DB)
+	@docker-compose exec dbcore psql -U $(POSTGRES_USER) $(POSTGRES_DB)
 
 db-pgsh: ## Launch a shell inside PostgreSQL container
-	@docker-compose -f docker-compose.yml exec dbcore sh
+	@docker-compose exec dbcore sh
 
 db-pgdump: ## Dump the database
-	@docker-compose -f docker-compose.yml exec dbcore pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB)
+	@docker-compose exec dbcore pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB)
 
 

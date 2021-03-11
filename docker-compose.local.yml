@@ -8,8 +8,9 @@ services:
     networks:
       - internal-subnet
     env_file:
-      - ./config/core.docker.env
+      - ./config/core-app.docker.env
     volumes:
+      - ./.run:/app/.run
       - ./application/signup/build/libs:/app/
       - core_files:/data/files:rw
       - core_logs:/data/logs:rw
@@ -38,8 +39,8 @@ services:
 
   keycloak:
     image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak:${VERSION}
-    container_name: keycloak
-    hostname: docker_keycloak
+    #container_name: keycloak
+    #hostname: docker_keycloak
     networks:
       - internal-subnet
     ports:

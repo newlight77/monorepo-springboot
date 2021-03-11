@@ -18,9 +18,10 @@ services:
     networks:
       - internal-subnet
     env_file:
-      - ./config/core.docker.env
+      - ./config/core-app.docker.env
     volumes:
-      - ./config/core.docker.env:/app/config/app.env:ro
+      - ./.run:/app/.run
+      - ./config/core-app.docker.env:/app/config/core-app.env:ro
       - core_files:/data/files:rw
       - core_logs:/data/logs:rw
     ports:
@@ -44,14 +45,14 @@ services:
       - ./infrastructure/pricer-reference/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/pricer-schema.sql:ro
       - ./infrastructure/pricer-reference/src/main/resources/data.sql:/docker-entrypoint-initdb.d/pricer-data.sql:ro
       - dbcore_data:/var/lib/postgresql/data
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     restart: unless-stopped
 
   keycloak:
     image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak:latest
-    container_name: keycloak
-    hostname: docker_keycloak
+    #container_name: keycloak
+    #hostname: docker_keycloak
     networks:
       - internal-subnet
     # ports:

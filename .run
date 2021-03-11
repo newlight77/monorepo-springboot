@@ -22,6 +22,8 @@ DEBUG_ARG=
 SPRING_PROFILE_ARG=--spring.profiles.active=local
 KEYCLOAK_CONFIG_ARG=
 CLASSPATH_DIR=
+RUN_MODE=
+ENV=
 
 LOG_FILE=$(basename $0).log
 echo "" > ${LOG_FILE}
@@ -49,9 +51,10 @@ usage() {
   echo "Usage: $0 [options]"
   echo ""
   echo "${blue}Options:    ${reset}"
+  echo "${blue}          -e, --env =[local | dev | prod]                classpath${reset}"
+  echo "${blue}          -m, --run-mode =[boot | local | docker]                classpath${reset}"
   echo "${blue}          -c, --classpath =[classpath]                           classpath${reset}"
-  echo "${blue}          -k, --keycloak-configFile =[keycloak.json file path]     keycloak.json file path${reset}"
-  echo "${blue}          -b, --boot                                             running in spring-boot mode${reset}"
+  echo "${blue}          -k, --keycloak-configFile =[keycloak.json file path]   keycloak.json file path${reset}"
   echo "${blue}          -d, --debug                                            enable debug remotely for java app${reset}"
   echo "${blue}          -h,  --help                                            help ${reset}"
   echo "${blue}                                                                 ${reset}"
@@ -65,29 +68,39 @@ usage() {
 for i in "$@"
   do
     case $i in
-      -c=*|--classpath=*)              CLASSPATH_DIR="${i#*=}"   ;;
-      -k=*|--keycloak-configFile=*)     KEYCLOAK_CONFIGFILE="${i#*=}"   ;;
-      -b|--boot)                       SPRING_BOOT="true"       ;;
-      -d|--debug)                      REMOTE_DEBUG="true"       ;;
-      -h|--help)                       usage               ;;
-      *)                               usage               ;;
+      -e=*|--env=*)                     ENV="${i#*=}"   ;;
+      -rm=*|--run-mode=*)               RUN_MODE="${i#*=}"   ;;
+      -cp=*|--classpath=*)              CLASSPATH_DIR="${i#*=}"   ;;
+      -kc=*|--keycloak-configFile=*)    KEYCLOAK_CONFIGFILE="${i#*=}"   ;;
+      -d|--debug)                       REMOTE_DEBUG="true"       ;;
+      -h|--help)                        usage               ;;
+      *)                                usage               ;;
     esac
 done
 
 #############################################
 ## Run
 #############################################
-#PID=$(ps -ef | grep java | grep 'core' | cut -d' ' -f4 | awk '{print}' ORS=' ')
-PID=$(ps -ef | grep java | grep 'core' | cut -d' ' -f4 | awk '{ printf("%s ", $0) }')
-echo "killing springboot app with pid=${PID}"
-kill -9 ${PID}
-ps -ef | grep java
 
+ps -1 2>&1
+if [ "$?" = '0' ]; then
+  #PID=$(ps -ef | grep java | grep 'core' | cut -d' ' -f4 | awk '{print}' ORS=' ')
+  PID=$(ps -ef | grep java | grep 'core' | cut -d' ' -f4 | awk '{ printf("%s ", $0) }')
+  echo "killing springboot app with pid=${PID}"
+  kill -9 ${PID}
+  ps -ef | grep java
+fi
 
-sed 's/\(.*=\)/export &/g' < ./config/core.env > .env
-. .env > /dev/null
+if [ "${ENV}" != '' ]; then
+  sed 's/\(.*=\)/export &/g' < ./config/core-app.${ENV}.env > ./.env
+else
+  sed 's/\(.*=\)/export &/g' < ./config/core-app.env > ./.env
+fi
+
+. ./.env > /dev/null
 #env
 rm .env
+
 
 if [ "${REMOTE_DEBUG}" = 'true' ]; then
   DEBUG_ARG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080"
@@ -107,9 +120,16 @@ fi
 
 logInfo "launching the application"
 
-if [ "${SPRING_BOOT}" = 'true' ]; then
+if [ "${RUN_MODE}" = 'boot' ]; then
   ./gradlew :application:signup:bootRun
-else
-  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/core/application/signup/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
+fi
+
+if [ "${RUN_MODE}" = 'local' ]; then
+  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/signup/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
   java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/signup/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
+fi
+
+if [ "${RUN_MODE}" = 'docker' ]; then
+  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/libs/core-app-signup.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
+  java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/libs/core-app-signup.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
 fi
