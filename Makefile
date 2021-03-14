@@ -60,7 +60,7 @@ core-run: dc-up-infra
 #	@java $(DEBUG_ARG) -jar core/application/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
 
 core-test-api:
-	@./test-api.sh -u=newlight77+test1@gmail.com --api-url=http://localhost:8080/api/keycloak
+	@./test-api.sh --api-url=http://localhost:8080/api --username=newlight77+test1@gmail.com 
 
 
 dc-build:
@@ -85,6 +85,11 @@ dc-up-keycloak:
 
 dc-down:
 	@docker-compose down
+
+dc-down-clean:
+	@docker-compose down
+	@docker volume prune
+	@docker network prune
 
 dc-clean:
 	@docker system prune

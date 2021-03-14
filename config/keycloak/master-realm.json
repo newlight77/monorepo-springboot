@@ -57,7 +57,7 @@
       "composites" : {
         "realm" : [ "create-realm" ],
         "client" : {
-          "local.realm" : [ "query-realms", "query-users", "query-groups", "manage-clients", "query-clients", "create-client", "view-realm", "impersonation", "view-events", "view-users", "manage-identity-providers", "view-clients", "manage-events", "manage-users", "view-authorization", "view-identity-providers", "manage-authorization", "manage-realm" ],
+          "local.app-realm" : [ "query-realms", "query-users", "query-groups", "manage-clients", "query-clients", "create-client", "view-realm", "impersonation", "view-events", "view-users", "manage-identity-providers", "view-clients", "manage-events", "manage-users", "view-authorization", "view-identity-providers", "manage-authorization", "manage-realm" ],
           "master-realm" : [ "manage-events", "create-client", "query-users", "view-events", "view-authorization", "query-realms", "manage-users", "view-clients", "manage-identity-providers", "manage-authorization", "manage-clients", "view-realm", "view-identity-providers", "query-groups", "manage-realm", "view-users", "impersonation", "query-clients" ]
         }
       },
@@ -82,7 +82,7 @@
       "attributes" : { }
     } ],
     "client" : {
-      "local.realm" : [ {
+      "local.app-realm" : [ {
         "id" : "e9b06f64-a644-460e-ba75-e3ec9026d554",
         "name" : "query-realms",
         "description" : "${role_query-realms}",
@@ -209,7 +209,7 @@
         "composite" : true,
         "composites" : {
           "client" : {
-            "local.realm" : [ "query-users", "query-groups" ]
+            "local.app-realm" : [ "query-users", "query-groups" ]
           }
         },
         "clientRole" : true,
@@ -230,7 +230,7 @@
         "composite" : true,
         "composites" : {
           "client" : {
-            "local.realm" : [ "query-clients" ]
+            "local.app-realm" : [ "query-clients" ]
           }
         },
         "clientRole" : true,
@@ -738,7 +738,7 @@
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
   }, {
     "id" : "41da5222-b7c9-4430-a308-a3706d817b0b",
-    "clientId" : "local.realm",
+    "clientId" : "local.app-realm",
     "name" : "Dev Realm",
     "surrogateAuthRequired" : false,
     "enabled" : true,
@@ -1302,7 +1302,18 @@
     "xXSSProtection" : "1; mode=block",
     "strictTransportSecurity" : "max-age=31536000; includeSubDomains"
   },
-  "smtpServer" : { },
+  "smtpServer" : {
+    "password" : "Legadlu2020****",
+    "starttls" : "",
+    "auth" : "true",
+    "port" : "587",
+    "host" : "ssl0.ovh.net",
+    "replyTo" : "noreply@tricefal.com",
+    "from" : "noreply@tricefal.com",
+    "fromDisplayName" : "Auto-Reply",
+    "ssl" : "",
+    "user" : "noreply@tricefal.com"
+  },
   "eventsEnabled" : false,
   "eventsListeners" : [ "jboss-logging" ],
   "enabledEventTypes" : [ ],

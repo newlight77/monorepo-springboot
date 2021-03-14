@@ -55,42 +55,40 @@ usage() {
 
 signup() {
   curl --insecure --location --request POST "${API_URL}/signup" \
-    --header "Content-Type: application/json" \
-    --data '{' \
-    '"firstname":"Kong",'\
-    '"lastname":"To",'\
-    '"username":"'${USERNAME}'",'\
-    '"password":"'${PASSWORD}'",'\
-    '"phoneNumber":"0659401130"'\
-    '}'
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "firstname": "kong", 
+        "lastname": "to", 
+        "username": "'${USERNAME}'",
+        "password": "'${PASSWORD}'",
+        "phoneNumber": "0659401130"
+    }'
 }
 
 getToken() {
-  token=$(curl --insecure --location --request POST "${TOKEN_URL}" \
-    --header "Content-Type: application/x-www-form-urlencoded" \
+  curl --location --request POST "${TOKEN_URL}" \
+    --header 'Content-Type: application/x-www-form-urlencoded' \
     --data-urlencode "client_id=${CLIENT_ID}" \
     --data-urlencode "username=${USERNAME}" \
     --data-urlencode "password=${PASSWORD}" \
-    --data-urlencode "grant_type=password" | jq -r .access_token)
-
-  echo "$token"
+    --data-urlencode "grant_type=password" | jq -r .access_token
 }
 
 helloApi() {
-  RESULT=$(curl ${API_URL}/hello)
-  echo "${RESULT}"
+  result=$(curl ${API_URL}/hello)
+  echo "${result}"
 }
 
 secureUserApi() {
   token=$1
-  RESULT=$(curl -H "Authorization: bearer ${token}" "${API_URL}/user")
-  echo "${RESULT}"
+  echo curl --location --request GET "${API_URL}/signup" \
+    -H 'Authorization: bearer '${token}
 }
 
 uploadCv() {
   token=$1
   curl --location --request POST "${API_URL}/signup/upload/cv" \
-    -H "Authorization: bearer ${TOKEN}" \
+    -H 'Authorization: bearer '${token} \
     --form 'file=@/Users/kong/Downloads/contabo-11.pdf'
 }
 
@@ -115,8 +113,11 @@ done
 #############################################
 
 helloApi
-signup
-TOKEN=getToken
-secureUserApi ${TOKEN}
-uploadCv ${TOKEN}
+$(signup)
+TOKEN=$(getToken)
+echo $TOKEN
+RESULT=$(secureUserApi ${TOKEN})
+echo $RESULT
+RESULT=$(uploadCv ${TOKEN})
+echo $RESULT
 

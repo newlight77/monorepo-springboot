@@ -6,7 +6,10 @@ services:
     container_name: core
     hostname: docker_core
     networks:
-      - internal-subnet
+      internal-subnet:
+        ipv4_address: 172.28.5.21
+    extra_hosts:
+      - "docker_keycloak_1:172.28.5.11"
     env_file:
       - ./config/core-app.docker.env
     volumes:
@@ -32,6 +35,8 @@ services:
     volumes:
       - ./application/signup/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
       - ./application/signup/src/main/resources/ref-data.sql:/docker-entrypoint-initdb.d/data.sql:ro
+      - ./infrastructure/pricer-reference/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/pricer-schema.sql:ro
+      - ./infrastructure/pricer-reference/src/main/resources/data.sql:/docker-entrypoint-initdb.d/pricer-data.sql:ro
       - dbcore_data:/var/lib/postgresql/data:rw
     ports:
       - "5432:5432"
@@ -39,23 +44,33 @@ services:
 
   keycloak:
     image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak:${VERSION}
-    #container_name: keycloak
-    #hostname: docker_keycloak
+    container_name: keycloak
+    hostname: docker_keycloak_1
     networks:
-      - internal-subnet
+      internal-subnet:
+        ipv4_address: 172.28.5.11
     ports:
       - "1080:8080"
       - "1443:8443"
     depends_on:
       - dbkeycloak
-    env_file:
-      - ./config/keycloak.env
-    volumes:
-      - ./config/keycloak/:/opt/jboss/keycloak/imports/
-    command:
-      - "-Dkeycloak.profile.feature.docker=enabled"
-      - "-Dkeycloak.migration.action=import"
-      - "-Dkeycloak.migration.dir=/opt/jboss/keycloak/imports/"
+    environment:
+      - DB_VENDOR=postgres
+      - DB_ADDR=docker_dbkeycloak
+      - DB_PORT=5432
+      - DB_DATABASE=keycloak
+      - DB_USER=keycloak
+      - DB_PASSWORD=Pa55w0rd
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=Pa55w0rd
+    # volumes:
+    #   - ./config/keycloak/:/opt/jboss/keycloak/imports/
+    # command:
+    #   - "-b 0.0.0.0"
+    #   - "-Dkeycloak.profile.feature.docker=enabled"
+    #   - "-Dkeycloak.migration.action=import"
+    #   - "-Dkeycloak.migration.dir=/opt/jboss/keycloak/imports/"
+    #   - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     restart: unless-stopped
 
   dbkeycloak:
@@ -64,15 +79,22 @@ services:
     hostname: docker_dbkeycloak
     networks:
       - internal-subnet
-    restart: always
-    env_file:
-      - ./config/dbkeycloak.env
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=Pa55w0rd
     volumes:
-      - dbkeycloak_data:/var/lib/postgresql/data:rw
+      - dbkeycloak_data:/var/lib/postgresql/data
+    restart: always
 
 networks:
   internal-subnet:
     name: internal_subnet
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.5.0/24
 
 volumes:  
   core_files:
