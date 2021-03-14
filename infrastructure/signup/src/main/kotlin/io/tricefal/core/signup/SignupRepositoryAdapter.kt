@@ -81,7 +81,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         return try {
             registrationService.delete(username)
         } catch (ex: Exception) {
-            logger.error("failed to delete user on IAM server for username $username")
+            logger.error("failed to delete user on IAM server for username $username", ex)
             throw SignupIamAccountDeletionException("failed to delete user from IAM server for username $username", ex)
         }
     }
@@ -91,7 +91,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
             val result = registrationService.register(signup)
             result
         } catch (ex: Exception) {
-            logger.error("Failed to register a user on IAM server for username ${signup.username}")
+            logger.error("Failed to register a user on IAM server for username ${signup.username}", ex)
             throw SignupRegistrationException("Failed to register a user on IAM server for username ${signup.username}", ex)
         }
     }
@@ -186,7 +186,7 @@ class SignupRepositoryAdapter(private var repository: SignupJpaRepository,
         try {
             keycloakRegisterService.addRole(username, accessRight)
         } catch (ex: Exception) {
-            logger.error("Failed to assign the role $accessRight to user $username")
+            logger.error("Failed to assign the role $accessRight to user $username", ex)
             throw SignupRoleAssignationException("Failed to assign the role $accessRight to user $username", ex)
         }
     }

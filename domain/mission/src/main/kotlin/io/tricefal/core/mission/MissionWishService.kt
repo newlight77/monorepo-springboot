@@ -46,7 +46,7 @@ class MissionWishService(private var dataAdapter: MissionWishDataAdapter) : IMis
                     )
             dataAdapter.updateOnResumeUploaded(username, filename)
         } catch (ex: Throwable) {
-            logger.error("Failed to update the mission wish from the resume uploaded event for user $username")
+            logger.error("Failed to update the mission wish from the resume uploaded event for user $username", ex)
             throw MissionResumeUploadException("Failed to mission wish the profile from the resume uploaded event for user $username", ex)
         }
         return missionWish

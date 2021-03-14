@@ -51,7 +51,7 @@ class ProfileEventListener(val webHandler: ProfileWebHandler) {
         try {
             this.webHandler.updateProfileOnResumeUploaded(event.username, event.filename)
         } catch(ex: Exception) {
-            logger.error("Failed to update the profile resume for username ${event.username}")
+            logger.error("Failed to update the profile resume for username ${event.username}", ex)
             throw ProfileUploadException("Failed to update the profile resume for username ${event.username}", ex)
         }
         logger.info("EventHandler picked up a resume uploaded event with ${event.filename}")
@@ -62,7 +62,7 @@ class ProfileEventListener(val webHandler: ProfileWebHandler) {
         try {
             this.webHandler.updateProfileOnResumeLinkedinUploaded(event.username, event.filename)
         } catch(ex: Exception) {
-            logger.error("Failed to update the profile resume linkedin for username ${event.username}")
+            logger.error("Failed to update the profile resume linkedin for username ${event.username}", ex)
             throw ProfileUploadException("Failed to update the profile resume linkedin for username ${event.username}", ex)
         }
         logger.info("EventHandler picked up resume linkedin uploaded event ${event.filename}")

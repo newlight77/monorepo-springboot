@@ -88,7 +88,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 dataAdapter.softDeleted(signup.username)
             }
         } catch (ex: Exception) {
-            logger.error("failed to delete from persistence the signup for username ${signup.username}")
+            logger.error("failed to delete from persistence the signup for username ${signup.username}", ex)
             throw SignupPersistenceException("failed to delete from persistence the signup for username ${signup.username}", ex)
         }
     }
@@ -115,8 +115,8 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.validated(signup)
             return signup.state!!
         } catch (ex: Throwable) {
-            logger.error("Failed to update the signup state after activation for username ${signup.username}")
-            throw SignupActivationException("Failed to update the signup state after activation for username ${signup.username}")
+            logger.error("Failed to update the signup state after activation for username ${signup.username}", ex)
+            throw SignupActivationException("Failed to update the signup state after activation for username ${signup.username}", ex)
         }
     }
 
@@ -175,7 +175,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.resumeUploaded(signup.username, metafileDomain.filename)
             return signup.state!!
         } catch (ex: Throwable) {
-            logger.error("failed to update the signup with resume upload of the signup for username ${signup.username}")
+            logger.error("failed to update the signup with resume upload of the signup for username ${signup.username}", ex)
             throw SignupResumeUploadException("failed to update the signup with resume upload of the signup for username ${signup.username}", ex)
         }
     }
@@ -189,7 +189,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.resumeLinkedinUploaded(signup.username, metafileDomain.filename)
             return signup.state!!
         } catch (ex: Throwable) {
-            logger.error("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}")
+            logger.error("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}", ex)
             throw SignupLinkedinResumeUploadException("failed to update the signup with linkedin resume upload of the signup for username ${signup.username}", ex)
         }
     }
@@ -205,7 +205,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.statusUpdated(signup)
             return signup.state!!
         } catch (ex: Throwable) {
-            logger.error("failed to update the status of the signup for username ${signup.username}")
+            logger.error("failed to update the status of the signup for username ${signup.username}", ex)
             throw SignupStatusUpdateException("failed to update the status of the signup for username ${signup.username}", ex)
         }
     }
@@ -222,7 +222,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.companyCompleted(signup)
             return signup.state!!
         } catch (ex: Throwable) {
-            logger.error("failed to update the state upon company completion of the signup for username ${signup.username}")
+            logger.error("failed to update the state upon company completion of the signup for username ${signup.username}", ex)
             throw SignupStatusUpdateException("failed to update the state of the signup upon company completion for username ${signup.username}", ex)
         }
     }
@@ -240,7 +240,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.resumeUploaded(username, filename)
             return signup
         } catch (ex: Throwable) {
-            logger.error("failed to update the signup and state upon resume upload for username ${signup.username}")
+            logger.error("failed to update the signup and state upon resume upload for username ${signup.username}", ex)
             throw SignupStatusUpdateException("failed to update the signup and state upon resume upload for username ${signup.username}", ex)
         }
     }
@@ -258,7 +258,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.resumeLinkedinUploaded(username, filename)
             return signup
         } catch (ex: Throwable) {
-            logger.error("failed to update the signup and state upon resume linkedin upload for username ${signup.username}")
+            logger.error("failed to update the signup and state upon resume linkedin upload for username ${signup.username}", ex)
             throw SignupStatusUpdateException("failed to update the signup and state upon resume linkedin upload for username ${signup.username}", ex)
         }
     }
@@ -275,7 +275,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.commented(targetUsername, comment)
             return comment
         } catch (ex: Throwable) {
-            logger.error("failed to add a comment on the signup for username ${signup.username}")
+            logger.error("failed to add a comment on the signup for username ${signup.username}", ex)
             throw SignupStatusUpdateException("failed to add a comment on the signup for username ${signup.username}", ex)
         }
     }
@@ -291,8 +291,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             }
             return false
         } catch (ex: Throwable) {
-            logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}")
-            logger.error("${ex.stackTrace}")
+            logger.error("a signup with username ${signup.username} has failed. ex : ${ex.localizedMessage}", ex)
             throw SignupUserRegistrationException("a signup with username ${signup.username} has failed. ", ex)
         }
     }
@@ -304,7 +303,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.saved(signup)
             return true
         } catch (ex: Throwable) {
-            logger.error("failed to persist the signup for username ${signup.username}")
+            logger.error("failed to persist the signup for username ${signup.username}", ex)
             throw SignupPersistenceException("failed to persist the signup for username ${signup.username}", ex)
         }
     }
@@ -317,7 +316,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
             dataAdapter.cguAccepted(signup.username, cguAcceptedVersion)
             return true
         } catch (ex: Throwable) {
-            logger.error("failed to accept the cgu for username ${signup.username}")
+            logger.error("failed to accept the cgu for username ${signup.username}", ex)
             throw SignupCguAcceptException("failed to accept the cgu for username ${signup.username}", ex)
         }
     }
@@ -331,7 +330,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .orElseThrow { SignupEmailNotificationException("failed to update the signup after sending email for username ${signup.username}")}
             return true
         } catch (ex: Throwable) {
-            logger.error("failed to send an email for validation for username ${signup.username}")
+            logger.error("failed to send an email for validation for username ${signup.username}", ex)
             throw SignupEmailNotificationException("failed to send an email for validation for username ${signup.username}", ex)
         }
     }
@@ -345,7 +344,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
                 .orElseThrow { SignupSmsNotificationException("failed to update the signup after sending sms for username ${signup.username}")}
             return true
         } catch (ex: Throwable) {
-            logger.error("failed to send an sms for activation for username ${signup.username}")
+            logger.error("failed to send an sms for activation for username ${signup.username}", ex)
             throw SignupSmsNotificationException("failed to send an sms for activation for username ${signup.username}", ex)
         }
     }
@@ -354,7 +353,7 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
         try {
             roles?.forEach { dataAdapter.assignRole(signup.username, it) }
         } catch (ex: Throwable) {
-            logger.error("Failed to assign the role ${statusToReadRole[signup.status]} to user ${signup.username}")
+            logger.error("Failed to assign the role ${statusToReadRole[signup.status]} to user ${signup.username}", ex)
             throw SignupRoleAssignationException("Failed to assign the role ${statusToReadRole[signup.status]} to user ${signup.username}", ex)
         }
     }
@@ -392,19 +391,36 @@ class SignupService(private var dataAdapter: SignupDataAdapter) : ISignupService
 
 }
 
-class SignupDeletionException(val s: String) : Throwable()
-class SignupActivationException(val s: String) : Throwable()
-class SignupDeactivationException(val s: String) : Throwable()
-
-class SignupNotFoundException(val s: String) : Throwable()
-class SignupPersistenceException(val s: String, ex: Throwable?) : Throwable(ex)
-class SignupUserNotFoundException(val s: String) : Throwable()
-class SignupUsernameUniquenessException(val s: String) : Throwable()
+class SignupDeletionException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupActivationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupDeactivationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupNotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupPersistenceException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupUserNotFoundException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupUsernameUniquenessException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 class SignupUserRegistrationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
     constructor(message: String?) : this(message, null)
 }
-class SignupVerificationByCodeException(val s: String) : Throwable()
-class SignupVerificationByCodeFromTokenException(val s: String) : Throwable()
+class SignupVerificationByCodeException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupVerificationByCodeFromTokenException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 class SignupEmailNotificationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
     constructor(message: String?) : this(message, null)
 }
@@ -423,5 +439,9 @@ class SignupResumeUploadException(val s: String?, val ex: Throwable?) : Throwabl
 class SignupLinkedinResumeUploadException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
     constructor(message: String?) : this(message, null)
 }
-class SignupRoleAssignationException(val s: String, ex: Throwable?) : Throwable(ex)
-class SignupResourceBundleMissingKeyException(val s: String) : Throwable()
+class SignupRoleAssignationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupResourceBundleMissingKeyException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}

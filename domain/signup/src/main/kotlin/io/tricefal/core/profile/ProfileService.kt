@@ -36,7 +36,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                     { profile = dataAdapter.create(profile) }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the profile from the signup state update event for user $username")
+            logger.error("Failed to update the profile from the signup state update event for user $username", ex)
             throw ProfileUploadException("Failed to update the profile from the signup state update event for user $username", ex)
         }
         return profile
@@ -57,7 +57,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                     { profile = dataAdapter.create(profile) }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the profile from the signup state update event for user $username")
+            logger.error("Failed to update the profile from the signup state update event for user $username", ex)
             throw ProfileUploadException("Failed to update the profile from the signup state update event for user $username", ex)
         }
         return profile
@@ -79,7 +79,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                     { profile = dataAdapter.create(profile) }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the profile from the portrait uploaded event for user $username")
+            logger.error("Failed to update the profile from the portrait uploaded event for user $username", ex)
             throw ProfileUploadException("Failed to update the profile from the portrait uploaded event for user $username", ex)
         }
         return profile
@@ -102,7 +102,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                 )
             this.dataAdapter.resumeUploaded(username, filename)
         } catch (ex: Throwable) {
-            logger.error("Failed to update the profile from the resume uploaded event for user $username")
+            logger.error("Failed to update the profile from the resume uploaded event for user $username", ex)
             throw ProfileUploadException("Failed to update the profile from the resume uploaded event for user $username", ex)
         }
         return profile
@@ -125,7 +125,7 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                 )
             this.dataAdapter.resumeLinkedinUploaded(username, filename)
         } catch (ex: Throwable) {
-            logger.error("Failed to update the profile from the linkedin resume uploaded event for user $username")
+            logger.error("Failed to update the profile from the linkedin resume uploaded event for user $username", ex)
             throw ProfileUploadException("Failed to update the profile from the linkedin resume uploaded event for user $username", ex)
         }
         return profile

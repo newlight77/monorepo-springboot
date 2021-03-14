@@ -48,7 +48,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
         val domain = try {
             missionWishService.update(fromModel(missionWish))
         } catch (ex : Throwable) {
-            logger.error("Failed to update the missionWish for user ${missionWish.username}")
+            logger.error("Failed to update the missionWish for user ${missionWish.username}", ex)
             throw MissionWishUpdateException("Failed to update the missionWish for user ${missionWish.username}", ex)
         }
         return toModel(domain)
@@ -61,7 +61,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
         val result = try {
             missionWishService.updateOnResumeUploaded(username, metaFile.filename)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the mission specific resume for user $username")
+            logger.error("Failed to upload the mission specific resume for user $username", ex)
             throw MissionWishUploadException("Failed to upload the mission specific resume for user $username", ex)
         }
         logger.info("successfully upload the mission specific resume for user $username")
@@ -84,7 +84,7 @@ class MissionWishWebHandler(val missionWishService: IMissionWishService,
         try {
             missionWishService.updateOnResumeUploaded(username, filename)
         } catch (ex: Throwable) {
-            logger.error("Failed to update mission wish on resume upload for user $username")
+            logger.error("Failed to update mission wish on resume upload for user $username", ex)
             throw MissionWishUploadException("Failed to update mission wish on resume upload for user $username", ex)
         }
     }

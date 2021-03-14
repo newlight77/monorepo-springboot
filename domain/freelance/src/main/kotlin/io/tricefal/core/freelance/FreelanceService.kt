@@ -125,7 +125,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                     }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the freelance from the kbis uploaded event for user $username")
+            logger.error("Failed to update the freelance from the kbis uploaded event for user $username", ex)
             throw KbisFileUploadException("Failed to update the freelance from the kbis uploaded event for user $username", ex)
         }
         return freelance
@@ -160,7 +160,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                     }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the freelance from the rib uploaded event for user $username")
+            logger.error("Failed to update the freelance from the rib uploaded event for user $username", ex)
             throw RibFileUploadException("Failed to update the freelance from the rib uploaded event for user $username", ex)
         }
         return freelance
@@ -195,7 +195,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                     }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the freelance from the rc uploaded event for user $username")
+            logger.error("Failed to update the freelance from the rc uploaded event for user $username", ex)
             throw RcFileUploadException("Failed to update the freelance from the rc uploaded event for user $username", ex)
         }
         return freelance
@@ -230,7 +230,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                     }
                 )
         } catch (ex: Exception) {
-            logger.error("Failed to update the freelance from the urssaf uploaded event for user $username")
+            logger.error("Failed to update the freelance from the urssaf uploaded event for user $username", ex)
             throw UrssafFileUploadException("Failed to update the freelance from the urssaf uploaded event for user $username", ex)
         }
         return freelance
@@ -265,7 +265,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
                     }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the freelance from the fiscal uploaded event for user $username")
+            logger.error("Failed to update the freelance from the fiscal uploaded event for user $username", ex)
             throw FiscalFileUploadException("Failed to update the freelance from the fiscal uploaded event for user $username", ex)
         }
         return freelance
@@ -276,7 +276,7 @@ class FreelanceService(private var dataAdapter: FreelanceDataAdapter) : IFreelan
             dataAdapter.sendEmail(notification)
             return true
         } catch (ex: Throwable) {
-            logger.error("failed to send an email upon freelance company completion for username ${freelance.username}")
+            logger.error("failed to send an email upon freelance company completion for username ${freelance.username}", ex)
             throw FreelanceCompletionEmailNotificationException("failed to send an email upon freelance company completion for username ${freelance.username}", ex)
         }
     }

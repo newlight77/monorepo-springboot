@@ -25,8 +25,8 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             )
             logger.info("A NewSignupEvent has been published user ${signup.username}")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a NewSignupEvent for user ${signup.username}")
-            throw SignupStatusPublicationException("Failed to publish a NewSignupEvent for user ${signup.username}")
+            logger.error("Failed to publish a NewSignupEvent for user ${signup.username}", ex)
+            throw SignupStatusPublicationException("Failed to publish a NewSignupEvent for user ${signup.username}", ex)
         }
     }
 
@@ -42,8 +42,8 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             )
             logger.info("A SignupStatusUpdatedEvent has been published user ${signup.username}")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a SignupStatusUpdatedEvent for user ${signup.username}")
-            throw SignupStatusPublicationException("Failed to publish a SignupStatusUpdatedEvent for user ${signup.username}")
+            logger.error("Failed to publish a SignupStatusUpdatedEvent for user ${signup.username}", ex)
+            throw SignupStatusPublicationException("Failed to publish a SignupStatusUpdatedEvent for user ${signup.username}", ex)
         }
     }
 
@@ -54,8 +54,8 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             )
             logger.info("A SignupStateUpdatedEvent has been published user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a SignupStateUpdatedEvent for user $username")
-            throw SignupStatePublicationException("Failed to publish a SignupStateUpdatedEvent for user $username")
+            logger.error("Failed to publish a SignupStateUpdatedEvent for user $username", ex)
+            throw SignupStatePublicationException("Failed to publish a SignupStateUpdatedEvent for user $username", ex)
         }
     }
 
@@ -66,8 +66,8 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             )
             logger.info("A ResumeUploadedEvent has been published: $filename for user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a ResumeUploadedEvent for user $username")
-            throw ProfileResumeUploadedPublicationException("Failed to publish a ResumeUploadedEvent for user $username")
+            logger.error("Failed to publish a ResumeUploadedEvent for user $username", ex)
+            throw ProfileResumeUploadedPublicationException("Failed to publish a ResumeUploadedEvent for user $username", ex)
         }
     }
 
@@ -78,8 +78,8 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             )
             logger.info("A ResumeLinkedinUploadedEvent has been published: $filename for user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a ResumeLinkedinUploadedEvent for user $username")
-            throw ProfileResumeLinkedinUploadedPublicationException("Failed to publish a ResumeLinkedinUploadedEvent for user $username")
+            logger.error("Failed to publish a ResumeLinkedinUploadedEvent for user $username", ex)
+            throw ProfileResumeLinkedinUploadedPublicationException("Failed to publish a ResumeLinkedinUploadedEvent for user $username", ex)
         }
     }
 
@@ -90,8 +90,8 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             )
             logger.info("A CguAcceptedEvent has been published for user $username with version $cguAcceptedVersion")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a CguAcceptedEvent for user $username with version $cguAcceptedVersion")
-            throw CguAcceptedPublicationException("Failed to publish a CguAcceptedEvent for user $username with version $cguAcceptedVersion")
+            logger.error("Failed to publish a CguAcceptedEvent for user $username with version $cguAcceptedVersion", ex)
+            throw CguAcceptedPublicationException("Failed to publish a CguAcceptedEvent for user $username with version $cguAcceptedVersion", ex)
         }
     }
 
@@ -102,8 +102,8 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
             )
             logger.info("A EmailNotificationEvent has been published to ${notification.emailTo}")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
-            throw EmailNotifiicationPublicationException("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
+            logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}", ex)
+            throw EmailNotifiicationPublicationException("Failed to publish a EmailNotificationEvent to ${notification.emailTo}", ex)
         }
     }
 
@@ -115,11 +115,21 @@ class SignupEventPublisher(private val applicationEventPublisher: ApplicationEve
 
 }
 
-class SignupStatusPublicationException(private val msg: String) : Throwable(msg) {}
-class SignupStatePublicationException(private val msg: String) : Throwable(msg) {}
-class ProfileResumeUploadedPublicationException(private val msg: String) : Throwable(msg) {}
-class ProfileResumeLinkedinUploadedPublicationException(private val msg: String) : Throwable(msg) {}
-class CguAcceptedPublicationException(private val msg: String) : Throwable(msg) {}
+class SignupStatusPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class SignupStatePublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class ProfileResumeUploadedPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class ProfileResumeLinkedinUploadedPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class CguAcceptedPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 
 class EmailNotifiicationPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
     constructor(message: String?) : this(message, null)

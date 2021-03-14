@@ -15,7 +15,7 @@ class MissionWishEventListener(val webHandler: MissionWishWebHandler) {
         try {
             this.webHandler.updateOnResumeUploaded(event.username, event.filename)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the mission wish on resume uploaded for username ${event.username}")
+            logger.error("Failed to update the mission wish on resume uploaded for username ${event.username}", ex)
             throw MissionWishCreationException("Failed to update the mission wish on resume uploaded for username ${event.username}", ex)
         }
         logger.info("EventHandler picked up a resume uploaded event with ${event.filename}")

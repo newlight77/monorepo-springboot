@@ -17,7 +17,7 @@ class SignupEventListener(val webHandler: SignupWebHandler,
         logger.info("EventHandler picked up a company completion event with ${event.username}")
         this.webHandler.companyCompleted(event.username)
     } catch(ex: Throwable) {
-        logger.error("Failed to update the signup on company completion for username ${event.username}")
+        logger.error("Failed to update the signup on company completion for username ${event.username}", ex)
         throw CompanyCompletionException("Failed to update the signup on company completion for username ${event.username}", ex)
     }
 
@@ -26,7 +26,7 @@ class SignupEventListener(val webHandler: SignupWebHandler,
         try {
             this.webHandler.profileResumeUploaded(event.username, event.filename)
         } catch(ex: Exception) {
-            logger.error("Failed to update the profile resume for username ${event.username}")
+            logger.error("Failed to update the profile resume for username ${event.username}", ex)
             throw ProfileUploadException("Failed to update the profile resume for username ${event.username}", ex)
         }
         logger.info("EventHandler picked up a resume uploaded event with $event")
@@ -37,7 +37,7 @@ class SignupEventListener(val webHandler: SignupWebHandler,
         try {
             this.webHandler.profileResumeLinkedinUploaded(event.username, event.filename)
         } catch(ex: Exception) {
-            logger.error("Failed to update the profile resume linkedin for username ${event.username}")
+            logger.error("Failed to update the profile resume linkedin for username ${event.username}", ex)
             throw ProfileUploadException("Failed to update the profile resume linkedin for username ${event.username}", ex)
         }
         logger.info("EventHandler picked up resume linkedin uploaded event $event")

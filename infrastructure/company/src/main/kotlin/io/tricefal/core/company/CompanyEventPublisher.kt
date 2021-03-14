@@ -18,8 +18,8 @@ class CompanyEventPublisher(private val applicationEventPublisher: ApplicationEv
         )
         logger.info("A CompanyCompletionEvent has been published user $companyName")
     } catch (ex: Exception) {
-        logger.error("Failed to publish a CompanyCompletionEvent for user $companyName")
-        throw CompanyCompletionPublicationException("Failed to publish a CompanyCompletionEvent for user $companyName")
+        logger.error("Failed to publish a CompanyCompletionEvent for user $companyName", ex)
+        throw CompanyCompletionPublicationException("Failed to publish a CompanyCompletionEvent for user $companyName", ex)
     }
 
     fun publishEmailNotification(notification: EmailNotificationDomain) {
@@ -29,15 +29,19 @@ class CompanyEventPublisher(private val applicationEventPublisher: ApplicationEv
             )
             logger.info("An EmailNotificationEvent has been published to ${notification.emailTo} ")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
+            logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}", ex)
             throw EmailNotifiicationPublicationException("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
         }
     }
 
 }
 
-class CompanyCompletionPublicationException(private val msg: String) : Throwable(msg) {}
-class EmailNotifiicationPublicationException(private val msg: String) : Throwable(msg) {}
+class CompanyCompletionPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
+class EmailNotifiicationPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}
 
 
 

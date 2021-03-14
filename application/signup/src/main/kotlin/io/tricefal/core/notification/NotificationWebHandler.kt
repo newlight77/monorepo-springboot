@@ -48,9 +48,8 @@ class NotificationWebHandler(val notificationService: INotificationService,
                 smsFrom=smsFrom, smsAdminNumber=smsAdmin)
             notificationService.sendEmail(notification, metaNotification)
         } catch (ex: Throwable) {
-            logger.error("Failed to send an email to ${notification.emailTo}")
-            throw EmailNotificationEventException("Failed to send an email to ${notification.emailTo}",
-                ex)
+            logger.error("Failed to send an email to ${notification.emailTo}", ex)
+            throw EmailNotificationEventException("Failed to send an email to ${notification.emailTo}", ex)
         }
         logger.info("Email successfullly sent to ${notification.emailTo}")
 

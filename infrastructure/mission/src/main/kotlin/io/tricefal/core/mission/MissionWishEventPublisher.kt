@@ -17,10 +17,12 @@ class MissionWishEventPublisher(private val applicationEventPublisher: Applicati
             )
             logger.info("A MissionResumeUploadedEvent has been published: $filename for user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a MissionResumeUploadedEvent for user $username")
-            throw MissionResumeUpdatedPublicationException("Failed to publish a MissionResumeUploadedEvent for user $username")
+            logger.error("Failed to publish a MissionResumeUploadedEvent for user $username", ex)
+            throw MissionResumeUpdatedPublicationException("Failed to publish a MissionResumeUploadedEvent for user $username", ex)
         }
     }
 }
 
-class MissionResumeUpdatedPublicationException(private val msg: String) : Throwable(msg) {}
+class MissionResumeUpdatedPublicationException(val s: String?, val ex: Throwable?) : Throwable(s, ex) {
+    constructor(message: String?) : this(message, null)
+}

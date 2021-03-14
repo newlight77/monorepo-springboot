@@ -18,8 +18,8 @@ class ProfileEventPublisher(private val applicationEventPublisher: ApplicationEv
             )
             logger.info("A ResumeUploadedEvent has been published: $filename for user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a ResumeUploadedEvent for user $username")
-            throw ProfileResumeUploadedPublicationException("Failed to publish a ResumeUploadedEvent for user $username")
+            logger.error("Failed to publish a ResumeUploadedEvent for user $username", ex)
+            throw ProfileResumeUploadedPublicationException("Failed to publish a ResumeUploadedEvent for user $username", ex)
         }
     }
 
@@ -30,8 +30,8 @@ class ProfileEventPublisher(private val applicationEventPublisher: ApplicationEv
             )
             logger.info("A ResumeLinkedinUploadedEvent has been published: $filename for user $username")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a ResumeLinkedinUploadedEvent for user $username")
-            throw ProfileResumeLinkedinUploadedPublicationException("Failed to publish a ResumeLinkedinUploadedEvent for user $username")
+            logger.error("Failed to publish a ResumeLinkedinUploadedEvent for user $username", ex)
+            throw ProfileResumeLinkedinUploadedPublicationException("Failed to publish a ResumeLinkedinUploadedEvent for user $username", ex)
         }
     }
 

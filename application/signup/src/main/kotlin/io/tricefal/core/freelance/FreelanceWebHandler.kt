@@ -115,7 +115,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the kbis document for user $username")
+            logger.error("Failed to upload the kbis document for user $username", ex)
             throw FreelanceUploadException("Failed to upload the kbis document for user $username", ex)
         }
         logger.info("successfully upload the kbis document for user $username")
@@ -131,7 +131,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the rib document for user $username")
+            logger.error("Failed to upload the rib document for user $username", ex)
             throw FreelanceUploadException("Failed to upload the rib document for user $username", ex)
         }
         logger.info("successfully upload the rib document for user $username")
@@ -147,7 +147,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the rc document for user $username")
+            logger.error("Failed to upload the rc document for user $username", ex)
             throw FreelanceUploadException("Failed to upload the rc document for user $username", ex)
         }
         logger.info("successfully upload the rc document for user $username")
@@ -163,7 +163,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the urssaaf document for user $username")
+            logger.error("Failed to upload the urssaaf document for user $username", ex)
             throw FreelanceUploadException("Failed to upload the urssaaf document for user $username", ex)
         }
         logger.info("successfully upload the urssaaf document for user $username")
@@ -179,7 +179,7 @@ class FreelanceWebHandler(val freelanceService: IFreelanceService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("freelance not found with username $username", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the fiscal document for user $username")
+            logger.error("Failed to upload the fiscal document for user $username", ex)
             throw FreelanceUploadException("Failed to upload the fiscal document for user $username", ex)
         }
         logger.info("successfully upload the fiscal document for user $username")

@@ -98,7 +98,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the company from the kbis uploaded event for user $companyName")
+            logger.error("Failed to update the company from the kbis uploaded event for user $companyName", ex)
             throw KbisFileUploadException("Failed to update the company from the kbis uploaded event for user $companyName", ex)
         }
         return company
@@ -132,7 +132,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the company from the rib uploaded event for user $companyName")
+            logger.error("Failed to update the company from the rib uploaded event for user $companyName", ex)
             throw RibFileUploadException("Failed to update the company from the rib uploaded event for user $companyName", ex)
         }
         return company
@@ -166,7 +166,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the company from the rc uploaded event for user $companyName")
+            logger.error("Failed to update the company from the rc uploaded event for user $companyName", ex)
             throw RcFileUploadException("Failed to update the company from the rc uploaded event for user $companyName", ex)
         }
         return company
@@ -200,7 +200,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     }
                 )
         } catch (ex: Exception) {
-            logger.error("Failed to update the company from the urssaf uploaded event for user $companyName")
+            logger.error("Failed to update the company from the urssaf uploaded event for user $companyName", ex)
             throw UrssafFileUploadException("Failed to update the company from the urssaf uploaded event for user $companyName", ex)
         }
         return company
@@ -234,7 +234,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
                     }
                 )
         } catch (ex: Throwable) {
-            logger.error("Failed to update the company from the fiscal uploaded event for user $companyName")
+            logger.error("Failed to update the company from the fiscal uploaded event for user $companyName", ex)
             throw FiscalFileUploadException("Failed to update the company from the fiscal uploaded event for user $companyName", ex)
         }
         return company
@@ -246,7 +246,7 @@ class CompanyService(private var dataAdapter: CompanyDataAdapter) : ICompanyServ
             dataAdapter.companyCompleted(username, company.raisonSocial)
             return true
         } catch (ex: Throwable) {
-            logger.error("failed to send an email upon company company completion for username ${company.raisonSocial}")
+            logger.error("failed to send an email upon company company completion for username ${company.raisonSocial}", ex)
             throw CompanyCompletionEmailNotificationException("failed to send an email upon company company completion for username ${company.raisonSocial}", ex)
         }
     }

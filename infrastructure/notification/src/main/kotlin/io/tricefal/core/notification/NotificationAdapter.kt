@@ -22,7 +22,7 @@ class NotificationAdapter(val mailService: EmailService,
                 .build()
             smsService.send(message).matches(Regex("^SM[a-z0-9]*"))
         } catch (ex: Exception) {
-            logger.error("Failed to send a sms notification for user ${notification.smsTo}")
+            logger.error("Failed to send a sms notification for user ${notification.smsTo}", ex)
             throw SmsNotificationException("Failed to send a sms notification for number ${notification.smsTo}", ex)
         }
         logger.info("An SMS has been sent")
@@ -49,7 +49,7 @@ class NotificationAdapter(val mailService: EmailService,
                 .build()
             mailService.send(message)
         } catch (ex: Exception) {
-            logger.error("Failed to send an email notification for user ${notification.emailTo}")
+            logger.error("Failed to send an email notification for user ${notification.emailTo}", ex)
             throw EmailNotificationException("Failed to send an email notification for user ${notification.emailTo}", ex)
         }
         logger.info("An Email has been sent")

@@ -98,7 +98,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("company not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the kbis document for user $companyName")
+            logger.error("Failed to upload the kbis document for user $companyName", ex)
             throw CompanyUploadException("Failed to upload the kbis document for user $companyName", ex)
         }
         logger.info("successfully upload the kbis document for user $companyName")
@@ -114,7 +114,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("company not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the rib document for user $companyName")
+            logger.error("Failed to upload the rib document for user $companyName", ex)
             throw CompanyUploadException("Failed to upload the rib document for user $companyName", ex)
         }
         logger.info("successfully upload the rib document for user $companyName")
@@ -130,7 +130,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("company not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the rc document for user $companyName")
+            logger.error("Failed to upload the rc document for user $companyName", ex)
             throw CompanyUploadException("Failed to upload the rc document for user $companyName", ex)
         }
         logger.info("successfully upload the rc document for user $companyName")
@@ -146,7 +146,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("company not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the urssaaf document for user $companyName")
+            logger.error("Failed to upload the urssaaf document for user $companyName", ex)
             throw CompanyUploadException("Failed to upload the urssaaf document for user $companyName", ex)
         }
         logger.info("successfully upload the urssaaf document for user $companyName")
@@ -162,7 +162,7 @@ class CompanyWebHandler(val companyService: ICompanyService,
         } catch (ex: NotFoundException) {
             throw GlobalNotFoundException("company not found with username $companyName", ex)
         } catch (ex: Throwable) {
-            logger.error("Failed to upload the fiscal document for user $companyName")
+            logger.error("Failed to upload the fiscal document for user $companyName", ex)
             throw CompanyUploadException("Failed to upload the fiscal document for user $companyName", ex)
         }
         logger.info("successfully upload the fiscal document for user $companyName")

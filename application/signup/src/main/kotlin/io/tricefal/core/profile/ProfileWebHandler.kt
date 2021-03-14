@@ -24,7 +24,7 @@ class ProfileWebHandler(val profileService: IProfileService,
             this.profileService.create(profile)
             //this.profileService.initProfile(username, profile)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the profile status for username $username")
+            logger.error("Failed to update the profile status for username $username", ex)
             throw ProfileUploadException("Failed to update the profile status for username $username", ex)
         }
     }
@@ -64,7 +64,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         val result = try {
             this.profileService.updateProfileOnPortraitUploaded(username, metaFile.filename)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the profile portrait for username $username")
+            logger.error("Failed to update the profile portrait for username $username", ex)
             throw ProfileUploadException("Failed to update the profile portrait for username $username", ex)
         }
         logger.info("successfully upload the portrait for user $username")
@@ -78,7 +78,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         val result = try {
             this.profileService.updateProfileOnResumeUploaded(username, metaFile.filename)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the profile resume for username $username")
+            logger.error("Failed to update the profile resume for username $username", ex)
             throw ProfileUploadException("Failed to update the profile resume for username $username", ex)
         }
         logger.info("successfully upload the resume for user $username")
@@ -92,7 +92,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         val result = try {
             this.profileService.updateProfileOnResumeLinkedinUploaded(username, metaFile.filename)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the profile linkedin resume for username $username")
+            logger.error("Failed to update the profile linkedin resume for username $username", ex)
             throw ProfileUploadException("Failed to update the profile cv linkedin resume for username $username", ex)
         }
 
@@ -104,7 +104,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         try {
             this.profileService.updateStatus(username, status)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the profile state for username $username")
+            logger.error("Failed to update the profile state for username $username", ex)
             throw ProfileUploadException("Failed to update the profile state for username $username", ex)
         }
     }
@@ -113,7 +113,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         try {
             this.profileService.updateState(username, state)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the profile state for username $username")
+            logger.error("Failed to update the profile state for username $username", ex)
             throw ProfileUploadException("Failed to update the profile state for username $username", ex)
         }
     }
@@ -122,7 +122,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         try {
             this.profileService.updateProfileOnResumeUploaded(username, filename)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the profile resume filename for username $username")
+            logger.error("Failed to update the profile resume filename for username $username", ex)
             throw ProfileUploadException("Failed to update the profile resume filename for username $username", ex)
         }
     }
@@ -131,7 +131,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         try {
             this.profileService.updateProfileOnResumeLinkedinUploaded(username, filename)
         } catch(ex: Throwable) {
-            logger.error("Failed to update the profile resume linkedin filename for username $username")
+            logger.error("Failed to update the profile resume linkedin filename for username $username", ex)
             throw ProfileUploadException("Failed to update the profile resume linkedin filename for username $username", ex)
         }
     }

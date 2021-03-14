@@ -18,8 +18,8 @@ class FreelanceEventPublisher(private val applicationEventPublisher: Application
         )
         logger.info("A CompanyCompletionEvent has been published user $username")
     } catch (ex: Exception) {
-        logger.error("Failed to publish a CompanyCompletionEvent for user $username")
-        throw CompanyCompletionPublicationException("Failed to publish a CompanyCompletionEvent for user $username")
+        logger.error("Failed to publish a CompanyCompletionEvent for user $username", ex)
+        throw CompanyCompletionPublicationException("Failed to publish a CompanyCompletionEvent for user $username", ex)
     }
 
     fun publishEmailNotification(notification: EmailNotificationDomain) {
@@ -29,8 +29,8 @@ class FreelanceEventPublisher(private val applicationEventPublisher: Application
             )
             logger.info("An EmailNotificationEvent has been published to ${notification.emailTo}")
         } catch (ex: Exception) {
-            logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
-            throw EmailNotifiicationPublicationException("Failed to publish a EmailNotificationEvent to ${notification.emailTo}")
+            logger.error("Failed to publish a EmailNotificationEvent to ${notification.emailTo}", ex)
+            throw EmailNotifiicationPublicationException("Failed to publish a EmailNotificationEvent to ${notification.emailTo}", ex)
         }
     }
 

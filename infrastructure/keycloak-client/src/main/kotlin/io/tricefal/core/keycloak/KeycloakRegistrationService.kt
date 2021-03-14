@@ -60,16 +60,16 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         val response = try {
             realmUsersResource.create(user)
         } catch (ex: Exception) {
-            logger.error("registration failed while creating a use resource in realm $appRealm with exception: ${ex.localizedMessage}")
-            throw KeycloakUnsuccessfulException("registration failed while creating a use resource in realm $appRealm with exception: ${ex.stackTrace}")
+            logger.error("registration failed while creating a user resource in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("registration failed while creating a user resource in realm $appRealm with exception: ${ex.stackTrace}", ex)
         }
 
         logger.info("Response: ${response.location} ${response.status} ${response.statusInfo}")
         val userId = try {
             CreatedResponseUtil.getCreatedId(response)
         } catch (ex: Exception) {
-            logger.error("failed to retrieve the created id for the created user inrealm $appRealm with exception: ${ex.localizedMessage}")
-            throw KeycloakUnsuccessfulException("failed to retrieve the created id for the created user inrealm $appRealm with exception: ${ex.localizedMessage}")
+            logger.error("failed to retrieve the created id for the created user in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("failed to retrieve the created id for the created user inrealm $appRealm with exception: ${ex.localizedMessage}", ex)
         }
         logger.info("User created with userId: $userId")
 
@@ -89,8 +89,8 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         val response = try {
             realmUsersResource.delete(username)
         } catch (ex: Exception) {
-            logger.error("delete keycloak account failed in realm $appRealm with exception: ${ex.localizedMessage}")
-            throw KeycloakUnsuccessfulException("delete keycloak account failed in realm $appRealm with exception: ${ex.stackTrace}")
+            logger.error("delete keycloak account failed in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("delete keycloak account failed in realm $appRealm with exception: ${ex.stackTrace}", ex)
         }
 
         if (response.status != 200 or 204) {
@@ -107,8 +107,8 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         val users = try {
             realmUsersResource.search(username)
         } catch (ex: Exception) {
-            logger.error("registration failed while finding a user in realm $appRealm with exception: ${ex.localizedMessage}")
-            throw KeycloakUnsuccessfulException("registration failed while finding a user in realm $appRealm with exception: ${ex.stackTrace}")
+            logger.error("registration failed while finding a user in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("registration failed while finding a user in realm $appRealm with exception: ${ex.stackTrace}", ex)
         }
 
         val userId = users.last().id
@@ -120,8 +120,8 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         try {
             userResource.update(users.last())
         } catch (ex: Exception) {
-            logger.error("registration failed while updating the user role in realm $appRealm with exception: ${ex.localizedMessage}")
-            throw KeycloakUnsuccessfulException("registration failed while updating the user role in realm $appRealm with exception: ${ex.stackTrace}")
+            logger.error("registration failed while updating the user role in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("registration failed while updating the user role in realm $appRealm with exception: ${ex.stackTrace}", ex)
         }
 
         return true
