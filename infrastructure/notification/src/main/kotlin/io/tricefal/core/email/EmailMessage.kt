@@ -57,30 +57,37 @@ class EmailMessage(var from: String,
 
 enum class EmailTemplate(val filename: String) {
     SIGNUP("email-template.html"),
+    SIGNUP_CI("email-template-ci.html"),
     SIGNUP_DEV("email-template-dev.html");
 }
 
 fun emailTemplateByEnv(env: String) = mapOf(
     "" to EmailTemplate.SIGNUP,
     "prod" to EmailTemplate.SIGNUP,
+    "ci" to EmailTemplate.SIGNUP_CI,
     "dev" to EmailTemplate.SIGNUP_DEV,
 )[env]
 
 enum class EmailTemplateThemeStyle(val style: String) {
     PROD(""),
-    DEV(".greeting { color: #FFD500;} " +
+    CI(".greeting { color: #FFD500;} " +
             ".content { color: #FFD500;}" +
-            ".signature { color: #FFD500;}")
+            ".signature { color: #FFD500;}"),
+    DEV(".greeting { color: #FFD500;} " +
+    ".content { color: #FFD500;}" +
+    ".signature { color: #FFD500;}")
 }
 
 fun emailTemplateThemeStyleByEnv(env: String) = mapOf(
     "" to EmailTemplateThemeStyle.PROD,
     "prod" to EmailTemplateThemeStyle.PROD,
+    "ci" to EmailTemplateThemeStyle.CI,
     "dev" to EmailTemplateThemeStyle.DEV,
 )[env]
 
 fun emailSubjectByEnv(env: String) = mapOf(
     "" to "",
     "prod" to "",
+    "ci" to " *** CI ***",
     "dev" to " *** DEV ***",
 )[env]

@@ -46,6 +46,7 @@ open class SignupNotificationFactory() {
         "" to "",
         "prod" to "",
         "dev" to activationCode,
+        "ci" to activationCode,
     )[env]
 
     fun accountActivatedEmailNotification(signup: SignupDomain, metaNotification: MetaNotificationDomain): EmailNotificationDomain {

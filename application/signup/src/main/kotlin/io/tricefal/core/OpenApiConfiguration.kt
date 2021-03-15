@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Profile
         bearerFormat = "JWT",
         scheme = "bearer"
 )
-@Profile(value = ["dev", "local", "localhost"])
+@Profile(value = ["dev", "ci", "local", "localhost"])
 class OpenApiConfiguration {
 
     @Bean
@@ -24,7 +24,7 @@ class OpenApiConfiguration {
         return OpenAPI()
                 .components(Components())
                 .info(Info()
-                        .title("Tricefal Core API")
-                        .description("This is the API documentation for Tricefal Core with OIDC."))
+                        .title("tricefal Core API")
+                        .description("This is the API documentation for tricefal Core with OIDC."))
     }
 }

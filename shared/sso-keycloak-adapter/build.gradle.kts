@@ -21,8 +21,8 @@ dependencies {
 	implementation(project(":infrastructure:ip-address"))
 
 	implementation("org.springframework.boot:spring-boot-starter-security:2.3.0.RELEASE")
-	implementation("org.keycloak:keycloak-spring-security-adapter:11.0.3")
-	implementation("org.keycloak:keycloak-spring-boot-starter:11.0.3")
+	implementation("org.keycloak:keycloak-spring-security-adapter:12.0.3")
+	implementation("org.keycloak:keycloak-spring-boot-starter:12.0.3")
 	implementation("com.github.ben-manes.caffeine:caffeine:2.8.1")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test:2.3.0.RELEASE") {

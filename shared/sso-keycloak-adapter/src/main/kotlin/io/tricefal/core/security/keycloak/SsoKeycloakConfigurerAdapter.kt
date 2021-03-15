@@ -30,7 +30,7 @@ import org.springframework.web.cors.CorsConfiguration
 
 
 @KeycloakConfiguration
-@Profile(value = ["prod", "dev", "local", "localhost"])
+@Profile(value = ["prod", "dev", "ci", "local", "localhost"])
 @PropertySource("classpath:/spring-security-keycloak.yml")
 @EnableGlobalMethodSecurity(
 //        securedEnabled = true, // @Secured

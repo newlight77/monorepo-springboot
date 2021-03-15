@@ -1,28 +1,29 @@
 version: "3.6"
 
 services:
-  core-app-signup:
-    image: openjdk:13-slim
-    container_name: core
-    hostname: docker_core
-    networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.21
-    extra_hosts:
-      - "docker_keycloak_1:172.28.5.11"
-    env_file:
-      - ./config/core-app.docker.env
-    volumes:
-      - ./.run:/app/.run
-      - ./application/signup/build/libs:/app/
-      - core_files:/data/files:rw
-      - core_logs:/data/logs:rw
-    ports:
-      - "8080:8080"
-      - "5080:5080"
-    depends_on:
-      - dbcore
-    command: java ${DEBUG_ARG} -jar /app/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=localhost
+
+  # core-app-signup:
+  #   image: openjdk:13-slim
+  #   container_name: core
+  #   hostname: docker_core
+  #   networks:
+  #     internal-subnet:
+  #       ipv4_address: 172.28.5.21
+  #   extra_hosts:
+  #     - "docker_keycloak_1:172.28.5.11"
+  #   env_file:
+  #     - ./config/core-app.localhost.env
+  #   volumes:
+  #     - ./.run:/app/.run
+  #     - ./application/signup/build/libs:/app/
+  #     - core_files:/data/files:rw
+  #     - core_logs:/data/logs:rw
+  #   ports:
+  #     - "8080:8080"
+  #     - "5080:5080"
+  #   depends_on:
+  #     - dbcore
+  #   command: java ${DEBUG_ARG} -jar /app/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=localhost
 
   dbcore:
     image: postgres:13.1
@@ -31,7 +32,7 @@ services:
     networks:
       - internal-subnet
     env_file:
-      - config/dbcore.env
+      - ./config/dbcore.env
     volumes:
       - ./application/signup/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
       - ./application/signup/src/main/resources/ref-data.sql:/docker-entrypoint-initdb.d/data.sql:ro
@@ -47,8 +48,7 @@ services:
     container_name: keycloak
     hostname: docker_keycloak_1
     networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.11
+      - internal-subnet
     ports:
       - "1080:8080"
       - "1443:8443"
@@ -61,16 +61,9 @@ services:
       - DB_DATABASE=keycloak
       - DB_USER=keycloak
       - DB_PASSWORD=Pa55w0rd
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=Pa55w0rd
-    # volumes:
-    #   - ./config/keycloak/:/opt/jboss/keycloak/imports/
-    # command:
-    #   - "-b 0.0.0.0"
-    #   - "-Dkeycloak.profile.feature.docker=enabled"
-    #   - "-Dkeycloak.migration.action=import"
-    #   - "-Dkeycloak.migration.dir=/opt/jboss/keycloak/imports/"
-    #   - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
+      - PROXY_ADDRESS_FORWARDING=true
+    volumes:
+      - ./config/local/:/opt/jboss/keycloak/imports/:rw
     restart: unless-stopped
 
   dbkeycloak:
@@ -90,11 +83,6 @@ services:
 networks:
   internal-subnet:
     name: internal_subnet
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.5.0/24
 
 volumes:  
   core_files:

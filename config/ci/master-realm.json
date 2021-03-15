@@ -57,7 +57,7 @@
       "composites" : {
         "realm" : [ "create-realm" ],
         "client" : {
-          "local.app-realm" : [ "query-realms", "query-users", "query-groups", "manage-clients", "query-clients", "create-client", "view-realm", "impersonation", "view-events", "view-users", "manage-identity-providers", "view-clients", "manage-events", "manage-users", "view-authorization", "view-identity-providers", "manage-authorization", "manage-realm" ],
+          "ci.app-realm" : [ "query-realms", "query-users", "query-groups", "manage-clients", "query-clients", "create-client", "view-realm", "impersonation", "view-events", "view-users", "manage-identity-providers", "view-clients", "manage-events", "manage-users", "view-authorization", "view-identity-providers", "manage-authorization", "manage-realm" ],
           "master-realm" : [ "manage-events", "create-client", "query-users", "view-events", "view-authorization", "query-realms", "manage-users", "view-clients", "manage-identity-providers", "manage-authorization", "manage-clients", "view-realm", "view-identity-providers", "query-groups", "manage-realm", "view-users", "impersonation", "query-clients" ]
         }
       },
@@ -82,7 +82,7 @@
       "attributes" : { }
     } ],
     "client" : {
-      "local.app-realm" : [ {
+      "ci.app-realm" : [ {
         "id" : "e9b06f64-a644-460e-ba75-e3ec9026d554",
         "name" : "query-realms",
         "description" : "${role_query-realms}",
@@ -209,7 +209,7 @@
         "composite" : true,
         "composites" : {
           "client" : {
-            "local.app-realm" : [ "query-users", "query-groups" ]
+            "ci.app-realm" : [ "query-users", "query-groups" ]
           }
         },
         "clientRole" : true,
@@ -230,7 +230,7 @@
         "composite" : true,
         "composites" : {
           "client" : {
-            "local.app-realm" : [ "query-clients" ]
+            "ci.app-realm" : [ "query-clients" ]
           }
         },
         "clientRole" : true,
@@ -636,7 +636,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "secret" : "753b3321-14bf-40be-9737-908e7676192c",
+    "secret" : "b344021f-a496-4719-979e-a7c9167f6f54",
     "redirectUris" : [ ],
     "webOrigins" : [ ],
     "notBefore" : 0,
@@ -738,7 +738,7 @@
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ]
   }, {
     "id" : "41da5222-b7c9-4430-a308-a3706d817b0b",
-    "clientId" : "local.app-realm",
+    "clientId" : "ci.app-realm",
     "name" : "Dev Realm",
     "surrogateAuthRequired" : false,
     "enabled" : true,
@@ -1943,6 +1943,6 @@
     "clientSessionIdleTimeout" : "0",
     "clientSessionMaxLifespan" : "0"
   },
-  "keycloakVersion" : "10.0.1",
+  "keycloakVersion" : "12.0.3",
   "userManagedAccessAllowed" : false
 }

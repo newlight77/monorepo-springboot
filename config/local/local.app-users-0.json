@@ -1,0 +1,253 @@
+{
+  "realm": "local.app",
+  "users": [
+    {
+      "id": "ae6fa855-7aa6-4359-8d80-ceaf07ebc852",
+      "createdTimestamp": 1605527533783,
+      "username": "arnaud@tricefal.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Arnaud",
+      "lastName": "Claudel",
+      "email": "arnaud@tricefal.com",
+      "credentials": [
+        {
+          "id": "037e1d52-a8b7-4a0f-b70d-cd7b81895bb7",
+          "type": "password",
+          "createdDate": 1605527560960,
+          "secretData": "{\"value\":\"atdWpuuR5KBdrCasB2FuSdDCAxYGnmqO97rd1/hy/rSsV1is2wa/lrlDcoFk0Oi13NLYUXx+9A1AUy+24JgJBQ==\",\"salt\":\"d+dTkdisWIvcLz4YewI8/Q==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "ac_collaborator_r",
+        "ac_billing_r",
+        "ac_freelance_r",
+        "ac_freelance_w",
+        "user-role",
+        "ac_contract_w",
+        "ac_steering_w",
+        "ac_billing_w",
+        "user-manager-role",
+        "ac_collaborator_w",
+        "ac_client_w",
+        "ac_tricefal_r",
+        "ac_tricefal_w",
+        "ac_contract_r",
+        "ac_client_r",
+        "uma_authorization",
+        "offline_access",
+        "ac_steering_r"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "98fc2ec4-1342-48bc-aad5-8d850a4e3c55",
+      "createdTimestamp": 1605479390940,
+      "username": "kong@tricefal.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Kong",
+      "lastName": "To",
+      "email": "kong@tricefal.com",
+      "credentials": [
+        {
+          "id": "9379c066-3cc7-4c9c-bcb3-64eab1f9d48f",
+          "type": "password",
+          "createdDate": 1605527390264,
+          "secretData": "{\"value\":\"sJ3VVZ4g9fiPVamon07qOdzHKeuA6MrReaGCNOGrCysEt52UI/W6fF3tOr34zpROPxggyT1uxa0ags6NulMPgg==\",\"salt\":\"yAAhDCnqGoPtq/Y2EoRGQA==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "ac_collaborator_r",
+        "ac_billing_r",
+        "ac_freelance_r",
+        "ac_freelance_w",
+        "user-role",
+        "ac_contract_w",
+        "ac_steering_w",
+        "ac_billing_w",
+        "user-manager-role",
+        "ac_collaborator_w",
+        "ac_client_w",
+        "ac_tricefal_r",
+        "ac_tricefal_w",
+        "ac_contract_r",
+        "ac_client_r",
+        "uma_authorization",
+        "offline_access",
+        "ac_steering_r"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "b8ac4b1a-b3c8-42ac-99bd-b6e5448ef931",
+      "createdTimestamp": 1605527700130,
+      "username": "martine@tricefal.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Martine",
+      "lastName": "Le Jossec",
+      "email": "martine@tricefal.com",
+      "credentials": [
+        {
+          "id": "e9bef193-773c-4427-bc93-aef95bf4f0ff",
+          "type": "password",
+          "createdDate": 1605527724640,
+          "secretData": "{\"value\":\"NEeHYEzCjq5zaA2Fem9wCZpUZ/PJHlM0EuIRJT+bDxp2RFAN4f9wxMBeU+NFNXB4Uo9rpwoUIPIg+C5O0KZqxQ==\",\"salt\":\"3NvinPZsH3g5d7OAq5Nbrw==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "ac_collaborator_r",
+        "ac_billing_r",
+        "ac_freelance_r",
+        "ac_freelance_w",
+        "user-role",
+        "ac_contract_w",
+        "ac_steering_w",
+        "ac_billing_w",
+        "user-manager-role",
+        "ac_collaborator_w",
+        "ac_client_w",
+        "ac_tricefal_r",
+        "ac_tricefal_w",
+        "ac_contract_r",
+        "ac_client_r",
+        "uma_authorization",
+        "offline_access",
+        "ac_steering_r"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "96b26908-3723-43e2-9432-f6f7244d756f",
+      "createdTimestamp": 1605527634620,
+      "username": "michel@tricefal.com",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": true,
+      "firstName": "Michel",
+      "lastName": "Adé",
+      "email": "michel@tricefal.com",
+      "credentials": [
+        {
+          "id": "c9964e76-e948-4f08-99dd-4517493b8f4d",
+          "type": "password",
+          "createdDate": 1605527646066,
+          "secretData": "{\"value\":\"Sw33+57/QvZ9OKKUfdUGiSJewKeiRtZE746kSo8RgpAa6IGZvrRXeymzE02Gc6H+Wpg74JXP82oiH2ma4MlNmw==\",\"salt\":\"rsY+VPaR3XioX/Q3Ed3Q2g==\"}",
+          "credentialData": "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\"}"
+        }
+      ],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "ac_collaborator_r",
+        "ac_billing_r",
+        "ac_freelance_r",
+        "ac_freelance_w",
+        "user-role",
+        "ac_contract_w",
+        "ac_steering_w",
+        "ac_billing_w",
+        "user-manager-role",
+        "ac_collaborator_w",
+        "ac_client_w",
+        "ac_tricefal_r",
+        "ac_tricefal_w",
+        "ac_contract_r",
+        "ac_client_r",
+        "uma_authorization",
+        "offline_access",
+        "ac_steering_r"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "d31b9696-3a21-497a-bdf2-7327ee288259",
+      "createdTimestamp": 1598534616614,
+      "username": "service-account-admin-cli",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "serviceAccountClientId": "admin-cli",
+      "credentials": [],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "uma_authorization",
+        "offline_access"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    },
+    {
+      "id": "6042415c-6f1d-4d07-9d8f-b5403abc419f",
+      "createdTimestamp": 1598531799079,
+      "username": "service-account-local.backend.confidential",
+      "enabled": true,
+      "totp": false,
+      "emailVerified": false,
+      "serviceAccountClientId": "local.backend.confidential",
+      "credentials": [],
+      "disableableCredentialTypes": [],
+      "requiredActions": [],
+      "realmRoles": [
+        "uma_authorization",
+        "offline_access"
+      ],
+      "clientRoles": {
+        "account": [
+          "manage-account",
+          "view-profile"
+        ]
+      },
+      "notBefore": 0,
+      "groups": []
+    }
+  ]
+}

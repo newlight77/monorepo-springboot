@@ -21,10 +21,11 @@ services:
     extra_hosts:
       - "docker_keycloak_1:172.28.5.11"
     env_file:
-      - ./config/core-app.${ENV}.env
+      # using keycloak on CI
+      - ./config/core-app.ci.env
     volumes:
       - ./.run:/app/.run
-      - ./config/core-app.${ENV}.env:/app/config/core-app.env:ro
+      - ./config/core-app.ci.env:/app/config/core-app.env:ro
       - core_files:/data/files:rw
       - core_logs:/data/logs:rw
     ports:
@@ -51,44 +52,6 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
-
-  keycloak:
-    image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak:${VERSION}
-    container_name: keycloak
-    hostname: docker_keycloak_1
-    networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.11
-    ports:
-      - "1080:8080"
-      - "1443:8443"
-    depends_on:
-      - dbkeycloak
-    environment:
-      - DB_VENDOR=postgres
-      - DB_ADDR=docker_dbkeycloak
-      - DB_PORT=5432
-      - DB_DATABASE=keycloak
-      - DB_USER=keycloak
-      - DB_PASSWORD=Pa55w0rd
-      - PROXY_ADDRESS_FORWARDING=true
-    volumes:
-      - ./config/${ENV}/:/opt/jboss/keycloak/imports/:rw
-    restart: unless-stopped
-
-  dbkeycloak:
-    image: postgres:13.1
-    container_name: dbkeycloak
-    hostname: docker_dbkeycloak
-    networks:
-      - internal-subnet
-    environment:
-      - POSTGRES_DB=keycloak
-      - POSTGRES_USER=keycloak
-      - POSTGRES_PASSWORD=Pa55w0rd
-    volumes:
-      - dbkeycloak_data:/var/lib/postgresql/data
-    restart: always
 
 networks:
   internal-subnet:

@@ -46,7 +46,8 @@ usage() {
   echo ""
   echo "${blue}Options:    ${reset}"
   echo "${blue}          -c, --classpath =[classpath]                           classpath${reset}"
-  echo "${blue}          -k, --keycloak-configFile =[keycloak.json file path]     keycloak.json file path${reset}"
+  echo "${blue}          -k, --keycloak-configFile =[keycloak.json file path]   keycloak.json file path${reset}"
+  echo "${blue}          -c, --token-url =[keycloak-token-url]                  url${reset}"
   echo "${blue}          -h,  --help                                            help ${reset}"
   echo "${blue}                                                                 ${reset}"
   echo "${blue}By default, this will run with --spring.profiles.active=test ${reset}"
@@ -63,6 +64,7 @@ signup() {
         "password": "'${PASSWORD}'",
         "phoneNumber": "0659401130"
     }'
+    echo ""
 }
 
 getToken() {
@@ -75,14 +77,13 @@ getToken() {
 }
 
 helloApi() {
-  result=$(curl ${API_URL}/hello)
-  echo "${result}"
+  curl "${API_URL}/hello"
 }
 
 secureUserApi() {
   token=$1
-  echo curl --location --request GET "${API_URL}/signup" \
-    -H 'Authorization: bearer '${token}
+  curl --location --request GET "${API_URL}/signup" \
+    -H "Authorization: bearer ${token}"
 }
 
 uploadCv() {
@@ -113,11 +114,28 @@ done
 #############################################
 
 helloApi
-$(signup)
+echo ""
+
+echo "signing up"
+signup
+
 TOKEN=$(getToken)
 echo $TOKEN
-RESULT=$(secureUserApi ${TOKEN})
-echo $RESULT
-RESULT=$(uploadCv ${TOKEN})
-echo $RESULT
+
+echo "get signup with token"
+result=$(secureUserApi ${TOKEN})
+
+if [ $result != "" ]; then 
+  echo $result
+else
+  echo "can't get the signup"
+  echo "maybe the issue is not valid. "
+  echo "notice : inside the container, the issuer is http://docker_keycloak_1:8080/auth"
+  echo "         and the is script is trying with issuer is http://localhost:1080/auth"
+fi
+
+
+echo "uploading a cv"
+uploadCv ${TOKEN}
+
 
