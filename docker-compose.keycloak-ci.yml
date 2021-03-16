@@ -19,7 +19,7 @@ services:
       internal-subnet:
         ipv4_address: 172.28.5.21
     extra_hosts:
-      - "docker_keycloak_1:172.28.5.11"
+      - "docker_dbcore:172.28.5.20"
     env_file:
       # using keycloak on CI
       - ./config/core-app.ci.env
@@ -40,7 +40,8 @@ services:
     container_name: dbcore
     hostname: docker_dbcore
     networks:
-      - internal-subnet
+      internal-subnet:
+        ipv4_address: 172.28.5.20
     env_file:
       - ./config/dbcore.env
     volumes:
