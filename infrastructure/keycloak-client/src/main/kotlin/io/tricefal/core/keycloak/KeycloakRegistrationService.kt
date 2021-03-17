@@ -18,6 +18,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.ws.rs.core.Response
 
 
 @Service
@@ -31,7 +32,6 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
     private val adminClientSecret = env.getProperty("keycloak.admin.client-secret")
     private val adminUser = env.getProperty("keycloak.admin.user")
     private val adminPassword = env.getProperty("keycloak.admin.password")
-
 
     final var keycloak: Keycloak = KeycloakBuilder.builder() //
             .serverUrl("${baseUrl}/auth") //
@@ -57,30 +57,17 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
     override fun register(signup: SignupDomain): Boolean {
         val user = toKeycloakUser(signup)
 
-        val response = try {
-            realmUsersResource.create(user)
-        } catch (ex: Exception) {
-            logger.error("registration failed while creating a user resource in realm $appRealm with exception: ${ex.localizedMessage}", ex)
-            throw KeycloakUnsuccessfulException("registration failed while creating a user resource in realm $appRealm with exception: ${ex.stackTrace}", ex)
-        }
-
+        val response = createUser(user)
         logger.info("Response: ${response.location} ${response.status} ${response.statusInfo}")
-        val userId = try {
-            CreatedResponseUtil.getCreatedId(response)
+        val userId = getCreatedId(response)
+        val userCredential = toKeycloakCredential(signup.username)
+
+        try {
+            realmUsersResource[userId].resetPassword(userCredential)
         } catch (ex: Exception) {
-            logger.error("failed to retrieve the created id for the created user in realm $appRealm with exception: ${ex.localizedMessage}", ex)
-            throw KeycloakUnsuccessfulException("failed to retrieve the created id for the created user inrealm $appRealm with exception: ${ex.localizedMessage}", ex)
+            logger.error("update password failed for user ${signup.username} in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("update password failed for user ${signup.username} in realm $appRealm with exception: ${ex.stackTrace}", ex)
         }
-        logger.info("User created with userId: $userId")
-
-        if (response.status != 200 or 201) {
-            logger.error("registration failed with : ${response.statusInfo}")
-            throw KeycloakUnsuccessfulException("the response code is: " + response.statusInfo)
-        }
-
-        val userResource = realmUsersResource[userId]
-        val userCredential = toKeycloakCredential(signup)
-        userResource.resetPassword(userCredential)
 
         return true
     }
@@ -101,16 +88,28 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         return true
     }
 
+    override fun updatePassword(username: String, password: String): Boolean {
+
+        val users = find(username)
+        if (users.isNotEmpty()) {
+            val user: UserRepresentation = users.last()
+            val credential = toKeycloakCredential(username)
+
+            try {
+                realmUsersResource[user.id].resetPassword(credential)
+            } catch (ex: Exception) {
+                logger.error("update password failed for user $username in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+                throw KeycloakUnsuccessfulException("update password failed for user $username in realm $appRealm with exception: ${ex.stackTrace}", ex)
+            }
+        }
+
+        return true
+    }
+
     override fun addRole(username: String, role: AccessRight): Boolean {
         val realmRole = realmRolesResource[role.label].toRepresentation()
 
-        val users = try {
-            realmUsersResource.search(username)
-        } catch (ex: Exception) {
-            logger.error("registration failed while finding a user in realm $appRealm with exception: ${ex.localizedMessage}", ex)
-            throw KeycloakUnsuccessfulException("registration failed while finding a user in realm $appRealm with exception: ${ex.stackTrace}", ex)
-        }
-
+        val users = find(username)
         val userId = users.last().id
         val userResource = realmUsersResource[userId]
         userResource.roles().realmLevel().add(listOf(realmRole))
@@ -127,11 +126,47 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         return true
     }
 
-    private fun toKeycloakCredential(signup: SignupDomain): CredentialRepresentation {
+    private fun getCreatedId(response: Response): String {
+        val userId = try {
+            CreatedResponseUtil.getCreatedId(response)
+        } catch (ex: Exception) {
+            logger.error("failed to retrieve the created id for the created user in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("failed to retrieve the created id for the created user inrealm $appRealm with exception: ${ex.localizedMessage}", ex)
+        }
+
+        if (response.status != 200 or 201) {
+            logger.error("registration failed with : ${response.statusInfo}")
+            throw KeycloakUnsuccessfulException("the response code is: " + response.statusInfo)
+        }
+
+        logger.info("User created with userId: $userId")
+
+        return userId
+    }
+
+    private fun createUser(user: UserRepresentation): Response {
+        return try {
+            realmUsersResource.create(user)
+        } catch (ex: Exception) {
+            logger.error("registration failed while creating a user resource in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("registration failed while creating a user resource in realm $appRealm with exception: ${ex.stackTrace}", ex)
+        }
+    }
+
+    private fun find(username: String): List<UserRepresentation> {
+        return try {
+            realmUsersResource.search(username)
+        } catch (ex: Exception) {
+            logger.error("Error occured while finding a user in realm $appRealm with exception: ${ex.localizedMessage}", ex)
+            throw KeycloakUnsuccessfulException("Error occured while finding a user in realm $appRealm with exception: ${ex.stackTrace}", ex)
+        }
+    }
+
+    private fun toKeycloakCredential(password: String): CredentialRepresentation {
         val passwordCred = CredentialRepresentation()
         passwordCred.isTemporary = false
         passwordCred.type = CredentialRepresentation.PASSWORD
-        passwordCred.value = signup.password
+        passwordCred.value = password
         return passwordCred
     }
 
