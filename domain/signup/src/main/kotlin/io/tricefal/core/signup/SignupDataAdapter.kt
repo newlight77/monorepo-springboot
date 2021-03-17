@@ -1,6 +1,5 @@
 package io.tricefal.core.signup
 
-import io.tricefal.core.metafile.MetafileDomain
 import io.tricefal.core.notification.EmailNotificationDomain
 import io.tricefal.core.notification.SmsNotificationDomain
 import io.tricefal.core.right.AccessRight

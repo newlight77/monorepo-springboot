@@ -88,12 +88,12 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         return true
     }
 
-    override fun updatePassword(username: String, password: String): Boolean {
+    override fun updatePassword(username: String, newPassword: String): Boolean {
 
         val users = find(username)
         if (users.isNotEmpty()) {
             val user: UserRepresentation = users.last()
-            val credential = toKeycloakCredential(username)
+            val credential = toKeycloakCredential(newPassword)
 
             try {
                 realmUsersResource[user.id].resetPassword(credential)

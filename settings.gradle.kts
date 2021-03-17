@@ -26,6 +26,7 @@ include(":infrastructure:pricer-reference")
 include(":infrastructure:profile")
 include(":infrastructure:signup")
 include(":infrastructure:storage")
+include(":infrastructure:user")
 
 include(":shared")
 include(":shared:util")

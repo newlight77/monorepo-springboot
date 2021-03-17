@@ -3,6 +3,7 @@ package io.tricefal.core.signup
 import io.tricefal.core.metafile.originalFilename
 import java.time.Instant
 
+class SignupPasswordModel(val username: String, val newPassword: String)
 class SignupResendModel(val username: String)
 class SignupCodeModel(val code: String)
 class SignupStatusModel(val status: String)

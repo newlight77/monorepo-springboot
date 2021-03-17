@@ -47,6 +47,7 @@ dependencies {
 	implementation(project(":infrastructure:profile"))
 	implementation(project(":infrastructure:signup"))
 	implementation(project(":infrastructure:storage"))
+	implementation(project(":infrastructure:user"))
 
 	implementation(project(":infrastructure:keycloak-client"))
 

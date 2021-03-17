@@ -7,11 +7,11 @@ import javax.annotation.security.RolesAllowed
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("user")
-open class UserApi() {
+@RequestMapping("keycload")
+open class KeycloakUserApi() {
 
     @RolesAllowed("ROLE_user-role")
-    @GetMapping("")
+    @GetMapping("user")
     fun principal(principal: Principal): String {
         println("Fetching user name: ${principal.name}")
 
