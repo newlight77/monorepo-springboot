@@ -73,6 +73,7 @@ getToken() {
     --data-urlencode "client_id=${CLIENT_ID}" \
     --data-urlencode "username=${USERNAME}" \
     --data-urlencode "password=${PASSWORD}" \
+    --data-urlencode "scope=openid" \
     --data-urlencode "grant_type=password" | jq -r .access_token
 }
 
@@ -83,13 +84,13 @@ helloApi() {
 secureUserApi() {
   token=$1
   curl --location --request GET "${API_URL}/signup" \
-    -H "Authorization: bearer ${token}"
+    -H "Authorization: Bearer ${token}"
 }
 
 uploadCv() {
   token=$1
   curl --location --request POST "${API_URL}/signup/upload/cv" \
-    -H 'Authorization: bearer '${token} \
+    -H 'Authorization: Bearer '${token} \
     --form 'file=@/Users/kong/Downloads/contabo-11.pdf'
 }
 
@@ -113,17 +114,22 @@ done
 ## Run
 #############################################
 
+echo "call helloApi..."
 helloApi
 echo ""
 
-echo "signing up"
-signup
+#echo "signing up"
+#signup
 
+echo "call getToken..."
 TOKEN=$(getToken)
 echo $TOKEN
+echo ""
 
-echo "get signup with token"
+echo "call secureUserApi..."
 result=$(secureUserApi ${TOKEN})
+
+echo $result
 
 if [ $result != "" ]; then 
   echo $result
