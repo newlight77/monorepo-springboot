@@ -53,11 +53,15 @@ core-code-analysis:
 	@docker run --rm -e SONAR_HOST_URL=https://ci.tricefal.io/sonar -e SONAR_LOGIN="f1843a5c58e6658ed82e95e169868d014e1d04b1" -v ~/wks/src/tricefal/tricefal/core:/usr/src sonarsource/sonar-scanner-cli
 	#@docker run -e SONAR_URL=https://ci.tricefal.io/sonar -e SONAR_ANALYSIS_MODE=publish -e SONAR_TOKEN="f1843a5c58e6658ed82e95e169868d014e1d04b1" ciricihq/gitlab-sonar-scanner gitlab-sonar-scanner
 
-core-boot: dc-up-infra
-	@./.run --env=local --run-mode=boot
+core-boot: 	
+	@./.run --env=localhost --run-mode=local
 
-core-run: dc-up-infra
+core-run:
 	@./.run --env=local --run-mode=local
+#	@java $(DEBUG_ARG) -jar core/application/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
+
+core-run-localhost:
+	@./.run --env=localhost --run-mode=local
 #	@java $(DEBUG_ARG) -jar core/application/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
 
 core-test-api:
@@ -84,14 +88,15 @@ dc-up:
 dc-up-with-keycloak-ci:
 	@ENV=ci && docker-compose -f docker-compose.keycloak-ci.yml up -d
 
-dc-up-local:
+# local-full  = full docker local
+dc-up-local-full:
 	@ENV=local && docker-compose up -d
 
 dc-up-local-keycloak:
 	@ENV=local && docker-compose up -d keycloak
 
 dc-up-localhost:
-	@ENV=local && docker-compose -f docker-compose.localhost.yml up -d dbcore keycloak dbkeycloak
+	@docker-compose -f docker-compose.localhost.yml up -d dbcore keycloak dbkeycloak
 
 dc-down:
 	@docker-compose down
