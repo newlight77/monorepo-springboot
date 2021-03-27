@@ -69,12 +69,13 @@ spring:
 
 logging:
     level:
-        org.springframework: ERROR
-        liquibase: ERROR
-        org.hibernate: ERROR
-        io.tricefal.core: DEBUG
+        org.springframework: WARN
+        liquibase: WARN
+        org.hibernate: WARN
+        io.tricefal.core: ${CORE_LOGGING_LEVEL:INFO}
         com.zaxxer: ERROR
-    org.apache.catalina: INFO
+        org.keycloak: WARN
+    org.apache.catalina: WARN
     pattern:
         console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
 #    config: classpath:logback-spring.xml
