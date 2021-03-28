@@ -96,7 +96,7 @@ dc-up-local-keycloak:
 	@ENV=local && docker-compose up -d keycloak
 
 dc-up-localhost:
-	@docker-compose -f docker-compose.localhost.yml up -d dbcore keycloak dbkeycloak
+	@ENV=local && docker-compose -f docker-compose.localhost.yml up -d dbcore keycloak dbkeycloak
 
 dc-down:
 	@docker-compose down

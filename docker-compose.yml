@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
 
   keycloak:
-    image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak:${VERSION}
+    image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak-${ENV}:${VERSION}
     container_name: keycloak
     hostname: docker_keycloak_1
     networks:
@@ -76,8 +76,6 @@ services:
       - DB_USER=keycloak
       - DB_PASSWORD=Pa55w0rd
       - PROXY_ADDRESS_FORWARDING=true
-    volumes:
-      - ./config/${ENV}/:/opt/jboss/keycloak/imports/:rw
     restart: unless-stopped
 
   dbkeycloak:

@@ -2,29 +2,6 @@ version: "3.6"
 
 services:
 
-  # core-app-signup:
-  #   image: openjdk:13-slim
-  #   container_name: core
-  #   hostname: docker_core
-  #   networks:
-  #     internal-subnet:
-  #       ipv4_address: 172.28.5.21
-  #   extra_hosts:
-  #     - "docker_keycloak_1:172.28.5.11"
-  #   env_file:
-  #     - ./config/core-app.localhost.env
-  #   volumes:
-  #     - ./.run:/app/.run
-  #     - ./application/signup/build/libs:/app/
-  #     - core_files:/data/files:rw
-  #     - core_logs:/data/logs:rw
-  #   ports:
-  #     - "8080:8080"
-  #     - "5080:5080"
-  #   depends_on:
-  #     - dbcore
-  #   command: java ${DEBUG_ARG} -jar /app/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=localhost
-
   dbcore:
     image: postgres:13.1
     container_name: dbcore
@@ -44,7 +21,7 @@ services:
     restart: unless-stopped
 
   keycloak:
-    image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak:${VERSION}
+    image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak-${ENV}:${VERSION}
     container_name: keycloak
     hostname: docker_keycloak_1
     networks:
@@ -62,8 +39,6 @@ services:
       - DB_USER=keycloak
       - DB_PASSWORD=Pa55w0rd
       - PROXY_ADDRESS_FORWARDING=true
-    volumes:
-      - ./config/local/:/opt/jboss/keycloak/imports/:rw
     restart: unless-stopped
 
   dbkeycloak:
