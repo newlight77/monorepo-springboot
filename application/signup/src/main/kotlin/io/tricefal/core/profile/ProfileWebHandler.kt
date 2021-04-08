@@ -76,7 +76,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            this.profileService.updateProfileOnResumeUploaded(username, metaFile.filename)
+            this.profileService.updateProfileResume(username, metaFile.filename)
         } catch(ex: Throwable) {
             logger.error("Failed to update the profile resume for username $username", ex)
             throw ProfileUploadException("Failed to update the profile resume for username $username", ex)
@@ -90,7 +90,7 @@ class ProfileWebHandler(val profileService: IProfileService,
         metafileService.save(metaFile, file.inputStream)
 
         val result = try {
-            this.profileService.updateProfileOnResumeLinkedinUploaded(username, metaFile.filename)
+            this.profileService.updateProfileResumeLinkedin(username, metaFile.filename)
         } catch(ex: Throwable) {
             logger.error("Failed to update the profile linkedin resume for username $username", ex)
             throw ProfileUploadException("Failed to update the profile cv linkedin resume for username $username", ex)

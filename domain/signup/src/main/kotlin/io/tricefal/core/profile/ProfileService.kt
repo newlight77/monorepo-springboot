@@ -100,7 +100,6 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                     },
                     { profile = dataAdapter.create(profile) }
                 )
-            this.dataAdapter.resumeUploaded(username, filename)
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the resume uploaded event for user $username", ex)
             throw ProfileUploadException("Failed to update the profile from the resume uploaded event for user $username", ex)
@@ -123,11 +122,28 @@ class ProfileService(private var dataAdapter: ProfileDataAdapter) : IProfileServ
                     },
                     { profile = dataAdapter.create(profile) }
                 )
-            this.dataAdapter.resumeLinkedinUploaded(username, filename)
         } catch (ex: Throwable) {
             logger.error("Failed to update the profile from the linkedin resume uploaded event for user $username", ex)
             throw ProfileUploadException("Failed to update the profile from the linkedin resume uploaded event for user $username", ex)
         }
+        return profile
+    }
+
+    override fun updateProfilePortrait(username: String, filename: String): ProfileDomain {
+        val profile = updateProfileOnPortraitUploaded(username, filename)
+        this.dataAdapter.resumeUploaded(username, filename)
+        return profile
+    }
+
+    override fun updateProfileResume(username: String, filename: String): ProfileDomain {
+        val profile = updateProfileOnResumeUploaded(username, filename)
+        this.dataAdapter.resumeUploaded(username, filename)
+        return profile
+    }
+
+    override fun updateProfileResumeLinkedin(username: String, filename: String): ProfileDomain {
+        val profile = updateProfileOnResumeLinkedinUploaded(username, filename)
+        this.dataAdapter.resumeLinkedinUploaded(username, filename)
         return profile
     }
 

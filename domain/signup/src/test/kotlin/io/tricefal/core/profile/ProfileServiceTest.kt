@@ -170,7 +170,7 @@ class ProfileServiceTest {
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
         Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
-        Mockito.doNothing().`when`(repository).resumeUploaded(username, "new filename")
+        //Mockito.doNothing().`when`(repository).resumeUploaded(username, "new filename")
         service = ProfileService(repository)
 
         // Act
@@ -200,11 +200,71 @@ class ProfileServiceTest {
 
         Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
         Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
-        Mockito.doNothing().`when`(repository).resumeLinkedinUploaded(username, "new filename")
+        //Mockito.doNothing().`when`(repository).resumeLinkedinUploaded(username, "new filename")
         service = ProfileService(repository)
 
         // Act
         val result = service.updateProfileOnResumeLinkedinUploaded(username, filename)
+
+        // Arrange
+        Assertions.assertTrue(result.state?.resumeLinkedinUploaded!!)
+        Assertions.assertEquals(filename, result.resumeLinkedinFilename)
+    }
+
+    @Test
+    fun `should update the profile resume`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val filename = "new filename"
+        val profile1 = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            ProfileStateDomain.Builder("kong@gmail.com").validated(true).build(),
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
+        val profile = Optional.of(profile1)
+
+        Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
+        Mockito.doNothing().`when`(repository).resumeUploaded(username, "new filename")
+        service = ProfileService(repository)
+
+        // Act
+        val result = service.updateProfileResume(username, filename)
+
+        // Arrange
+        Assertions.assertTrue(result.state?.resumeUploaded!!)
+        Assertions.assertEquals(filename, result.resumeFilename)
+    }
+
+    @Test
+    fun `should update the profile resume linkedin`() {
+        // Arrange
+        val username = "kong@gmail.com"
+        val filename = "new filename"
+        val profile1 = ProfileDomain("kong@gmail.com",
+            "kong",
+            "to",
+            "000000000",
+            Status.FREELANCE,
+            ProfileStateDomain.Builder("kong@gmail.com").validated(true).build(),
+            Instant.now(),
+            "portrait",
+            "resume",
+            "resume linkedin")
+        val profile = Optional.of(profile1)
+
+        Mockito.`when`(repository.findByUsername(username)).thenReturn(profile)
+        Mockito.`when`(repository.update(profile1)).thenReturn(profile1)
+        Mockito.doNothing().`when`(repository).resumeLinkedinUploaded(username, "new filename")
+        service = ProfileService(repository)
+
+        // Act
+        val result = service.updateProfileResumeLinkedin(username, filename)
 
         // Arrange
         Assertions.assertTrue(result.state?.resumeLinkedinUploaded!!)
