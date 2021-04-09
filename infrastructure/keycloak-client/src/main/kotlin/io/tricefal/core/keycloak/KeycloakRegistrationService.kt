@@ -60,7 +60,7 @@ class KeycloakRegistrationService(private val env: Environment): IamRegisterServ
         val response = createUser(user)
         logger.info("Response: ${response.location} ${response.status} ${response.statusInfo}")
         val userId = getCreatedId(response)
-        val userCredential = toKeycloakCredential(signup.username)
+        val userCredential = toKeycloakCredential(signup.password!!)
 
         try {
             realmUsersResource[userId].resetPassword(userCredential)
