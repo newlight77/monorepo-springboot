@@ -28,16 +28,16 @@ data class LoginEntity(
         var ipAddress: String,
 
         @Column(name = "city", length = 50)
-        var city: String,
+        var city: String?,
 
         @Column(name = "region", length = 100)
-        var region: String,
+        var region: String?,
 
         @Column(name = "device", length = 100)
-        val device: String,
+        val device: String?,
 
         @Column(name = "success")
-        var success: Boolean
+        var success: Boolean?
 )
 
 fun toEntity(domain: LoginDomain): LoginEntity {
@@ -46,10 +46,10 @@ fun toEntity(domain: LoginDomain): LoginEntity {
                 username = domain.username,
                 loginDate = domain.loginDate!!,
                 ipAddress = domain.ipAddress!!,
-                city = domain.city!!,
-                region = domain.region!!,
-                device = domain.device!!,
-                success = domain.success!!
+                city = domain.city,
+                region = domain.region,
+                device = domain.device,
+                success = domain.success
         )
 }
 
