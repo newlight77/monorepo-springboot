@@ -23,18 +23,26 @@ class ProfileAdminApi(val profileWebHandler: ProfileWebHandler) {
         val metafile = profileWebHandler.resume(username)
 
         val header = HttpHeaders()
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
+        val filename = metafile?: ""
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=$filename")
         header.add("Cache-Control", "no-cache, no-store, must-revalidate")
         header.add("Pragma", "no-cache")
         header.add("Expires", "0")
 
-        val path = Paths.get(metafile.filename)
-        val resource = ByteArrayResource(Files.readAllBytes(path))
-
-        return ResponseEntity.ok()
+        metafile?.let {
+            val path = Paths.get(metafile.filename)
+            val resource = ByteArrayResource(Files.readAllBytes(path))
+            return ResponseEntity.ok()
                 .contentLength(metafile.size!!)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(resource)
+        }
+
+        return ResponseEntity.ok()
+            .contentLength(0)
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(ByteArrayResource(ByteArray(0)))
+
     }
 
     @RolesAllowed("ROLE_ac_tricefal_w")
@@ -44,18 +52,26 @@ class ProfileAdminApi(val profileWebHandler: ProfileWebHandler) {
         val metafile = profileWebHandler.resumeLinkedIn(username)
 
         val header = HttpHeaders()
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
+        val filename = metafile ?: ""
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=$filename")
         header.add("Cache-Control", "no-cache, no-store, must-revalidate")
         header.add("Pragma", "no-cache")
         header.add("Expires", "0")
 
-        val path = Paths.get(metafile.filename)
-        val resource = ByteArrayResource(Files.readAllBytes(path))
+        metafile?.let {
+            val path = Paths.get(metafile.filename)
+            val resource = ByteArrayResource(Files.readAllBytes(path))
+
+            return ResponseEntity.ok()
+                .contentLength(metafile.size!!)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource)
+        }
 
         return ResponseEntity.ok()
-            .contentLength(metafile.size!!)
+            .contentLength(0)
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .body(resource)
+            .body(ByteArrayResource(ByteArray(0)))
     }
 
 }

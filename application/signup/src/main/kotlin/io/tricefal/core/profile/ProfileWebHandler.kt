@@ -39,22 +39,22 @@ class ProfileWebHandler(val profileService: IProfileService,
         return toModel(domain)
     }
 
-    fun portrait(username: String): MetafileModel {
+    fun portrait(username: String): MetafileModel? {
         return metafileService.findByUsername(username, Representation.PORTRAIT)
                 .map { toModel(it) }
-                .first()
+                .firstOrNull()
     }
 
-    fun resume(username: String): MetafileModel {
+    fun resume(username: String): MetafileModel? {
         return metafileService.findByUsername(username, Representation.CV)
                 .map { toModel(it) }
-                .first()
+                .firstOrNull()
     }
 
-    fun resumeLinkedIn(username: String): MetafileModel {
+    fun resumeLinkedIn(username: String): MetafileModel? {
         return metafileService.findByUsername(username, Representation.CV_LINKEDIN)
                 .map { toModel(it) }
-                .first()
+                .firstOrNull()
     }
 
     fun uploadPortrait(username: String, file: MultipartFile): ProfileModel {

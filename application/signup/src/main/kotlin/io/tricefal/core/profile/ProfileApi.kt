@@ -95,20 +95,25 @@ class ProfileApi(val profileWebHandler: ProfileWebHandler,
                 .body(resource)
     }
 
-    private fun toStreamingResponse(response: HttpServletResponse, metafile: MetafileModel): StreamingResponseBody {
-        response.contentType = metafile.contentType
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
-        response.setHeader("filename", metafile.filename)
-        val inputStream = FileInputStream(Paths.get(metafile.filename).toFile())
-        return streamingResponseBody(inputStream)
+    private fun toStreamingResponse(response: HttpServletResponse, metafile: MetafileModel?): StreamingResponseBody {
+        metafile?.let {
+            response.contentType = metafile.contentType
+            response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${metafile.filename}")
+            response.setHeader("filename", metafile.filename)
+            val inputStream = FileInputStream(Paths.get(metafile.filename).toFile())
+            return streamingResponseBody(inputStream)
+        }
+        return streamingResponseBody(null)
     }
 
-    private fun streamingResponseBody(inputStream: FileInputStream): StreamingResponseBody {
+    private fun streamingResponseBody(inputStream: FileInputStream?): StreamingResponseBody {
         return StreamingResponseBody { outputStream ->
-            var bytesRead: Int
-            val buffer = ByteArray(2048)
-            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                outputStream.write(buffer, 0, bytesRead)
+            inputStream?.let {
+                var bytesRead: Int
+                val buffer = ByteArray(2048)
+                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                    outputStream.write(buffer, 0, bytesRead)
+                }
             }
         }
     }
