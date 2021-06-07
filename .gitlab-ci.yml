@@ -25,7 +25,7 @@ stages:
 #assemble:
 #  stage: compile
 #  script:
-#    - make core-clean-assemble
+#    - make clean-assemble
 #  artifacts:
 #    paths:
 ##      - .gradle
@@ -43,7 +43,7 @@ unit-test:
   dependencies:
     - package
   script:
-    - make core-test
+    - make test
   artifacts:
     paths:
 #      - .gradle
@@ -64,7 +64,7 @@ package:
     - /^[0-9].[0-9].[0-9]$/
     - /^v[0-9].[0-9].[0-9]$/
   script:
-    - make core-clean-package
+    - make clean-package
   artifacts:
     paths:
       - application/signup/build/
@@ -143,16 +143,16 @@ build-image:
     - echo $VERSION $ENV
   script:
     - docker login -u $GROUP_REGISTRY_USER -p $GROUP_REGISTRY_PASSWORD $GROUP_REGISTRY
-    - docker-compose -f ./docker-compose.yml pull core-app-signup
-    - docker-compose -f ./docker-compose.yml build core-app-signup
+    - docker-compose -f ./docker-compose.yml pull app-signup-backend
+    - docker-compose -f ./docker-compose.yml build app-signup-backend
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker-compose -f ./docker-compose.yml push core-app-signup
+    - docker-compose -f ./docker-compose.yml push app-signup-backend
     - VERSION=$(git describe --always | cut -d'-' -f1) # v1.0.4
-    - docker-compose -f ./docker-compose.yml build core-app-signup
-    - docker-compose -f ./docker-compose.yml push core-app-signup
+    - docker-compose -f ./docker-compose.yml build app-signup-backend
+    - docker-compose -f ./docker-compose.yml push app-signup-backend
     - VERSION=latest
-    - docker-compose -f ./docker-compose.yml build core-app-signup
-    - docker-compose -f ./docker-compose.yml push core-app-signup
+    - docker-compose -f ./docker-compose.yml build app-signup-backend
+    - docker-compose -f ./docker-compose.yml push app-signup-backend
   only:
     - master
     - develop
