@@ -11,7 +11,7 @@ export ENV ?= local
 #BRANCH = $(shell git branch --show-current)
 export VERSION ?= $(shell git describe --always)
 
-include ./config/core-app.${ENV}.env
+include ./config/app.${ENV}.env
 export
 
 $(info version = $(VERSION))
@@ -23,8 +23,6 @@ env:
 help: ## Display this help screen
 	@grep -h -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-clean: core-clean
-
 kill:
 	@tools/scripts/kill-process.sh --$(keyword)
 
@@ -32,55 +30,55 @@ kill-java:
 	@tools/scripts/kill-process.sh --java --tricefal
 
 
-core-clean:
+clean:
 	@./gradlew clean
 
-core-clean-assemble:
+clean-assemble:
 	@./gradlew -g .gradle/caches clean assemble
 
-core-package:
+package:
 	@./gradlew -g .gradle/caches build -x test
 
-core-clean-package:
+clean-package:
 	@./gradlew -g .gradle/caches clean build -x test
 
-core-test:
+test:
 	@./gradlew -g .gradle/caches check jacocoTestReport
 
-core-code-analysis:
+code-analysis:
 	#@./gradlew -g .gradle/caches sonarqube
 	#@./gradlew sonarqube -Dsonar.qualitygate.wait=true
-	@docker run --rm -e SONAR_HOST_URL=https://ci.tricefal.io/sonar -e SONAR_LOGIN="f1843a5c58e6658ed82e95e169868d014e1d04b1" -v ~/wks/src/tricefal/tricefal/core:/usr/src sonarsource/sonar-scanner-cli
+	@docker run --rm -e SONAR_HOST_URL=https://ci.tricefal.io/sonar -e SONAR_LOGIN="f1843a5c58e6658ed82e95e169868d014e1d04b1" -v ~/wks/src/tricefal/app-signup-backend:/usr/src sonarsource/sonar-scanner-cli
 	#@docker run -e SONAR_URL=https://ci.tricefal.io/sonar -e SONAR_ANALYSIS_MODE=publish -e SONAR_TOKEN="f1843a5c58e6658ed82e95e169868d014e1d04b1" ciricihq/gitlab-sonar-scanner gitlab-sonar-scanner
 
-core-boot: 	
+boot: 	
 	@./.run --env=localhost --run-mode=local
 
-core-run:
+run:
 	@./.run --env=local --run-mode=local
-#	@java $(DEBUG_ARG) -jar core/application/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
+#	@java $(DEBUG_ARG) -jar application/signup/build/libs/app-signup-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
 
-core-run-localhost:
+run-localhost:
 	@./.run --env=localhost --run-mode=local
-#	@java $(DEBUG_ARG) -jar core/application/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
+#	@java $(DEBUG_ARG) -jar application/signup/build/libs/app-signup-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
 
-core-test-api:
+test-api:
 	@./test-api.sh --api-url=http://localhost:8080/api --client-id=ci.frontend.https --token-url=https://ci.tricefal.io/auth/realms/ci.app/protocol/openid-connect/token --username=newlight77+${testId}@gmail.com
 
-core-test-api-local:
+test-api-local:
 	@./test-api.sh --api-url=http://localhost:8080/api --client-id=local.frontend.https --token-url=http://localhost:1080/auth/realms/local.app/protocol/openid-connect/token --username=newlight77+${testId}@gmail.com
 
 
-dc-build: core-package
-	@docker-compose build core-app-signup
+dc-build: package
+	@docker-compose build app-signup-backend
 
-dc-build-push: core-package
+dc-build-push: package
 	@docker system prune -f
-	@docker-compose build core-app-signup
-	@docker-compose push core-app-signup
+	@docker-compose build app-signup-backend
+	@docker-compose push app-signup-backend
 
 dc-push:
-	@docker-compose push core-app-signup
+	@docker-compose push app-signup-backend
 
 dc-up:
 	@docker-compose up -d
@@ -96,7 +94,7 @@ dc-up-local-keycloak:
 	@ENV=local && docker-compose up -d keycloak
 
 dc-up-localhost:
-	@ENV=local && docker-compose -f docker-compose.localhost.yml up -d dbcore keycloak dbkeycloak
+	@ENV=local && docker-compose -f docker-compose.localhost.yml up -d dbsignup keycloak dbkeycloak
 
 dc-down:
 	@docker-compose down
@@ -115,12 +113,12 @@ dc-restart: down up
 
 
 db-psql: ## Launch PostgreSQL Shell
-	@docker-compose exec dbcore psql -U $(POSTGRES_USER) $(POSTGRES_DB)
+	@docker-compose exec dbsignup psql -U $(POSTGRES_USER) $(POSTGRES_DB)
 
 db-pgsh: ## Launch a shell inside PostgreSQL container
-	@docker-compose exec dbcore sh
+	@docker-compose exec dbsignup sh
 
 db-pgdump: ## Dump the database
-	@docker-compose exec dbcore pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB)
+	@docker-compose exec dbsignup pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB)
 
 

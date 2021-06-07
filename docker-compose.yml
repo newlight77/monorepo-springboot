@@ -5,64 +5,62 @@
 version: "3.6"
 
 services:
-  core-app-signup:
-    image: registry.gitlab.com/tricefal/tricefal-core/core-app-signup:${VERSION}
+  app-signup-backend:
+    image: registry.gitlab.com/tricefal/app-signup-backend:${VERSION}
     build:
       context: .
       dockerfile: ./Dockerfile
       args:
         ENV: ${ENV}
         ENABLE_BUILD: ${ENABLE_BUILD}
-    container_name: core
-    hostname: docker_core
+    container_name: app-signup-backend
+    hostname: app-signup-backend
     networks:
       internal-subnet:
         ipv4_address: 172.28.5.21
     extra_hosts:
-      - "docker_keycloak_1:172.28.5.11"
-      - "docker_dbcore:172.28.5.20"
+      - "keycloak:172.28.5.11"
+      - "dbsignup:172.28.5.20"
     env_file:
-      - ./config/core-app.${ENV}.env
+      - ./config/app.${ENV}.env
     volumes:
       - ./.run:/app/.run
-      - ./config/core-app.${ENV}.env:/app/config/core-app.env:ro
-      - core_files:/data/files:rw
-      - core_logs:/data/logs:rw
+      - ./config/app.${ENV}.env:/app/config/app.env:ro
+      - signup_files:/data/files:rw
+      - signup_logs:/data/logs:rw
     ports:
       - "8080:8080"
       - "5080:5080"
     depends_on:
-      - dbcore
+      - dbsignup
     restart: unless-stopped
 
-  dbcore:
+  dbsignup:
     image: postgres:13.1
-    container_name: dbcore
-    hostname: docker_dbcore
+    container_name: dbsignup
+    hostname: dbsignup
     networks:
       internal-subnet:
         ipv4_address: 172.28.5.20
     env_file:
-      - ./config/dbcore.env
+      - ./config/dbsignup.env
     volumes:
       - ./application/signup/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
       - ./application/signup/src/main/resources/ref-data.sql:/docker-entrypoint-initdb.d/data.sql:ro
       - ./infrastructure/pricer-reference/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/pricer-schema.sql:ro
       - ./infrastructure/pricer-reference/src/main/resources/data.sql:/docker-entrypoint-initdb.d/pricer-data.sql:ro
-      - dbcore_data:/var/lib/postgresql/data:rw
+      - dbsignup_data:/var/lib/postgresql/data:rw
     ports:
       - "5432:5432"
     restart: unless-stopped
 
   keycloak:
-    image: registry.gitlab.com/tricefal/tricefal-keycloak/keycloak-${ENV}:${VERSION}
+    image: registry.gitlab.com/tricefal/docker-keycloak:${VERSION}
     container_name: keycloak
-    hostname: docker_keycloak_1
+    hostname: keycloak
     networks:
       internal-subnet:
         ipv4_address: 172.28.5.11
-    extra_hosts:
-      - "docker_dbkeycloak:172.28.5.10"
     ports:
       - "1080:8080"
       - "1443:8443"
@@ -70,18 +68,20 @@ services:
       - dbkeycloak
     environment:
       - DB_VENDOR=postgres
-      - DB_ADDR=docker_dbkeycloak
+      - DB_ADDR=dbkeycloak
       - DB_PORT=5432
       - DB_DATABASE=keycloak
       - DB_USER=keycloak
       - DB_PASSWORD=Pa55w0rd
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=Pa55w0rd
       - PROXY_ADDRESS_FORWARDING=true
     restart: unless-stopped
 
   dbkeycloak:
     image: postgres:13.1
     container_name: dbkeycloak
-    hostname: docker_dbkeycloak
+    hostname: dbkeycloak
     networks:
       internal-subnet:
         ipv4_address: 172.28.5.10
@@ -103,7 +103,7 @@ networks:
         - subnet: 172.28.5.0/24
 
 volumes:  
-  core_files:
-  core_logs:
-  dbcore_data:
+  signup_files:
+  signup_logs:
+  dbsignup_data:
   dbkeycloak_data:

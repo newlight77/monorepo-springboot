@@ -7,7 +7,7 @@ WORKDIR /code
 
 COPY ./ .
 #COPY ./.run ./.run
-#COPY ./config/core.${ENV}.env ./config/core.env
+#COPY ./config/app.${ENV}.env ./config/app.env
 
 ENV JVM_OPTS="-Xmx2048m"
 ENV GRADLE_OPTS="-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false"
@@ -30,8 +30,8 @@ WORKDIR /app
 # RUN addgroup -S spring && adduser -S spring -G spring
 RUN adduser spring
 
-COPY --from=builder /code/application/signup/build/libs/*.jar /app/libs/core-app-signup.jar
-COPY --from=builder /code/config/core-app.ci.env /app/config/core-app.env
+COPY --from=builder /code/application/signup/build/libs/*.jar /app/libs/app-signup-backend.jar
+COPY --from=builder /code/config/app.ci.env /app/config/app.env
 COPY --from=builder /code/.run /app/.run
 
 RUN chown -R spring:spring /app

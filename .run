@@ -94,9 +94,9 @@ if [ "$?"x = '0x' ]; then
 fi
 
 if [ "${ENV}" != '' ]; then
-  sed 's/\(.*=\)/export &/g' < ./config/core-app.${ENV}.env > ./.env
+  sed 's/\(.*=\)/export &/g' < ./config/app.${ENV}.env > ./.env
 else
-  sed 's/\(.*=\)/export &/g' < ./config/core-app.env > ./.env
+  sed 's/\(.*=\)/export &/g' < ./config/app.env > ./.env
 fi
 
 . ./.env > /dev/null
@@ -127,11 +127,11 @@ if [ "${RUN_MODE}" = 'boot' ]; then
 fi
 
 if [ "${RUN_MODE}" = 'local' ]; then
-  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/signup/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
-  java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/signup/build/libs/core-app-signup-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
+  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/signup/build/libs/app-signup-backend-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
+  java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/application/signup/build/libs/app-signup-backend-0.0.1-SNAPSHOT.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
 fi
 
 if [ "${RUN_MODE}" = 'docker' ]; then
-  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/libs/core-app-signup.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
-  java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/libs/core-app-signup.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
+  echo "java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/libs/app-signup-backend.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}"
+  java ${DEBUG_ARG} ${CLASSPATH_ARG} -jar ${ROOT_DIR}/libs/app-signup-backend.jar ${SPRING_PROFILE_ARG} ${KEYCLOAK_CONFIG_ARG}
 fi
