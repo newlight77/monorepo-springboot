@@ -95,7 +95,7 @@ tasks.withType<BootRun> {
 }
 
 tasks.withType<Jar>() {
-    baseName = "core-app-signup"
+    baseName = "app-signup-backend"
 }
 
 testlogger {
