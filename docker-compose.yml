@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
 
   keycloak:
-    image: registry.gitlab.com/tricefal/docker-keycloak:${VERSION}
+    image: jboss/keycloak:12.0.3
     container_name: keycloak
     hostname: keycloak
     networks:
@@ -76,6 +76,16 @@ services:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=Pa55w0rd
       - PROXY_ADDRESS_FORWARDING=true
+    volumes:
+      - ./config/keycloak/:/opt/jboss/keycloak/imports/:rw
+      - ./certs/${ENV}/${ENV}.cert.fullchain.pem:/etc/x509/https/tls.crt:ro
+      - ./certs/${ENV}/${ENV}.cert.key:/etc/x509/https/tls.key:ro
+    command:
+      - "-b 0.0.0.0"
+      - "-Dkeycloak.profile.feature.docker=enabled"
+      - "-Dkeycloak.migration.action=import"
+      - "-Dkeycloak.migration.dir=/opt/jboss/keycloak/imports/"
+      - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     restart: unless-stopped
 
   dbkeycloak:
