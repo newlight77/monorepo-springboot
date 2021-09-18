@@ -15,7 +15,7 @@ buildscript {
 			.resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
 }
 
-group = "io.tricefal.application"
+group = "io.oneprofile.application"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
@@ -81,7 +81,7 @@ dependencies {
 }
 
 application {
-	mainClassName = "io.tricefal.core.KeycloakAuthApplicationKt"
+	mainClassName = "io.oneprofile.core.KeycloakAuthApplicationKt"
 }
 
 tasks.withType<BootRun> {

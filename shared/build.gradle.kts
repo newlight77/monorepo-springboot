@@ -5,7 +5,7 @@ plugins {
 	idea
 }
 
-group = "io.tricefal.shared"
+group = "io.oneprofile.shared"
 version = "0.0.1-SNAPSHOT"
 
 

@@ -5,7 +5,7 @@ plugins {
 	kotlin("plugin.spring") version "1.3.72"
 }
 
-group = "io.tricefal.infrastructure"
+group = "io.oneprofile.infrastructure"
 version = "0.0.1-SNAPSHOT"
 
 

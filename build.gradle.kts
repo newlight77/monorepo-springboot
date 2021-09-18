@@ -12,7 +12,7 @@ plugins {
 	jacoco
 }
 
-group = "io.tricefal.core"
+group = "io.oneprofile.core"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
@@ -123,7 +123,7 @@ subprojects {
 			rule {
 				enabled = false
 				element = "CLASS"
-				includes = listOf("io.tricefal.*")
+				includes = listOf("io.oneprofile.*")
 
 				limit {
 					counter = "LINE"

@@ -4,7 +4,7 @@ plugins {
 	kotlin("jvm")
 }
 
-group = "io.tricefal.domain"
+group = "io.oneprofile.domain"
 version = "0.0.1-SNAPSHOT"
 
 repositories {

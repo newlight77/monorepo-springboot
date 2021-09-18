@@ -5,7 +5,7 @@ plugins {
 	idea
 }
 
-group = "io.tricefal.application"
+group = "io.oneprofile.application"
 version = "0.0.1-SNAPSHOT"
 
 repositories {

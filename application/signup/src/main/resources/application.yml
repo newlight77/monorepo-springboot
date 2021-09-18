@@ -72,7 +72,7 @@ logging:
         org.springframework: WARN
         liquibase: WARN
         org.hibernate: WARN
-        io.tricefal.core: ${CORE_LOGGING_LEVEL:INFO}
+        io.oneprofile.core: ${CORE_LOGGING_LEVEL:INFO}
         com.zaxxer: ERROR
         org.keycloak: WARN
     org.apache.catalina: WARN

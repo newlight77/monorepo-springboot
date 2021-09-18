@@ -8,7 +8,7 @@ buildscript {
 			.resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
 }
 
-group = "io.tricefal.shared"
+group = "io.oneprofile.shared"
 version = "0.0.1-SNAPSHOT"
 
 repositories {

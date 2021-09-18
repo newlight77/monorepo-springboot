@@ -5,8 +5,8 @@ import io.cucumber.java8.En
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import io.restassured.response.ValidatableResponse
-import io.tricefal.core.signup.SignupJpaRepository
-import io.tricefal.core.signup.SignupModel
+import io.oneprofile.core.signup.SignupJpaRepository
+import io.oneprofile.core.signup.SignupModel
 import org.hamcrest.core.Is
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.web.server.LocalServerPort

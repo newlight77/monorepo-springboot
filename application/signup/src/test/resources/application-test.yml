@@ -70,7 +70,7 @@ logging:
         org.springframework: ERROR
         liquibase: ERROR
         org.hibernate: ERROR
-        io.tricefal.core: DEBUG
+        io.oneprofile.core: DEBUG
         com.zaxxer: ERROR
     pattern:
         console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"

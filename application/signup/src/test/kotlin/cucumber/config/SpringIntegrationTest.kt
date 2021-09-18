@@ -1,7 +1,7 @@
 package cucumber.config
 
 import io.cucumber.java.Before
-import io.tricefal.core.KeycloakAuthApplication
+import io.oneprofile.core.KeycloakAuthApplication
 import org.apache.commons.logging.LogFactory
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
