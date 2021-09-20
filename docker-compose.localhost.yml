@@ -21,14 +21,14 @@ services:
     restart: unless-stopped
 
   keycloak:
-    image: registry.gitlab.com/oneprofile/docker-keycloak:${VERSION}
+    image: jboss/keycloak:12.0.3
     container_name: keycloak
     hostname: keycloak
     networks:
       - internal-subnet
     ports:
-      - "1080:8080"
-      - "1443:8443"
+      - "2080:8080"
+      - "2443:8443"
     depends_on:
       - dbkeycloak
     environment:
@@ -38,7 +38,19 @@ services:
       - DB_DATABASE=keycloak
       - DB_USER=keycloak
       - DB_PASSWORD=Pa55w0rd
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=Pa55w0rd
       - PROXY_ADDRESS_FORWARDING=true
+    volumes:
+      - ./config/keycloak/:/opt/jboss/keycloak/imports/:rw
+      - ./certs/local/local.cert.fullchain.pem:/etc/x509/https/tls.crt:ro
+      - ./certs/local/local.cert.key:/etc/x509/https/tls.key:ro
+    command:
+      - "-b 0.0.0.0"
+      - "-Dkeycloak.profile.feature.docker=enabled"
+      - "-Dkeycloak.migration.action=import"
+      - "-Dkeycloak.migration.dir=/opt/jboss/keycloak/imports/"
+      - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     restart: unless-stopped
 
   dbkeycloak:

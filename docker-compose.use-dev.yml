@@ -16,16 +16,15 @@ services:
     container_name: signup
     hostname: signup
     networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.21
+      - internal-subnet
     extra_hosts:
       - "dbsignup:172.28.5.20"
     env_file:
-      # using keycloak on CI
-      - ./config/app.ci.env
+      # using keycloak on DEV
+      - ./config/app.dev.env
     volumes:
       - ./.run:/app/.run
-      - ./config/app.ci.env:/app/config/app.env:ro
+      - ./config/app.dev.env:/app/config/app.env:ro
       - signup_files:/data/files:rw
       - signup_logs:/data/logs:rw
     ports:
@@ -40,8 +39,7 @@ services:
     container_name: dbsignup
     hostname: dbsignup
     networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.20
+      - internal-subnet
     env_file:
       - ./config/dbsignup.env
     volumes:
@@ -57,12 +55,6 @@ services:
 networks:
   internal-subnet:
     name: internal_subnet
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.5.0/24
-
 volumes:  
   signup_files:
   signup_logs:

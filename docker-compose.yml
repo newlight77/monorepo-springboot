@@ -11,21 +11,17 @@ services:
       context: .
       dockerfile: ./Dockerfile
       args:
-        ENV: ${ENV}
+        #ENV: ${ENV}
         ENABLE_BUILD: ${ENABLE_BUILD}
     container_name: app-signup-backend
     hostname: app-signup-backend
     networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.21
-    extra_hosts:
-      - "keycloak:172.28.5.11"
-      - "dbsignup:172.28.5.20"
+      - internal-subnet
     env_file:
-      - ./config/app.${ENV}.env
+      - ./config/app.local.env
     volumes:
       - ./.run:/app/.run
-      - ./config/app.${ENV}.env:/app/config/app.env:ro
+      - ./config/app.local.env:/app/config/app.env:ro
       - signup_files:/data/files:rw
       - signup_logs:/data/logs:rw
     ports:
@@ -40,8 +36,7 @@ services:
     container_name: dbsignup
     hostname: dbsignup
     networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.20
+      - internal-subnet
     env_file:
       - ./config/dbsignup.env
     volumes:
@@ -59,8 +54,7 @@ services:
     container_name: keycloak
     hostname: keycloak
     networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.11
+      - internal-subnet
     ports:
       - "1080:8080"
       - "1443:8443"
@@ -78,8 +72,8 @@ services:
       - PROXY_ADDRESS_FORWARDING=true
     volumes:
       - ./config/keycloak/:/opt/jboss/keycloak/imports/:rw
-      - ./certs/${ENV}/${ENV}.cert.fullchain.pem:/etc/x509/https/tls.crt:ro
-      - ./certs/${ENV}/${ENV}.cert.key:/etc/x509/https/tls.key:ro
+      - ./certs/local/local.cert.fullchain.pem:/etc/x509/https/tls.crt:ro
+      - ./certs/local/local.cert.key:/etc/x509/https/tls.key:ro
     command:
       - "-b 0.0.0.0"
       - "-Dkeycloak.profile.feature.docker=enabled"
@@ -93,8 +87,7 @@ services:
     container_name: dbkeycloak
     hostname: dbkeycloak
     networks:
-      internal-subnet:
-        ipv4_address: 172.28.5.10
+      - internal-subnet
     environment:
       - POSTGRES_DB=keycloak
       - POSTGRES_USER=keycloak
@@ -106,11 +99,6 @@ services:
 networks:
   internal-subnet:
     name: internal_subnet
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.28.5.0/24
 
 volumes:  
   signup_files:

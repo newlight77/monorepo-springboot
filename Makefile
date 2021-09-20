@@ -62,10 +62,10 @@ run-localhost:
 	@./.run --env=localhost --run-mode=local
 #	@java $(DEBUG_ARG) -jar application/signup/build/libs/app-signup-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
 
-test-api:
-	@./test-api.sh --api-url=http://localhost:8080/api --client-id=ci.frontend.https --token-url=https://ci.oneprofile.io/auth/realms/ci.app/protocol/openid-connect/token --username=newlight77+${testId}@gmail.com
+test-api-use-dev:
+	@./test-api.sh --api-url=http://localhost:8080/api --client-id=dev.frontend.https --token-url=https://dev.oneprofile.io/auth/realms/dev.app/protocol/openid-connect/token --username=newlight77+${testId}@gmail.com
 
-test-api-local:
+test-api-use-local:
 	@./test-api.sh --api-url=http://localhost:8080/api --client-id=local.frontend.https --token-url=http://localhost:1080/auth/realms/local.app/protocol/openid-connect/token --username=newlight77+${testId}@gmail.com
 
 
@@ -80,21 +80,15 @@ dc-build-push: package
 dc-push:
 	@docker-compose push app-signup-backend
 
+# full docker local
 dc-up:
 	@docker-compose up -d
 
-dc-up-with-keycloak-ci:
-	@ENV=ci && docker-compose -f docker-compose.keycloak-ci.yml up -d
+dc-up-use-dev:
+	@ENV=dev && docker-compose -f docker-compose.use-dev.yml up -d
 
-# local-full  = full docker local
-dc-up-local-full:
-	@ENV=local && docker-compose up -d
-
-dc-up-local-keycloak:
-	@ENV=local && docker-compose up -d keycloak
-
-dc-up-localhost:
-	@ENV=local && docker-compose -f docker-compose.localhost.yml up -d dbsignup keycloak dbkeycloak
+dc-up-infra:
+	@docker-compose -f docker-compose.localhost.yml up -d dbsignup keycloak dbkeycloak
 
 dc-down:
 	@docker-compose down

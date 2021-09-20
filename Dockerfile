@@ -31,7 +31,7 @@ WORKDIR /app
 RUN adduser spring
 
 COPY --from=builder /code/application/signup/build/libs/*.jar /app/libs/app-signup-backend.jar
-COPY --from=builder /code/config/app.ci.env /app/config/app.env
+COPY --from=builder /code/config/app.dev.env /app/config/app.env
 COPY --from=builder /code/.run /app/.run
 
 RUN chown -R spring:spring /app
