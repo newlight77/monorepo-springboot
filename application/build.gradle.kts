@@ -5,7 +5,7 @@ plugins {
 	idea
 }
 
-group = "io.oneprofile.application"
+group = "io.oneprofile.signup.application"
 version = "0.0.1-SNAPSHOT"
 
 repositories {

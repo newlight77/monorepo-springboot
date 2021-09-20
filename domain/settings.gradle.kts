@@ -1,4 +1,4 @@
-rootProject.name = "tricefal-domain"
+rootProject.name = "app-signup-domain"
 
 include("company")
 include("freelance")

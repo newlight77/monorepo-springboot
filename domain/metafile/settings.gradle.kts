@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-domain-metafile"
+rootProject.name = "app-signup-domain-metafile"

@@ -1,4 +1,4 @@
-rootProject.name = "tricefal-core"
+rootProject.name = "app-signup-backend"
 
 include(":application")
 include(":application:signup")

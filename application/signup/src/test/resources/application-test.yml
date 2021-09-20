@@ -44,8 +44,8 @@ spring:
     mail:
         host: localhost
         port: 2525
-        username: kong@tricefal.com
-        password: tricefal
+        username: kong@oneprofile.io
+        password: oneprofile
 #        properties:
 #            mail:
 #                smtp:
@@ -70,7 +70,7 @@ logging:
         org.springframework: ERROR
         liquibase: ERROR
         org.hibernate: ERROR
-        io.oneprofile.core: DEBUG
+        io.oneprofile.signup: DEBUG
         com.zaxxer: ERROR
     pattern:
         console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
@@ -98,7 +98,7 @@ notification:
 encryption:
     secretKey: oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGh
 
-core:
+signup:
     baseUrl: http://localhost/api
     frontendUrl: http://localhost
 
@@ -143,5 +143,5 @@ keycloak:
         authRoles[10]: ROLE_ac_freelance_w
         authRoles[11]: ROLE_ac_steering_r
         authRoles[12]: ROLE_ac_steering_w
-        authRoles[13]: ROLE_ac_tricefal_r
-        authRoles[14]: ROLE_ac_tricefal_w
+        authRoles[13]: ROLE_ac_oneprofile_r
+        authRoles[14]: ROLE_ac_oneprofile_w

@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-domain-notification"
+rootProject.name = "app-signup-domain-notification"

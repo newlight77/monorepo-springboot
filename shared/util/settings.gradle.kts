@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-shared-util"
+rootProject.name = "app-signup-shared-util"

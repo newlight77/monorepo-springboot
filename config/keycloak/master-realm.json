@@ -1597,11 +1597,11 @@
     "auth": "true",
     "port": "587",
     "host": "ssl0.ovh.net",
-    "replyTo": "noreply@tricefal.com",
-    "from": "noreply@tricefal.com",
+    "replyTo": "noreply@oneprofile.io",
+    "from": "noreply@oneprofile.io",
     "fromDisplayName": "Auto-Reply",
     "ssl": "",
-    "user": "noreply@tricefal.com"
+    "user": "noreply@oneprofile.io"
   },
   "eventsEnabled": false,
   "eventsListeners": [

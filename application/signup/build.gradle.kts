@@ -15,7 +15,7 @@ buildscript {
 			.resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
 }
 
-group = "io.oneprofile.application"
+group = "io.oneprofile.signup.application"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
@@ -81,7 +81,7 @@ dependencies {
 }
 
 application {
-	mainClassName = "io.oneprofile.core.KeycloakAuthApplicationKt"
+	mainClassName = "io.oneprofile.signup.KeycloakAuthApplicationKt"
 }
 
 tasks.withType<BootRun> {

@@ -2,5 +2,5 @@ spring:
     mail:
         host: localhost
         port: 2525
-        username: kong@tricefal.com
-        password: tricefal
+        username: kong@oneprofile.io
+        password: oneprofile

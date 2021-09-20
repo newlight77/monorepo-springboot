@@ -1,3 +1,3 @@
-rootProject.name = "tricefal-application"
+rootProject.name = "app-signup-application"
 
 include("signup")

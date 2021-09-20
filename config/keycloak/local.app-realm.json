@@ -140,7 +140,7 @@
       },
       {
         "id": "076893e6-4d67-4052-996f-eb0a8c48e2bc",
-        "name": "ac_tricefal_r",
+        "name": "ac_oneprofile_r",
         "composite": false,
         "clientRole": false,
         "containerId": "local.app",
@@ -148,7 +148,7 @@
       },
       {
         "id": "95de2245-3bf3-40cd-99c6-bc6dcb14484e",
-        "name": "ac_tricefal_w",
+        "name": "ac_oneprofile_w",
         "composite": false,
         "clientRole": false,
         "containerId": "local.app",
@@ -1819,11 +1819,11 @@
     "auth": "true",
     "port": "587",
     "host": "ssl0.ovh.net",
-    "replyTo": "noreply@tricefal.com",
-    "from": "noreply@tricefal.com",
+    "replyTo": "noreply@oneprofile.io",
+    "from": "noreply@oneprofile.io",
     "fromDisplayName": "Auto-Reply",
     "ssl": "",
-    "user": "noreply@tricefal.com"
+    "user": "noreply@oneprofile.io"
   },
   "loginTheme": "base",
   "accountTheme": "base",

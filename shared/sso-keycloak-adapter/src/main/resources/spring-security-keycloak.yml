@@ -45,5 +45,5 @@ keycloak:
         authRoles[10]: ROLE_ac_freelance_w
         authRoles[11]: ROLE_ac_steering_r
         authRoles[12]: ROLE_ac_steering_w
-        authRoles[13]: ROLE_ac_tricefal_r
-        authRoles[14]: ROLE_ac_tricefal_w
+        authRoles[13]: ROLE_ac_oneprofile_r
+        authRoles[14]: ROLE_ac_oneprofile_w

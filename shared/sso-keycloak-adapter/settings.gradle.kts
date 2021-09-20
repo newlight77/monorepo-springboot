@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-shared-sso-keycloak-adapter"
+rootProject.name = "app-signup-shared-sso-keycloak-adapter"

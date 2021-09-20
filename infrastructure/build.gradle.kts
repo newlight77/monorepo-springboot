@@ -5,7 +5,7 @@ plugins {
 	idea
 }
 
-group = "io.oneprofile.infrastructure"
+group = "io.oneprofile.signup.infrastructure"
 version = "0.0.1-SNAPSHOT"
 
 repositories {

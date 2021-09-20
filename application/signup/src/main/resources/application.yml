@@ -72,7 +72,7 @@ logging:
         org.springframework: WARN
         liquibase: WARN
         org.hibernate: WARN
-        io.oneprofile.core: ${CORE_LOGGING_LEVEL:INFO}
+        io.oneprofile.signup: ${CORE_LOGGING_LEVEL:INFO}
         com.zaxxer: ERROR
         org.keycloak: WARN
     org.apache.catalina: WARN
@@ -104,9 +104,9 @@ notification:
 encryption:
     secretKey: ${ENCRYPTION_SECRET_KEY}
 
-core:
-    baseUrl: ${CORE_BASE_URL}
-    frontendUrl: ${CORE_FRONTEND_URL}
+signup:
+    baseUrl: ${SIGNUP_BASE_URL}
+    frontendUrl: ${SIGNUP_FRONTEND_URL}
 
 ## Can be set to false to disable security during local development
 management:
@@ -160,5 +160,5 @@ keycloak:
         authRoles[10]: ROLE_ac_freelance_w
         authRoles[11]: ROLE_ac_steering_r
         authRoles[12]: ROLE_ac_steering_w
-        authRoles[13]: ROLE_ac_tricefal_r
-        authRoles[14]: ROLE_ac_tricefal_w
+        authRoles[13]: ROLE_ac_oneprofile_r
+        authRoles[14]: ROLE_ac_oneprofile_w

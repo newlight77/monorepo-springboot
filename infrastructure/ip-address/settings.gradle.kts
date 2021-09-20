@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-infrastructure-ip-address"
+rootProject.name = "app-signup-infrastructure-ip-address"

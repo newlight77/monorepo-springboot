@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-infrastructure-pricer-reference"
+rootProject.name = "app-signup-infrastructure-pricer-reference"

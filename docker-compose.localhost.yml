@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
 
   keycloak:
-    image: registry.gitlab.com/tricefal/docker-keycloak:${VERSION}
+    image: registry.gitlab.com/oneprofile/docker-keycloak:${VERSION}
     container_name: keycloak
     hostname: keycloak
     networks:

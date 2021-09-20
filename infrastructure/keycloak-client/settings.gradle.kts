@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-infrastructure-keycloak-client"
+rootProject.name = "app-signup-infrastructure-keycloak-client"

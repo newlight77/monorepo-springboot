@@ -4,13 +4,13 @@
     {
       "id": "98fc2ec4-1342-48bc-aad5-8d850a4e3c55",
       "createdTimestamp": 1605479390940,
-      "username": "kong@tricefal.com",
+      "username": "kong@oneprofile.io",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
       "firstName": "Kong",
       "lastName": "To",
-      "email": "kong@tricefal.com",
+      "email": "kong@oneprofile.io",
       "credentials": [
         {
           "id": "9379c066-3cc7-4c9c-bcb3-64eab1f9d48f",
@@ -34,8 +34,8 @@
         "user-manager-role",
         "ac_collaborator_w",
         "ac_client_w",
-        "ac_tricefal_r",
-        "ac_tricefal_w",
+        "ac_oneprofile_r",
+        "ac_oneprofile_w",
         "ac_contract_r",
         "ac_client_r",
         "uma_authorization",

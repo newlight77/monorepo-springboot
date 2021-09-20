@@ -31,9 +31,9 @@ Feature: signup
   3. validation by code must go through a valid GMS phone number to receive the code by SMS
   4. the email address is validated at the same step as by SMS (later version)
   5. roles are assigned to the user upon status update
-    ex: a freelance will have access to freelance views, and general purpose views regarding tricefal
-    ex: a collaborator will have access to collaborator views, and general purpose views regarding tricefal
-    ex : a customer will have access to customer views, and general purpose views regarding tricefal
+    ex: a freelance will have access to freelance views, and general purpose views regarding oneprofile
+    ex: a collaborator will have access to collaborator views, and general purpose views regarding oneprofile
+    ex : a customer will have access to customer views, and general purpose views regarding oneprofile
   6.
 
   Glossary:
@@ -44,12 +44,12 @@ Feature: signup
     A profile can be translated to a status, but it will be used purposely for authorization management
   - roles: a role is associated to a right that the portal would use to verify a user can or not access to a functionality
   - freelance: a freelance status is associated to a consultant who has his own enterprise declared juridically.
-    He can then access the portal and benefit from the business model that tricefal provides. He will be assigned a mission
-  - collaborator: a collaborator is an employee and consultant of tricefal. He will be assigned a mission
+    He can then access the portal and benefit from the business model that oneprofile provides. He will be assigned a mission
+  - collaborator: a collaborator is an employee and consultant of oneprofile. He will be assigned a mission
   - customer: a customer is the a company which would be provide several misssion, typically is represented by multiple mission orderer to fullfill the business needs (ex. software development)
   - mission orderer: an orderer is the one who will give a mission order and he seeks for experts to get things done (ex. software development)
   - backoffice: a backoffice status is a hidden as it is meant for internal purpose.
-  - general purpose views regarding tricefal
+  - general purpose views regarding oneprofile
   - resume: A resume is a formal document that a job applicant creates to itemize his or her qualifications for a position.
   - position: a position is what defines tasks, roles and responsibilities are assigned to a consultant
   - mission: a collaborator or a freelance will seek for a mission for consulting services.

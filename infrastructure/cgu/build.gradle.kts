@@ -6,7 +6,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.3.72"
 }
 
-group = "io.oneprofile.infrastructure"
+group = "io.oneprofile.signup.infrastructure"
 version = "0.0.1-SNAPSHOT"
 
 

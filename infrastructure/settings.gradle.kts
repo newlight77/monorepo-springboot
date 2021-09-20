@@ -1,4 +1,4 @@
-rootProject.name = "tricefal-infrastructure"
+rootProject.name = "app-signup-infrastructure"
 
 include("cgu")
 include("compnay")

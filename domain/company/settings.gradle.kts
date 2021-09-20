@@ -1,1 +1,1 @@
-rootProject.name = "tricefal-domain-company"
+rootProject.name = "app-signup-domain-company"

@@ -4,7 +4,7 @@ plugins {
 	kotlin("jvm")
 }
 
-group = "io.oneprofile.domain"
+group = "io.oneprofile.signup.domain"
 version = "0.0.1-SNAPSHOT"
 
 repositories {

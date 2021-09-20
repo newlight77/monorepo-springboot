@@ -12,7 +12,7 @@ plugins {
 	jacoco
 }
 
-group = "io.oneprofile.core"
+group = "io.oneprofile.signup"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
@@ -135,7 +135,7 @@ subprojects {
 		classDirectories.setFrom(
 				sourceSets.main.get().output.asFileTree.matching {
 					// exclude main()
-					exclude("io/tricefal/core/AuthenticationApplicationKt.class")
+					exclude("io/oneprofile/core/AuthenticationApplicationKt.class")
 				}
 		)
 	}
