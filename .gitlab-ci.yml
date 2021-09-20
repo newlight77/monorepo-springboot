@@ -131,7 +131,7 @@ build-image:
     SHORT_VERSION: latest
     ENV: local
     GROUP_REGISTRY: registry.gitlab.com/oneprofile/
-    GROUP_REGISTRY_USER: gitlab+deploy-token-578015-read
+    GROUP_REGISTRY_USER: gitlab+deploy-token-578015
     # GROUP_REGISTRY_PASSWORD: on gitlab.com project/settings/cicd/variables
   before_script:
     - apk add --no-cache make git
