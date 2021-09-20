@@ -27,7 +27,7 @@ kill:
 	@tools/scripts/kill-process.sh --$(keyword)
 
 kill-java:
-	@tools/scripts/kill-process.sh --java --tricefal
+	@tools/scripts/kill-process.sh --java --oneprofile
 
 
 clean:
@@ -48,8 +48,8 @@ test:
 code-analysis:
 	#@./gradlew -g .gradle/caches sonarqube
 	#@./gradlew sonarqube -Dsonar.qualitygate.wait=true
-	@docker run --rm -e SONAR_HOST_URL=https://ci.tricefal.io/sonar -e SONAR_LOGIN="f1843a5c58e6658ed82e95e169868d014e1d04b1" -v ~/wks/src/tricefal/app-signup-backend:/usr/src sonarsource/sonar-scanner-cli
-	#@docker run -e SONAR_URL=https://ci.tricefal.io/sonar -e SONAR_ANALYSIS_MODE=publish -e SONAR_TOKEN="f1843a5c58e6658ed82e95e169868d014e1d04b1" ciricihq/gitlab-sonar-scanner gitlab-sonar-scanner
+	@docker run --rm -e SONAR_HOST_URL=https://ci.oneprofile.io/sonar -e SONAR_LOGIN="f1843a5c58e6658ed82e95e169868d014e1d04b1" -v ~/wks/src/oneprofile/app-signup-backend:/usr/src sonarsource/sonar-scanner-cli
+	#@docker run -e SONAR_URL=https://ci.oneprofile.io/sonar -e SONAR_ANALYSIS_MODE=publish -e SONAR_TOKEN="f1843a5c58e6658ed82e95e169868d014e1d04b1" ciricihq/gitlab-sonar-scanner gitlab-sonar-scanner
 
 boot: 	
 	@./.run --env=localhost --run-mode=local
@@ -63,7 +63,7 @@ run-localhost:
 #	@java $(DEBUG_ARG) -jar application/signup/build/libs/app-signup-backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=$SPRING_PROFILE
 
 test-api:
-	@./test-api.sh --api-url=http://localhost:8080/api --client-id=ci.frontend.https --token-url=https://ci.tricefal.io/auth/realms/ci.app/protocol/openid-connect/token --username=newlight77+${testId}@gmail.com
+	@./test-api.sh --api-url=http://localhost:8080/api --client-id=ci.frontend.https --token-url=https://ci.oneprofile.io/auth/realms/ci.app/protocol/openid-connect/token --username=newlight77+${testId}@gmail.com
 
 test-api-local:
 	@./test-api.sh --api-url=http://localhost:8080/api --client-id=local.frontend.https --token-url=http://localhost:1080/auth/realms/local.app/protocol/openid-connect/token --username=newlight77+${testId}@gmail.com
@@ -120,5 +120,3 @@ db-pgsh: ## Launch a shell inside PostgreSQL container
 
 db-pgdump: ## Dump the database
 	@docker-compose exec dbsignup pg_dump -U $(POSTGRES_USER) $(POSTGRES_DB)
-
-

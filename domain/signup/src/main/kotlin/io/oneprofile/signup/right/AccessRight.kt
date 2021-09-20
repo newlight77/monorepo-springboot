@@ -13,6 +13,6 @@ enum class AccessRight(val label: String) {
     AC_FREELANCE_WRITE("ac_freelance_w"),
     AC_STEERING_READ("ac_steering_r"),
     AC_STEERING_WRITE("ac_steering_w"),
-    AC_TRICEFAL_READ("ac_oneprofile_r"),
-    AC_TRICEFAL_WRTIE("ac_oneprofile_w")
+    AC_ONEPROFILE_READ("ac_oneprofile_r"),
+    AC_ONEPROFILE_WRTIE("ac_oneprofile_w")
 }

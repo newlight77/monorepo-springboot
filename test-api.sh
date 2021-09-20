@@ -18,7 +18,7 @@ fi
 API_URL=http://localhost:8080/api
 CLIENT_ID=local.frontend.https
 USERNAME=newlight77+test1@gmail.com
-PASSWORD=Tricefal1
+PASSWORD=Oneprofile1
 TOKEN_URL=http://localhost:1080/auth/realms/local.app/protocol/openid-connect/token
 TOKEN=
 
