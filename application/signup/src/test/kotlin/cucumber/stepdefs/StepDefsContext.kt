@@ -1,4 +1,4 @@
-package cucumber
+package cucumber.stepdefs
 
 import kotlin.reflect.KClass
 

@@ -23,29 +23,29 @@ subprojects {
 	}
 
 	dependencies {
-		implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.3")
-		implementation("org.slf4j:slf4j-api:1.7.30")
+		implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2")
+		implementation("org.slf4j:slf4j-api:1.7.36")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
-		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.3.5")
+		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.0")
 
-		testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
-		testImplementation("org.mockito:mockito-junit-jupiter:3.6.0")
-		testImplementation("org.mockito:mockito-inline:3.6.0")
+		testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+		testImplementation("org.mockito:mockito-junit-jupiter:4.4.0")
+		testImplementation("org.mockito:mockito-inline:4.4.0")
 		testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
-		testImplementation("org.assertj:assertj-core:3.11.1")
+		testImplementation("org.assertj:assertj-core:3.22.0")
 
-		testImplementation("io.rest-assured:spring-mock-mvc:4.3.0") {
+		testImplementation("io.rest-assured:spring-mock-mvc:5.0.0") {
 			exclude("com.sun.xml.bind:jaxb-osgi")
 		}
 		testImplementation("io.rest-assured:xml-path:4.2.0")
 
-		testImplementation("io.cucumber:cucumber-java:5.6.0")
-		testImplementation("io.cucumber:cucumber-java8:5.6.0")
-		testImplementation("io.cucumber:cucumber-junit-platform-engine:5.6.0")
-		testImplementation("io.cucumber:cucumber-spring:5.6.0")
-		testImplementation("com.github.cukedoctor:cukedoctor-converter:1.2.1")
+		testImplementation("io.cucumber:cucumber-java:7.2.3")
+		testImplementation("io.cucumber:cucumber-java8:7.2.3")
+		testImplementation("io.cucumber:cucumber-junit-platform-engine:7.2.3")
+		testImplementation("io.cucumber:cucumber-spring:7.2.3")
+		testImplementation("com.github.cukedoctor:cukedoctor-converter:3.7.0")
 
 	}
 }

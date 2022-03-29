@@ -4,7 +4,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 //import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
-	kotlin("jvm") version "1.4.10"
+	kotlin("jvm") version "1.6.10"
 	id("com.adarshr.test-logger") version ("2.0.0")
 //	id("org.jmailen.kotlinter") version "2.3.2"
 //	id("com.diffplug.gradle.spotless") version "3.27.2"
@@ -91,7 +91,7 @@ subprojects {
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
 			freeCompilerArgs = listOf("-Xjsr305=strict")
-			jvmTarget = "11"
+			jvmTarget = "13"
 		}
 	}
 
