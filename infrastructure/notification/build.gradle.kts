@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	kotlin("jvm")
-	kotlin("plugin.spring") version "1.3.72"
-	kotlin("plugin.jpa") version "1.3.72"
+	kotlin("plugin.spring") version "1.6.10"
+	kotlin("plugin.jpa") version "1.6.10"
 }
 
 group = "io.oneprofile.signup.infrastructure"
@@ -20,15 +20,15 @@ dependencies {
 
 	implementation(project(":domain:notification"))
 
-	implementation("org.springframework.boot:spring-boot-starter:2.3.0.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter:2.6.5")
 
 
 	// notification
-	implementation("org.springframework.boot:spring-boot-starter-mail:2.3.0.RELEASE")
-	api("org.freemarker:freemarker:2.3.30")
-	testImplementation("com.icegreen:greenmail:1.5.13")
+	implementation("org.springframework.boot:spring-boot-starter-mail:2.6.5")
+	api("org.freemarker:freemarker:2.3.31")
+	testImplementation("com.icegreen:greenmail:1.6.7")
 
 	// twilio
-	implementation("com.twilio.sdk:twilio:7.51.0")
+	implementation("com.twilio.sdk:twilio:8.28.0")
 
 }

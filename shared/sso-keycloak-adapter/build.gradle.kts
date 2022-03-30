@@ -20,12 +20,12 @@ dependencies {
 	implementation(project(":shared:util"))
 	implementation(project(":infrastructure:ip-address"))
 
-	implementation("org.springframework.boot:spring-boot-starter-security:2.3.0.RELEASE")
-	implementation("org.keycloak:keycloak-spring-security-adapter:12.0.3")
-	implementation("org.keycloak:keycloak-spring-boot-starter:12.0.3")
-	implementation("com.github.ben-manes.caffeine:caffeine:2.8.1")
+	implementation("org.springframework.boot:spring-boot-starter-security:2.6.5")
+	implementation("org.keycloak:keycloak-spring-security-adapter:17.0.1")
+	implementation("org.keycloak:keycloak-spring-boot-starter:17.0.1")
+	implementation("com.github.ben-manes.caffeine:caffeine:3.0.6")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test:2.3.0.RELEASE") {
+	testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.5") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 		exclude("junit", "junit")
 	}

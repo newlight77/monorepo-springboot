@@ -29,8 +29,8 @@ dependencies {
 
 	implementation(project(":infrastructure:keycloak-client"))
 
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
-	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.5")
+	implementation("org.springframework.boot:spring-boot-starter-validation:2.6.5")
 
 }
 

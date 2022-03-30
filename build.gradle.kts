@@ -30,8 +30,8 @@ subprojects {
 
 
 	java {
-		sourceCompatibility = JavaVersion.VERSION_13
-		targetCompatibility = JavaVersion.VERSION_13
+		sourceCompatibility = JavaVersion.VERSION_17
+		targetCompatibility = JavaVersion.VERSION_17
 	}
 
 	configurations {
@@ -91,7 +91,7 @@ subprojects {
 	tasks.withType<KotlinCompile> {
 		kotlinOptions {
 			freeCompilerArgs = listOf("-Xjsr305=strict")
-			jvmTarget = "13"
+			jvmTarget = "17"
 		}
 	}
 
@@ -141,7 +141,7 @@ subprojects {
 	}
 
 	jacoco {
-		toolVersion = "0.8.5"
+		toolVersion = "0.8.7"
 		reportsDir = file("$buildDir/jacoco")
 	}
 

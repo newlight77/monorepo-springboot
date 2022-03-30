@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	kotlin("jvm")
-	kotlin("plugin.spring") version "1.3.72"
-	kotlin("plugin.jpa") version "1.3.72"
+	kotlin("plugin.spring") version "1.6.10"
+	kotlin("plugin.jpa") version "1.6.10"
 }
 
 group = "io.oneprofile.signup.infrastructure"
@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.0.RELEASE")
-	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.0.RELEASE")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.5")
+	implementation("org.springframework.boot:spring-boot-starter-validation:2.6.5")
 
 }
 

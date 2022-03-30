@@ -10,7 +10,7 @@ import java.security.Key
 import java.time.Instant
 import java.util.*
 import javax.crypto.spec.SecretKeySpec
-import javax.xml.bind.DatatypeConverter
+import java.util.Base64
 
 
 @Service
@@ -24,7 +24,7 @@ class  JwtEncryptionService(private final val env: Environment) {
 
         //The JWT signature algorithm we will be using to sign the token
         val signatureAlgorithm: SignatureAlgorithm = SignatureAlgorithm.HS256
-        val apiKeySecretBytes: ByteArray = DatatypeConverter.parseBase64Binary(secretKey)
+        val apiKeySecretBytes: ByteArray = Base64.getDecoder().decode(secretKey)
         val signingKey: Key = SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName())
 
         val builder = Jwts.builder()
@@ -41,7 +41,7 @@ class  JwtEncryptionService(private final val env: Environment) {
     fun decode(token: String): String {
         //This line will throw an exception if it is not a signed JWS (as expected)
         return Jwts.parserBuilder()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                .setSigningKey(Base64.getDecoder().decode(secretKey))
                 .build()
                 .parseClaimsJws(token).body.subject
     }
