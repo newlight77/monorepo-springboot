@@ -1,4 +1,4 @@
-rootProject.name = "app-signup-backend"
+rootProject.name = "monorepo-springboot"
 
 include(":application")
 include(":application:signup")

@@ -1,8 +1,6 @@
 # Monorepo kotlin/springboot
 
-
-image:https://gitlab.com/oneprofie/app-signup-backend/badges/master/pipeline.svg[link="https://gitlab.com/oneprofile/app-signup-backend/-/commits/master",title="pipeline status"]
-image:https://gitlab.com/oneprofile/app-signup-backend/badges/master/coverage.svg[link="https://gitlab.com/oneprofile/app-signup-backend/-/commits/master",title="coverage report"]
+A monorepo project as showcase.
 
 ## Pre-requisites:
 

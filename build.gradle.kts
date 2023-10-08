@@ -12,7 +12,7 @@ plugins {
 	jacoco
 }
 
-group = "io.oneprofile.signup"
+group = "io.oneprofile"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
