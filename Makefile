@@ -45,6 +45,9 @@ clean-package:
 test:
 	@./gradlew -g .gradle/caches check jacocoTestReport
 
+merge-coverage:
+	@./util/ci/prepare-coverage.sh
+
 code-analysis:
 	#@./gradlew -g .gradle/caches sonarqube
 	#@./gradlew sonarqube -Dsonar.qualitygate.wait=true
