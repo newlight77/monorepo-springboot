@@ -6,6 +6,7 @@ build/
 !**/src/test/**
 *.trc
 *.txt
+.DS_Store
 
 ### STS ###
 .apt_generated

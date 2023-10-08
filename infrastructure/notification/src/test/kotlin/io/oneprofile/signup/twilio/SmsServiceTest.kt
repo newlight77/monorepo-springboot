@@ -22,8 +22,8 @@ internal class SmsServiceTest {
                 .content("hello Kong, test sms notif")
                 .build()
         Mockito.`when`(env.getProperty("notification.sms.twilio.phoneNumber")).thenReturn("33644601054")
-        Mockito.`when`(env.getProperty("notification.sms.twilio.accountSid")).thenReturn("AC497ba2b4c6a9ecf212ea611537e0be92")
-        Mockito.`when`(env.getProperty("notification.sms.twilio.authToken")).thenReturn("d69fcdb58b6b98dd2959f86f9e730e85")
+        Mockito.`when`(env.getProperty("notification.sms.twilio.accountSid")).thenReturn("ABCDEba2b4c6a9ecf212ea611537e0be92")
+        Mockito.`when`(env.getProperty("notification.sms.twilio.authToken")).thenReturn("abcdedb58b6b98dd2959f86f9e730e85")
 
         // act
         val result = SmsService(env).send(message)
@@ -42,7 +42,7 @@ internal class SmsServiceTest {
                 .content("hello Kong, test sms notif")
                 .build()
         Mockito.`when`(env.getProperty("notification.sms.twilio.phoneNumber")).thenReturn("0659401130")
-        Mockito.`when`(env.getProperty("notification.sms.twilio.accountSid")).thenReturn("AC497ba2b4c6a9ecf212ea611537e0be92")
+        Mockito.`when`(env.getProperty("notification.sms.twilio.accountSid")).thenReturn("ABCDEba2b4c6a9ecf212ea611537e0be92")
         Mockito.`when`(env.getProperty("notification.sms.twilio.authToken")).thenReturn("56dfdab0b2c07ed9d861b4a182d10e00")
 
         // act

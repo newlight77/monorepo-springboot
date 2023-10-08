@@ -2,5 +2,5 @@ notification:
   sms:
     twilio:
       phoneNumber: 33644601054
-      accountSid: AC497ba2b4c6a9ecf212ea611537e0be92
-      authToken: d69fcdb58b6b98dd2959f86f9e730e85
+      accountSid: ABCDEba2b4c6a9ecf212ea611537e0be92
+      authToken: abcdedb58b6b98dd2959f86f9e730e85

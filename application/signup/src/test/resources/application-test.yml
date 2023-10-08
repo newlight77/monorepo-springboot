@@ -91,12 +91,12 @@ notification:
     sms:
         admin: 0659401130
         twilio:
-            phoneNumber: 33644601054
-            accountSid: AC497ba2b4c6a9ecf212ea611537e0be92
-            authToken: d69fcdb58b6b98dd2959f86f9e730e85
+            phoneNumber: 33666666666
+            accountSid: ABCDEba2b4c6a9ecf212ea611537e0be92
+            authToken: abcdedb58b6b98dd2959f86f9e730e85
 
 encryption:
-    secretKey: oeRaYY7Wo24sDqKSX3IM9ASGmdGPmkTd_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGh
+    secretKey: abcde7Wo24sDqKSX3IM9ASGmdGPmkTd_9hKolVX8xNrQDcNRfVEdTZNOuOyqEGh
 
 signup:
     baseUrl: http://localhost/api
