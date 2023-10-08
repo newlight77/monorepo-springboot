@@ -48,7 +48,7 @@ test:
 code-analysis:
 	#@./gradlew -g .gradle/caches sonarqube
 	#@./gradlew sonarqube -Dsonar.qualitygate.wait=true
-	@docker run --rm -e SONAR_HOST_URL=https://ci.oneprofile.io/sonar -e SONAR_LOGIN="f1843a5c58e6658ed82e95e169868d014e1d04b1" -v ~/wks/src/oneprofile/app-signup-backend:/usr/src sonarsource/sonar-scanner-cli
+	#@docker run --rm -e SONAR_HOST_URL=https://ci.oneprofile.io/sonar -e SONAR_LOGIN="f1843a5c58e6658ed82e95e169868d014e1d04b1" -v ~/wks/src/oneprofile/app-signup-backend:/usr/src sonarsource/sonar-scanner-cli
 	#@docker run -e SONAR_URL=https://ci.oneprofile.io/sonar -e SONAR_ANALYSIS_MODE=publish -e SONAR_TOKEN="f1843a5c58e6658ed82e95e169868d014e1d04b1" ciricihq/gitlab-sonar-scanner gitlab-sonar-scanner
 
 boot: 	
