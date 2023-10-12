@@ -13,8 +13,17 @@ repositories {
 
 dependencies {
 	implementation(project(":domain:metafile"))
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.withType<Jar>() {
-	baseName = "domain-mission"
+	archiveBaseName.set("domain-mission")
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "17"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "17"
 }

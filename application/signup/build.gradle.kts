@@ -1,4 +1,5 @@
 import org.springframework.boot.gradle.tasks.run.BootRun
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	application
@@ -6,13 +7,13 @@ plugins {
 	id("org.springframework.boot") version "2.6.5"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	kotlin("jvm")
-	kotlin("plugin.spring") version "1.6.10"
-	kotlin("plugin.jpa") version "1.6.10"
+	kotlin("plugin.spring") version "1.9.10"
+	kotlin("plugin.jpa") version "1.9.10"
 }
 
 buildscript {
 	configurations.classpath
-			.resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
+		.get().resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
 }
 
 group = "io.oneprofile.signup.application"
@@ -77,11 +78,12 @@ dependencies {
 	implementation("org.postgresql:postgresql")
 
 	implementation("org.liquibase:liquibase-core:4.9.0")
+    implementation(kotlin("stdlib-jdk8"))
 
 }
 
 application {
-	mainClassName = "io.oneprofile.signup.KeycloakAuthApplicationKt"
+	mainClass.set("io.oneprofile.signup.KeycloakAuthApplicationKt")
 }
 
 tasks.withType<BootRun> {
@@ -95,7 +97,7 @@ tasks.withType<BootRun> {
 }
 
 tasks.withType<Jar>() {
-    baseName = "app-signup-backend"
+    archiveBaseName.set("app-signup-backend")
 }
 
 testlogger {
@@ -109,4 +111,12 @@ testlogger {
 	showPassedStandardStreams = true
 	showSkippedStandardStreams = true
 	showFailedStandardStreams = true
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "17"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "17"
 }

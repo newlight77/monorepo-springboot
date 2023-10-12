@@ -4,7 +4,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 //import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
-	kotlin("jvm") version "1.6.10"
+	kotlin("jvm") version "1.9.10"
 	id("com.adarshr.test-logger") version ("2.0.0")
 //	id("org.jmailen.kotlinter") version "2.3.2"
 //	id("com.diffplug.gradle.spotless") version "3.27.2"
@@ -104,11 +104,11 @@ subprojects {
 
 	tasks.jacocoTestReport {
 		reports {
-			csv.isEnabled = false
-			html.isEnabled = true
-			html.destination = file("$buildDir/jacoco/html")
-			xml.isEnabled = true
-			xml.destination = file("$buildDir/jacoco/jacocoTestReport.xml")
+			csv.required.set(true)
+			html.required.set(true)
+			html.outputLocation.set(file("$buildDir/jacoco/html"))
+			xml.required.set(true)
+			xml.outputLocation.set(file("$buildDir/jacoco/jacocoTestReport.xml"))
 		}
 	}
 
@@ -142,7 +142,7 @@ subprojects {
 
 	jacoco {
 		toolVersion = "0.8.7"
-		reportsDir = file("$buildDir/jacoco")
+		reportsDirectory.set(file("$buildDir/jacoco"))
 	}
 
 	val testCoverage by tasks.registering {

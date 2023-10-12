@@ -16,9 +16,18 @@ dependencies {
 	implementation(project(":domain:company"))
 	implementation(project(":domain:notification"))
 	implementation(project(":shared:util"))
+    implementation(kotlin("stdlib-jdk8"))
 
 }
 
 tasks.withType<Jar>() {
-	baseName = "domain-freelance"
+	archiveBaseName.set("domain-freelance")
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "17"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "17"
 }

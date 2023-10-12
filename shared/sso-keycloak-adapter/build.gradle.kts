@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	kotlin("jvm")
@@ -5,7 +6,7 @@ plugins {
 
 buildscript {
 	configurations.classpath
-			.resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
+			.get().resolutionStrategy.force("com.github.pinterest:ktlint:0.36.0")
 }
 
 group = "io.oneprofile.shared"
@@ -29,11 +30,12 @@ dependencies {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 		exclude("junit", "junit")
 	}
+    implementation(kotlin("stdlib-jdk8"))
 
 }
 
 tasks.withType<Jar>() {
-	baseName = "sso-keycloak-adapter"
+	archiveBaseName.set("sso-keycloak-adapter")
 }
 
 testlogger {
@@ -47,4 +49,12 @@ testlogger {
 	showPassedStandardStreams = true
 	showSkippedStandardStreams = true
 	showFailedStandardStreams = true
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "17"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "17"
 }

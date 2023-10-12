@@ -1,4 +1,4 @@
-FROM openjdk:13-slim AS builder
+FROM openjdk:17-slim AS builder
 
 ARG ENV=local
 ARG ENABLE_BUILD=true
@@ -21,7 +21,7 @@ RUN if [ "$(ls -l /code/application/signup/build/libs/*.jar | grep .jar)" = "" ]
     fi
 
 # Runner
-FROM openjdk:13-slim
+FROM openjdk:17-slim
 
 ARG ENV=local
 
