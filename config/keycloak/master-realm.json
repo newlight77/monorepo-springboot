@@ -61,7 +61,7 @@
             "create-realm"
           ],
           "client": {
-            "local.app-realm": [
+            "local-app-realm": [
               "query-realms",
               "query-users",
               "query-groups",
@@ -127,7 +127,7 @@
       }
     ],
     "client": {
-      "local.app-realm": [
+      "local-app-realm": [
         {
           "id": "e9b06f64-a644-460e-ba75-e3ec9026d554",
           "name": "query-realms",
@@ -270,7 +270,7 @@
           "composite": true,
           "composites": {
             "client": {
-              "local.app-realm": [
+              "local-app-realm": [
                 "query-users",
                 "query-groups"
               ]
@@ -296,7 +296,7 @@
           "composite": true,
           "composites": {
             "client": {
-              "local.app-realm": [
+              "local-app-realm": [
                 "query-clients"
               ]
             }
@@ -930,7 +930,7 @@
     },
     {
       "id": "41da5222-b7c9-4430-a308-a3706d817b0b",
-      "clientId": "local.app-realm",
+      "clientId": "local-app-realm",
       "name": "Dev Realm",
       "surrogateAuthRequired": false,
       "enabled": true,
