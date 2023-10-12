@@ -23,6 +23,7 @@ build/
 *.iml
 *.ipr
 out/
+.run.log
 
 ### NetBeans ###
 /nbproject/private/

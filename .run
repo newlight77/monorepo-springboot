@@ -51,8 +51,8 @@ usage() {
   echo "Usage: $0 [options]"
   echo ""
   echo "${blue}Options:    ${reset}"
-  echo "${blue}          -e, --env =[local | dev | prod]                classpath${reset}"
-  echo "${blue}          -m, --run-mode =[boot | local | docker]                classpath${reset}"
+  echo "${blue}          -e, --env =[local | dev | prod]                        classpath${reset}"
+  echo "${blue}          -m, --run-mode =[boot | local | localhost | docker]    classpath${reset}"
   echo "${blue}          -c, --classpath =[classpath]                           classpath${reset}"
   echo "${blue}          -k, --keycloak-configFile =[keycloak.json file path]   keycloak.json file path${reset}"
   echo "${blue}          -d, --debug                                            enable debug remotely for java app${reset}"
@@ -103,7 +103,7 @@ fi
 #env
 rm .env
 
-
+echo remote: ${REMOTE_DEBUG}
 if [ "${REMOTE_DEBUG}" = 'true' ]; then
   DEBUG_ARG="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5080"
 fi
@@ -121,9 +121,10 @@ if [ x"${CLASSPATH_DIR}" != 'x' ]; then
 fi
 
 logInfo "launching the application"
+logInfo "runmode ${RUN_MODE}"
 
 if [ "${RUN_MODE}" = 'boot' ]; then
-  ./gradlew :application:signup:bootRun
+  ./gradlew :application:signup:bootRun -Dspring.profiles.active=local
 fi
 
 if [ "${RUN_MODE}" = 'local' ]; then

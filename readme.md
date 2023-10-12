@@ -4,7 +4,7 @@ A monorepo project as showcase.
 
 ## Pre-requisites:
 
-- [keycloak](https://<server>/auth/realms/dev.app/account/)[reset password]
+- [keycloak reset password](https://<server>/auth/realms/dev.app/account/)
 
 ## Run
 
